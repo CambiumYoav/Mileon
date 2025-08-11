@@ -1,0 +1,95 @@
+@import "./elements.scss";
+// checkbox.scss
+
+@mixin base-checkbox($bg, $color, $border: none, $shadow: none) {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: $colorWhite;
+  color: $color;
+  border: 1px $colorBlack;
+  box-shadow: $shadow;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $colorDarkBluePrimary;
+  }
+
+  &:checked {
+    background-color: $colorStatusLightBlue;
+    border-color: $colorBlack;
+    background-image: url("/assets/icons/check.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px;
+  }
+
+  &:checked:before {
+    border-color: $colorBlack !important;
+    background-color: $colorWhite;
+  }
+
+  &:disabled {
+    background-color: $colorDisabledGrey;
+    border-color: $colorDarkGray;
+    cursor: not-allowed;
+  }
+
+  &:checked:disabled {
+    border-color: $colorDarkGray;
+    background-image: url("/assets/icons/check-disable.svg");
+
+    background-color: $colorDisabledGrey;
+  }
+}
+
+%checkbox-size-default {
+  font-size: 16px;
+  width: 16px !important;
+  height: 16px !important;
+}
+
+%checkbox-size-lg {
+  font-size: 24px;
+  width: 107px !important;
+  height: 50px !important;
+  padding: 12px 20px;
+}
+
+.checkbox-lg {
+  @extend %checkbox-size-lg;
+}
+
+.checkbox-base {
+  @extend %checkbox-size-default;
+}
+
+// Checkbox variants
+.checkbox-primary {
+  @include base-checkbox(
+    $colorStatusLightBlue,
+    $colorBlack,
+    1px solid $colorBlack
+  );
+}
+
+.checkbox-secondary {
+  @include base-checkbox(
+    $colorStatusLightBlue,
+    $colorBlack,
+    1px solid $colorDarkBluePrimary
+  );
+}
+
+.checkbox-outline {
+  @include base-checkbox(
+    $colorWhite,
+    $colorDarkBluePrimary,
+    1px solid $colorDarkBluePrimary
+  );
+}

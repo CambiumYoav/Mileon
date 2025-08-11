@@ -1,0 +1,191 @@
+@import "./elements.scss";
+
+@mixin base-btn($bg, $color, $border: none, $shadow: none) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: $border;
+  background-color: $bg;
+  color: $color;
+  box-shadow: $shadow;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $colorLightBlueSecondery;
+  }
+
+  &:disabled {
+    background-color: $colorDisabledGrey;
+    color: $colorDarkGray !important;
+    // cursor: not-allowed;
+    border: $colorDisabledGrey;
+  }
+  &:active {
+    background-color: $colorDarkBluePrimary;
+    border: $colorDarkBluePrimary;
+    color: $colorWhite;
+  }
+
+  img,
+  svg,
+  i {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    gap: 5px;
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+@mixin link-btn($color, $shadow: none) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: $colorWhite;
+  color: $color;
+  box-shadow: $shadow;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 700;
+
+  //   &:hover {
+  //     background-color: $colorLightBlueSecondery;
+  //   }
+
+  &:disabled {
+    background-color: $colorDisabledGrey;
+    color: $colorDarkGray;
+    cursor: not-allowed;
+    border: $colorDisabledGrey;
+    opacity: 0.6;
+  }
+  //   &:active {
+  //     background-color: $colorDarkBluePrimary;
+  //     color: $colorWhite;
+  //   }
+
+  img,
+  svg,
+  i {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 9px 20px;
+    gap: 5px;
+  }
+}
+.primary-btn {
+  @include base-btn($colorLightBluePrimary, $colorBlack);
+}
+
+.secondary-btn {
+  @include base-btn($colorDarkBluePrimary, $colorDarkBluePrimary);
+}
+
+.tertiary-btn {
+  @include base-btn(
+    $colorWhite,
+    $colorBlack,
+    1px solid $colorWhite,
+    0px 0px 12px -1px $colorBoxShadow
+  );
+}
+.link-btn {
+  @include link-btn($colorDarkBlue);
+}
+
+.outline-btn {
+  @include base-btn(#ffffff, #387ec4, 1px solid #387ec4);
+}
+
+.disabled-btn {
+  @include base-btn($colorDisabledGrey, #387ec4, 1px solid #387ec4);
+}
+
+.outline-secondary-btn {
+  @include base-btn(
+    #ffffff,
+    $colorDarkBluePrimary,
+    1px solid $colorDarkBluePrimary
+  );
+}
+
+%btn-size-sm {
+  width: 54px !important;
+  height: 27px !important;
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 5px;
+}
+
+%btn-size-default {
+  font-size: 16px;
+  width: 78px !important;
+  height: 37px !important;
+  padding: 7.5px 20px;
+  border-radius: 4px;
+}
+
+%btn-size-lg {
+  font-size: 24px;
+  width: 107px !important;
+  height: 50px !important;
+  padding: 12px 20px;
+  border-radius: 8px;
+}
+
+.button-sm {
+  @extend %btn-size-sm;
+}
+.button-lg {
+  @extend %btn-size-lg;
+}
+
+.button-base {
+  @extend %btn-size-default;
+}
+
+%btn-icon-size-sm {
+  width: 73px !important;
+  height: 27px !important;
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  justify-content: space-between;
+}
+
+%btn-icon-size-default {
+  font-size: 16px;
+  width: 96px !important;
+  height: 37px !important;
+  padding: 7.5px 15px;
+  border-radius: 4px;
+  justify-content: space-between;
+}
+
+%btn-icon-size-lg {
+  font-size: 24px;
+  width: 139px !important;
+  height: 50px !important;
+  padding: 9px 20px;
+  border-radius: 8px;
+  justify-content: space-between;
+}
+
+.button-icon-sm {
+  @extend %btn-icon-size-sm;
+}
+.button-icon-lg {
+  @extend %btn-icon-size-lg;
+}
+
+.button-icon-base {
+  @extend %btn-icon-size-default;
+}

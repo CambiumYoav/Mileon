@@ -1,0 +1,17 @@
+.tag {
+  line-height: normal;
+  border-radius: 4px;
+  padding: 3px 10px;
+  white-space: normal;
+  width: fit-content;
+  margin: auto;
+}
+
+.active {
+  background-color: #d4f8d3;
+  color: #19a58c;
+}
+.not-active {
+  background-color: #ffe0e3;
+  color: #ff0000;
+}

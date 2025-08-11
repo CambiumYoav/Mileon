@@ -1,0 +1,11 @@
+<button
+  [matTooltip]="tooltipText"
+  [matTooltipClass]="['custom-tooltip', tooltipClass]"
+  [ngClass]="[buttonClass, imgSrc ? iconSizeClass : sizeClass]"
+  [type]="buttonType"
+  [attr.disabled]="isDisabled ? true : null"
+  (click)="clickFunction.emit()"
+>
+  <span *ngIf="buttonText">{{ buttonText }}</span>
+  <img *ngIf="imgSrc" [src]="imgSrc" alt="" />
+</button>

@@ -1,0 +1,25 @@
+export enum ModalMessages {
+  ARE_YOU_SURE_YOU_WANT_TO_APPROVE = 'האם אתה בטוח שברצונך לאשר את הבקשה?',
+  ARE_YOU_SURE_YOU_WANT_TO_DENY = 'האם אתה בטוח שברצונך לדחות את הבקשה?',
+  ARE_YOU_WANT_TO_MOVE_PAYMENT_PAGE = 'האם ברצונך לעבור לעמוד תשלום?',
+  ARE_YOU_SURE_YOU_WANT_TO_MOVE_DOCUMENT_COMPLETION = 'האם אתה בטוח שברצונך להעביר לסטטוס השלמת מסמכים?',
+  NO_FILE_ATTACHED_TO_REQUEST = 'לא צירפת קבצים לבקשה, האם אתה בטוח שברצונך ליצור את הבקשה?',
+  EXPORT_FILE = 'יצוא מבנה קובץ',
+  SEND_FILE = 'שליחת קובץ למשרד התחבורה',
+  SEND_FILE_INTERIOR = 'שליחת קובץ למשרד הפנים',
+  CONFIG = 'עדכון קובץ קונפיג',
+  CHANGE_TYPE = 'שינוי סוג הודעה',
+  DISABLE_USER = 'הפיכת משתמש ללא פעיל',
+  UNDISABLE_USER = 'הפיכת משתמש לפעיל',
+  CLOSE_TICKETBOOK = 'סגירת פנקס',
+  UPDATE_SETTINGS = 'עדכון הגדרות',
+  DELETE_TEMPLATE = 'מחיקת תבנית',
+  UPDATE_TEMPLATE = 'עדכון תבנית',
+
+  UPDATE_DRAFTS_AND_LETTERS = 'עדכון גלופות ומכתבים',
+  ARE_YOU_SURE_IS_ACTIVE = 'האם ברצונך להפוך את המכתב  לפעיל?',
+  ARE_YOU_SURE_IS_INACTIVE = 'האם ברצונך להפוך את המכתב ללא פעיל?',
+  COPY_DRAFTS_AND_LETTERS = 'יצירת העתק  ',
+
+  ARE_YOU_SURE_GO_BACK = 'שים לב ! השינוים לא ישמרו. האם ברצונך לעזוב את המסך ?',
+}

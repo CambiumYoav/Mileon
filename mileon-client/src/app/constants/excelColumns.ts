@@ -1,0 +1,25 @@
+export const MinistryOfInteriorExcelColumns = [
+  //FIXME -  do it acording to the server name
+  //NOTE- Check the values where from they comming?
+  { name: 'TicketNumber', displayName: 'TicketNumber' },
+  { name: 'Name', displayName: 'Name' },
+  { name: 'ViolationDate', displayName: 'ViolationDate' },
+  //   { name: 'TicketNumber', displayName: 'מספר זהות' },
+  //   { name: 'Name', displayName: 'שם משפחה' },
+  //   { name: 'FirstName', displayName: 'שם פרטי' },
+  //   { name: 'FatherName', displayName: 'שם אב' },
+  //   { name: 'SpouseFirstName', displayName: 'ב.זוג שם פרטי' },
+  //   { name: 'BirthDate', displayName: 'תאריך לידה' },
+  //   { name: 'CitySymbol', displayName: 'סמל ישוב' },
+  //   { name: 'CityName', displayName: 'שם ישוב' },
+  //   { name: 'StreetSymbol', displayName: 'סמל רחוב' },
+  //   { name: 'StreetName', displayName: 'שם רחוב' },
+  //   { name: 'HouseNumber', displayName: 'מספר בית' },
+  //   { name: 'HouseLetter', displayName: 'אות בית' },
+  //   { name: 'EntranceNumber', displayName: 'מספר כניסה' },
+  //   { name: 'ApartmentNumber', displayName: 'מספר דירה' },
+  //   { name: 'PostalCode5', displayName: 'מיקוד 5' },
+  //   { name: 'PostalCode7', displayName: 'מיקוד 7' },
+  //   { name: 'DivisionCode', displayName: 'קוד חלוקה' },
+  //   { name: 'CustomField1', displayName: 'חופשי 1' },
+];

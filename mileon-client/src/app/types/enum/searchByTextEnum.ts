@@ -1,0 +1,26 @@
+export enum SearchByTextEnum {
+  AreasSearch = 'קוד,שם אזור...',
+  StreetsSearch = 'קוד,שם רחוב,אזור תו דייר,אזור פיקוח...',
+  BusinessSearch = 'קוד,ח.פ,שם העסק,כתובת,טלפון,עיר...',
+  ChipsSearch = 'קוד,מספר שבב,ת.ז,שם בעלים,כתובת...',
+  CitizensSearch = 'קוד,תעודת זהות,שם ,כתובת,טלפון,עיר...',
+  ColorsSearch = 'קוד,צבע,סטטוס...',
+  ManufactureSearch = 'קוד,יצרן,סטטוס...',
+  TypeSearch = 'קוד,סוג,סטטוס...',
+  CausesSearch = 'קוד,תיאור,שיוך לקבוצה,סטטוס...',
+  SignsSearch = 'קוד,מספר שלט,תיאור שלט...',
+  SpecialSearch = 'מספר רישוי,קוד...',
+  SubStagesSearch = 'קוד,תיאור,סטטוס...',
+  TicketsSourceSearch = 'מקור,קוד,שיטת מסירה...',
+  TollsSearch = 'קוד,תיאור,סכום...',
+  ViolationTypesSearch = 'קוד,תיאור,סוג דוח,קוד לאוטומציה...',
+  ViolationsSearch = 'קוד,תיאור,סוג דוח,סעיף...',
+
+  AreaSearch = 'אזור,עובדים משוייכים...',
+  AssignedUsersSearch = 'שם פרטי,שם משפחה...',
+  UsersSearch = 'שם משתמש,שם פרטי,שם משפחה,ת.ז...',
+  TicketBooksSearch = 'פנקס, סוג דוח, שם פקח, תאריך קליטה...',
+
+  TemplatesSearch = 'כותרת תבנית,תוכן התבנית...',
+  LogosSearch = 'כותרת תבנית...',
+}

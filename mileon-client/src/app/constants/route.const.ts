@@ -1,0 +1,43 @@
+export const RoutePaths = {
+  Tickets: {
+    DETAILS: 'tickets/details',
+    HOME: 'tickets',
+  },
+  TicketsNew: {
+    HOME: '',
+    MAIN: 'main',
+    TICKETS: 'tickets',
+    TICKET: 'ticket',
+    DETAILS: 'details',
+    OWNER: 'owner',
+    VIOLATION: 'violation',
+    PAYMENT_HISTORY: 'payment-history',
+    CONNECTED_TICKETS: 'connected-tickets',
+    HISTORY: 'history',
+    PAYMENT: 'payment',
+  },
+  ParkingPermits: {
+    HOME: 'parking-permits',
+    BLANK: '',
+    MAIN: 'main',
+    DETAILS: 'details',
+    REQUEST_DOCUMENTS: 'request-documents',
+    CREATE: 'create',
+  },
+  LegalRequests: {
+    HOME: 'legal-requests',
+    LEGAL_REQUEST: 'legal-requests/legal-request',
+    BLANK: 'legal-requests',
+    MAIN: 'legal-requests/main',
+    CREATE: 'legal-requests/create',
+    DETAILS: 'legal-requests/details',
+    REQUEST_DOCUMENTS: 'legal-requests/request-documents',
+    TICKET_DETAILS: 'legal-requests/ticket-details',
+    HISTORY: 'legal-requests/history',
+  },
+  Payment: {
+    MAIN: 'payment',
+    SUCCESS: 'payment/payment-success',
+    ERROR: 'payment/payment-error',
+  },
+} as const;

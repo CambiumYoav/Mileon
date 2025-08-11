@@ -1,0 +1,64 @@
+<!-- <p class="font-regular text-sm">Regular text</p>
+<p class="font-regular text-base">Regular text</p>
+<p class="font-bold text-lg">Bold large text</p> -->
+<div class="p-2 d-flex flex-column gap-2">
+  <button class="primary-btn button-icon-lg">
+    כפתור <i class="fa fa-check"></i>
+  </button>
+
+  <button class="primary-btn button-icon-base">
+    כפתור <i class="fa fa-check"></i>
+  </button>
+
+  <button class="primary-btn button-icon-base" disabled>
+    כפתור <i class="fa fa-check"></i>
+  </button>
+
+  <button class="primary-btn button-icon-sm">
+    כפתור <i class="fa fa-check"></i>
+  </button>
+  <button class="primary-btn button-sm">כפתור</button>
+
+  <button class="primary-btn button-lg">כפתור</button>
+
+  <button class="primary-btn button-base">כפתור</button>
+
+  <button class="tertiary-btn button-base">כפתור</button>
+
+  <button class="outline-secondary-btn button-base">כפתור</button>
+  <button class="outline-btn button-base">כפתור</button>
+
+  <button class="link-btn button-base">כפתור</button>
+
+  <button class="outline-btn button-lg" disabled>Cancel</button>
+
+  <!-- <button (click)="showSuccess()">הצג טוסטר</button> -->
+
+  <app-button
+    [buttonText]="'כפתור'"
+    [buttonClass]="'outline-secondary-btn'"
+    [isDisabled]="true"
+  >
+  </app-button>
+  <app-button
+    [buttonText]="'כפתור'"
+    [buttonClass]="'outline-secondary-btn'"
+    [imgSrc]="Icons.ADD"
+  >
+  </app-button>
+
+  <label>
+    <input
+      type="checkbox"
+      class="checkbox-base checkbox-primary"
+      disabled
+      checked
+    />
+    Receive newsletter
+  </label>
+
+  <label>
+    <input type="checkbox" class="checkbox-base checkbox-secondary" checked />
+    Accept terms
+  </label>
+</div>

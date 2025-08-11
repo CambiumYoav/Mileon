@@ -1,0 +1,250 @@
+@use "./typography";
+@use "./buttons.scss";
+@use "./checkboxs.scss";
+@use "bootstrap/scss/bootstrap" as *;
+@import "./elements.scss";
+
+// @import "./search.scss";
+// @import "./actions_ticket.scss";
+// @import "../styles/input.scss";
+// @import "../styles/note.scss";
+// @import "../styles/tooltip.scss";
+// @import "../styles/form.scss";
+// @import "../styles/side.scss";
+// @import "../styles/table.scss";
+// @import "../styles/image.scss";
+// @import "../styles/errors.scss";
+// @import "../styles/buttons.scss";
+// @import "../styles/advanced-search.scss";
+
+@import "./../../node_modules/font-awesome/scss/font-awesome.scss";
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
+:-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+  overflow-y: scroll;
+  background: #e9e9e9 !important;
+  box-shadow: inset 0 0 7px #e9e9e9 !important;
+  // background: $colorLightGray !important;
+  // box-shadow: inset 0 0 7px $colorLightGray !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border-radius: 30px;
+  // background: $colorBlue;
+  // border-radius: 10px;
+}
+.icon-close {
+  cursor: pointer;
+}
+.back {
+  padding-top: 25px;
+  padding-bottom: 13px;
+
+  .title {
+    font-weight: 800;
+    font-size: 24px;
+    margin-right: 30px;
+  }
+}
+
+.heading {
+  font-size: 24px;
+  font-weight: 800;
+  position: relative;
+  display: inline-block;
+  max-width: 300px;
+}
+
+.icon-close {
+  cursor: pointer;
+}
+
+.search-ticket-dialog .mat-dialog-container {
+  height: fit-content;
+  position: absolute;
+  top: 18vh;
+  // top: calc(16vh);
+  // left: calc(300px + 4%);
+  left: calc(300px + 3.5%);
+  width: 78%;
+}
+
+.advence-search .mat-dialog-container {
+  height: fit-content;
+  position: absolute;
+  top: 18vh;
+  // left: 31vw;
+  // width: 77rem;
+  right: 4vw;
+  width: calc((100% - 300px) * 0.9);
+}
+
+.parking-permit-advence-search .mat-dialog-container {
+  height: fit-content;
+  position: absolute;
+  top: 18vh;
+  left: 57vw;
+  width: 660px;
+}
+
+.mat-dialog-container .action-dialog-container {
+  min-width: 45vw;
+  max-height: 95vh;
+}
+
+@media (max-width: 1300px) {
+  .search-ticket-dialog .mat-dialog-container {
+    left: 310px !important;
+    width: 75% !important;
+  }
+
+  .advence-search .mat-dialog-container {
+    left: 2rem !important;
+    // left: 5.7rem !important;
+    top: 5rem !important;
+    width: 77rem !important;
+  }
+
+  .parking-permit-advence-search .mat-dialog-container {
+    top: 2vh !important;
+    left: 42vw !important;
+  }
+}
+
+// .confirm-dialog .mat-dialog-container {
+//     position: absolute;
+//     top: 200px;
+//     left: 45px;
+//     width: fit-content;
+//     height: fit-content;
+// }
+
+.back {
+  padding-right: 50px;
+  display: flex;
+  align-items: center;
+
+  img {
+    cursor: pointer;
+  }
+}
+
+.cdk-overlay-dark-backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+th[sortable] {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+th[sortable].desc:before,
+th[sortable].asc:before {
+  content: "";
+  display: block;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAmxJREFUeAHtmksrRVEUx72fH8CIGQNJkpGUUmakDEiZSJRIZsRQmCkTJRmZmJgQE0kpX0D5DJKJgff7v+ru2u3O3vvc67TOvsdatdrnnP1Y///v7HvvubdbUiIhBISAEBACQkAICAEhIAQ4CXSh2DnyDfmCPEG2Iv9F9MPlM/LHyAecdyMzHYNwR3fdNK/OH9HXl1UCozD24TCvILxizEDWIEzA0FcM8woCgRrJCoS5PIwrANQSMAJX1LEI9bqpQo4JYNFFKRSvIgsxHDVnqZgIkPnNBM0rIGtYk9YOOsqgbgepRCfdbmFtqhFkVEDVPjJp0+Z6e6hRHhqBKgg6ZDCvYBygVmUoEGoh5JTRvIJwhJo1aUOoh4CLPMyvxxi7EWOMgnCGsXXI1GIXlZUYX7ucU+kbR8NW8lh3O7cue0Pk32MKndfUxQFAwxdirk3fHappAnc0oqDPzDfGTBrCfHP04dM4oTV8cxr0SVzH9FF07xD3ib6xCDE+M+aUcVygtWzzbtGX2rPBrEUYfecfQkaFzYi6HjVnGBdtL7epqAlc1+jRdAap74RrnPc4BCijttY2tRcdN0g17w7HqZrXhdJTYAuS3hd8z+vKgK3V1zWPae0mZDMykadBn1hTQBLnZNwVrJpSe/NwEeDsEwCctEOsJTsgxLvCqUl2ACftEGvJDgjxrnBqkh3ASTvEWrIDQrwrnJpkB3DSDrGW7IAQ7wqnJtkBnLRztejXXVu4+mxz/nQ9jR1w5VB86ejLTFcnnDwhzV+F6T+CHZlx6THSjn76eyyBIOPHyDakhBAQAkJACAgBISAEhIAQYCLwC8JxpAmsEGt6AAAAAElFTkSuQmCC")
+    no-repeat;
+
+  background-size: 22px;
+  width: 22px;
+  height: 22px;
+  float: left;
+  //   margin-left: -22px;
+}
+
+th[sortable].desc:before {
+  transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+}
+
+@mixin hide() {
+  display: none !important;
+}
+
+.hide {
+  @include hide();
+}
+
+@mixin table-title() {
+  font-size: 24px;
+  color: $colorDarkBlue2;
+}
+
+.table-title {
+  @include table-title();
+}
+
+.w-15 {
+  width: 15% !important;
+}
+
+.w-85 {
+  width: 85% !important;
+}
+
+/* Importing Bootstrap SCSS file. */
+// @import "~bootstrap/scss/bootstrap";
+
+span {
+  font-family: $fontOpenSans;
+}
+
+.toast-message {
+  direction: rtl;
+  text-align: right !important;
+}
+
+.toast-success {
+  background-color: #d4f8d3 !important;
+  color: black !important;
+  font-weight: 700;
+  font-family: $fontOpenSans;
+  line-height: 38px;
+  font-size: 16px;
+  background-image: url("/assets/icons/tickcircle.svg") !important;
+}
+
+.toast-close-button {
+  right: auto;
+  left: 0.5rem;
+}
+
+.toast-error {
+  font-family: $fontOpenSans;
+  background-color: #ffe0e3 !important;
+  color: #f00 !important;
+  background-image: url("/assets/icons/error.svg") !important;
+  background-size: 16.393px 16.393px !important;
+}
+
+.toast-info,
+.toast-warning {
+  color: black !important;
+}
+
+.loader {
+  position: absolute;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.8;
+  object-fit: contain;
+}
+
+.button-loader {
+  width: 20px;
+  height: 20px;
+  margin: 0 0 0 5px;
+}

@@ -1,0 +1,90 @@
+/*colors*/
+// Blue
+$colorDarkBlueSecondery: #1a488c;
+$colorDarkBluePrimary: #21527d;
+$colorDarkBlue: #387ec4;
+$colorLightBlueSecondery: #86d0f7;
+$colorLightBluePrimary: #d3f0ff;
+$colorLightBlueOther: #d0e5f9;
+$colorLightBlueToolTip: #edf9ff;
+$colorLightBlueBackground: #f7f9fc;
+$colorWhite: #ffffff;
+
+//Status
+
+//green
+$colorStatusLightGreen: #d7f8d3;
+$colorStatusGreen: #19a58c;
+//pink
+$colorStatusLightPink: #ffe5f9;
+$colorStatusPink: #ff51ba;
+//purple
+$colorStatusLightPurple: #e6dbff;
+$colorStatusPurple: #9747ff;
+//yellow
+$colorStatusLightYellow: #fff9c6;
+$colorStatusYellow: #c28c00;
+//orange
+$colorStatusLightOrange: #ffddce;
+$colorStatusOrange: #ff824d;
+//red
+$colorStatusLightOrange: #ffe0e3;
+$colorStatusOrange: #ff0000;
+//blue
+$colorStatusLightBlue: #d3f0ff;
+$colorStatusBlue: #387ec4;
+
+//Icons
+$colorGreenIcon: #d7f8d3;
+$colorYellowIcon: #fff9c6;
+$colorOrangeIcon: #ffddce;
+$colorPinkIcon: #ffe0e3;
+$colorPurpleIcon: #e6dbff;
+$colorBlueIcon: #d3f0ff;
+$colorGreyIcon: #b9c6d4;
+$colorLightGreyIcon: #f7f9fc;
+
+$colorBlack: #000000;
+$colorDisabledGrey: #e3e7eb;
+$colorDarkGray: #606060;
+
+$colorLightBlue: #d3f0ff;
+$colorBlue: #86d0f7;
+$colorDarkBlue: #387ec4;
+$colorDarkBlueOther: #21527d;
+$colorLightGray: #f7f9fc;
+$colorYellow: #fff9c6;
+$colorWhite: #ffffff;
+$colorRed: #f61f1f;
+$colorGray: #606060;
+$colorLightBlueBack: #f5f5f5;
+$colorLightGrayOther: #a9a5a5;
+$colorRedShadow: rgba(255, 36, 36, 0.25);
+$colorLightPink: #fbe7e9;
+$colorTitle: #636466;
+$colorLink: #0480b6;
+$colorLightBlueBorder: #e3e7eb;
+$colorError: #ff0000;
+$colorDarkBlue2: #002741;
+$colorBoxShadow: #d2dbe8;
+$colorBorder: #b9c6d4;
+$colorBorderGray: #cccccc;
+$colorGreen: #d4f8d3;
+$colorDarkGreen: #19a58c;
+$colorPink: #ffe0e3;
+// $colorDarkGray: #b0b0b0;
+$backGroundLightBlue: #d8e4f1;
+// $ColorDarkBlue3: #1a488c;
+/*fonts*/
+$fontOpenSans: "Open Sans";
+$fontAssistant: "Assistant";
+
+@font-face {
+  font-family: "Open Sans";
+  src: url("../assets/fonts/OpenSans-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Assistant";
+  src: url("../assets/fonts/Assistant-Regular.ttf");
+}

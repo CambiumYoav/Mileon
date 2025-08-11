@@ -1,0 +1,53 @@
+export enum HttpMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+  PATCH = 'PATCH',
+}
+
+export enum AccessType {
+  READ = 'read',
+  WRITE = 'write',
+}
+
+export enum PermissionRoutes {
+  UPDATE_CITIZEN_TICKET = 'Tickets/{ticketId}/Citizen',
+  CALL_SUMMARY = 'Tickets/CallSummary',
+  ACTION_SMS = 'Actions/sms',
+  ACTION_EMAIL = 'Actions/email',
+  ACTION_PRINT = 'Actions/print',
+  USER_NOTES = 'User/Notes',
+  ADD_VIEW_TICKET_HISTORY = 'Tickets/AddViewTicketHistory',
+  TICKETS_DETAILS = 'Tickets/{ticketId}/Details',
+  TICKETS_BY_IDENTITY = 'Tickets/connectedTicketsByIdentity',
+  TICKETS_BY_VEHICLE = 'Tickets/connectedTicketsByVehicle',
+  CITIES = 'Lookup/Cities',
+  VIOLATIONS = 'Tickets/{ticketId}/Violation',
+  TICKET_LOOKUP = 'Lookup/TicketLookups',
+  TICKET_FINANCIAL_TRANSACTIONS = 'Tickets/{ticketId}/FinancialTransactions',
+  TICKETS_FINANCIAL_SUMMARY = 'Tickets/GetTicketsWithFinancialSummary',
+  TICKETS_HISTORY = 'Tickets/{ticketId}/History',
+  PAYMENTS_IFRAME = 'Payments/iframe',
+  PARKING_PERMIT_SUMMARY = 'ParkingPermit/{AuthorityId}/Summary',
+  PARKING_PERMIT_SUMMARY_LIST = 'ParkingPermit/{AuthorityId}/Summary/List',
+  USER_SUMMARY_TOTAL = 'User/{AuthorityId}/SummaryTotal',
+  LEGAL_REQUEST_SUMMARY = 'LegalRequest/{AuthorityId}/Summary',
+  LEGAL_REQUEST_SUMMARY_LIST = 'LegalRequest/{AuthorityId}/Summary/List',
+  TICKETS_SUMMARY = 'Tickets/{AuthorityId}/Summary',
+  TICKETS_SUMMARY_LIST = 'Tickets/{AuthorityId}/Summary/List',
+  TICKETS_GET_TICKETS = 'Lookup/TicketLookups',
+  PARKING_PERMIT = 'ParkingPermit',
+  LEGAL_REQUEST_BY_TICKET_NUMBER = 'LegalRequest/byTicketNumber',
+  LEGAL_REQUEST_CREATE_UPDATE = 'LegalRequest/CreateOrUpdate',
+  LEGAL_REQUEST_UPLOAD_FILE = 'LegalRequest/uploadFile',
+  PARKING_PERMIT_BY_ID = 'ParkingPermit/{permitID}',
+  PARKING_PERMIT_BY_ID_FILES = 'ParkingPermit/{permitID}/files',
+  TICKETS_GET_VIEW_HISTORY = 'Tickets/GetViewTicketHistory',
+  PARKING_PERMIT_CREATE_UPDATE = 'ParkingPermit/CreateOrUpdate',
+  LEGAL_REQUEST = 'LegalRequest',
+  EXTERNAL_SEND_DATA_TO_INTERIOR = 'External/SendDataToInerior',
+  PARKING_PERMIT_UPDATE_STATUS = 'ParkingPermit/UpdateStatus',
+  INFRASTRUCTURE_TABLES = 'InfrastructureTables/vehicle/{tableName}',
+  USERS_LOCAL='User/update/local'
+}

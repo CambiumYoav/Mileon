@@ -1,0 +1,28 @@
+// Font Weights
+$font-weights: (
+  regular: 400,
+  bold: 700,
+  bolder: 800,
+);
+
+@each $name, $weight in $font-weights {
+  .font-#{$name} {
+    font-weight: $weight;
+  }
+}
+
+// Font Sizes
+$font-sizes: (
+  sm: 14px,
+  md: 16px,
+  base: 24px,
+  lg: 36px,
+  xl: 48px,
+);
+
+@each $name, $size in $font-sizes {
+  .text-#{$name} {
+    font-size: $size;
+    line-height: 1.5;
+  }
+}
