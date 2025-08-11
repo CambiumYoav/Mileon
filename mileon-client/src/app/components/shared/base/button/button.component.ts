@@ -1,14 +1,22 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import {
   ButtonTypes,
   ButtonTypesEnum,
 } from '../../../../types/enum/button.enum';
+import { SharedImports } from '../../../../shared/shared-modules';
 
 @Component({
   selector: 'app-button',
-  standalone: false,
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
+  imports: [SharedImports],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
   @Input() buttonClass = 'primary-btn';

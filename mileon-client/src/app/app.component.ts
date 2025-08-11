@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ConstPath } from './constants/const_path';
+import { BaseComponents, SharedImports, SharedModules } from './shared/shared-modules';
 
 @Component({
   selector: 'app-root',
-  standalone: false,
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'], // 👈 plural
+  styleUrl: './app.component.scss',
+  imports: [ BaseComponents, SharedImports],
 })
 export class AppComponent {
   title = 'mileon-client';
