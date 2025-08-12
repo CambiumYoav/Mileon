@@ -1,10 +1,12 @@
 <div
   class="paginator align-items-center d-flex flex-row-reverse justify-content-center"
-  *ngIf="showPaginator && pages && pages.length > 1"
+  *ngIf="showPaginator && totalPages > 1"
 >
   <i
     (click)="setSelectedPage(selectedPage - 1)"
     class="angle fa fa-angle-left"
+    [class.disabled]="selectedPage <= 1"
+    [class.active]="selectedPage > 1"
   ></i>
 
   <span
@@ -18,5 +20,7 @@
   <i
     (click)="setSelectedPage(selectedPage + 1)"
     class="angle fa fa-angle-right"
+    [class.disabled]="selectedPage >= totalPages"
+    [class.active]="selectedPage < totalPages"
   ></i>
 </div>

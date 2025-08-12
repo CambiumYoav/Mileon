@@ -30,13 +30,15 @@ import { ConstPath } from '../../../constants/const_path';
 import { SharedImports } from '../../../shared/shared-modules';
 import { RenderIdentityPipe } from '../../../pipes/identity.pipe';
 import { PaginatorComponent } from "./paginator/paginator.component";
+import { TagComponent } from '../base/tag/tag.component';
+import { CheckboxComponent } from '../base/checkbox/checkbox.component';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
-  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent],
+  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent  ],
   providers: [TableService],
 })
 export class TableComponent

@@ -175,6 +175,14 @@ export class TableService {
               temp[field] = item[field];
             }
           });
+          
+          // Preserve fieldId data needed by tag components
+          this.columns.forEach(column => {
+            if (column.fieldId && item[column.fieldId] !== undefined) {
+              temp[column.fieldId] = item[column.fieldId];
+            }
+          });
+          
           tableData.push(temp);
         }
 

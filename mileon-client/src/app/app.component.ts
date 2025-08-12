@@ -10,6 +10,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Column, ColumnTypeEnum } from './types/table';
 import { Subject } from 'rxjs';
 import { Icon } from './types/icon';
+import { AppService } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -26,9 +27,10 @@ export class AppComponent {
     {
       propertyName: 'status',
       displayName: 'סטטוס',
-      type: ColumnTypeEnum.Text,
+      type: ColumnTypeEnum.Tag,
       canSort: true,
-      sortByServer: false
+      sortByServer: false,
+      fieldId: 'statusId'
     },
     {
       propertyName: 'municipality',
@@ -99,6 +101,7 @@ export class AppComponent {
       nid: '245987630',
       municipality: 'באר שבע',
       status: 'פתוח',
+      statusId: 3,
       balance: 'התראה',
       additionalReports: 526
     },
@@ -111,6 +114,7 @@ export class AppComponent {
       nid: '245987630',
       municipality: 'אילת',
       status: 'סגור',
+      statusId: 1,
       balance: 'התראה',
       additionalReports: 526
     },
@@ -123,6 +127,7 @@ export class AppComponent {
       nid: '245987630',
       municipality: 'תל אביב',
       status: 'פתוח',
+      statusId: 1,
       balance: 'התראה',
       additionalReports: 526
     },
@@ -135,6 +140,7 @@ export class AppComponent {
       nid: '245987630',
       municipality: 'קריית שמונה',
       status: 'סגור',
+      statusId: 1,
       balance: 'התראה',
       additionalReports: 526
     },
@@ -147,6 +153,7 @@ export class AppComponent {
       nid: '245987630',
       municipality: 'דימונה',
       status: 'פתוח',
+      statusId: 1,
       balance: 'התראה',
       additionalReports: 526
     },
@@ -159,6 +166,7 @@ export class AppComponent {
       nid: '245987630',
       municipality: 'חיפה',
       status: 'סגור',
+      statusId: 1,
       balance: 'התראה',
       additionalReports: 526
     },
@@ -171,6 +179,7 @@ export class AppComponent {
       nid: '245987630',
       municipality: 'נתניה',
       status: 'פתוח',
+      statusId: 1,
       balance: 'התראה',
       additionalReports: 526
     },
@@ -183,6 +192,7 @@ export class AppComponent {
       nid: '245987630',
       municipality: 'ראשון לציון',
       status: 'סגור',
+      statusId: 1,
       balance: 'התראה',
       additionalReports: 526
     },
@@ -195,6 +205,7 @@ export class AppComponent {
       nid: '245987630',
       municipality: 'מודיעין',
       status: 'פתוח',
+      statusId: 3,
       balance: 'התראה',
       additionalReports: 526
     },
@@ -207,6 +218,7 @@ export class AppComponent {
       nid: '245987630',
       municipality: 'קיסריה',
       status: 'סגור',
+      statusId: 3,
       balance: 'התראה',
       additionalReports: 526
     }
@@ -221,8 +233,15 @@ export class AppComponent {
 
   
   Icons = ConstPath;
-  constructor(private toastr: ToastrService) {}
+  constructor(
+    private toastr: ToastrService,
+    private appService: AppService
+  ) {}
+  
   ngOnInit() {
+    // Set the current module name for tag colors to work
+    this.appService.currentModuleName = 'TicketsNewModule';
+    
     // Initialize form with pagination
     this.form = new FormGroup({
       currentPage: new FormControl(1),

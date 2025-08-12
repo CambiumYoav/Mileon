@@ -1,4 +1,5 @@
 .paginator {
+  padding-top: 20px;
   .page {
     font-weight: 300;
     font-size: 16px;
@@ -20,8 +21,28 @@
 
   .angle {
     cursor: pointer;
-    font-size: 10px;
+    font-size: 20px;
     font-weight: 600;
-    margin: 1rem;
+    margin: 0 1rem;
+    transition: all 0.2s ease;
+    
+    &.active {
+      color: #000000; // Black when active
+      
+      &:hover {
+        color: #333333;
+        transform: scale(1.1);
+      }
+    }
+    
+    &.disabled {
+      color: #387EC4; // Blue when disabled
+      cursor: not-allowed;
+      opacity: 0.6;
+      
+      &:hover {
+        opacity: 0.8;
+      }
+    }
   }
 }

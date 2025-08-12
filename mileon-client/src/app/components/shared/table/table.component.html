@@ -101,7 +101,7 @@
                       [icon]="getIconById(item[column.fieldId])"
                     ></app-icon> -->
   
-                    <!-- <app-checkbox
+                    <app-checkbox
                       class="me-2"
                       *ngIf="column.hasCheckbox"
                       (change)="onSelectedRowIdChange(item)"
@@ -111,7 +111,7 @@
                         'input-fill-disable ': isCheckboxsSelected,
                         checkbox: !isCheckboxsSelected
                       }"
-                    ></app-checkbox> -->
+                    ></app-checkbox>
   
                     <span
                       *ngIf="!column.hasIcon && column.propertyName !== 'nid'"
@@ -139,11 +139,11 @@
                     >
                     </app-icon> -->
 
-                    <!-- <app-checkbox
+                    <app-checkbox
                       class="checkbox-td"
                       *ngIf="column.hasCheckbox"
                       (change)="onSelectedRowIdChange(item)"
-                    ></app-checkbox> -->
+                    ></app-checkbox>
                     
                     <!-- Status column with conditional styling -->
                     <span
@@ -203,17 +203,17 @@
                     {{ item[column.propertyName] | date : "HH:mm | dd.MM.yyyy" }}
                   </span>
   
-                  <!-- <app-checkbox
+                  <app-checkbox
                     *ngIf="column.type === ColumnTypeEnum.Checkbox"
                     [initialValue]="item[column.propertyName]"
                     (change)="onSelectedRowIdChange(item)"
-                  ></app-checkbox> -->
+                  ></app-checkbox>
   
-                  <!-- <app-tag
+                  <app-tag
                     *ngIf="column.type === ColumnTypeEnum.Tag"
                     [tagName]="item[column.propertyName]"
                     [tagId]="item[column.fieldId]"
-                  ></app-tag> -->
+                  ></app-tag>
   
                   <div class="d-flex justify-content-center">
                     <span

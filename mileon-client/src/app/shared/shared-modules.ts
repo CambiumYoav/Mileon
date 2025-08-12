@@ -9,7 +9,8 @@ import { TableComponent } from '../components/shared/table/table.component';
 import { ActiveComponent } from '../components/shared/base/active/active.component';
 import { HeaderComponent } from '../components/header/header.component';
 import { CheckboxComponent } from '../components/shared/base/checkbox/checkbox.component';
-import { BaseComponent } from '../components/shared/base/base.componenet';
+import { BaseComponent } from '../components/shared/base/base.component';
+
 export const SharedModules = [CommonModule, RouterOutlet];
 
 export const SharedImports = [
