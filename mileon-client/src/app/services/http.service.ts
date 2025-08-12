@@ -18,7 +18,7 @@ import { ErrorResponse } from '../types/errorResponse';
 })
 export class HttpService {
   apiUrl = environment.apiUrl;
-  httpClient = inject(HttpClient);
+  private httpClient = inject(HttpClient);
   toastr = inject(ToastrService);
 
   public getRequest<T>(type: string, params?: any): Observable<T | any> {

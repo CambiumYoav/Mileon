@@ -7,7 +7,8 @@ import { MaterialModule } from './material-module';
 import { RouterOutlet } from '@angular/router';
 import { TableComponent } from '../components/shared/table/table.component';
 import { ActiveComponent } from '../components/shared/base/active/active.component';
-export const SharedModules = [CommonModule,RouterOutlet];
+import { HeaderComponent } from '../components/header/header.component';
+export const SharedModules = [CommonModule, RouterOutlet];
 
 export const SharedImports = [
   FormsModule,
@@ -18,11 +19,10 @@ export const SharedImports = [
   ...SharedModules,
   ...MaterialModule,
 ];
-
+export const SharedComponents = [HeaderComponent];
 
 export const BaseComponents = [
   ButtonComponent,
   TableComponent,
   ActiveComponent,
-
 ];

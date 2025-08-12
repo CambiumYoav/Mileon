@@ -1,4 +1,4 @@
-export class CitizenPhone{
-    isMain:boolean | undefined
-    phone:string
+export class CitizenPhone {
+  isMain: boolean | undefined = true;
+  phone: string = '';
 }

@@ -1,6 +1,6 @@
 import { tick } from '@angular/core/testing';
 import { Data } from '@angular/router';
-import { InfrastructureService } from '../components/infrastructures/infrastructure.service';
+// import { InfrastructureService } from '../components/infrastructures/infrastructure.service';
 import { FileType, FileTypeExtension } from '../types/enum/fileType.enum';
 import { InfrastructureTablesTypes } from '../types/enum/infrastructureTablesEnum';
 import {
@@ -43,14 +43,19 @@ export class Utils {
     });
   }
 
-  public static getEnumKeyByValue(enumObject: object, value: number): string {
+  public static getEnumKeyByValue(
+    enumObject: Record<string, number>,
+    value: number
+  ): string {
     return (
-      Object.keys(enumObject).find((key) => enumObject[key] === value) || ''
+      Object.keys(enumObject).find(
+        (key) => enumObject[key as keyof typeof enumObject] === value
+      ) || ''
     );
   }
 
-  public static flattenObject(obj: {}) {
-    const result = {};
+  public static flattenObject(obj: Record<string, any>) {
+    const result: Record<string, any> = {};
     for (const key of Object.keys(obj)) {
       if (obj[key] && typeof obj[key] === 'object') {
         const nested = this.flattenObject(obj[key]);
@@ -128,7 +133,9 @@ export class Utils {
   }
 
   public static getTicketTypeId(ticketTypeName: string): number {
-    return TicketTypeDisplayEnum[ticketTypeName];
+    return TicketTypeDisplayEnum[
+      ticketTypeName as keyof typeof TicketTypeDisplayEnum
+    ];
   }
 
   public static getTicketStageId(ticketStageName: string) {
@@ -139,8 +146,8 @@ export class Utils {
     return entry ? Number(entry[1]) : null; // Return ID or null if not found
   }
 
-  public static getRelatedGroupName(relatedGroupId) {
-    return RelatedGroupEnum[relatedGroupId];
+  public static getRelatedGroupName(relatedGroupId: string) {
+    return RelatedGroupEnum[relatedGroupId as keyof typeof RelatedGroupEnum];
   }
 
   public static getDeliveryMethodId(deliveryMethodName: string) {
@@ -202,85 +209,85 @@ export class Utils {
 
   //fetch options
 
-  public static async fetchOptionsAndUpdateDialogData(
-    infrastructureServer: InfrastructureService,
-    tableType: InfrastructureTablesTypes,
-    dialogData: any[],
-    fieldName: string,
-    valueKey: string,
-    displayKey: string
-  ): Promise<any[]> {
-    try {
-      const response = await infrastructureServer.getInfrastructureTable(
-        { currentPage: 1 },
-        tableType
-      );
+  // public static async fetchOptionsAndUpdateDialogData(
+  //   infrastructureServer: InfrastructureService,
+  //   tableType: InfrastructureTablesTypes,
+  //   dialogData: any[],
+  //   fieldName: string,
+  //   valueKey: string,
+  //   displayKey: string
+  // ): Promise<any[]> {
+  //   try {
+  //     const response = await infrastructureServer.getInfrastructureTable(
+  //       { currentPage: 1 },
+  //       tableType
+  //     );
 
-      if (response && Array.isArray(response.data)) {
-        const options = response.data.map((item: any) => ({
-          value: item[valueKey],
-          display: item[displayKey],
-        }));
+  //     if (response && Array.isArray(response.data)) {
+  //       const options = response.data.map((item: any) => ({
+  //         value: item[valueKey],
+  //         display: item[displayKey],
+  //       }));
 
-        // Update `dialogData` with fetched options
-        return dialogData.map((dynamicRow) => {
-          dynamicRow.row = dynamicRow.row.map((field) => {
-            if (field.name === fieldName) {
-              return { ...field, options };
-            }
-            return field;
-          });
-          return dynamicRow;
-        });
-      }
+  //       // Update `dialogData` with fetched options
+  //       return dialogData.map((dynamicRow) => {
+  //         dynamicRow.row = dynamicRow.row.map((field) => {
+  //           if (field.name === fieldName) {
+  //             return { ...field, options };
+  //           }
+  //           return field;
+  //         });
+  //         return dynamicRow;
+  //       });
+  //     }
 
-      return dialogData;
-    } catch (error) {
-      console.error('Error fetching options:', error);
-      throw error;
-    }
-  }
+  //     return dialogData;
+  //   } catch (error) {
+  //     console.error('Error fetching options:', error);
+  //     throw error;
+  //   }
+  // }
 
-  public static async fetchOptionsAndData(
-    infrastructureServer: InfrastructureService,
-    tableType: InfrastructureTablesTypes,
-    dialogData: any[],
-    fieldName: string,
-    valueKey: string,
-    displayKey: string
-  ): Promise<{ dialogData: any[]; options: any[]; data: any[] }> {
-    try {
-      const response = await infrastructureServer.getInfrastructureTable(
-        { currentPage: 1 },
-        tableType
-      );
+  // public static async fetchOptionsAndData(
+  //   infrastructureServer: InfrastructureService,
+  //   tableType: InfrastructureTablesTypes,
+  //   dialogData: any[],
+  //   fieldName: string,
+  //   valueKey: string,
+  //   displayKey: string
+  // ): Promise<{ dialogData: any[]; options: any[]; data: any[] }> {
+  //   try {
+  //     const response = await infrastructureServer.getInfrastructureTable(
+  //       { currentPage: 1 },
+  //       tableType
+  //     );
 
-      if (response && Array.isArray(response.data)) {
-        const data = response.data;
-        const options = response.data.map((item: any) => ({
-          value: item[valueKey],
-          display: item[displayKey],
-        }));
+  //     if (response && Array.isArray(response.data)) {
+  //       const data = response.data;
+  //       const options = response.data.map((item: any) => ({
+  //         value: item[valueKey],
+  //         display: item[displayKey],
+  //       }));
 
-        const updatedDialogData = dialogData.map((dynamicRow) => {
-          dynamicRow.row = dynamicRow.row.map((field) => {
-            if (field.name === fieldName) {
-              return { ...field, options };
-            }
-            return field;
-          });
-          return dynamicRow;
-        });
+  //       const updatedDialogData = dialogData.map((dynamicRow) => {
+  //         dynamicRow.row = dynamicRow.row.map((field) => {
+  //           if (field.name === fieldName) {
+  //             return { ...field, options };
+  //           }
+  //           return field;
+  //         });
+  //         return dynamicRow;
+  //       });
 
-        return { dialogData: updatedDialogData, options, data: data };
-      }
+  //       return { dialogData: updatedDialogData, options, data: data };
+  //     }
 
-      return { dialogData, options: [], data: [] };
-    } catch (error) {
-      console.error('Error fetching options:', error);
-      throw error;
-    }
-  }
+  //     return { dialogData, options: [], data: [] };
+  //   } catch (error) {
+  //     console.error('Error fetching options:', error);
+  //     throw error;
+  //   }
+  // }
 
   // Titles for each ticket type
   public static columnTitles: { [key: string]: string } = Object.fromEntries(
@@ -345,7 +352,7 @@ export class Utils {
     const fileName = `${defaultFileName}.${extension}`;
     return new File([array], fileName, { type: mime });
   }
-  
+
   // Enum Mapping Function
   public static getRelatedGroupMapping(): { [key: number]: string } {
     return Object.fromEntries(

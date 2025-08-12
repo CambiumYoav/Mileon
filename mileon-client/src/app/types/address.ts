@@ -1,22 +1,27 @@
 export class Address {
-  addressID: number | null;
+  addressID: number | null = null;
   apartment: string = '';
-  areaID: number | null;
-  areaName: string = ''; 
-  fullAddress?: string; 
+  areaID: number | null = null;
+  areaName: string = '';
+  fullAddress?: string;
   cityID: number | undefined = undefined;
   cityName: string = '';
   entrance: string = '';
   houseNumber: number | undefined = undefined;
   mailbox: string = '';
   postalCode: string = '';
-  streetID: number |undefined = undefined;
+  streetID: number | undefined = undefined;
   streetName: string = '';
 
   constructor(args?: Address) {
     if (args) {
       Object.assign(this, args);
-      this.fullAddress = (this.streetName || '') + ' ' + (this.houseNumber || '') + ' ' + (this.cityName || '');
+      this.fullAddress =
+        (this.streetName || '') +
+        ' ' +
+        (this.houseNumber || '') +
+        ' ' +
+        (this.cityName || '');
     }
   }
 }

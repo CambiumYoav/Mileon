@@ -1,0 +1,80 @@
+@import "./../../../styles/elements.scss";
+.login-container {
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: $colorDarkBlue;
+  text-align: center;
+  text-decoration-line: underline;
+  cursor: pointer;
+  padding: 0;
+  font-family: $fontOpenSans;
+  font-weight: 700;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+}
+.button-container {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: center;
+}
+
+:host {
+  .wrap-header {
+    background-color: #1a488c;
+    box-shadow: 0px 0px 12px -1px #b0bac8;
+    padding: 2px 10px;
+    height: 106px;
+
+    .img-wrapper {
+      margin: 0;
+    }
+  }
+}
+
+.mileon-logo {
+  padding: 0px 30px;
+  cursor: pointer;
+  width: auto;
+  height: 80px;
+}
+
+.text-bolder-modal {
+  font-size: 12px;
+  line-height: 16.34px;
+  font-family: $fontOpenSans;
+  font-weight: 700;
+  font-style: normal;
+}

@@ -1,0 +1,241 @@
+@import "./../../../styles/elements.scss";
+
+:host {
+  button mat-icon {
+    color: white !important;
+  }
+  .wrap-header {
+    background-color: $colorDarkBlueSecondery;
+    box-shadow: 0px 0px 12px -1px #b0bac8;
+    padding: 2px 10px;
+    height: 106px;
+
+    .user {
+      display: flex;
+      align-items: center;
+      // justify-content: space-between;
+      // width: 17%;
+
+      .wrap-municipals {
+        position: absolute;
+      }
+
+      .user-logo {
+        background-color: $colorDarkBlue;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-right: 1rem;
+
+        span {
+          font-family: $fontOpenSans;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 20px;
+          line-height: 44px;
+          color: $colorWhite;
+        }
+      }
+
+      .user-details {
+        position: absolute;
+        top: 106px;
+        right: 2vh;
+        box-shadow: 0px 0px 12px -1px $colorBoxShadow;
+        border-radius: 8px;
+        width: 20%;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        color: white;
+
+        .user {
+          padding: 10px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          line-height: 18px;
+          background: white;
+          width: 100%;
+          font-family: $fontOpenSans;
+          font-size: 0.8vw;
+          color: $colorDarkBlue2;
+
+          .user-logo {
+            margin-bottom: 1vh;
+          }
+
+          .username {
+            font-weight: 400;
+          }
+
+          .email {
+            font-weight: 300;
+          }
+        }
+
+        .logout {
+          background: white;
+          font-family: $fontOpenSans;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding: 10px;
+          border-top: 1px solid $colorLightBlueBorder;
+          .logout-btn {
+            border: none;
+            padding: 5px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: $colorLightBlue;
+            font-weight: 400;
+          }
+
+          .password {
+            font-weight: 300;
+            font-size: 15px;
+            color: $colorGray;
+          }
+        }
+      }
+    }
+
+    .logo {
+      width: 74px;
+      height: 71px;
+    }
+
+    .municipal-logo {
+      img {
+        width: 100%;
+        height: 100%;
+        box-shadow: 0px 0px 5px 2px rgba(163, 163, 163, 0.25);
+        border-radius: 50%;
+        background: white;
+      }
+
+      .tasks {
+        background: red;
+        font-family: $fontOpenSans;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 11px;
+        color: white;
+        border-radius: 50%;
+        width: 23.9px;
+        height: 23.67px;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1.5px solid white;
+      }
+
+      &.main {
+        cursor: pointer;
+        margin: 0 1.5rem;
+      }
+    }
+
+    .wrap-municipals {
+      position: absolute;
+      right: 8vh;
+      top: 106px;
+      width: 15%;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      box-shadow: 0px 0px 12px -1px $colorBoxShadow;
+      border-radius: 0px 0px 8px 8px;
+      scrollbar-width: thin;
+      scrollbar-color: #ccc transparent;
+      max-height: 500px;
+      overflow-y: auto;
+      .municipal-list {
+        border-top: 1px solid #e3e7eb;
+        width: 100%;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+
+        .wrap-name {
+          display: flex;
+          flex-direction: column;
+          font-family: $fontOpenSans;
+          color: $colorDarkBlue2;
+          line-height: 14px;
+
+          .name {
+            font-weight: 700;
+            font-size: 11px;
+          }
+
+          .task {
+            font-weight: 300;
+            font-size: 11px;
+          }
+        }
+
+        .ok {
+          border-radius: 50%;
+          width: 1.2vw;
+          height: 1.2vw;
+          display: flex;
+
+          &.current {
+            background-color: $colorBlue;
+          }
+
+          mat-icon {
+            font-size: 1.2vw;
+          }
+        }
+      }
+    }
+
+    .municipal-name {
+      span {
+        font-family: $fontOpenSans;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 33px;
+        color: white;
+      }
+    }
+  }
+
+  .mileon-logo {
+    padding: 0px 30px;
+    cursor: pointer;
+    width: auto;
+    height: 80px;
+  }
+
+  .parking-permits-link {
+    cursor: pointer;
+    margin: 2vw;
+    font-size: 18px;
+    span {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    &:hover {
+      font-weight: 800;
+    }
+  }
+}
+
+::ng-deep {
+  .mat-badge-medium.mat-badge-above .mat-badge-content {
+    top: -13px;
+  }
+}

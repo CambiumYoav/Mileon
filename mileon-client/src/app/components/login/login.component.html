@@ -1,1 +1,81 @@
-<p>login works!</p>
+<div class="wrap-header d-flex align-items-center justify-content-between">
+  <div style="flex-grow: 1"></div>
+  <div class="img-wrapper d-flex flex-row-reverse">
+    <img class="mileon-logo" [src]="Icons.LOGO_MVIEW2" />
+  </div>
+</div>
+
+<div class="d-flex flex-row justify-content-center mb-2">
+  <img class="mileon-logo" [src]="Icons.LOGO_MVIEW" />
+</div>
+<div class="login-container">
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <div>
+      <div class="title-placeholder">שם משתמש</div>
+
+      <div [class]="'input-fill'">
+        <input
+          class="hide-border-input input-text"
+          type="text"
+          id="username"
+          formControlName="username"
+        />
+      </div>
+    </div>
+    <div>
+      <div class="title-placeholder">סיסמה</div>
+
+      <div [class]="'input-fill'">
+        <input
+          class="hide-border-input input-text"
+          type="password"
+          id="password"
+          formControlName="password"
+        />
+      </div>
+    </div>
+
+    <div class="button-container">
+      <app-button
+        [buttonText]="'התחברות'"
+        [buttonType]="buttonType"
+        [isDisabled]="loader"
+      >
+      </app-button>
+    </div>
+  </form>
+
+  <app-button
+    class="mt-2"
+    [buttonText]="'לא זוכר את הסיסמה?'"
+    [buttonType]="buttonType"
+    [buttonClass]="'link-btn'"
+    [sizeClass]="'button-base'"
+    [isDisabled]="loader"
+    (clickFunction)="onLinkClick()"
+  >
+  </app-button>
+</div>
+<div *ngIf="loader" class="d-flex justify-content-center mt-3">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p class="mt-2 text-primary">מתחבר... אנא המתן</p>
+</div>
+<!-- <app-modal
+  [isModalOpen]="isModalOpen"
+  [modalSize]="'full'"
+  [buttons]="modalButtons"
+  (isModalClosed)="closeModal()"
+>
+  <div>
+    <div class="mb-2">
+      <img [src]="Icons.DANGER" />
+      <p class="text-bolder-modal">
+        שים לב! <br />
+        נשלח אלייך מייל עם קישור לאיפוס סיסמה
+        <br />
+      </p>
+    </div>
+  </div>
+</app-modal> -->
