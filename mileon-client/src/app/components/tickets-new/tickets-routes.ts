@@ -6,8 +6,9 @@ export const ticketsRoutes: Routes = [
     loadComponent: () =>
       import('./tickets-new.component').then((m) => m.TicketsNewComponent),
   },
-];
 
+];
+///
 // TODO: need to be like this
 // // tickets-routes.ts
 // import { Routes } from '@angular/router';
