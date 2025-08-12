@@ -1,22 +1,14 @@
-import {
-  FormGroup,
-  AbstractControl,
-  ValidatorFn,
-  ValidationErrors,
-  FormControl,
-} from '@angular/forms';
 import { Component } from '@angular/core';
-import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
-import { BaseComponent } from '../base/base.component'; 
-import { takeUntil, debounceTime, Observable } from 'rxjs';
 import { SharedImports } from '../../../shared/shared-modules';
-
+import { FormGroup, FormControl, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { Observable, distinctUntilChanged, takeUntil, debounceTime } from 'rxjs';
+import { BaseComponent } from '../base/base.componenet';
 
 @Component({
   selector: 'app-base-form',
-  template: ``,
-  styles: [''],
   imports: [SharedImports],
+  templateUrl: './base-form.component.html',
+  styleUrl: './base-form.component.scss',
 })
 export class BaseFormComponent extends BaseComponent {
   constructor() {
@@ -59,11 +51,11 @@ export class BaseFormComponent extends BaseComponent {
     secondForm:
       | FormGroup
       | {
-        [key: string]: AbstractControl;
-      },
+          [key: string]: AbstractControl;
+        },
     controlName: string
   ) {
-    firstForm.addControl(controlName, secondForm[controlName as keyof typeof secondForm] as FormControl);
+    // firstForm.addControl(controlName, secondForm[controlName]);
   }
 
   atLeastOneValidator: ValidatorFn = (

@@ -1,95 +1,71 @@
 @import "./elements.scss";
 // checkbox.scss
 
-@mixin base-checkbox($bg, $color, $border: none, $shadow: none) {
+@mixin base-checkbox($tick-url: "/assets/icons/check.svg") {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+
+  display: inline-block;
+
+  border: 1px solid $colorBlack;
   border-radius: 4px;
+  box-sizing: border-box;
   background-color: $colorWhite;
-  color: $color;
-  border: 1px $colorBlack;
-  box-shadow: $shadow;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
 
   &:hover {
     border-color: $colorDarkBluePrimary;
   }
 
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($colorDarkBlue, 0.25);
+  }
+
   &:checked {
     background-color: $colorStatusLightBlue;
     border-color: $colorBlack;
-    background-image: url("/assets/icons/check.svg");
+    background-image: url(#{$tick-url});
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 12px;
-  }
-
-  &:checked:before {
-    border-color: $colorBlack !important;
-    background-color: $colorWhite;
+    background-size: 12px 12px;
   }
 
   &:disabled {
     background-color: $colorDisabledGrey;
     border-color: $colorDarkGray;
     cursor: not-allowed;
+    opacity: 0.7;
   }
 
   &:checked:disabled {
-    border-color: $colorDarkGray;
     background-image: url("/assets/icons/check-disable.svg");
-
     background-color: $colorDisabledGrey;
+    border-color: $colorDarkGray;
   }
 }
 
-%checkbox-size-default {
-  font-size: 16px;
-  width: 16px !important;
-  height: 16px !important;
+.checkbox-sm {
+  width: 16px;
+  height: 16px;
+  padding: 2px;
 }
-
-%checkbox-size-lg {
-  font-size: 24px;
-  width: 107px !important;
-  height: 50px !important;
-  padding: 12px 20px;
-}
-
-.checkbox-lg {
-  @extend %checkbox-size-lg;
-}
-
-.checkbox-base {
-  @extend %checkbox-size-default;
+.checkbox-md {
+  width: 24px;
+  height: 24px;
+  padding: 3px;
 }
 
 // Checkbox variants
 .checkbox-primary {
-  @include base-checkbox(
-    $colorStatusLightBlue,
-    $colorBlack,
-    1px solid $colorBlack
-  );
+  @include base-checkbox();
 }
-
-.checkbox-secondary {
-  @include base-checkbox(
-    $colorStatusLightBlue,
-    $colorBlack,
-    1px solid $colorDarkBluePrimary
-  );
-}
-
 .checkbox-outline {
-  @include base-checkbox(
-    $colorWhite,
-    $colorDarkBluePrimary,
-    1px solid $colorDarkBluePrimary
-  );
+  @include base-checkbox();
+}
+.checkbox-secondary {
+  @include base-checkbox();
 }
