@@ -1,0 +1,22 @@
+<div
+  class="paginator align-items-center d-flex flex-row-reverse justify-content-center"
+  *ngIf="showPaginator && pages && pages.length > 1"
+>
+  <i
+    (click)="setSelectedPage(selectedPage - 1)"
+    class="angle fa fa-angle-left"
+  ></i>
+
+  <span
+    class="page"
+    *ngFor="let page of pages; index as i"
+    [class.current]="page === selectedPage"
+    (click)="setSelectedPage(page)"
+    >{{ page }}</span
+  >
+
+  <i
+    (click)="setSelectedPage(selectedPage + 1)"
+    class="angle fa fa-angle-right"
+  ></i>
+</div>

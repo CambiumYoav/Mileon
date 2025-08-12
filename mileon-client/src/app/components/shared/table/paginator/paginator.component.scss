@@ -1,0 +1,27 @@
+.paginator {
+  .page {
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 22px;
+    padding: 5px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 2.5px;
+    border-radius: 4px;
+    &.current {
+      font-weight: 700;
+      background: #d3f0ff;
+    }
+  }
+
+  .angle {
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+    margin: 1rem;
+  }
+}

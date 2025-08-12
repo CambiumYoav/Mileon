@@ -9,13 +9,13 @@ export class Table {
 
 export class Column {
   /** List of options */
-  displayName: string;
-  propertyName: string;
+  displayName!: string;
+  propertyName!: string;
   sortField?: string;
   fieldId?: any;
-  canSort: boolean;
-  type: ColumnType;
-  sortByServer: boolean;
+  canSort!: boolean;
+  type!: ColumnType;
+  sortByServer!: boolean;
   hasIcon?: boolean;
   additionalText?: string;
   textOverflow?: boolean;

@@ -1,0 +1,109 @@
+<form [formGroup]="form"> 
+  <div class="search-area wrap-search-input">
+    <!-- [ngClass]="{ 'not-found': !foundResult || !filterHasValue }" -->
+    <div class="start">
+      <img [src]="icons.SEARCH" [alt]="icons.SEARCH" class="search-icon" />
+      <span *ngIf="showPlaceholder" class="text">{{ searchTitle }}</span>
+      <input
+        #searchText
+        type="text"
+        class="input"
+        placeholder="{{ searchBy }}"
+        formControlName="searchText"
+      />
+    </div>
+    <div class="end">
+      <img
+        *ngIf="form.get('searchText')?.value"
+        [src]="icons.EXIT"
+        class="clear-icon"
+        (click)="resetSearch()"
+        [alt]="icons.EXIT"
+      />
+      <!-- <mat-datepicker-toggle
+        [disableRipple]="true"
+        matSuffix
+        [for]="picker"
+        (click)="$event.stopPropagation()"
+        *ngIf="
+          showDatePicker && showDatePicker && !form.get('searchText')?.value
+        "
+      > -->
+        <!-- <mat-icon matDatepickerToggleIcon>
+          <img [src]="icons.CELANDER" [alt]="icons.CELANDER" />
+        </mat-icon>
+      </mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker> -->
+      <img
+        *ngIf="!form.get('searchText')?.value && showFilters"
+        id="filter-icon"
+        [src]="icons.SEARCH_END"
+        [alt]="icons.SEARCH_END"
+        (click)="openAdvancedSearch()"
+      />
+    </div>
+  </div>
+  <!-- <mat-date-range-input
+    [ngClass]="{ hide: !picker.opened }"
+    dir="ltr"
+    [rangePicker]="picker"
+  > -->
+    <!-- <input readonly="true" matStartDate formControlName="startDate" />
+    <input readonly="true" matEndDate formControlName="endDate" />
+  </mat-date-range-input> -->
+  <div
+    class="selected-date-range"
+    *ngIf="
+      form.get('startDate')?.value &&
+      form.get('endDate')?.value &&
+      !picker.opened
+    "
+  >
+    <span>
+      {{ form.get("startDate")?.value | date : "dd/MM/yyyy" }} - 
+      {{ form.get("endDate")?.value | date : "dd/MM/yyyy" }}
+    </span>
+  </div>
+  <!-- <app-dropdown-window
+    *ngIf="dropdownWindowOpened"
+    (closeDropdownEvent)="closeDropdownWindow()"
+  >
+    <app-advanced-search
+      *ngIf="advancedSearchOpened"
+      [form]="form"
+      [advancedForm]="advancedSearch"
+      (onSearch)="onSearch()"
+      [searchButtonClicked]="searchButtonClicked"
+    ></app-advanced-search>
+    <app-results-dropdown
+      *ngIf="resultData.length && !advancedSearchOpened"
+      [resultData]="resultData"
+      [loader]="loader"
+    > -->
+    <!-- </app-results-dropdown>
+  </app-dropdown-window> -->
+  <div class="under-search">
+    <!-- <div>
+      <ng-container *ngIf="!filterHasValue; else results">
+        <span class="not-found-message">יש להזין נתונים לחיפוש</span>
+      </ng-container>
+      <ng-template #results>
+        <span class="not-found-message" *ngIf="!foundResult">
+          * לא נמצאו תוצאות חיפוש מתאימות</span
+        >
+        <span *ngIf="">{{ resultCountMessage }}</span>
+      </ng-template>
+    </div> -->
+    <!-- <span *ngIf="resultCountMessage" class="result-count-msg">{{
+      resultCountMessage
+    }}</span> -->
+
+    <span *ngIf="total && !hasResultsDropdown" class="result-count-msg">{{
+      total +
+        " " +
+        resultCountMessage +
+        " " +
+        (searchTextValue ? " " + searchTextValue : "")
+    }}</span>
+  </div>
+</form>

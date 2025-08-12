@@ -8,6 +8,7 @@ import { RouterOutlet } from '@angular/router';
 import { TableComponent } from '../components/shared/table/table.component';
 import { ActiveComponent } from '../components/shared/base/active/active.component';
 import { HeaderComponent } from '../components/header/header.component';
+import { BaseComponent } from '../components/shared/base/base.component';
 export const SharedModules = [CommonModule, RouterOutlet];
 
 export const SharedImports = [
@@ -22,6 +23,7 @@ export const SharedImports = [
 export const SharedComponents = [HeaderComponent];
 
 export const BaseComponents = [
+  BaseComponent,
   ButtonComponent,
   TableComponent,
   ActiveComponent,

@@ -1,0 +1,26 @@
+:host ::ng-deep mat-datepicker-toggle {
+  .mat-icon {
+    line-height: 0;
+  }
+}
+
+form {
+  position: relative;
+}
+
+.result-count-msg {
+  font-size: 16px;
+  color: #a9a5a5;
+}
+
+.text {
+  align-self: normal;
+}
+
+.selected-date-range {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+  direction: ltr;
+}
+

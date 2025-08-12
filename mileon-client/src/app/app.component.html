@@ -1,6 +1,8 @@
-<div class="direction: rtl">
+<!-- <div class="direction: rtl">
   <router-outlet></router-outlet>
-</div>
+</div> -->
+
+
 <!-- <div class="p-2 d-flex flex-column gap-2">
   <button class="primary-btn button-icon-lg">
     כפתור <i class="fa fa-check"></i>
@@ -59,6 +61,20 @@
     <input type="checkbox" class="checkbox-base checkbox-secondary" checked />
     Accept terms
   </label>
-</div>
-<app-table></app-table> -->
-<!-- <app-table></app-table> -->
+</div> -->
+
+
+<app-table
+  [data]="data"
+  [columns]="columns"
+  [total]="total"
+  [form]="form"
+  [showPaginator]="showPaginator"
+  [selectedItemData]="selectedUserData"
+  [icons]="TicketStagesIcons"
+  [loader]="loader"
+  [pageSize]="10"
+  [parentComponentName]="'app-table'"
+  [isCheckboxsSelected]="true"
+>
+</app-table>
