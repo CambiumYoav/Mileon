@@ -6,11 +6,9 @@
   -webkit-appearance: none;
   -moz-appearance: none;
 
-  display: inline-block; // simpler than flex here
-  // width: 16px;
-  // height: 16px;
+  display: inline-block;
 
-  border: 1px solid $colorBlack; // ← include 'solid'
+  border: 1px solid $colorBlack;
   border-radius: 4px;
   box-sizing: border-box;
   background-color: $colorWhite;
@@ -19,7 +17,7 @@
     box-shadow 0.2s ease;
 
   &:hover {
-    border-color: $colorDarkBluePrimary; // border-color ok since style is already set
+    border-color: $colorDarkBluePrimary;
   }
 
   &:focus-visible {
