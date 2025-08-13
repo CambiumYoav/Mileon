@@ -59,48 +59,33 @@
                   
                   (change)="onSelectedRowIdChange(item)"
                 /> -->
-                <div class="radio-options-container" *ngIf="column.type === ColumnTypeEnum.Radio">
-                  <div class="radio-option">
-                    <input
-                      type="radio"
-                      [name]="'yesNoRadio-' + item.id"
-                      value="כן"
-                      [checked]="item[column.propertyName] === 'כן'"
-                      (change)="onRadioChange(item, column.propertyName, 'כן')"
-                    />
-                    <span class="radio-label">כן</span>
-                  </div>
-                  <div class="radio-option">
-                    <input
-                      type="radio"
-                      [name]="'yesNoRadio-' + item.id"
-                      value="לא"
-                      [checked]="item[column.propertyName] === 'לא'"
-                      (change)="onRadioChange(item, column.propertyName, 'לא')"
-                    />
-                    <span class="radio-label">לא</span>
-                  </div>
-                </div>
-                <ng-container
+                <app-radio-button
+                  *ngIf="column.type === ColumnTypeEnum.Radio"
+                  [options]="[
+                    { value: 'כן', label: 'כן' },
+                    { value: 'לא', label: 'לא' }
+                  ]"
+                  [name]="'yesNoRadio-' + item.id"
+                  [value]="item[column.propertyName]"
+                  (valueChange)="onRadioChange(item, column.propertyName, $event)"
+                  type="default"
+                  direction="horizontal"
+                ></app-radio-button>
+                <app-radio-button
                   *ngIf="column.type === ColumnTypeEnum.ActiveStatus"
-                >
-                  <div
-                    [ngClass]="getRadioWrapperClass(item)"
-                    class="radio-wrapper"
-                  >
-                    <input
-                      *ngIf="column.type === ColumnTypeEnum.ActiveStatus"
-                      type="radio"
-                      [name]="'activeStatus-' + item.id"
-                      [value]="item"
-                      (change)="onSelectedRowIdChange(item)"
-                      [ngClass]="
-                        getRadioColorClassByLastTicketTime(item.lastTicketTime)
-                      "
-                      class="custom-colored-radio"
-                    />
-                  </div>
-                </ng-container>
+                  [options]="[
+                    { 
+                      value: 'active', 
+                      label: '', 
+                      colorClass: getRadioColorClassByLastTicketTime(item.lastTicketTime)
+                    }
+                  ]"
+                  [name]="'activeStatus-' + item.id"
+                  value="active"
+                  (valueChange)="onSelectedRowIdChange(item)"
+                  type="colored"
+                  direction="horizontal"
+                ></app-radio-button>
                 <span
                   *ngIf="
                     column.type === ColumnTypeEnum.Text && column.hasCheckbox

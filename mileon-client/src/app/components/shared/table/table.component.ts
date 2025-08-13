@@ -32,13 +32,14 @@ import { RenderIdentityPipe } from '../../../pipes/identity.pipe';
 import { PaginatorComponent } from "./paginator/paginator.component";
 import { TagComponent } from '../base/tag/tag.component';
 import { CheckboxComponent } from '../base/checkbox/checkbox.component';
+import { RadioButtonComponent } from '../base/radio-button/radio-button.component';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
-  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent  ],
+  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent, RadioButtonComponent],
   providers: [TableService],
 })
 export class TableComponent
@@ -268,17 +269,7 @@ export class TableComponent
       }
     }
   }
-  getRadioWrapperClass(item: any): string {
-    const count = item.lastTicketTime || 0;
-    if (count >= 10) return 'radio-colored high';
-    if (count >= 5) return 'radio-colored medium';
-    return 'radio-colored low';
-  }
-  getRadioColorClass(ticketCount: number): string {
-    if (ticketCount >= 10) return 'high';
-    if (ticketCount >= 5) return 'medium';
-    return 'low';
-  }
+
 
   getRadioColorClassByLastTicketTime(timeStr: string | null): string {
     if (!timeStr) return 'gray';
