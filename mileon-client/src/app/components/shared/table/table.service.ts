@@ -165,30 +165,39 @@ export class TableService {
     this.dataSubject$.subscribe((res) => {
       tableData = res;
       if (res?.length && this.columns) {
-        tableData = [];
-        const columnKeys = this.columns.map((a) => a.propertyName);
-
-        for (let item of res) {
-          let temp: any = {};
-          Object.keys(item).map((field) => {
-            if (columnKeys.includes(field)) {
-              temp[field] = item[field];
-            }
-          });
-          
-          // Preserve fieldId data needed by tag components
-          this.columns.forEach(column => {
-            if (column.fieldId && item[column.fieldId] !== undefined) {
-              temp[column.fieldId] = item[column.fieldId];
-            }
-          });
-          
-          tableData.push(temp);
+        tableData = [...res];
+        
+        if (sortColumn && sortDirection) {
+          tableData = sort(tableData, sortColumn, sortDirection);
         }
 
-        // tableData = res;
+        // tableData = [];
+        // const columnKeys = this.columns.map((a) => a.propertyName);
 
-        tableData = sort(tableData, sortColumn, sortDirection);
+        // for (let item of res) {
+        //   let temp: any = {};
+        //   Object.keys(item).map((field) => {
+        //     if (columnKeys.includes(field)) {
+        //       temp[field] = item[field];
+        //     }
+        //   });
+          
+        //   // Preserve fieldId data needed by tag components
+        //   this.columns.forEach(column => {
+        //     if (column.fieldId && item[column.fieldId] !== undefined) {
+        //       temp[column.fieldId] = item[column.fieldId];
+        //     }
+        //   });
+          
+        //   tableData.push(temp);
+        // }
+
+        // // tableData = res;
+
+        // tableData = sort(tableData, sortColumn, sortDirection);
+        
+
+
         // 2. filter
         // tableData = tableData?.filter((item) =>
         //   matches(item, searchTerm, this.pipe)

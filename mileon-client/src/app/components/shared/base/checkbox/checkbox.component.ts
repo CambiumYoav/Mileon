@@ -11,6 +11,7 @@ import { InputSizeEnum } from '../../../../types/enum/inputSizeEnum';
 
 @Component({
   selector: 'app-checkbox',
+  standalone: true,
   imports: [SharedImports],
   templateUrl: './checkbox.component.html',
   styleUrl: './checkbox.component.scss',

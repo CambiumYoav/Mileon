@@ -48,7 +48,8 @@ export enum ColumnTypeEnum {
   Dropdown = 'dll',
   SubStageIcon = 'subStageIcon',
   ActiveStatus= 'activeStatus',
-  Select='select'
+  Select='select',
+  Input = 'input'
 }
 
 // export class Row {

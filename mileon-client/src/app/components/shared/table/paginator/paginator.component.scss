@@ -1,28 +1,32 @@
 .paginator {
   padding-top: 20px;
+  gap: 8px;
   .page {
-    font-weight: 300;
+    font-weight: 400;
     font-size: 16px;
-    line-height: 22px;
-    padding: 5px;
+    line-height: 24px;
+    padding: 10px;
     cursor: pointer;
     width: 40px;
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 2.5px;
     border-radius: 4px;
+    &:hover {
+      border-radius: 29px;
+      border: 1px solid  #B9C6D4;
+    }
     &.current {
-      font-weight: 700;
-      background: #d3f0ff;
+      border-radius: 29px;
+    background: #D3F0FF;
     }
   }
 
   .angle {
     cursor: pointer;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 400;
     margin: 0 1rem;
     transition: all 0.2s ease;
     
@@ -43,6 +47,45 @@
       &:hover {
         opacity: 0.8;
       }
+    }
+
+    &.double-angle {
+      font-size: 18px;
+      margin: 0 0.5rem;
+      
+      &:hover:not(.disabled) {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  .items-display {
+    display: flex;
+    align-items: right;
+    
+    .items-text {
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px; /* 150% */
+    }
+    
+    .items-range {
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px; /* 150% */
+      margin: 0 4px;
+    }
+    
+    .total-items {
+      color: #387EC4;
+      font-weight: 600;
+      margin: 0 4px;
     }
   }
 }

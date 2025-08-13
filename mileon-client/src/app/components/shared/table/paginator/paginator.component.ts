@@ -15,7 +15,7 @@ export class PaginatorComponent implements OnInit {
 
   @Input() selectedPage: number = 1;
 
-  @Input() pageSize: number = 10; // Optional: can be overridden by parent
+  @Input() pageSize: number = 2; // Optional: can be overridden by parent
 
   pages: number[] = [];
 
@@ -26,22 +26,11 @@ export class PaginatorComponent implements OnInit {
   }
 
   @Input() set total(value: number | null) {
-    if (value && value > 0) {
-      // Calculate total pages based on actual data count
-      this._totalPages = Math.ceil(value / this.pageSize);
-      
-      // If total pages is 1 or less, no need for pagination
-      if (this._totalPages <= 1) {
-        this.pages = [];
-        this._totalPages = 0;
-      } else {
-        // Reset to first page when data changes
-        this.selectedPage = 1;
-        this.pages = this.getVisiblePages(this._totalPages);
-      }
+    if (value && this.pageSize) {
+      this._totalPages = Math.ceil(value / this.pageSize); // store the full total
+      this.pages = this.getVisiblePages(this._totalPages);
     } else {
       this.pages = [];
-      this._totalPages = 0;
     }
   }
 
@@ -91,5 +80,14 @@ export class PaginatorComponent implements OnInit {
 
   changePage() {
     this.pageChanger.emit(this.selectedPage);
+  }
+
+  getStartItem(): number {
+    return (this.selectedPage - 1) * this.pageSize + 1;
+  }
+
+  getEndItem(): number {
+    const end = this.selectedPage * this.pageSize;
+    return Math.min(end, this.total || 0);
   }
 }

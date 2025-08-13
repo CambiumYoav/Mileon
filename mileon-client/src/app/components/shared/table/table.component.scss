@@ -6,7 +6,7 @@
   background: #F7F9FC;
     // border-collapse: separate;
   border-radius: 4px;
-  table-layout: fixed;
+  table-layout: auto;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
@@ -26,7 +26,6 @@ div.table-container {
   overflow-y: auto;
   border-radius: 14px;
   transform: rotate(0deg);
-//   height: 50vh;
 }
 
 table {
@@ -34,6 +33,7 @@ table {
   height: 100%;
   width: 100%;
   margin: 0;
+  table-layout: auto;
 
   td {
     padding: 4px 8px 4px 8px;
@@ -48,17 +48,21 @@ table {
     line-height: normal;
     height: 40px;
     vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     
+    // &:first-child {
+    //   padding-right: 10px; 
+    // }
   }
 }
 
 .fixedwidth {
-  width: 2rem !important;
+  width: auto !important;
+  min-width: 2rem;
 }
 
-.checkbox-td {
-  padding: 0.5rem 2.5rem 0.5rem 0.5rem !important;
-}
 
 th .title {
   color: #F7F9FC;
@@ -68,11 +72,15 @@ th .title {
 th {
     background: #387EC4;
   height: 50px;
-  padding: 8px 10px 8px 12px;
+  padding: 8px 12px 8px 12px;
   text-align: right;
   vertical-align: middle;
   display: table-cell;
 }
+
+// th:first-child {
+//   padding-right: 10px;
+// }
 
 th.asc::before {
   content: "";
@@ -83,6 +91,7 @@ th.asc::before {
 tbody tr {
   color: #606060;
 }
+
 
 .blue {
     color: var(--blue, #387EC4);
@@ -97,10 +106,6 @@ tbody tr {
   border-bottom: 1px solid #b9c6d4;
 }
 
-
-:host ::ng-deep app-checkbox .inline {
-  width: 160px !important;
-}
 
 @keyframes blink {
   0%, 100% { opacity: 1; }
@@ -168,5 +173,70 @@ input.custom-colored-radio:checked::after {
   position: absolute;
   top: 4px;
   left: 4px;
+}
+
+.radio-options-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    
+    input[type="radio"] {
+      margin: 0;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+    
+    .radio-label {
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+      font-weight: 400;
+    }
+  }
+}
+
+.radio-td {
+  text-align: center;
+  vertical-align: middle;
+  
+  .radio-options-container {
+    justify-content: center;
+    width: 100%;
+    
+  }
+}
+
+.input-field {
+  width: 148px;
+  height: 30px;
+  border: 1px solid #606060;
+  border-radius: 3px;
+  
+  &:focus {
+    outline: none;
+    border-color: #387EC4;
+    box-shadow: 0 0 0 2px rgba(56, 126, 196, 0.2);
+    background-color: #fff;
+  }
+
+  &::placeholder {
+    color: #606060;
+    text-align: right;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+    font-family: "Open Sans";
+  }
+
+  &:invalid {
+    border-color: #dc3545;
+  }
 }
 

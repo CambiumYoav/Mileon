@@ -291,4 +291,40 @@ export class TableComponent
     if (diffMinutes <= 60) return 'red-blink';
     return 'gray';
   }
+
+  onRadioChange(item: any, propertyName: string, value: string): void {
+    // Update the item's property value
+    item[propertyName] = value;
+    
+    // Emit the change event
+    this.onSelectedRowIdChange(item);
+    
+    // Update the table service data to reflect the change
+    if (this.data) {
+      this.tableService.dataSubject$.next([...this.data]);
+    }
+  }
+
+  onInputChange(item: any, propertyName: string, event: any): void {
+    // Update the item's property value
+    item[propertyName] = event.target.value;
+    
+    // Emit the change event
+    this.onSelectedRowIdChange(item);
+    
+    // Update the table service data to reflect the change
+    if (this.data) {
+      this.tableService.dataSubject$.next([...this.data]);
+    }
+  }
+
+  onKeyPress(event: KeyboardEvent): void {
+    // Allow only numeric input (0-9) and control keys
+    const pattern = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    
+    if (!pattern.test(inputChar) && event.charCode !== 0) {
+      event.preventDefault();
+    }
+  }
 }
