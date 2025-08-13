@@ -15,23 +15,33 @@ export class PaginatorComponent implements OnInit {
 
   @Input() selectedPage: number = 1;
 
-  @Input() pageSize: number = 2; // Optional: can be overridden by parent
+  @Input() pageSize: number = 14;
 
   pages: number[] = [];
 
   private _totalPages: number = 0;
+  private _total: number = 0;
 
   get totalPages(): number {
     return this._totalPages;
   }
 
   @Input() set total(value: number | null) {
-    if (value && this.pageSize) {
-      this._totalPages = Math.ceil(value / this.pageSize); // store the full total
-      this.pages = this.getVisiblePages(this._totalPages);
+    if (value !== null && value !== undefined) {
+      this._total = value;
+      if (this.pageSize) {
+        this._totalPages = Math.ceil(value / this.pageSize);
+        this.pages = this.getVisiblePages(this._totalPages);
+      }
     } else {
+      this._total = 0;
+      this._totalPages = 0;
       this.pages = [];
     }
+  }
+
+  get total(): number {
+    return this._total;
   }
 
   getVisiblePages(totalPages: number): number[] {
@@ -83,11 +93,25 @@ export class PaginatorComponent implements OnInit {
   }
 
   getStartItem(): number {
+    if (this._total === 0) return 0;
     return (this.selectedPage - 1) * this.pageSize + 1;
   }
 
   getEndItem(): number {
+    if (this._total === 0) return 0;
     const end = this.selectedPage * this.pageSize;
-    return Math.min(end, this.total || 0);
+    return Math.min(end, this._total);
+  }
+
+  getAllPages(): number[] {
+    return Array.from({ length: this._totalPages }, (_, i) => i + 1);
+  }
+
+  onPageDropdownChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const selectedPage = parseInt(target.value);
+    if (selectedPage && selectedPage !== this.selectedPage) {
+      this.setSelectedPage(selectedPage);
+    }
   }
 }

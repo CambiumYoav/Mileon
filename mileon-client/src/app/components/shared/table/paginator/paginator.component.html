@@ -2,6 +2,20 @@
   class="paginator align-items-center d-flex flex-row-reverse justify-content-center"
   *ngIf="showPaginator && pages && pages.length > 1"
 >
+  <!-- Page Selection Dropdown -->
+  <div class="page-dropdown-container">
+    <select 
+      class="page-dropdown" 
+      [value]="selectedPage"
+      (change)="onPageDropdownChange($event)"
+      [disabled]="totalPages <= 1"
+    >
+      <option *ngFor="let page of getAllPages()" [value]="page">
+        {{ page }}
+      </option>
+    </select>
+  </div>
+
   <!-- Last page button (swapped from first) -->
   <i
     (click)="setSelectedPage(totalPages)"
@@ -41,7 +55,7 @@
   <!-- Display showing current range of items -->
   <div class="items-display">
     <span class="items-text">מציג</span>
-    <span class="items-range">{{ getStartItem() }}-{{ getEndItem() }}</span>
+    <span class="items-range">{{ getEndItem() }}-{{ getStartItem() }}</span>
     <span class="items-text">מתוך</span>
     <span class="total-items">{{ total }}</span>
   </div>

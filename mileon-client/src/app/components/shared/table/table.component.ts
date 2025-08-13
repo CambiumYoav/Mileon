@@ -64,7 +64,7 @@ export class TableComponent
   count?: number;
 
   @Input({ required: true })
-  pageSize: number = 10;
+  pageSize: number = 14;
 
   @Input({ required: true })
   showPaginator: boolean = true;
@@ -167,12 +167,19 @@ export class TableComponent
   pageChanges(currentPage: number) {
     // this.searchFormService.updatePagingParams(currentPage);
     // console.log(this.form, currentPage);
+    this.selectedPage = currentPage;
     this.form?.get('currentPage')?.setValue(currentPage);
     this.onFormChanges.emit(this.form);
+    
+    // Update table service and refresh data
+    this.tableService.page = currentPage;
+    this.setTableData();
   }
 
   setTableData() {
     this.tableService.columns = this.columns || [];
+    this.tableService.pageSize = this.pageSize;
+    this.tableService.page = this.selectedPage;
     this.tableService.dataSubject$.next(this.data || []);
     this.tableService.totalSubject$.next(this.total);
   }

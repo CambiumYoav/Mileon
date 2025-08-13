@@ -1,11 +1,66 @@
 .paginator {
   padding-top: 20px;
   gap: 8px;
+  
+  .page-dropdown-container {
+    position: relative;
+    
+    .page-dropdown {
+      margin-right: 6px;   
+      border-radius: 8px;
+      border: 1px solid var(--gray, #B0B0B0);
+      background: var(--white, #FFF);
+      display: flex;
+      height: 40px;
+      padding: 0 12px;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: none;
+      padding-left: 36px; /* 12px (base) + 16px (arrow width) + 8px (gap) = 36px total */
+      
+      &:focus {
+        outline: none;
+        border-color: #387EC4;
+        box-shadow: 0 0 0 2px rgba(56, 126, 196, 0.2);
+      }
+      
+      &:disabled {
+        background-color: #f5f5f5;
+        color: #999;
+        cursor: not-allowed;
+      }
+      
+      option {
+        text-align: center;
+        direction: rtl;
+      }
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      left: 12px; /* 12px from left edge */
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      background-image: url('/assets/icons/angle-down.svg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+      z-index: 1;
+    }
+  }
+  
   .page {
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
-    padding: 10px;
     cursor: pointer;
     width: 40px;
     height: 40px;
@@ -62,6 +117,7 @@
   .items-display {
     display: flex;
     align-items: right;
+    padding-left: 6px;
     
     .items-text {
       color: var(--black, #000);
@@ -78,13 +134,17 @@
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
-      line-height: 24px; /* 150% */
+      line-height: 24px;
       margin: 0 4px;
     }
     
     .total-items {
-      color: #387EC4;
-      font-weight: 600;
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px;
       margin: 0 4px;
     }
   }

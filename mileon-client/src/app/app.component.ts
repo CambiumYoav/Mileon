@@ -238,10 +238,139 @@ export class AppComponent {
       status: 'סגור',
       statusId: 3,
       additionalReports: 526
+    },
+    {
+      id: 11,
+      selected: false,
+      reportNumber: '1585123121604',
+      inputField: '',
+      yesNoRadio: 'לא',
+      violationDate: '2025-11-18',
+      fullName: 'שרה כהן',
+      nid: '123456789',
+      municipality: 'תל אביב',
+      status: 'פתוח',
+      statusId: 1,
+      additionalReports: 342
+    },
+    {
+      id: 12,
+      selected: false,
+      reportNumber: '1585123121605',
+      inputField: '',
+      yesNoRadio: 'כן',
+      violationDate: '2025-10-25',
+      fullName: 'משה לוי',
+      nid: '987654321',
+      municipality: 'חיפה',
+      status: 'סגור',
+      statusId: 3,
+      additionalReports: 189
+    },
+    {
+      id: 13,
+      selected: false,
+      reportNumber: '1585123121606',
+      inputField: '',
+      yesNoRadio: 'לא',
+      violationDate: '2025-09-30',
+      fullName: 'רחל גולדברג',
+      nid: '456789123',
+      municipality: 'ירושלים',
+      status: 'פתוח',
+      statusId: 1,
+      additionalReports: 567
+    },
+    {
+      id: 14,
+      selected: false,
+      reportNumber: '1585123121607',
+      inputField: '',
+      yesNoRadio: 'כן',
+      violationDate: '2025-08-14',
+      fullName: 'דוד רוזן',
+      nid: '789123456',
+      municipality: 'באר שבע',
+      status: 'סגור',
+      statusId: 3,
+      additionalReports: 234
+    },
+    {
+      id: 15,
+      selected: false,
+      reportNumber: '1585123121608',
+      inputField: '',
+      yesNoRadio: 'לא',
+      violationDate: '2025-07-22',
+      fullName: 'מיכל שפירא',
+      nid: '321654987',
+      municipality: 'אשדוד',
+      status: 'פתוח',
+      statusId: 1,
+      additionalReports: 445
+    },
+    {
+      id: 16,
+      selected: false,
+      reportNumber: '1585123121609',
+      inputField: '',
+      yesNoRadio: 'כן',
+      violationDate: '2025-06-15',
+      fullName: 'יוסי ברק',
+      nid: '654987321',
+      municipality: 'פתח תקווה',
+      status: 'סגור',
+      statusId: 3,
+      additionalReports: 378
+    },
+    {
+      id: 17,
+      selected: false,
+      reportNumber: '1585123121610',
+      inputField: '',
+      yesNoRadio: 'לא',
+      violationDate: '2025-05-08',
+      fullName: 'נועה אברהם',
+      nid: '147258369',
+      municipality: 'רחובות',
+      status: 'פתוח',
+      statusId: 1,
+      additionalReports: 612
+    },
+    {
+      id: 18,
+      selected: false,
+      reportNumber: '1585123121611',
+      inputField: '',
+      yesNoRadio: 'כן',
+      violationDate: '2025-04-12',
+      fullName: 'עמיר כהן',
+      nid: '963852741',
+      municipality: 'הרצליה',
+      status: 'סגור',
+      statusId: 3,
+      additionalReports: 298
+    },
+    {
+      id: 19,
+      selected: false,
+      reportNumber: '1585123121612',
+      inputField: '',
+      yesNoRadio: 'לא',
+      violationDate: '2025-03-25',
+      fullName: 'דנה לוי',
+      nid: '852963741',
+      municipality: 'רמת גן',
+      status: 'פתוח',
+      statusId: 1,
+      additionalReports: 456
     }
   ];
   
-  total: number = 251;
+  get total(): number {
+    return this.data.length;
+  }
+  
   count: number = 10;
   selectedUserData: Subject<any> = new Subject<any>();
   loader: boolean = false;
@@ -262,7 +391,7 @@ export class AppComponent {
     // Initialize form with pagination
     this.form = new FormGroup({
       currentPage: new FormControl(1),
-      pageSize: new FormControl(10)
+      pageSize: new FormControl(14)
     });
     
     // Set table data after initialization

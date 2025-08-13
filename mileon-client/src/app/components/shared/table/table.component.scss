@@ -76,15 +76,18 @@ th {
   text-align: right;
   vertical-align: middle;
   display: table-cell;
+  position: relative;
 }
 
-// th:first-child {
-//   padding-right: 10px;
-// }
 
-th.asc::before {
+th[sortable]:before {
   content: "";
-  color: #d8e4f1;
+  display: inline-block;
+  background: url("/assets/icons/filter-icon.svg") no-repeat;
+  width: 8px;
+  height: 14px;
+  opacity: 1;
+  transition: opacity 0.2s ease;
 }
 
 

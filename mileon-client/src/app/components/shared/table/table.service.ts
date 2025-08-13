@@ -99,7 +99,7 @@ export class TableService {
 
   private _state: State = {
     page: 1,
-    pageSize: 4,
+    pageSize: 14,
     sortColumn: '',
     sortDirection: '',
   };
@@ -178,7 +178,7 @@ export class TableService {
         //   let temp: any = {};
         //   Object.keys(item).map((field) => {
         //     if (columnKeys.includes(field)) {
-        //       temp[field] = item[field];
+        //       temp[field] = item[column.fieldId];
         //     }
         //   });
           
@@ -204,11 +204,11 @@ export class TableService {
         // );
 
         // 3. paginate
-        //NOTE: Comment out the filter. temp fix. MAYA's blame
-        // tableData = tableData.slice(
-        //   (page - 1) * pageSize,
-        //   (page - 1) * pageSize + pageSize
-        // );
+        if (pageSize > 0 && page > 0) {
+          const startIndex = (page - 1) * pageSize;
+          const endIndex = startIndex + pageSize;
+          tableData = tableData.slice(startIndex, endIndex);
+        }
       }
     });
     // const total = tableData?.length;
