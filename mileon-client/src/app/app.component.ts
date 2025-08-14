@@ -99,7 +99,7 @@ export class AppComponent {
     {
       propertyName: 'actions',
       displayName: 'פעולות',
-      type: ColumnTypeEnum.Edit,
+      type: ColumnTypeEnum.Icon,
       canSort: false,
       sortByServer: false
     }

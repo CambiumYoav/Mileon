@@ -208,14 +208,9 @@
                     (click)="onRowClick(item, $event)"
                     style="margin-left: 40px"
                   >
-                    <!-- <img [src]="Icons[column.icon!] || Icons.EDIT" /> -->
+                    <img [src]="getIconPath(column.icon)" class="icon-img" />
                   </span>
                 </div>
-
-                <app-edit-column
-                  *ngIf="column.type === ColumnTypeEnum.Edit"
-                  (editClick)="onEditClick(item)"
-                ></app-edit-column>
               </td>
             </ng-container>
           </tr>

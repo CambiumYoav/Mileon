@@ -34,15 +34,14 @@ import { TagComponent } from '../base/tag/tag.component';
 import { CheckboxComponent } from '../base/checkbox/checkbox.component';
 import { RadioButtonComponent } from '../base/radio-button/radio-button.component';
 import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
-import { IconComponent } from "../base/icon/icon.component";
-import { EditColumnComponent } from "../base/edit-column/edit-column.component";
+import { IconComponent } from "../base/icon/icon.component";  
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
-  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent, RadioButtonComponent, RedLineErrorComponent, IconComponent, EditColumnComponent],
+  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent, RadioButtonComponent, RedLineErrorComponent, IconComponent],
   providers: [TableService],
 })
 export class TableComponent
@@ -243,6 +242,15 @@ export class TableComponent
   getIconById(id: number) {
     const icon = this.icons.find((icon) => icon.id === id) as Icon;
     return icon;
+  }
+
+  getIconPath(iconName: string | undefined): string {
+    if (!iconName) {
+      return this.Icons.EDIT;
+    }
+    
+    // Use type assertion to access the static property dynamically
+    return (this.Icons as any)[iconName] || this.Icons.EDIT;
   }
 
   // listenToPageReset() {
