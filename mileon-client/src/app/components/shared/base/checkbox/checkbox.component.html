@@ -1,18 +1,4 @@
-<!-- <div [ngClass]="[cssWrapperClass, cssSizeClass]" [class.disabled]="isDisabled">
-  <div class="inline">
-    <input
-      type="checkbox"
-      [checked]="checked"
-      [ngClass]="[cssWrapperClass, cssSizeClass]"
-      (change)="onInputChange($event)"
-      [disabled]="isDisabled"
-      [title]="label"
-      [value]="initialValue"
-    />
-    <label class="label" for="checkbox">{{ label }}</label>
-  </div>
-</div> -->
-<div [ngClass]="sizeClass">
+<div [ngClass]="[sizeClass]">
   <label class="app-checkbox-label" [ngClass]="fontSizeClass">
     <input
       type="checkbox"

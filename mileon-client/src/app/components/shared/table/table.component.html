@@ -1,5 +1,5 @@
 <div>
-  <!-- <app-red-line-error [errorMsg]="errorMsg"></app-red-line-error> -->
+  <app-red-line-error [errorMsg]="errorMsg"></app-red-line-error>
   <div class="table-container">
     <table class="table table-hover shadow-table">
       <thead>
@@ -58,6 +58,15 @@
                   [value]="item"
                   
                   (change)="onSelectedRowIdChange(item)"
+                />
+                <input
+                  *ngIf="column.type === ColumnTypeEnum.Radio"
+                  type="radio"
+                  [name]="
+                    parentComponentName + '_radioGroup' || 'tableRadioGroup'
+                  "
+                  [value]="item"
+                  (change)="onSelectedRowIdChange(item)"
                 /> -->
                 <app-radio-button
                   *ngIf="column.type === ColumnTypeEnum.Radio"
@@ -92,10 +101,10 @@
                   "
                   class="d-flex align-items-center"
                 >
-                  <!-- <app-icon
+                  <app-icon
                     *ngIf="column.hasIcon"
                     [icon]="getIconById(item[column.fieldId])"
-                  ></app-icon> -->
+                  ></app-icon>
 
                   <app-checkbox
                     class="me-2"
@@ -129,11 +138,11 @@
                     column.type === ColumnTypeEnum.Text && !column.hasCheckbox
                   "
                 >
-                  <!-- <app-icon
+                  <app-icon
                     *ngIf="column.hasIcon"
                     [icon]="getIconById(item[column.fieldId])"
                   >
-                  </app-icon> -->
+                  </app-icon>
 
                   <app-checkbox
                     class="checkbox-td"
@@ -202,6 +211,11 @@
                     <!-- <img [src]="Icons[column.icon!] || Icons.EDIT" /> -->
                   </span>
                 </div>
+
+                <app-edit-column
+                  *ngIf="column.type === ColumnTypeEnum.Edit"
+                  (editClick)="onEditClick(item)"
+                ></app-edit-column>
               </td>
             </ng-container>
           </tr>

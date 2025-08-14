@@ -11,7 +11,6 @@ import { InputSizeEnum } from '../../../../types/enum/inputSizeEnum';
 
 @Component({
   selector: 'app-checkbox',
-  standalone: true,
   imports: [SharedImports],
   templateUrl: './checkbox.component.html',
   styleUrl: './checkbox.component.scss',
@@ -69,8 +68,10 @@ export class CheckboxComponent implements OnInit {
     return `text-${this.checkboxSize}`;
   }
 
-  get sizeClass(): string {
-    return `checkbox-size-${this.checkboxSize}`;
+  get sizeClass(): string | null {
+    return this.label
+      ? `checkbox-size-${this.checkboxSize}`
+      : `checkbox-size-no-label-${this.checkboxSize}`;
   }
 
   get cssSizeClass(): string {

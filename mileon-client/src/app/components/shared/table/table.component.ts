@@ -33,13 +33,16 @@ import { PaginatorComponent } from "./paginator/paginator.component";
 import { TagComponent } from '../base/tag/tag.component';
 import { CheckboxComponent } from '../base/checkbox/checkbox.component';
 import { RadioButtonComponent } from '../base/radio-button/radio-button.component';
+import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
+import { IconComponent } from "../base/icon/icon.component";
+import { EditColumnComponent } from "../base/edit-column/edit-column.component";
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
-  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent, RadioButtonComponent],
+  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent, RadioButtonComponent, RedLineErrorComponent, IconComponent, EditColumnComponent],
   providers: [TableService],
 })
 export class TableComponent
@@ -324,5 +327,10 @@ export class TableComponent
     if (!pattern.test(inputChar) && event.charCode !== 0) {
       event.preventDefault();
     }
+  }
+
+  onEditClick(item: any): void {
+    // Emit the edit event with the item data
+    this.onRowEvent.emit({ item, action: 'edit' });
   }
 }

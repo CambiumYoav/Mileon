@@ -95,6 +95,13 @@ export class AppComponent {
       type: ColumnTypeEnum.Currency,
       canSort: true,
       sortByServer: false
+    },
+    {
+      propertyName: 'actions',
+      displayName: 'פעולות',
+      type: ColumnTypeEnum.Edit,
+      canSort: false,
+      sortByServer: false
     }
   ];
   
@@ -371,7 +378,6 @@ export class AppComponent {
     return this.data.length;
   }
   
-  count: number = 10;
   selectedUserData: Subject<any> = new Subject<any>();
   loader: boolean = false;
   showPaginator: boolean = true;
@@ -385,22 +391,25 @@ export class AppComponent {
   ) {}
   
   ngOnInit() {
-    // Set the current module name for tag colors to work
     this.appService.currentModuleName = 'TicketsNewModule';
     
-    // Initialize form with pagination
     this.form = new FormGroup({
       currentPage: new FormControl(1),
       pageSize: new FormControl(14)
     });
     
-    // Set table data after initialization
     setTimeout(() => {
       this.loader = false;
     }, 100);
     
-    // this.showSuccess();
-    // this.showError();
+  }
+
+  onRowEvent(event: any): void {
+    if (event.action === 'edit') {
+      console.log('Edit clicked for item:', event.item);
+      // TODO: Implement edit functionality
+      this.showSuccess(); // Show success message for now
+    }
   }
   showSuccess() {
     this.toastr.success('הפעולה הושלמה בהצלחה!');

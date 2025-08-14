@@ -8,11 +8,22 @@
 .app-checkbox-text {
   user-select: none;
 }
-
 .checkbox-size-sm {
   min-width: 132px;
   height: 32px;
   max-width: 200px;
+}
+
+.checkbox-size-md {
+  min-width: 140px;
+  max-width: 240px;
+  height: 24px;
+}
+
+.checkbox-size-no-label-sm {
+  width: 16px;
+  height: 16px;
+  // max-width: 200px;
 }
 
 .checkbox-size-md {
