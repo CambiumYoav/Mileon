@@ -33,7 +33,7 @@ import { PaginatorComponent } from "./paginator/paginator.component";
 import { TagComponent } from '../base/tag/tag.component';
 import { CheckboxComponent } from '../base/checkbox/checkbox.component';
 import { RadioButtonComponent } from '../base/radio-button/radio-button.component';
-import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
+// import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
 import { IconComponent } from "../base/icon/icon.component";  
 
 @Component({
@@ -41,7 +41,7 @@ import { IconComponent } from "../base/icon/icon.component";
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
-  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent, RadioButtonComponent, RedLineErrorComponent, IconComponent],
+  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent, RadioButtonComponent, IconComponent],
   providers: [TableService],
 })
 export class TableComponent

@@ -1,0 +1,22 @@
+<div [ngClass]="{ disabled: disabled }">
+  <div *ngIf="title" class="title-placeholder">{{ title }}</div>
+  <div class="button-container containerSize" [ngClass]="'status-' + currentUploadStatus">
+    <input type="file" #fileUpload hidden (change)="handleFileInput()" />
+    <img
+      [src]="getCurrentIcon"
+      (click)="onUploadButtonClick()"
+      style="cursor: pointer"
+    />
+    <span class="title-upload-text">{{ getCurrentTitleText }}</span>
+    <span class="upload-text" *ngIf="currentUploadStatus !== 'uploading' && currentUploadStatus !== 'failed'"> גרור את הקבצים שברצונך לצרף</span>
+  </div>
+  <div class="files-preview-container mt-1" *ngIf="previewFiles.length > 0">
+    <app-document-preview-new
+      *ngFor="let file of previewFiles"
+      [previewFile]="file"
+      [isFullPath]="true"
+      [isDownoladable]="isDownoladable"
+      (deleteEvent)="deleteFile($event)"
+    ></app-document-preview-new>
+  </div>
+</div>

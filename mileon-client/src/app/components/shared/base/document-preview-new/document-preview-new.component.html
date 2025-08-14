@@ -1,0 +1,46 @@
+<div class="document-card card">
+  <div class="file-info-container">
+    <div class="file-name">
+      <img [src]="documentTextIcon" alt="document-icon" />
+      <img
+        *ngIf="isDownoladable"
+        [src]="attachCircleIcon"
+        alt="attach-icon"
+        (click)="openFileForPrint()"
+        class="attach-icon"
+      />
+      <div class="file-name-details">
+        <div class="file-name-text">
+          {{ previewFile?.file?.name || "Unnamed File" }}
+        </div>
+
+        <div class="file-size-text">
+          {{ (previewFile?.file?.size! / 1024)?.toFixed(2) || "0" }} KB
+        </div>
+      </div>
+    </div>
+    <div class="file-actions">
+      <!-- <img
+        *ngIf="isDownoladable"
+        [src]="attachCircleIcon"
+        alt="attach-icon"
+        (click)="openFileForPrint()"
+        class="attach-icon"
+      /> -->
+
+      <img
+        *ngIf="isDownoladable"
+        style="cursor: pointer; margin-top: 3px"
+        [src]="exportIcon"
+        (click)="onDownloadFileClicked()"
+        alt="document-icon"
+      />
+      <img
+        style="cursor: pointer"
+        [src]="closeCircleIcon"  
+        (click)="onDeleteIconClicked()"
+        alt="delete-icon"
+      />
+    </div>
+  </div>
+</div>

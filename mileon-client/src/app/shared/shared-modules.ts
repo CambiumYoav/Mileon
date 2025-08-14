@@ -12,6 +12,9 @@ import { CheckboxComponent } from '../components/shared/base/checkbox/checkbox.c
 import { BaseComponent } from '../components/shared/base/base.component';
 import { RadioButtonComponent } from '../components/shared/base/radio-button/radio-button.component';
 import { RedLineErrorComponent } from '../components/shared/errors/red-line-error/red-line-error.component';
+import { FileUploadNewComponent } from '../components/shared/base/upload-files/upload-files.component';
+import { DocumentPreviewNewComponent } from '../components/shared/base/document-preview-new/document-preview-new.component';
+
 
 export const SharedModules = [CommonModule, RouterOutlet];
 
@@ -34,5 +37,7 @@ export const BaseComponents = [
   CheckboxComponent,
   BaseComponent,
   RadioButtonComponent,
-  RedLineErrorComponent
+  RedLineErrorComponent,
+  FileUploadNewComponent,
+  DocumentPreviewNewComponent
 ];

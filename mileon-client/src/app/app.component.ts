@@ -7,16 +7,17 @@ import {
   SharedModules,
 } from './shared/shared-modules';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Column, ColumnTypeEnum } from './types/table';
+import { Column, ColumnTypeEnum } from './types/table';``
 import { Subject } from 'rxjs';
 import { Icon } from './types/icon';
 import { AppService } from './app.service';
+import { PreviewFileType } from './types/previewFile';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  imports: [BaseComponents, SharedImports],
+  imports: [BaseComponents, SharedImports], 
 })
 export class AppComponent {
   title = 'mileon-client';
@@ -374,6 +375,8 @@ export class AppComponent {
     }
   ];
   
+previewFile: PreviewFileType | undefined;
+  
   get total(): number {
     return this.data.length;
   }
@@ -382,6 +385,7 @@ export class AppComponent {
   loader: boolean = false;
   showPaginator: boolean = true;
   TicketStagesIcons: Icon[] = [];
+  selectedFiles: any[] = [];
 
   
   Icons = ConstPath;

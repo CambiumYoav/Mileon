@@ -1,5 +1,6 @@
 export class ConstPath {
   public static NOTE_CONTENT = '../assets/icons/noteContent.svg';
+  public static CLOSE_CIRCLE = '../assets/icons/close_circle.svg';
   public static TRASH = '../assets/icons/trash.svg';
   public static TRASH_NOTICES = '../assets/icons/trashNotices.svg';
   public static TRASH_TABLE = '../assets/icons/trashOutline.svg';
@@ -73,6 +74,11 @@ export class ConstPath {
   public static TICKET_ONLINE = '../assets/icons/ticket_online.svg';
   public static TICKET_STATUS = '../assets/icons/ticket_status.svg';
   public static IMG = '../assets/icons/image.svg';
+  
+  public static TIMER = '../assets/icons/timer.svg';
+  public static TICK_CIRCLE = '../assets/icons/tick_circle.svg';
+  public static ERROR_CIRCLE = '../assets/icons/error_circle.svg'; 
+
 
   public static UPLOAD_DOCUMENT = '../assets/icons/document_upload.svg';
   public static ATTACH_CIRCLE = '../assets/icons/attach-circle.svg';
@@ -86,6 +92,7 @@ export class ConstPath {
   public static UPLOAD_FILE = '../assets/icons/upload1.svg';
   public static RIGHT_ARROW = '../assets/icons/arrow-right-contained.svg';
   public static CLOUD_UPLOAD = '../assets/icons/cloud-upload.svg';
+  public static UPLOAD_DOCUMENT2 = '../assets/icons/document_upload_2.svg';
 
   public static STAGE = '../assets/icons/stages/stage';
   public static TICKET_DETAILS = '../assets/icons/ticket-details.svg';
@@ -137,4 +144,6 @@ export class ConstPath {
 
   ////////url
   public static MEDIA_URL = 'https://d3pe2doddq0g20.cloudfront.net/media';
+
+  
 }
