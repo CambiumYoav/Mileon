@@ -64,7 +64,9 @@
 </div> -->
 
 
-<!-- <app-table
+<br><br>
+
+<app-table
   [data]="data"
   [columns]="columns"
   [total]="total"
@@ -76,15 +78,21 @@
   [pageSize]="pageSize"
   [parentComponentName]="'app-table'"
   [isCheckboxsSelected]="true"
+  [icon]="Icons.FILTER_ICON"
   (onRowEvent)="onRowEvent($event)"
 >
-</app-table> -->
+</app-table>
 
-
+<br><br>
  
 <div class="upload-container" style="width: 80%; margin: 0 auto;">
   <app-file-upload-new 
   [selectedFiles]="selectedFiles"
+[maxFileSizeMB]="0.001"
   ></app-file-upload-new>
 </div>
+
+<br><br>
+
+<br><br>
 

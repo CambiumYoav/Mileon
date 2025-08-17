@@ -15,8 +15,12 @@
 
 tbody {
   display: block; /* Make tbody a block element */
-  height: 560px; /* Height for 14 rows (14 × 40px) */
+  height: 561px; /* Height for 14 rows (14 × 40px) */
+  max-height: 561px;
   overflow-y: auto; /* Enable vertical scrolling */
+  
+  scrollbar-width: thin;
+  scrollbar-color: #B9C6D4 #F7F9FC;
 }
 
 tbody tr {
@@ -97,18 +101,11 @@ th {
   z-index: 10; 
 }
 
-
-th[sortable]::before {
-  content: "";
-  cursor: pointer;  
-  display: inline-block;
-  background: url("/assets/icons/filter-icon.svg") no-repeat center center;
+.header-icon {
   width: 8.235px;
   height: 14px;
-  position: absolute;
-  left: 10px; 
-  top: 50%;
-  transform: translateY(-50%);
+  vertical-align: middle;
+  margin-right: 5px;
 }
 
 

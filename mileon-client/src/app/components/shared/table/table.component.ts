@@ -55,6 +55,9 @@ export class TableComponent
   columns?: Column[];
 
   @Input({ required: true })
+  icon?: Icon | string;
+
+  @Input({ required: true })
   data?: any[];
 
   @Input()
@@ -244,9 +247,19 @@ export class TableComponent
     return icon;
   }
 
-  getIconPath(iconName: string | undefined): string {
+  getIconPath(iconName: string | Icon | undefined): string {
     if (!iconName) {
       return this.Icons.EDIT;
+    }
+    
+    // If it's already a string path, return it directly
+    if (typeof iconName === 'string') {
+      return iconName;
+    }
+    
+    // If it's an Icon object, use its src property
+    if (iconName && typeof iconName === 'object' && 'src' in iconName) {
+      return iconName.src;
     }
     
     // Use type assertion to access the static property dynamically

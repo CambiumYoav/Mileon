@@ -76,7 +76,7 @@ export class ConstPath {
   public static IMG = '../assets/icons/image.svg';
 
   public static ANGLE_DOWN = '../assets/icons/angle-down.svg';
-  
+  public static FILTER_ICON = '../assets/icons/filter-icon.svg';
 
   public static TIMER = '../assets/icons/timer.svg';
   public static TICK_CIRCLE = '../assets/icons/tick_circle.svg';

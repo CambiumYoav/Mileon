@@ -13,10 +13,16 @@
               (sort)="onSort($event)"
               [canSort]="column.canSort"
               [sortByServer]="column.sortByServer"
-            >
+            > 
               <span class="title">
                 {{ column.displayName }}
               </span>
+              <img 
+                *ngIf="icon" 
+                [src]="getIconPath(icon)" 
+                class="header-icon" 
+                alt="filter icon"
+              />
             </th>
           </ng-container>
         </tr>
