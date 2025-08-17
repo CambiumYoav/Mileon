@@ -24,6 +24,7 @@ export class AppComponent {
 
   
   form: FormGroup = new FormGroup({});
+  pageSize: number = 100;
   columns: Column[] = [
     {
       propertyName: 'selected',
@@ -372,7 +373,65 @@ export class AppComponent {
       status: 'פתוח',
       statusId: 1,
       additionalReports: 456
-    }
+    },
+    {
+      id: 20,
+      selected: false,
+      reportNumber: '1585123121612',
+      inputField: '',
+      yesNoRadio: 'לא',
+      violationDate: '2025-03-25',
+      fullName: 'דנה לוי',
+      nid: '852963741',
+      municipality: 'רמת גן',
+      status: 'פתוח',
+      statusId: 1,
+      additionalReports: 456
+    },
+    {
+      id: 21,
+      selected: false,
+      reportNumber: '1585123121612',
+      inputField: '',
+      yesNoRadio: 'לא',
+      violationDate: '2025-03-25',
+      fullName: 'דנה לוי',
+      nid: '852963741',
+      municipality: 'רמת גן',
+      status: 'פתוח',
+      statusId: 1,
+      additionalReports: 456
+    },
+    {
+      id: 22,
+      selected: false,
+      reportNumber: '1585123121612',
+      inputField: '',
+      yesNoRadio: 'לא',
+      violationDate: '2025-03-25',
+      fullName: 'דנה לוי',
+      nid: '852963741',
+      municipality: 'רמת גן',
+      status: 'פתוח',
+      statusId: 1,
+      additionalReports: 456
+    },
+    {
+      id: 23,
+      selected: false,
+      reportNumber: '1585123121612',
+      inputField: '',
+      yesNoRadio: 'לא',
+      violationDate: '2025-03-25',
+      fullName: 'דנה לוי',
+      nid: '852963741',
+      municipality: 'רמת גן',
+      status: 'פתוח',
+      statusId: 1,
+      additionalReports: 456
+    },
+    
+    
   ];
   
 previewFile: PreviewFileType | undefined;
@@ -386,7 +445,6 @@ previewFile: PreviewFileType | undefined;
   showPaginator: boolean = true;
   TicketStagesIcons: Icon[] = [];
   selectedFiles: any[] = [];
-
   
   Icons = ConstPath;
   constructor(
@@ -398,8 +456,7 @@ previewFile: PreviewFileType | undefined;
     this.appService.currentModuleName = 'TicketsNewModule';
     
     this.form = new FormGroup({
-      currentPage: new FormControl(1),
-      pageSize: new FormControl(14)
+      currentPage: new FormControl(1)
     });
     
     setTimeout(() => {

@@ -99,7 +99,7 @@ export class TableService {
 
   private _state: State = {
     page: 1,
-    pageSize: 14,
+    pageSize: 10,
     sortColumn: '',
     sortDirection: '',
   };

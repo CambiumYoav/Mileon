@@ -74,7 +74,10 @@ export class ConstPath {
   public static TICKET_ONLINE = '../assets/icons/ticket_online.svg';
   public static TICKET_STATUS = '../assets/icons/ticket_status.svg';
   public static IMG = '../assets/icons/image.svg';
+
+  public static ANGLE_DOWN = '../assets/icons/angle-down.svg';
   
+
   public static TIMER = '../assets/icons/timer.svg';
   public static TICK_CIRCLE = '../assets/icons/tick_circle.svg';
   public static ERROR_CIRCLE = '../assets/icons/error_circle.svg'; 

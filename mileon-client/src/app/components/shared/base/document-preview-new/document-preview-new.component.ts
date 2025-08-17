@@ -12,16 +12,19 @@ import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { ConstPath } from '../../../../constants/const_path';
 import { BaseService } from '../../../../services/base.service';
 import { PreviewFileType } from '../../../../types/previewFile';
+import { CommonModule } from '@angular/common';
 import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-document-preview-new',
   templateUrl: './document-preview-new.component.html',
   styleUrls: ['./document-preview-new.component.scss'],
+  standalone: true,
+  imports: [CommonModule],
 })
 export class DocumentPreviewNewComponent implements OnInit, OnChanges {
   @Input()
-  previewFile!: PreviewFileType;
+  previewFile?: PreviewFileType;
   @Input() isDownoladable: boolean = false; // Allow download by default
 
   @Input()
@@ -69,7 +72,7 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
       // console.log(this.previewFile.path);
 
       this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-        this.previewFile.path ?? ''
+        this.previewFile?.path ?? ''
       );
     }
   }
@@ -94,16 +97,16 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
       this.http
         .get(this.finalFileUrl, { responseType: 'blob' as 'json' })
         .subscribe((res: any) => {
-          saveAs(res, this.previewFile.fileTypeTitle);
+          saveAs(res, this.previewFile?.fileTypeTitle ?? '');
         });
     } else {
       const downloadLink = document.createElement('a');
-      downloadLink.href = this.previewFile.path ?? '';
-      downloadLink.download = this.previewFile.file?.name ?? '';
+      downloadLink.href = this.previewFile?.path ?? '';
+      downloadLink.download = this.previewFile?.file?.name ?? '';
       downloadLink.click();
 
       // Clean up by revoking the object URL
-      URL.revokeObjectURL(this.previewFile.path ?? '');
+      URL.revokeObjectURL(this.previewFile?.path ?? '');
     }
   }
 

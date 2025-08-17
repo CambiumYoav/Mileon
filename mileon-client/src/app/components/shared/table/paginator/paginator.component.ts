@@ -15,7 +15,7 @@ export class PaginatorComponent implements OnInit {
 
   @Input() selectedPage: number = 1;
 
-  @Input() pageSize: number = 14;
+  @Input() pageSize!: number; 
 
   pages: number[] = [];
 
@@ -78,7 +78,12 @@ export class PaginatorComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this._total > 0 && this.pageSize > 0) {
+      this._totalPages = Math.ceil(this._total / this.pageSize);
+      this.pages = this.getVisiblePages(this._totalPages);
+    }
+  }
 
   setSelectedPage(page: number) {
     if (page >= 1 && page <= this._totalPages) {

@@ -67,7 +67,7 @@ export class TableComponent
   count?: number;
 
   @Input({ required: true })
-  pageSize: number = 14;
+  pageSize!: number;
 
   @Input({ required: true })
   showPaginator: boolean = true;
