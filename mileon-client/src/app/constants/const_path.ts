@@ -81,6 +81,7 @@ export class ConstPath {
   public static TIMER = '../assets/icons/timer.svg';
   public static TICK_CIRCLE = '../assets/icons/tick_circle.svg';
   public static ERROR_CIRCLE = '../assets/icons/error_circle.svg'; 
+  public static ERROR_UPLOAD = '../assets/icons/error_upload.svg';
 
 
   public static UPLOAD_DOCUMENT = '../assets/icons/document_upload.svg';

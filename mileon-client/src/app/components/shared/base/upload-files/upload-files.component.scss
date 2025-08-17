@@ -5,6 +5,16 @@
   pointer-events: none;
 }
 
+.title-placeholder {
+  // font-family: $fontOpenSans;
+  color: var(--text, #000);
+  text-align: right;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+
 .button-container {
   box-sizing: border-box;
   display: flex;
@@ -30,6 +40,7 @@
 
   &.status-uploading {
     border-color: #FF824D;
+    gap: 20px;
   }
 
   &.status-success {
@@ -38,6 +49,7 @@
 
   &.status-failed {
     border-color: #F00;
+    gap: 20px;
   }
 
   &.sm {
@@ -79,4 +91,7 @@
     align-content: flex-start;
     padding-bottom: 30px;
   }
+
+
 }
+

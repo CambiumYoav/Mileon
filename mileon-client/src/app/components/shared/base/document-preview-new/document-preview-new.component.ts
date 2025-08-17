@@ -14,6 +14,7 @@ import { BaseService } from '../../../../services/base.service';
 import { PreviewFileType } from '../../../../types/previewFile';
 import { CommonModule } from '@angular/common';
 import { saveAs } from 'file-saver';
+import { UploadStatus } from '../../../../types/enum/uploadStatus.enum';
 
 @Component({
   selector: 'app-document-preview-new',
@@ -26,6 +27,8 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
   @Input()
   previewFile?: PreviewFileType;
   @Input() isDownoladable: boolean = false; // Allow download by default
+  @Input() uploadStatus: UploadStatus = UploadStatus.IDLE;
+  @Input() errorType: 'size' | 'type' | null = null;
 
   @Input()
   isFullPath!: boolean;
@@ -40,7 +43,8 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
   closeCircleIcon!: string;
   documentTextIcon!: string;
   exportIcon!: string;
-
+  errorUploadIcon!: string;
+  
   constructor(
     private sanitizer: DomSanitizer,
     private baseService: BaseService,
@@ -82,6 +86,7 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
     this.closeCircleIcon = ConstPath.CLOSE_CIRCLE;
     this.documentTextIcon = ConstPath.DOCUMENT_TEXT_ICON;
     this.exportIcon = ConstPath.EXPORT_DOCUMENT;
+    this.errorUploadIcon = ConstPath.ERROR_UPLOAD;
   }
 
   ngOnChanges(changes: SimpleChanges): void {

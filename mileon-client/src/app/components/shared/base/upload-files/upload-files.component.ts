@@ -60,6 +60,7 @@ export class FileUploadNewComponent
   @Input() containerSize: 'sm' | 'md' | 'lg' | string = 'md';
   @Input() disabled: boolean = false;
   currentUploadStatus: UploadStatus = UploadStatus.IDLE;
+  currentErrorType: 'size' | 'type' | null = null;
 
   // Computed property to get the current icon based on upload status
   get getCurrentIcon(): string {
@@ -132,7 +133,8 @@ export class FileUploadNewComponent
         this.allowedFileTypes.length > 0 &&
         !this.allowedFileTypes.includes(fileType as FileType)
       ) {
-        this.clearFileFromMemory();
+        this.currentErrorType = 'type';
+        this.addFileToPreview(this.file, UploadStatus.FAILED);
         this.currentUploadStatus = UploadStatus.FAILED;
         this.toaster.error(ErrorSuccessMessages.FILE_TYPES_NOT_ALLOWED);
         return;
@@ -143,7 +145,8 @@ export class FileUploadNewComponent
         ? this.maxFileSizeMB * 1024 * 1024
         : Infinity;
       if (this.file.size > maxBytes) {
-        this.clearFileFromMemory();
+        this.currentErrorType = 'size';
+        this.addFileToPreview(this.file, UploadStatus.FAILED);
         this.currentUploadStatus = UploadStatus.FAILED;
         this.toaster.error(ErrorSuccessMessages.FILE_SIZE_NOT_ALLOWED);
         return;
@@ -151,11 +154,11 @@ export class FileUploadNewComponent
 
       console.log('Selected file:', this.file);
       // Add to preview
-      this.addFileToPreview(this.file);
+      this.addFileToPreview(this.file, UploadStatus.SUCCESS);
     }
   }
 
-  addFileToPreview(file: File): void {
+  addFileToPreview(file: File, status: UploadStatus = UploadStatus.SUCCESS): void {
     // Clear previous file
     this.previewFiles = [];
 
@@ -170,8 +173,8 @@ export class FileUploadNewComponent
       file,
     });
     
-    // Set status to success when file is added to preview
-    this.currentUploadStatus = UploadStatus.SUCCESS;
+    // Set status based on parameter
+    this.currentUploadStatus = status;
     
     this.fileSelected.emit(file); // Emit file event if needed
   }
@@ -183,6 +186,7 @@ export class FileUploadNewComponent
     }
     // Reset status to idle when clearing file
     this.currentUploadStatus = UploadStatus.IDLE;
+    this.currentErrorType = null;
   }
 
   deleteFile(fileID: number): void {
@@ -192,5 +196,6 @@ export class FileUploadNewComponent
     
     // Reset status to idle when file is deleted
     this.currentUploadStatus = UploadStatus.IDLE;
+    this.currentErrorType = null;
   }
 }

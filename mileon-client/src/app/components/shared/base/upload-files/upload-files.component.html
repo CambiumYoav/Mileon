@@ -16,6 +16,8 @@
       [previewFile]="file"
       [isFullPath]="true"
       [isDownoladable]="isDownoladable"
+      [uploadStatus]="currentUploadStatus"
+      [errorType]="currentErrorType"
       (deleteEvent)="deleteFile($event)"
     ></app-document-preview-new>
   </div>

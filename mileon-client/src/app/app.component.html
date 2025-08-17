@@ -64,7 +64,7 @@
 </div> -->
 
 
-<app-table
+<!-- <app-table
   [data]="data"
   [columns]="columns"
   [total]="total"
@@ -78,15 +78,14 @@
   [isCheckboxsSelected]="true"
   (onRowEvent)="onRowEvent($event)"
 >
-</app-table>
+</app-table> -->
 
-<!-- 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>  
-<app-file-upload-new [selectedFiles]="selectedFiles"></app-file-upload-new>
- -->
+
+ 
+<div class="upload-container" style="width: 80%; margin: 0 auto;">
+  <app-file-upload-new 
+  [selectedFiles]="selectedFiles"
+   [title]="'ייבוא קובץ'"
+  ></app-file-upload-new>
+</div>
+

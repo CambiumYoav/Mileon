@@ -15,9 +15,30 @@
       height: auto;
       max-width: 400px;
       background-color: #ffffff !important;
-      border-color: $colorBorderGray;
       border-radius: 8px !important;
       box-shadow: none;
+
+          &.failed {
+      background-color: #FFE0E3 !important;
+
+       .error-icon {
+        width: 20px;
+        height: 20px;
+       }
+
+       .primary-error {
+        color: #0C3058;
+        font-weight: bold;
+        font-size: 16px;
+       }
+
+       .secondary-error {
+        color: #666;
+        font-size: 14px;
+       }
+
+       }
+    }
     }
 
     .file-info-container {
@@ -34,6 +55,10 @@
         background-color: var(--light-blue, #EDF9FF);
       }
 
+    }
+
+    .failed {
+      background: #FFE0E3 !important;
     }
 
     .file-name {
@@ -54,16 +79,24 @@
       }
 
       .file-name-text {
-        font-size: 14px;
-        font-weight: 400;
-        color: black;
+        overflow: hidden;
+        color: var(--text-text-50, #0C3058);
+        text-align: right;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 24px;
       }
+
       .file-size-text {
-        font-size: 12px;
-        font-weight: 300;
-        color: gray;
-        margin-left: 0;
-        margin-top: 2px;
+        color: var(--text-text-40, #3A5778);
+      text-align: right;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px;
       }
     }
 
@@ -77,7 +110,7 @@
         height: 24px;
         flex-shrink: 0;
         position: relative;
-        top: -20px;
+        top: -22px;
         z-index: 10;
 
       }
@@ -90,4 +123,4 @@
     }
 
   }
-}
+
