@@ -1,4 +1,4 @@
-import { display } from 'ngx-bootstrap-icons';
+// import { display } from 'ngx-bootstrap-icons';
 export interface AdvancedForm {
   tabs: Tab[];
 }

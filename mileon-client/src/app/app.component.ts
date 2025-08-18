@@ -7,11 +7,12 @@ import {
   SharedModules,
 } from './shared/shared-modules';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Column, ColumnTypeEnum } from './types/table';``
+import { Column, ColumnTypeEnum } from './types/table';
 import { Subject } from 'rxjs';
 import { Icon } from './types/icon';
 import { AppService } from './app.service';
 import { PreviewFileType } from './types/previewFile';
+import { InputSizeEnum } from './types/enum/inputSizeEnum';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,9 @@ import { PreviewFileType } from './types/previewFile';
   imports: [BaseComponents, SharedImports], 
 })
 export class AppComponent {
+
+  InputSizeEnum = InputSizeEnum;
+
   title = 'mileon-client';
 
   
@@ -107,7 +111,7 @@ export class AppComponent {
     }
   ];
   
-  data: any[] = [
+  originalData: any[] = [
     {
       id: 1,
       selected: false,
@@ -434,7 +438,13 @@ export class AppComponent {
     
   ];
   
-previewFile: PreviewFileType | undefined;
+  data: any[] = [...this.originalData];
+  
+  // Generate suggestions from the data
+  searchSuggestions: string[] = [];
+  
+  previewFile: PreviewFileType | undefined;
+  searchText: string = '';
   
   get total(): number {
     return this.data.length;
@@ -455,9 +465,22 @@ previewFile: PreviewFileType | undefined;
   ngOnInit() {
     this.appService.currentModuleName = 'TicketsNewModule';
     
+    // Initialize form with all necessary controls
     this.form = new FormGroup({
-      currentPage: new FormControl(1)
+      searchText: new FormControl(''),
+      currentPage: new FormControl(1),
+      startDate: new FormControl(null),
+      endDate: new FormControl(null),
+      orderByField: new FormControl(null),
+      order: new FormControl('asc'),
+      customFilters: new FormControl(null)
     });
+    
+    // Generate search suggestions
+    this.generateSearchSuggestions();
+    
+    console.log('App component form initialized:', this.form);
+    console.log('Form controls:', Object.keys(this.form.controls));
     
     setTimeout(() => {
       this.loader = false;
@@ -471,6 +494,66 @@ previewFile: PreviewFileType | undefined;
       // TODO: Implement edit functionality
       this.showSuccess(); // Show success message for now
     }
+  }
+
+  sendFormValue(searchForm: any): void {
+    console.log('Search form received:', searchForm);
+    const searchText = searchForm.get('searchText')?.value || '';
+    console.log('Search text:', searchText);
+    this.searchText = searchText;
+    
+    if (searchText) {
+      // Filter the data based on search text
+      this.filterData(searchText);
+    } else {
+      // Reset to original data if no search text
+      this.resetData();
+    }
+  }
+
+  private filterData(searchText: string): void {
+    console.log('Filtering data with search text:', searchText);
+    console.log('Original data length:', this.originalData.length);
+    
+    const filteredData = this.originalData.filter(item => 
+      item.fullName?.toLowerCase().includes(searchText.toLowerCase()) ||
+      item.nid?.includes(searchText) ||
+      item.municipality?.toLowerCase().includes(searchText.toLowerCase()) ||
+      item.reportNumber?.includes(searchText)
+    );
+    
+    console.log('Filtered data length:', filteredData.length);
+    
+    // Update the data source for the table
+    this.updateTableData(filteredData);
+  }
+
+  private resetData(): void {
+    console.log('Resetting data to original');
+    // Reset to original data
+    this.updateTableData([...this.originalData]);
+  }
+
+  private updateTableData(newData: any[]): void {
+    console.log('Updating table data:', newData.length, 'items');
+    // Create a new array reference to trigger change detection
+    this.data = [...newData];
+    console.log('Table data updated, new length:', this.data.length);
+  }
+
+  private generateSearchSuggestions(): void {
+    const suggestions = new Set<string>();
+    
+    // Add names, municipalities, NIDs, and report numbers to suggestions
+    this.originalData.forEach(item => {
+      if (item.fullName) suggestions.add(item.fullName);
+      if (item.municipality) suggestions.add(item.municipality);
+      if (item.nid) suggestions.add(item.nid);
+      if (item.reportNumber) suggestions.add(item.reportNumber);
+    });
+    
+    this.searchSuggestions = Array.from(suggestions);
+    console.log('Generated suggestions:', this.searchSuggestions);
   }
   showSuccess() {
     this.toastr.success('הפעולה הושלמה בהצלחה!');

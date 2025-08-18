@@ -6,21 +6,342 @@
 
 form {
   position: relative;
+  width: 100%;
 }
 
-.result-count-msg {
-  font-size: 16px;
-  color: #a9a5a5;
+.search-area {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+
+  .start {
+    width:  100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .search-icon {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--blue, #387EC4);
+      text-align: right;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;      
+
+      &::placeholder {
+        color: var(--blue, #387EC4);
+      }
+    }
+
+    .text{
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .suggestions-dropdown {
+      position: absolute;
+      top: 115%;
+      // bottom: 0%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      z-index: 1000;
+      max-height: 300px;
+      overflow-y: auto;
+
+      border-radius: 4px;
+      background: #FFF;
+
+      /* drop */
+      box-shadow: 0 0 12px -1px #D2DBE8;
+      
+      .suggestion-item {
+        padding: 12px 16px;
+        cursor: pointer;
+        display: flex;
+        height: 35px;
+        padding: 0 10px;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 23px;
+        align-self: stretch;
+        
+        &:hover {
+          background-color: #f5f5f5;
+        }
+        
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+
+    // Error state for the container
+    &.error,
+    &.ng-invalid.ng-touched {
+      border-radius: 8px;
+      border: 1px solid var(--red, #F00);
+      background: var(--white, #FFF);
+      box-shadow: 0 0 8px 0 rgba(255, 36, 36, 0.59);
+    }
+
+    // Disabled state for the container
+    &:disabled,
+    &.disabled {
+      background: #E3E7EB;
+      border-color: #606060;
+      cursor: not-allowed;
+      opacity: 0.6;
+      
+      .search-icon {
+        opacity: 0.5;
+      }
+      
+      .text {
+        color: #606060;
+      }
+    }
+  }
+  
+  .end {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .clear-icon,
+    .filter-icon {
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+      
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
 }
 
-.text {
-  align-self: normal;
+
+// Search bar size variants
+.search-bar-sm {
+  .search-area {
+    border-radius: 8px;
+    border: 1px solid var(--melion-blue, #21527D);
+    background: var(--white, #FFF);
+    width: 500px;
+    height: 64px;
+    flex-shrink: 0;
+    padding: 15px 20px; 
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .start {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    
+    .text {
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      gap: 14px;
+    }
+  }
 }
 
-.selected-date-range {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #555;
-  direction: ltr;
+
+.search-bar-md {
+  .search-area {
+    border-radius: 8px;
+    border: 1px solid var(--melion-blue, #21527D);
+    background: var(--white, #FFF);
+    width: 800px;
+    height: 64px;
+    flex-shrink: 0;
+    padding: 15px 20px; 
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .start {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .text {
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  }
 }
 
+.search-bar-lg {
+  .search-area {
+    border-radius: 8px;
+    border: 1px solid var(--melion-blue, #21527D);
+    background: var(--white, #FFF);
+    width: 1100px;
+    height: 64px;
+    flex-shrink: 0;
+    padding: 15px 20px; 
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .start {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .text {
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  }
+}
+
+
+// Theme variations
+.search-bar-primary {
+  .search-area {
+    border-color: #007bff;
+    
+    &:focus-within {
+      border-color: #0056b3;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+  }
+}
+
+.search-bar-success {
+  .search-area {
+    border-color: #28a745;
+    
+    &:focus-within {
+      border-color: #1e7e34;
+      box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+    }
+  }
+}
+
+.search-bar-warning {
+  .search-area {
+    border-color: #ffc107;
+    
+    &:focus-within {
+      border-color: #e0a800;
+      box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.25);
+    }
+  }
+}
+
+.search-bar-danger {
+  .search-area {
+    border-color: #dc3545;
+    
+    &:focus-within {
+      border-color: #c82333;
+      box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  form {
+    max-width: 100%;
+  }
+  
+  .search-area {
+    .start {
+      .text {
+        display: none; // Hide the search title on small screens
+      }
+    }
+    
+    .end {
+      padding-right: 8px;
+      gap: 4px;
+    }
+  }
+  
+  // Adjust sizes for mobile
+  .search-bar-lg,
+  .search-bar-xl {
+    .search-area {
+      height: 56px;
+      
+      .input {
+        height: 56px;
+        padding: 12px 16px;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .search-area {
+    .start {
+      padding-left: 8px;
+      
+      .search-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 6px;
+      }
+    }
+    
+    .end {
+      padding-right: 6px;
+    }
+  }
+  
+  // Further reduce sizes for very small screens
+  .search-bar-md,
+  .search-bar-lg,
+  .search-bar-xl {
+    .search-area {
+      height: 48px;
+      
+      .input {
+        height: 48px;
+        padding: 10px 14px;
+        font-size: 16px;
+      }
+    }
+  }
+}

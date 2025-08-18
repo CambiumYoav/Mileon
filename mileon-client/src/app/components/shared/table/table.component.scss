@@ -75,8 +75,8 @@ table {
     overflow: hidden;
     text-overflow: ellipsis;
 
-  }
 
+  }
 
 .fixedwidth {
   width: auto !important;
@@ -123,9 +123,26 @@ thead {
     font-weight: 700;
     line-height: normal;
 }
+
+
 .inactive-row {
-  background-color: #e3e7eb;
+  background-color: #e3e7eb !important;
   border-bottom: 1px solid #b9c6d4;
+  
+  td {
+    background-color: #e3e7eb !important;
+    color: #666 !important;
+  }
+
+  .blue {
+    color: #666 !important;
+  }
+
+  .tag {
+    background-color: #F7F9FC !important;
+    color: #666 !important;
+  }
+
 }
 
 .icon-img {

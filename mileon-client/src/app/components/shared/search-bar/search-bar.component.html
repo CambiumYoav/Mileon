@@ -1,18 +1,29 @@
-<form [formGroup]="form"> 
+<form [formGroup]="form" [ngClass]="sizeClass"> 
   <div class="search-area wrap-search-input">
     <!-- [ngClass]="{ 'not-found': !foundResult || !filterHasValue }" -->
     <div class="start">
       <img [src]="icons.SEARCH" [alt]="icons.SEARCH" class="search-icon" />
-      <span *ngIf="showPlaceholder" class="text">{{ searchTitle }}</span>
+      <span *ngIf="showPlaceholder && !form.get('searchText')?.value" class="text">{{ searchTitle }}</span>
       <input
         #searchText
         type="text"
         class="input"
         placeholder="{{ searchBy }}"
         formControlName="searchText"
-      />
-    </div>
-    <div class="end">
+             />
+       
+       <!-- Search suggestions dropdown -->
+       <div *ngIf="showSuggestions && filteredSuggestions.length > 0" class="suggestions-dropdown">
+         <div 
+           *ngFor="let suggestion of filteredSuggestions" 
+           class="suggestion-item"
+           (click)="selectSuggestion(suggestion)"
+         >
+           {{ suggestion }}
+         </div>
+       </div>
+     </div>
+     <div class="end">
       <img
         *ngIf="form.get('searchText')?.value"
         [src]="icons.EXIT"
@@ -51,12 +62,12 @@
     <!-- <input readonly="true" matStartDate formControlName="startDate" />
     <input readonly="true" matEndDate formControlName="endDate" />
   </mat-date-range-input> -->
-  <div
+  <div  
     class="selected-date-range"
     *ngIf="
       form.get('startDate')?.value &&
       form.get('endDate')?.value &&
-      !picker.opened
+      !picker.opened  
     "
   >
     <span>
@@ -98,12 +109,12 @@
       resultCountMessage
     }}</span> -->
 
-    <span *ngIf="total && !hasResultsDropdown" class="result-count-msg">{{
+    <!-- <span *ngIf="total && !hasResultsDropdown" class="result-count-msg">{{
       total +
         " " +
         resultCountMessage +
         " " +
         (searchTextValue ? " " + searchTextValue : "")
-    }}</span>
+    }}</span> -->
   </div>
 </form>
