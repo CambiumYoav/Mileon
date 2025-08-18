@@ -69,26 +69,21 @@
 
 
  
-<!-- <div class="upload-container" style="width: 80%; margin: 0 auto;">
-  <app-file-upload-new 
-  [selectedFiles]="selectedFiles"
-[maxFileSizeMB]="0.001"
-  ></app-file-upload-new>
-</div> -->
+
 
 <!-- Search bar with different sizes -->
-<div style="margin: 20px;">
+<!-- <div style="margin: 20px;">
   <h3>Small Size</h3>
   <app-search-bar 
     [size]="InputSizeEnum.Sm"
     [form]="form" 
-    [showFilters]="false"
+    [showFilters]="true"
     (search)="sendFormValue($event)"
     [submitOnKey]="true"
     [resultData]="data"
     [total]="total"
     [searchTextValue]="searchText"
-    [showDatePicker]="false"
+    [showDatePicker]="true"
     [hasResultsDropdown]="false"
     searchBy="שם משתמש,שם מלא,תעודת זהות..."
     searchTitle="חיפוש"
@@ -102,13 +97,13 @@
   <app-search-bar 
     [size]="InputSizeEnum.Md"
     [form]="form" 
-    [showFilters]="false"
+    [showFilters]="true"
     (search)="sendFormValue($event)"
     [submitOnKey]="true"
     [resultData]="data"
     [total]="total"
     [searchTextValue]="searchText"
-    [showDatePicker]="false"
+    [showDatePicker]="true"
     [hasResultsDropdown]="false"
     searchBy="שם משתמש,שם מלא,תעודת זהות..."
     searchTitle="חיפוש"
@@ -121,38 +116,36 @@
   <app-search-bar 
     [size]="InputSizeEnum.Lg"
     [form]="form" 
-    [showFilters]="false"
+    [showFilters]="true"
     (search)="sendFormValue($event)"
     [submitOnKey]="true"
     [resultData]="data"
     [total]="total"
     [searchTextValue]="searchText"
-    [showDatePicker]="false"
+    [showDatePicker]="true"
     [hasResultsDropdown]="false"
     searchBy="שם משתמש,שם מלא,תעודת זהות..."
     searchTitle="חיפוש"
     [showPlaceholder]="true"
     [disabled]="true"
   ></app-search-bar>
-</div>
+</div> -->
 
 
-<br>
 <!-- Search bar for table -->
 <div style="margin: 20px; padding-top: 100px;" >
   <h3>Table Search</h3>
   <app-search-bar 
     [size]="InputSizeEnum.Md"
     [form]="form" 
-    [showFilters]="false"
+    [showFilters]="true"
     (search)="sendFormValue($event)"
     [submitOnKey]="true"
     [resultData]="data"
     [total]="total"
     [searchTextValue]="searchText"
-    [showDatePicker]="false"
-    [hasResultsDropdown]="false"
-    [suggestions]="searchSuggestions"
+    [showDatePicker]="true"
+    [hasResultsDropdown]="true"
     searchBy="שם משתמש,שם מלא,תעודת זהות..."
     searchTitle="חיפוש בטבלה"
     [showPlaceholder]="true"
@@ -179,3 +172,12 @@
 </app-table>
 
 </div>
+
+<br>
+
+
+<!-- <div class="upload-container" style="margin: 20px;">
+  <app-file-upload-new 
+  [selectedFiles]="selectedFiles"
+  ></app-file-upload-new>
+</div> -->

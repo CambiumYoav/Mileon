@@ -11,17 +11,6 @@
         placeholder="{{ searchBy }}"
         formControlName="searchText"
              />
-       
-       <!-- Search suggestions dropdown -->
-       <div *ngIf="showSuggestions && filteredSuggestions.length > 0" class="suggestions-dropdown">
-         <div 
-           *ngFor="let suggestion of filteredSuggestions" 
-           class="suggestion-item"
-           (click)="selectSuggestion(suggestion)"
-         >
-           {{ suggestion }}
-         </div>
-       </div>
      </div>
      <div class="end">
       <img
@@ -31,22 +20,20 @@
         (click)="resetSearch()"
         [alt]="icons.EXIT"
       />
-      <!-- <mat-datepicker-toggle
+      <mat-datepicker-toggle
         [disableRipple]="true"
         matSuffix
         [for]="picker"
         (click)="$event.stopPropagation()"
-        *ngIf="
-          showDatePicker && showDatePicker && !form.get('searchText')?.value
-        "
-      > -->
-        <!-- <mat-icon matDatepickerToggleIcon>
+        *ngIf="showDatePicker && !form.get('searchText')?.value"
+      >
+        <mat-icon matDatepickerToggleIcon>
           <img [src]="icons.CELANDER" [alt]="icons.CELANDER" />
         </mat-icon>
       </mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker> -->
+      <mat-date-range-picker #picker></mat-date-range-picker>
       <img
-        *ngIf="!form.get('searchText')?.value && showFilters"
+        *ngIf="showFilters && !form.get('searchText')?.value"
         id="filter-icon"
         [src]="icons.SEARCH_END"
         [alt]="icons.SEARCH_END"
@@ -54,45 +41,45 @@
       />
     </div>
   </div>
-  <!-- <mat-date-range-input
+  <mat-date-range-input
     [ngClass]="{ hide: !picker.opened }"
     dir="ltr"
     [rangePicker]="picker"
-  > -->
-    <!-- <input readonly="true" matStartDate formControlName="startDate" />
+  >
+    <input readonly="true" matStartDate formControlName="startDate" />
     <input readonly="true" matEndDate formControlName="endDate" />
-  </mat-date-range-input> -->
-  <div  
+  </mat-date-range-input>
+  <div
     class="selected-date-range"
     *ngIf="
       form.get('startDate')?.value &&
       form.get('endDate')?.value &&
-      !picker.opened  
+      !picker.opened
     "
   >
     <span>
-      {{ form.get("startDate")?.value | date : "dd/MM/yyyy" }} - 
+      {{ form.get("startDate")?.value | date : "dd/MM/yyyy" }} -
       {{ form.get("endDate")?.value | date : "dd/MM/yyyy" }}
     </span>
   </div>
-  <!-- <app-dropdown-window
+  <app-dropdown-window
     *ngIf="dropdownWindowOpened"
     (closeDropdownEvent)="closeDropdownWindow()"
   >
-    <app-advanced-search
+    <!-- <app-advanced-search
       *ngIf="advancedSearchOpened"
       [form]="form"
       [advancedForm]="advancedSearch"
       (onSearch)="onSearch()"
       [searchButtonClicked]="searchButtonClicked"
-    ></app-advanced-search>
-    <app-results-dropdown
+    ></app-advanced-search> -->
+    <!-- <app-results-dropdown
       *ngIf="resultData.length && !advancedSearchOpened"
       [resultData]="resultData"
       [loader]="loader"
-    > -->
-    <!-- </app-results-dropdown>
-  </app-dropdown-window> -->
+    >
+    </app-results-dropdown> -->
+  </app-dropdown-window>
   <div class="under-search">
     <!-- <div>
       <ng-container *ngIf="!filterHasValue; else results">
@@ -109,12 +96,13 @@
       resultCountMessage
     }}</span> -->
 
-    <!-- <span *ngIf="total && !hasResultsDropdown" class="result-count-msg">{{
+    <span *ngIf="total && !hasResultsDropdown" class="result-count-msg">{{
       total +
         " " +
         resultCountMessage +
         " " +
         (searchTextValue ? " " + searchTextValue : "")
-    }}</span> -->
+    }}</span>
   </div>
 </form>
+

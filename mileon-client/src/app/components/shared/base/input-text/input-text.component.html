@@ -1,0 +1,35 @@
+<div [class.disabled]="disabled" [ngClass]="sizeClass">
+  <div class="title-container">
+    <div class="inline-header">
+      <img *ngIf="isRequired" class="exit-icon" [src]="Icons.ASTERISK_RED" />
+      <div class="title-placeholder">{{ title }}</div>
+    </div>
+    <ng-container *ngIf="isTooltip">
+      <img
+        [src]="Icons.TOOL_TIP"
+        class="tooltip-icon"
+        [matTooltip]="getTooltipContent()"
+        [matTooltipClass]="['custom-tooltip', 'users-tooltip']"
+        matTooltipPosition="left"
+        aria-label="Info"
+        alt="Info"
+      />
+    </ng-container>
+  </div>
+
+  <div
+    [class]="className || 'input-fill'"
+    [ngClass]="!isValid ? 'invalidInput' : ''"
+  >
+    <input
+      [placeholder]="placeholder"
+      type="text"
+      [formControl]="control"
+      class="hide-border-input input-text"
+    />
+    <div class="icon" *ngIf="icon">
+      <img [src]="icon" alt="icon" />
+    </div>
+  </div>
+  <span *ngIf="!isValid" class="error">{{ errorMessage }}</span>
+</div>

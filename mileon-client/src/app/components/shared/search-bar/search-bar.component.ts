@@ -19,13 +19,15 @@ import { AdvancedForm } from '../../../types/advanced-search/form-tab.model';
 import { MyRef } from '../../../types/myRef';
 import { SharedImports } from '../../../shared/shared-modules';
 import { InputSizeEnum } from '../../../types/enum/inputSizeEnum';
+import { DropdownWindowComponent } from "../dropdown-window/dropdown-window.component";
+
 
 @Component({
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss'],
   standalone: true,
-  imports: [SharedImports],
+  imports: [SharedImports, DropdownWindowComponent],
   providers: [SearchFormService],
 })
 export class SearchBarComponent
@@ -88,49 +90,10 @@ export class SearchBarComponent
   
   @Input() disabled: boolean = false;
   
-  @Input() set suggestions(value: string[]) {
-    this._suggestions = value;
-    this.allSuggestions = [...value];
-  }
-  
-  get suggestions(): string[] {
-    return this._suggestions;
-  }
-  
-  private _suggestions: string[] = [];
+
   private _resultData: any[] = [];
   picker: any;
 
-  private filterSuggestions(value: string): void {
-    if (!value || value.trim() === '') {
-      this.showSuggestions = false;
-      this.filteredSuggestions = [];
-      return;
-    }
-
-    const searchTerm = value.toLowerCase().trim();
-    this.filteredSuggestions = this.allSuggestions.filter(suggestion =>
-      suggestion.toLowerCase().includes(searchTerm)
-    );
-    
-    this.showSuggestions = this.filteredSuggestions.length > 0;
-  }
-
-  selectSuggestion(suggestion: string): void {
-    const searchControl = this.form.get('searchText');
-    if (searchControl) {
-      searchControl.setValue(suggestion);
-    }
-    this.showSuggestions = false;
-    this.onSearch();
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    if (!this.elementRef.nativeElement.contains(event.target as Node)) {
-      this.showSuggestions = false;
-    }
-  }
 
   @Input()
   set resultData(value: any[]) {
@@ -158,10 +121,6 @@ export class SearchBarComponent
 
   _searchTextValue: string = '';
   
-  // Suggestions properties
-  showSuggestions: boolean = false;
-  filteredSuggestions: string[] = [];
-  allSuggestions: string[] = [];
 
   get searchTextValue(): string {
     return this._searchTextValue;
@@ -193,22 +152,7 @@ export class SearchBarComponent
   }
 
   ngOnInit(): void {
-    console.log('Search bar component initialized');
-    console.log('Form received:', this.form);
-    // Don't clear the parent form, just ensure searchText control exists
-    if (this.form && !this.form.get('searchText')) {
-      console.log('Adding searchText control to form');
-      this.form.addControl('searchText', new FormControl(''));
-    }
-    console.log('Form controls after init:', Object.keys(this.form?.controls || {}));
-    
-    // Subscribe to search text changes to show/hide suggestions
-    const searchControl = this.form.get('searchText');
-    if (searchControl) {
-      searchControl.valueChanges.subscribe(value => {
-        this.filterSuggestions(value);
-      });
-    }
+    this.searchFormService.clearForm();
   }
 
   ngAfterViewInit(): void {
@@ -244,19 +188,18 @@ export class SearchBarComponent
       searchControl.setValue('');
     }
     this.closeDropdownWindow();
-    this.showSuggestions = false;
     // Emit search so parent resets the table
     this.onSearch();
   }
 
   onSearch() {
-    console.log('Search triggered in search bar component');
     this.loader = true;
-    const searchControl = this.form.get('searchText');
-    this._searchTextValue = searchControl?.value || '';
-    console.log('Search text value:', this._searchTextValue);
-    console.log('Form being emitted:', this.form);
-    
+    this._searchTextValue = this.form.get('searchText')?.value;
+    // for (let name of Object.keys(this.form.controls)) {
+    //   const formGroup = this.form.controls[name] as FormGroup;
+    //   if (this.checkIfExistsAndValid(formGroup.controls))
+    //     this.concatFormControls(this.searchForm, this.form.controls, name);
+    // }
     this.search.emit(this.form);
     if (this.searchButtonClicked.current) {
       this.triggerAction();

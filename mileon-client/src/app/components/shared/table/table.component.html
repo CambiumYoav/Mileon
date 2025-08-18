@@ -230,7 +230,7 @@
     [showPaginator]="showPaginator"
     [total]="total$ | async"
     (pageChanger)="pageChanges($event)"
-    [pageSize]="pageSize"
+    [pageSize]="pageSize || 14" 
     [selectedPage]="selectedPage"
   >
   </app-paginator>

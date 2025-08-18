@@ -14,7 +14,6 @@
 
     &.card {
       height: auto;
-      max-width: 400px;
       border-radius: 8px !important;
       box-shadow: none;
 
@@ -67,8 +66,8 @@
       gap: 10px;
 
       img {
-        width: 63.817px;
-        height: 63.817px;
+        width: 30px;
+        height: 30px;   
         aspect-ratio: 1/1;
       }
 

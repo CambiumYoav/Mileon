@@ -70,7 +70,7 @@ export class TableComponent
   count?: number;
 
   @Input({ required: true })
-  pageSize!: number;
+  pageSize?: number;
 
   @Input({ required: true })
   showPaginator: boolean = true;
@@ -184,7 +184,7 @@ export class TableComponent
 
   setTableData() {
     this.tableService.columns = this.columns || [];
-    this.tableService.pageSize = this.pageSize;
+    this.tableService.pageSize = this.pageSize || 14; 
     this.tableService.page = this.selectedPage;
     this.tableService.dataSubject$.next(this.data || []);
     this.tableService.totalSubject$.next(this.total);

@@ -1,0 +1,78 @@
+@import "../../../../styles/elements.scss";
+.white-input-si {
+  background: #ffffff;
+  border: 1px solid #b9c6d4;
+  border-radius: 4px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 225px;
+  // max-width: 13vw;
+  padding-right: 10px;
+  font-size: 14px;
+  font-family: $fontOpenSans;
+  .icon {
+    padding-left: 15px;
+  }
+}
+.title-container {
+  gap: 0.5rem; // Adjust spacing between title and icon
+
+  display: flex;
+  align-items: center;
+}
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.tooltip-icon {
+  font-size: 16px;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 5px;
+  vertical-align: middle;
+}
+.input-text {
+  padding-right: 10px;
+}
+
+.invalidInput {
+  border: 1px solid red;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+}
+
+.error {
+  color: red;
+}
+
+::ng-deep .custom-tooltip {
+  &::first-line {
+    text-decoration: underline;
+    font-weight: 600;
+    font-size: 14px;
+    color: red;
+    line-height: 19px;
+    font-family: $fontOpenSans;
+  }
+}
+
+.inline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  .exit-icon {
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .form-title {
+    font-size: 16px;
+    color: black;
+    font-weight: 800;
+    font-family: $fontOpenSans;
+    direction: rtl;
+  }
+}
+
+
