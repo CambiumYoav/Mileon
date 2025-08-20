@@ -284,7 +284,6 @@ export class TableComponent
 
     // Also listen to the form directly if it's passed as input
     if (this.form) {
-      console.log(this.form);
       const formCurrentPage = this.form.get('currentPage');
       if (formCurrentPage) {
         this.onValueChanges(formCurrentPage).subscribe((res: any) => {

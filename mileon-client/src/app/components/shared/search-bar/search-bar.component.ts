@@ -20,6 +20,7 @@ import { MyRef } from '../../../types/myRef';
 import { SharedImports } from '../../../shared/shared-modules';
 import { InputSizeEnum } from '../../../types/enum/inputSizeEnum';
 import { DropdownWindowComponent } from "../dropdown-window/dropdown-window.component";
+import { AdvancedSearchComponent } from "../advanced-search/advanced-search.component";
 
 
 @Component({
@@ -27,7 +28,7 @@ import { DropdownWindowComponent } from "../dropdown-window/dropdown-window.comp
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss'],
   standalone: true,
-  imports: [SharedImports, DropdownWindowComponent],
+  imports: [SharedImports, DropdownWindowComponent, AdvancedSearchComponent],
   providers: [SearchFormService],
 })
 export class SearchBarComponent

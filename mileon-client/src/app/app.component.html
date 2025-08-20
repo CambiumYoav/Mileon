@@ -149,6 +149,7 @@
     searchBy="שם משתמש,שם מלא,תעודת זהות..."
     searchTitle="חיפוש בטבלה"
     [showPlaceholder]="true"
+    [advancedSearch]="advancedSearch"
   ></app-search-bar>
 </div>
 
@@ -181,3 +182,80 @@
   [selectedFiles]="selectedFiles"
   ></app-file-upload-new>
 </div> -->
+
+
+<div style="margin: 20px;" [formGroup]="form">
+
+    <!-- text input
+  <app-input-text 
+  [size]="InputSizeEnum.Sm"
+    [title]="'מספרים'" 
+    [placeholder]="'00:00'"
+  ></app-input-text>
+  <br>
+  <app-input-text 
+  [size]="InputSizeEnum.Md"
+    [title]="'כותרת-רגילה'" 
+    [placeholder]="'כותרת-רגילה'"
+  ></app-input-text>
+  <br>
+  <app-input-text 
+  [size]="InputSizeEnum.Lg"
+    [title]="'טקסט של התווית'" 
+    [placeholder]="'טקסט של התווית'"
+  ></app-input-text>
+  <br>
+  <app-input-text 
+    [size]="InputSizeEnum.Xl"
+    [title]="'כותרת-טקסט ארוך'" 
+    [placeholder]="'כותרת-טקסט ארוך'"
+  ></app-input-text>
+
+  <br> -->
+
+  <!-- date input
+  <app-input-date
+  [formControlName]="'lastUpdate'"
+  [title]="'תאריך קליטה אחרון'"
+  [placeholder]="'dd-mm-yyyy'"
+  [isValid]="true"
+  ></app-input-date>
+
+  <br> -->
+
+  <!-- phone input
+  <app-input-phone
+  [title]="'טלפון'"
+  [formControlName]="'phone'"
+  [isValid]="true"
+  [isRequired]="true"
+  ></app-input-phone>
+
+  <br> -->
+
+  select input
+  <app-select
+  fxFill
+  [ngStyle]="{ height: '40px', width: '180px' }"
+  appearance="fill"
+  [bindLabelKeys]="['value']"
+  [formControlName]="'selectValue'"
+  [dataFunction]="dataFunction.getMunicipalities" 
+  searchPlaceholder="חיפוש"
+  bindLabelKey="value"
+  bindValueKey="id"
+  [isMultiSelect]="false"
+  ></app-select>
+
+  <br>
+
+  <app-input-checkbox
+  [title]="'בחירה'"
+  [formControlName]="'checkboxValue'"
+  ></app-input-checkbox>
+
+</div>
+
+
+
+

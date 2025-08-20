@@ -1,9 +1,10 @@
 import { Component, forwardRef, Injector, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FormControlValueAccessorConnector } from '../../abstract/form-control-value-accessor-connector.component'; 
-import { ConstPath } from '../../../../constants/const_path';
-import { SharedImports } from '../../../../shared/shared-modules';
-import { InputSizeEnum } from '../../../../types/enum/inputSizeEnum';
+import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component'; 
+import { ConstPath } from '../../../../../constants/const_path';
+import { SharedImports } from '../../../../../shared/shared-modules';
+import { InputSizeEnum } from '../../../../../types/enum/inputSizeEnum';
+
 
 @Component({
   selector: 'app-input-text',
@@ -27,7 +28,12 @@ export class InputTextComponent
   constructor(injector: Injector) {
     super(injector);
   }
+  InputSizeEnum = InputSizeEnum;
   Icons = ConstPath;
+  
+  @Input()
+  size: InputSizeEnum = InputSizeEnum.Base;
+  
   @Input()
   className: string = '';
 
@@ -46,8 +52,8 @@ export class InputTextComponent
   isRequired: boolean | undefined = false;
   @Input() disabled: boolean = false;
 
-  get sizeClass(): string | null {
-    return `white-input-${this.inputSize}`;
+  get sizeClass(): string {
+    return `input-text-${this.size}`;
   }
 
   getTooltipContent(): string {

@@ -1,0 +1,96 @@
+.title-placeholder {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: right;
+}
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.input-fill{
+  display: flex;
+  align-items: center;
+  padding: 10px 11px;
+}
+
+.phone-group {
+  display: flex;
+  width: 210px;
+  height: 40.644px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  &:focus{
+    border:none;
+  }
+
+  .input-text{
+    width: 100%;
+    border: none;
+    background: none;
+    outline: none;
+
+    &:focus{
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+  }
+  
+  .phone-input {
+    width: 100%;
+    height: 40.644px;
+    border-radius: 4px;
+    border: 1px solid var(--strok_color, #B9C6D4);
+    background: var(--white, #FFF);
+    align-items: center;
+    position: relative;
+    
+    .call-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      z-index: 1;
+    }
+    
+    .input-text {
+      padding-left: 40px;
+    }
+  }
+}
+
+.hide-border-input{
+  width: 100%;
+  &:focus{
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.invalidInput {
+  border: 1px solid red;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+.inline-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+  
+  .exit-icon {
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+}

@@ -2,6 +2,7 @@ export class ConstPath {
   public static NOTE_CONTENT = '../assets/icons/noteContent.svg';
   public static CLOSE_CIRCLE = '../assets/icons/close_circle.svg';
   public static TRASH = '../assets/icons/trash.svg';
+  public static CALL = '../assets/icons/call.svg';
   public static TRASH_NOTICES = '../assets/icons/trashNotices.svg';
   public static TRASH_TABLE = '../assets/icons/trashOutline.svg';
   public static TRASH_DARK = '../assets/icons/trash-dark.svg';

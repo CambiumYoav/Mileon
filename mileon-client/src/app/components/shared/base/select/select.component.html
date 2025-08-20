@@ -1,0 +1,70 @@
+<div [class.disabled]="disabled">
+  <div class="inline-header">
+    <img *ngIf="isRequired" class="exit-icon" [src]="Icons.ASTERISK_RED" />
+    <div
+      class="title-placeholder"
+      [ngStyle]="{ 'margin-bottom': title ? '0.5rem' : '0' }"
+    >
+      {{ title }}
+    </div>
+  </div>
+  <div
+    [class.input-fill]="appearance != 'standard'"
+    class="select"
+    [ngClass]="{
+      invalidInput: !isValid,
+      validInput: control?.valid && control?.touched
+    }"
+  >
+    <span *ngIf="control?.value && (isMultiSelect ? control.value.length : true)">
+      <mat-icon class="ml-2" (click)="clearSelectionAndUpdateDateAccordingly()">clear</mat-icon>
+    </span>
+    
+    <!-- Search input inside the select field -->
+    <!-- <div class="search-container" *ngIf="displaySearch">
+      <input
+        matInput
+        class="search-input"
+        [placeholder]="searchPlaceholder"
+        [formControl]="filterFormControl"
+      />
+    </div> -->
+    
+    <mat-select
+      appInfiniteScroll
+      (scrolled)="updateCurrentPage()"
+      [formControl]="control"
+      disableOptionCentering
+      [multiple]="isMultiSelect ?? true"
+      [placeholder]="placeholder"
+      aria-disabled="true"
+      [compareWith]="compareValues"
+    >
+      <div *ngIf="items$ | async as retrievedItems; else waitingResponse">
+        <mat-option
+          *ngFor="let item of retrievedItems"
+          [value]="item[bindValueKey]"
+        >
+          <ng-container *ngIf="bindLabelKeys; else elseBlock">
+            <span>{{ constructLabel(item, bindLabelKeys) }}</span>
+          </ng-container>
+          <ng-template #elseBlock>
+            <span>{{ item[bindLabelKey] || item.name || item.section }}</span>
+          </ng-template>
+        </mat-option>
+      </div>
+
+      <ng-template #waitingResponse>
+        <mat-option disabled="true">טוען...</mat-option>
+      </ng-template>
+    </mat-select>
+  </div>
+  
+  <!-- Selected items display section -->
+  <div class="selected-items-container" *ngIf="isMultiSelect && control?.value && control.value.length > 0">
+    <div class="selected-item-tag" *ngFor="let selectedValue of control.value; let i = index">
+      <span class="tag-text">{{ getSelectedItemLabel(selectedValue) }}</span>
+      <mat-icon class="remove-icon" (click)="removeSelectedItem(i)">close</mat-icon>
+    </div>
+  </div>
+</div>

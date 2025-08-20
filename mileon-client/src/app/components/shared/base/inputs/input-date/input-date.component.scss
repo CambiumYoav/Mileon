@@ -1,0 +1,150 @@
+.input-fill {
+  border-radius: 4px;
+  border: 1px solid var(--black, #B9C6D4);
+  background: var(--white, #FFF);
+  display: flex;
+  width: 210px;
+  height: 40.644px;
+  padding: 0 10px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  
+  
+  &:focus-within {
+    border: 1px solid var(--black, #000) !important;
+    // box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  }
+}
+
+.invalidInput {
+  border: 1px solid red;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+}
+
+.error {
+  color: red;
+}
+
+// Additional styling for better integration with Material Design
+.hide-border-input {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  width: 100% !important;
+  font-size: 14px !important;
+  color: #333 !important;
+  
+  
+  &::placeholder {
+    color: #000;
+    text-align: right;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+}
+
+.input-text {
+  direction: rtl !important;
+  color: #000 !important;
+  text-align: right !important;
+  font-size: 16px !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+}
+
+// Calendar icon container styling
+mat-datepicker-toggle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  
+  .mat-icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+}
+
+// Move the toggle button to the left
+::ng-deep .mat-mdc-icon-button {
+  position: relative !important;
+  left: 5px !important;
+}
+
+// Target the touch target specifically
+::ng-deep .mat-mdc-icon-button .mat-mdc-button-touch-target {
+  left: 35% !important;
+}
+
+// Alternative approach - move the entire toggle container
+::ng-deep mat-datepicker-toggle {
+  transform: translateX(-15px) !important;
+}
+
+.calendarImg {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain !important;
+}
+
+.outside-month {
+  color: #999 !important;
+  opacity: 0.7 !important;
+  background-color: #f5f5f5 !important;
+}
+
+.outside-month:hover {
+  background-color: #e0e0e0 !important;
+  cursor: pointer !important;
+}
+
+// Hebrew locale specific styling
+:host-context([dir="rtl"]) {
+  .input-fill {
+    direction: rtl;
+  }
+  
+  .input-text {
+    direction: rtl !important;
+    text-align: right !important;
+  }
+}
+
+// Ensure calendar displays properly in Hebrew
+::ng-deep .mat-calendar {
+  direction: rtl !important;
+  
+  .mat-calendar-table-header th {
+    direction: rtl !important;
+    text-align: center !important;
+  }
+  
+  .mat-calendar-body-cell-content {
+    direction: rtl !important;
+    text-align: center !important;
+  }
+}
+
+// Hebrew month and day name styling
+::ng-deep .mat-calendar-period-button {
+  font-family: 'Assistant', 'Open Sans', sans-serif !important;
+  font-weight: 700 !important;
+}
+
+::ng-deep .mat-calendar-table-header th {
+  font-family: 'Assistant', 'Open Sans', sans-serif !important;
+  font-weight: 500 !important;
+}
+
+// Ensure proper RTL layout for Hebrew
+::ng-deep .mat-calendar-controls {
+  direction: rtl !important;
+}

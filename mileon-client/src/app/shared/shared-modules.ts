@@ -14,9 +14,10 @@ import { RadioButtonComponent } from '../components/shared/base/radio-button/rad
 import { RedLineErrorComponent } from '../components/shared/errors/red-line-error/red-line-error.component';
 import { FileUploadNewComponent } from '../components/shared/base/upload-files/upload-files.component';
 import { DocumentPreviewNewComponent } from '../components/shared/base/document-preview-new/document-preview-new.component';
-import { InputTextComponent } from '../components/shared/base/input-text/input-text.component';
+import { InputTextComponent } from '../components/shared/base/inputs/input-text/input-text.component';
 import { SearchBarComponent } from '../components/shared/search-bar/search-bar.component';
-
+import { SelectComponent } from '../components/shared/base/select/select.component';
+import { AdvancedSearchComponent } from '../components/shared/advanced-search/advanced-search.component';
 
 export const SharedModules = [CommonModule, RouterOutlet];
 
@@ -43,5 +44,7 @@ export const BaseComponents = [
   FileUploadNewComponent,
   DocumentPreviewNewComponent,
   InputTextComponent,
-  SearchBarComponent
+  SearchBarComponent,
+  SelectComponent,
+  AdvancedSearchComponent
 ];

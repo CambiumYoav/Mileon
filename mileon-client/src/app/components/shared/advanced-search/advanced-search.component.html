@@ -1,64 +1,68 @@
-<div [ngClass]="{ 'header-less-tabs': advancedForm.tabs.length === 1 }">
-  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+<div *ngIf="advancedForm && form" [ngClass]="{ 'header-less-tabs': (advancedForm.tabs || []).length === 1 }">
+  <mat-tab-group 
+    mat-stretch-tabs="false" 
+    mat-align-tabs="start"
+    [disableRipple]="true"
+    [animationDuration]="0">
     <form [formGroup]="form">
       <mat-tab
-        *ngFor="let tab of advancedForm.tabs"
-        [label]="tab.displayName + getSum(tab.name)"
+        *ngFor="let tab of advancedForm.tabs || []"
+        [label]="(tab.displayName || '') + getSum(tab.name || '')"
       >
-        <div class="p-2" *ngIf="form" [formGroupName]="tab.name">
-          <div *ngFor="let row of tab.rows" class="input-group g-3">
+        <div class="p-2" [formGroupName]="tab.name || ''">
+          <div *ngFor="let row of tab.rows || []" class="input-group g-3">
             <div
               class="p-2 d-flex flex-column justify-content-end"
-              *ngFor="let field of row.group"
+              *ngFor="let field of row.group || []"
               [ngClass]="{ 'mb-2': field.type === FieldTypeEnum.Checkbox }"
             >
               <div
                 class="wrap-field"
-                [class]="'field-' + field.length"
+                [class]="'field-' + (field.length || '')"
                 [ngSwitch]="field.type"
               >
                 <app-select
                   *ngSwitchCase="FieldTypeEnum.Select"
                   fxFill
                   appearance="outline"
-                  [placeholder]="field.displayName"
+                  [placeholder]="field.displayName || ''"
                   [bindLabelKeys]="field.bindLabelKeys"
-                  [formControlName]="field.name"
+                  [formControlName]="field.name || ''"
                   [dataFunction]="field.dataFunction"
                   searchPlaceholder="חיפוש"
                   (itemFilterServerSide)="waitForFilterResponse($event)"
                   bindLabelKey="value"
                   bindValueKey="id"
                   [isMultiSelect]="field.multipleSelect"
-                  [title]="field.displayName"
+                  [title]="field.displayName || ''"
                   ></app-select>
 
                 <app-input-text
                   *ngSwitchCase="FieldTypeEnum.Text"
-                  [placeholder]="field.displayName"
-                  [formControlName]="field.name"
+                  [placeholder]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
                   [connectedField]="field.connectedField"
-                  [title]="field.displayName"
+                  [title]="field.displayName || ''"
                 ></app-input-text>
 
                 <app-input-checkbox
                   *ngSwitchCase="FieldTypeEnum.Checkbox"
-                  [placeholder]="field.displayName"
-                  [formControlName]="field.name"
+                  [placeholder]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
                 ></app-input-checkbox>
 
                 <app-input-date
                   *ngSwitchCase="FieldTypeEnum.Date"
-                  [title]="field.displayName"
-                  [formControlName]="field.name"
-                  [placeholder]="field.displayName"
+                  [title]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
+                  [placeholder]="field.displayName || ''"
                 ></app-input-date>
 
                 <app-date-time
                   *ngSwitchCase="FieldTypeEnum.DateTime"
-                  [placeholder]="field.displayName"
-                  [title]="field.displayName"
-                  [formControlName]="field.name"
+                  [placeholder]="field.displayName || ''"
+                  [title]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
                 ></app-date-time>
 
                 <!-- <div *ngSwitchDefault>output2</div> -->
@@ -70,15 +74,15 @@
           <div class="d-flex justify-content-end">
             <button
               class="primary-btn-outline g-3"
-              (click)="resetForm(tab.name)"
+              (click)="resetForm(tab.name || '')"
             >
               נקה
             </button>
             <button
               class="primary-btn-fill"
-              [disabled]="form.invalid"
+              [disabled]="!form || form.invalid"
               [ngClass]="
-                form.invalid ? 'primary-btn-disabled' : 'primary-btn-fill'
+                !form || form.invalid ? 'primary-btn-disabled' : 'primary-btn-fill'
               "
               (click)="search()"
             >
@@ -89,9 +93,14 @@
       </mat-tab>
       <mat-tab disabled>
         <ng-template mat-tab-label>
-          <button mat-icon-button (click)="resetForm()">נקה הכל</button>
+          <button mat-icon-button (click)="resetForm()" class="clear-all-btn">נקה הכל</button>
         </ng-template>
       </mat-tab>
     </form>
   </mat-tab-group>
+</div>
+
+<!-- Show message when advancedForm or form is not available -->
+<div *ngIf="!advancedForm || !form" class="p-4 text-center">
+  <p>טוען חיפוש מתקדם...</p>
 </div>

@@ -1,0 +1,57 @@
+<!-- <div class="title-placeholder">{{ title }}</div> -->
+
+<!-- <div
+  class="title-placeholder"
+  [ngStyle]="{ 'margin-bottom': title ? '0.5rem' : '0' }"
+>
+  {{ title }}
+</div>
+<div
+  class="input-fill"
+  [class.invalidInput]="control?.parent?.errors?.['dateRange'] && (control?.dirty || control?.touched)"
+>
+  <input
+    (change)="onBlur()"
+    class="hide-border-input input-text"
+    [formControl]="control"
+    matInput
+    [matDatepicker]="picker"
+    style="width: 115px"
+    [placeholder]="placeholder"
+  />
+
+  <mat-datepicker-toggle [disableRipple]="true" matSuffix [for]="picker">
+    <mat-icon matDatepickerToggleIcon>
+      <img class="calendarImg" [src]="calendarImg" />
+    </mat-icon>
+  </mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</div> -->
+
+
+<div
+  class="title-placeholder"
+  [ngStyle]="{ 'margin-bottom': title ? '0.5rem' : '0' }"
+>
+  {{ title }}
+</div>
+<div class="input-fill" [ngClass]="!isValid ? 'invalidInput' : ''">
+  <input
+    (blur)="onBlur()"
+    class="hide-border-input input-text"
+    [formControl]="control"
+    matInput
+    [matDatepicker]="picker"
+    style="border: none; max-width: 115px;"
+    [placeholder]="placeholder"
+  />
+  <div>
+    <mat-datepicker-toggle [disableRipple]="true" matSuffix [for]="picker">
+      <mat-icon matDatepickerToggleIcon>
+        <img class="calendarImg" [src]="calendarImg" />
+      </mat-icon>
+    </mat-datepicker-toggle>
+    <mat-datepicker #picker [dateClass]="dateClass" [startAt]="startAt"></mat-datepicker>
+
+  </div>
+</div>
