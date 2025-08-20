@@ -196,24 +196,23 @@
 .selected-items-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
-  padding: 4px 0;
+  gap: 5px;
+  margin-top: 6px;
   
   .selected-item-tag {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 8px;
-    background: #86D0F7;
+    gap: 8px;
+    padding: 4px 11px;
+    background: #D3F0FF;
     border-radius: 16px;
-    font-size: 12px;
     color: #333;
+    font-size: 10.885px;
     cursor: pointer;
     transition: background-color 0.2s ease;
     
-    &:hover {
-      background: #6BB8E8;
+    &:disabled {
+      background: #E3E7EB;
     }
     
     .tag-text {
@@ -221,11 +220,17 @@
       direction: rtl;
       text-align: right;
     }
+
+
+    .mat-icon {
+      width: 10px;
+      height: 10px;
+    }
     
     .remove-icon {
-      font-size: 14px;
-      width: 14px;
-      height: 14px;
+      font-size: 10px;
+      width: 10px;
+      height: 10px;
       cursor: pointer;
       opacity: 0.7;
       

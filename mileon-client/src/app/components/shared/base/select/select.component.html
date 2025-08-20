@@ -20,15 +20,6 @@
       <mat-icon class="ml-2" (click)="clearSelectionAndUpdateDateAccordingly()">clear</mat-icon>
     </span>
     
-    <!-- Search input inside the select field -->
-    <!-- <div class="search-container" *ngIf="displaySearch">
-      <input
-        matInput
-        class="search-input"
-        [placeholder]="searchPlaceholder"
-        [formControl]="filterFormControl"
-      />
-    </div> -->
     
     <mat-select
       appInfiniteScroll
@@ -40,6 +31,14 @@
       aria-disabled="true"
       [compareWith]="compareValues"
     >
+    <div class="search-container" *ngIf="displaySearch">
+      <input
+        matInput
+        class="search-input"
+        [placeholder]="searchPlaceholder"
+        [formControl]="filterFormControl"
+      />
+    </div>
       <div *ngIf="items$ | async as retrievedItems; else waitingResponse">
         <mat-option
           *ngFor="let item of retrievedItems"
