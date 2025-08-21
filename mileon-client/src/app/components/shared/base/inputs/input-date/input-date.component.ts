@@ -45,6 +45,11 @@ export class HebrewDateAdapter extends NativeDateAdapter {
     return Array.from({length: 31}, (_, i) => (i + 1).toString());
   }
 
+  // Override firstDayOfWeek to start with Sunday (0) for Hebrew calendar
+  override getFirstDayOfWeek(): number {
+    return 0; // Sunday
+  }
+
   // Custom format method for DD/MM/YY format
   override format(date: Date, displayFormat: any): string {
     if (displayFormat === HEBREW_DATE_FORMATS.display.dateInput) {

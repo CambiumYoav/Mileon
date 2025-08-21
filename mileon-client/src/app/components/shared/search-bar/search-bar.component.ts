@@ -22,6 +22,13 @@ import { InputSizeEnum } from '../../../types/enum/inputSizeEnum';
 import { DropdownWindowComponent } from "../dropdown-window/dropdown-window.component";
 import { AdvancedSearchComponent } from "../advanced-search/advanced-search.component";
 import { ResultsDropdownComponent } from "../results-dropdown/results-dropdown.component";
+import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { HebrewDateAdapter, HEBREW_DATE_FORMATS } from '../base/inputs/input-date/input-date.component';
+import { registerLocaleData } from '@angular/common';
+import he from '@angular/common/locales/he';
+
+// Register Hebrew locale
+registerLocaleData(he);
 
 
 @Component({
@@ -30,7 +37,21 @@ import { ResultsDropdownComponent } from "../results-dropdown/results-dropdown.c
   styleUrls: ['./search-bar.component.scss'],
   standalone: true,
   imports: [SharedImports, DropdownWindowComponent, AdvancedSearchComponent, ResultsDropdownComponent],
-  providers: [SearchFormService],
+  providers: [
+    SearchFormService,
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'he-IL'
+    },
+    {
+      provide: DateAdapter,
+      useClass: HebrewDateAdapter
+    },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: HEBREW_DATE_FORMATS
+    }
+  ],
 })
 export class SearchBarComponent
   extends BaseFormComponent
@@ -97,6 +118,9 @@ export class SearchBarComponent
 
   private _resultData: any[] = [];
   picker: any;
+
+  // Set startAt to current date to ensure proper Hebrew calendar rendering
+  startAt = new Date();
 
 
   @Input()

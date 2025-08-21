@@ -48,14 +48,14 @@ form {
       }
 
       // Styles when input has value
-      &:not(:placeholder-shown){
-        color: var(--black, #000);
-        text-align: right;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: normal;
-      }
+      // &:not(:placeholder-shown){
+      //   color: var(--black, #000);
+      //   text-align: right;
+      //   font-size: 24px;
+      //   font-style: normal;
+      //   font-weight: 400;
+      //   line-height: normal;
+      // }
     }
 
     .text{
@@ -154,6 +154,8 @@ form {
       display: none;
     }
 
+
+
     
     .text {
       color: var(--black, #000);
@@ -188,6 +190,20 @@ form {
       align-items: center;
       gap: 10px;
     }
+
+    .input{
+      &:not(:placeholder-shown){
+        color: var(--black, #000);
+        text-align: right;
+        font-family: "Open Sans";
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+      }
+    }
+
+
     
     .text {
       color: var(--black, #000);
@@ -220,6 +236,19 @@ form {
       align-items: center;
       gap: 10px;
     }
+
+    .input{
+      &:not(:placeholder-shown){
+        color: var(--black, #000);
+        text-align: right;
+        font-family: "Open Sans";
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+      }
+    }
+
     
     .text {
       color: var(--black, #000);
@@ -344,5 +373,131 @@ form {
         font-size: 16px;
       }
     }
+  }
+}
+
+// Hebrew date picker styling
+::ng-deep .mat-date-range-picker {
+  direction: rtl !important;
+  
+  .mat-calendar-table-header th {
+    direction: rtl !important;
+    text-align: center !important;
+  }
+  
+  .mat-calendar-body-cell-content {
+    direction: rtl !important;
+    text-align: center !important;
+  }
+  
+  // Ensure the calendar grid respects RTL layout
+  .mat-calendar-table {
+    direction: rtl !important;
+  }
+  
+  // Force RTL for calendar body rows
+  .mat-calendar-body-row {
+    direction: rtl !important;
+  }
+  
+  // Ensure calendar cells are properly aligned
+  .mat-calendar-body-cell {
+    direction: rtl !important;
+    text-align: center !important;
+  }
+}
+
+// Additional RTL calendar styling
+::ng-deep .mat-calendar {
+  direction: rtl !important;
+  
+  .mat-calendar-table {
+    direction: rtl !important;
+  }
+  
+  .mat-calendar-body-row {
+    direction: rtl !important;
+  }
+  
+  .mat-calendar-body-cell {
+    direction: rtl !important;
+    text-align: center !important;
+  }
+}
+
+// Specific styling for Hebrew date picker
+::ng-deep .hebrew-date-picker {
+  direction: rtl !important;
+  
+  .mat-calendar {
+    direction: rtl !important;
+    
+    .mat-calendar-table {
+      direction: rtl !important;
+      
+      .mat-calendar-table-header {
+        direction: rtl !important;
+        
+        th {
+          direction: rtl !important;
+          text-align: center !important;
+        }
+      }
+      
+      .mat-calendar-body {
+        direction: rtl !important;
+        
+        .mat-calendar-body-row {
+          direction: rtl !important;
+          display: flex !important;
+          flex-direction: row-reverse !important;
+          
+          .mat-calendar-body-cell {
+            direction: rtl !important;
+            text-align: center !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Hebrew month and day name styling for range picker
+::ng-deep .mat-date-range-picker .mat-calendar-period-button {
+  font-family: 'Assistant', 'Open Sans', sans-serif !important;
+  font-weight: 700 !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-table-header th {
+  font-family: 'Assistant', 'Open Sans', sans-serif !important;
+  font-weight: 500 !important;
+}
+
+// Ensure proper RTL layout for Hebrew range picker
+::ng-deep .mat-date-range-picker .mat-calendar-controls {
+  direction: rtl !important;
+}
+
+// Style for the date range input fields
+::ng-deep .mat-date-range-input {
+  direction: rtl !important;
+  
+  input {
+    text-align: right !important;
+    font-family: 'Assistant', 'Open Sans', sans-serif !important;
+  }
+}
+
+// Selected date range display styling
+.selected-date-range {
+  text-align: right !important;
+  direction: rtl !important;
+  font-family: 'Assistant', 'Open Sans', sans-serif !important;
+  margin-top: 8px;
+  
+  span {
+    color: var(--blue, #387EC4);
+    font-size: 14px;
+    font-weight: 500;
   }
 }

@@ -5,7 +5,7 @@
   display: flex;
   width: 210px;
   height: 40.644px;
-  padding: 0 10px;
+  padding: 0 10px 0 0;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -73,21 +73,21 @@ mat-datepicker-toggle {
 
 }
 
-// Move the toggle button to the left
-::ng-deep .mat-mdc-icon-button {
-  position: relative !important;
-  left: 5px !important;
-}
+// // Move the toggle button to the left
+// ::ng-deep .mat-mdc-icon-button {
+//   position: relative !important;
+//   left: 5px !important;
+// }
 
-// Target the touch target specifically
-::ng-deep .mat-mdc-icon-button .mat-mdc-button-touch-target {
-  left: 35% !important;
-}
+// // Target the touch target specifically
+// ::ng-deep .mat-mdc-icon-button .mat-mdc-button-touch-target {
+//   left: 35% !important;
+// }
 
-// Alternative approach - move the entire toggle container
-::ng-deep mat-datepicker-toggle {
-  transform: translateX(-15px) !important;
-}
+// // Alternative approach - move the entire toggle container
+// ::ng-deep mat-datepicker-toggle {
+//   transform: translateX(-15px) !important;
+// }
 
 .calendarImg {
   width: 20px !important;

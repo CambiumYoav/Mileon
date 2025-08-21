@@ -31,7 +31,7 @@
           <img [src]="icons.CELANDER" [alt]="icons.CELANDER" />
         </mat-icon>
       </mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
+      <mat-date-range-picker #picker [startAt]="startAt" class="hebrew-date-picker"></mat-date-range-picker>
       <img
         *ngIf="showFilters && !form.get('searchText')?.value"
         id="filter-icon"
@@ -43,11 +43,11 @@
   </div>
   <mat-date-range-input
     [ngClass]="{ hide: !picker.opened }"
-    dir="ltr"
+    dir="rtl"
     [rangePicker]="picker"
   >
-    <input readonly="true" matStartDate formControlName="startDate" />
-    <input readonly="true" matEndDate formControlName="endDate" />
+    <input readonly="true" matStartDate formControlName="startDate" placeholder="תאריך התחלה" />
+    <input readonly="true" matEndDate formControlName="endDate" placeholder="תאריך סיום" />
   </mat-date-range-input>
   <div
     class="selected-date-range"
@@ -58,8 +58,8 @@
     "
   >
     <span>
-      {{ form.get("startDate")?.value | date : "dd/MM/yyyy" }} -
-      {{ form.get("endDate")?.value | date : "dd/MM/yyyy" }}
+      {{ form.get("startDate")?.value | date : "dd/MM/yy" }} -
+      {{ form.get("endDate")?.value | date : "dd/MM/yy" }}
     </span>
   </div>
   <app-dropdown-window
