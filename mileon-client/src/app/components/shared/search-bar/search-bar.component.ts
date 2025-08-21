@@ -21,6 +21,7 @@ import { SharedImports } from '../../../shared/shared-modules';
 import { InputSizeEnum } from '../../../types/enum/inputSizeEnum';
 import { DropdownWindowComponent } from "../dropdown-window/dropdown-window.component";
 import { AdvancedSearchComponent } from "../advanced-search/advanced-search.component";
+import { ResultsDropdownComponent } from "../results-dropdown/results-dropdown.component";
 
 
 @Component({
@@ -28,7 +29,7 @@ import { AdvancedSearchComponent } from "../advanced-search/advanced-search.comp
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss'],
   standalone: true,
-  imports: [SharedImports, DropdownWindowComponent, AdvancedSearchComponent],
+  imports: [SharedImports, DropdownWindowComponent, AdvancedSearchComponent, ResultsDropdownComponent],
   providers: [SearchFormService],
 })
 export class SearchBarComponent
@@ -84,6 +85,8 @@ export class SearchBarComponent
 
   @Output()
   searchButtonClicked: MyRef<boolean> = { current: false };
+
+  @Output() optionSelected = new EventEmitter<any>();
 
   @Input() showFilters: boolean = true;
   
@@ -240,5 +243,10 @@ export class SearchBarComponent
     // NOTE ugly due to lack of dev time, supposed to be dynamic
     this.closeDropdownWindow();
     this.executeAction.emit(this.form);
+  }
+
+  onOptionSelected(item: any) {
+    this.closeDropdownWindow();
+    this.optionSelected.emit(item);
   }
 }

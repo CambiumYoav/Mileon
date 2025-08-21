@@ -73,12 +73,15 @@
       (onSearch)="onSearch()"
       [searchButtonClicked]="searchButtonClicked"
     ></app-advanced-search>
-    <!-- <app-results-dropdown
+    <app-results-dropdown
       *ngIf="resultData.length && !advancedSearchOpened"
       [resultData]="resultData"
       [loader]="loader"
+      [form]="form"
+      [originalData]="resultData"
+      (optionSelected)="onOptionSelected($event)"
     >
-    </app-results-dropdown> -->
+    </app-results-dropdown>
   </app-dropdown-window>
   <div class="under-search">
     <!-- <div>

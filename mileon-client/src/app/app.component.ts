@@ -756,4 +756,40 @@ export class AppComponent {
   showError() {
     this.toastr.error('משהו השתבש.');
   }
+
+  onOptionSelected(filteredData: any[]) {
+    // Update the table data with the filtered results
+    this.data = filteredData;
+    
+    // Update search text if we have results
+    if (filteredData.length > 0) {
+      this.searchText = this.getDisplayText(filteredData[0]);
+    }
+  }
+
+  private getDisplayText(item: any): string {
+   const searchText = this.form?.get('searchText')?.value || '';
+    
+    if (!searchText) {
+      return 'אופציה';
+    }
+
+    if (searchText === item.nid || item.nid?.includes(searchText)) {
+      return item.nid;
+    }
+    
+    if (searchText === item.municipality || item.municipality?.includes(searchText)) {
+      return item.municipality;
+    }
+    
+    if (searchText === item.reportNumber || item.reportNumber?.includes(searchText)) {
+      return item.reportNumber;
+    }
+    
+    if (searchText === item.fullName || item.fullName?.includes(searchText)) {
+      return item.fullName;
+    }
+    
+    return item.nid || item.municipality || item.reportNumber || item.fullName || 'אופציה';
+  }
 }
