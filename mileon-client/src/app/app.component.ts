@@ -18,12 +18,13 @@ import { InputDateComponent } from "./components/shared/base/inputs/input-date/i
 import { InputPhoneComponent } from "./components/shared/base/inputs/input-phone/input-phone.component";
 import { InputCheckboxComponent } from "./components/shared/base/inputs/input-checkbox/input-checkbox.component";
 import { SelectComponent } from "./components/shared/base/select/select.component";
+import { TextareaCommentsComponent } from "./components/shared/base/inputs/textarea-comments/textarea-comments.component";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  imports: [BaseComponents, SharedImports, InputDateComponent, InputPhoneComponent, InputCheckboxComponent, SelectComponent], 
+  imports: [BaseComponents, SharedImports, InputDateComponent, InputPhoneComponent, InputCheckboxComponent, SelectComponent, TextareaCommentsComponent], 
 })
 export class AppComponent {
 
@@ -549,6 +550,7 @@ export class AppComponent {
   
   previewFile: PreviewFileType | undefined;
   searchText: string = '';
+  newComment: any;
   
 
   
