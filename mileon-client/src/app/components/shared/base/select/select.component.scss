@@ -12,6 +12,7 @@
   direction: rtl !important;
   text-align: right !important;
   justify-content: flex-end !important;
+  gap: 10px !important;
   
   .mdc-list-item__content {
     direction: rtl !important;
@@ -27,12 +28,72 @@
 }
 
 ::ng-deep .mat-pseudo-checkbox{
-  display: none !important;
+  border-radius: 4px !important;
+  border: 1px solid #000 !important;
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 16px !important;
+  height: 16px !important;
 }
+
+
+// Show checkboxes only for multiselect
+::ng-deep .mat-mdc-select-panel[data-multiselect="true"] .mat-mdc-option .mat-pseudo-checkbox {
+  display: block !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 4px !important;
+  border: 1px solid #000 !important;
+  background: transparent !important;
+}
+
+
 
 .disabled {
   opacity: 0.5;
   pointer-events: none;
+  
+  .select {
+    border: 1px solid #606060 !important;
+    background: #E3E7EB !important;
+    
+    .search-overlay {
+      background: #E3E7EB !important;
+      border: 1px solid #606060 !important;
+    }
+    
+    &.multiselect::before {
+      background: #E3E7EB !important;
+      opacity: 0.4 !important;
+    }
+    
+    .mat-icon {
+      color: #999 !important;
+      cursor: not-allowed !important;
+    }
+  }
+  
+  .selected-items-container {
+    .selected-item-tag {
+      background: #E3E7EB !important;
+      color: #666 !important;
+      cursor: not-allowed !important;
+      
+      .remove-icon {
+        cursor: not-allowed !important;
+        opacity: 0.5 !important;
+        
+        &:hover {
+          opacity: 0.5 !important;
+        }
+      }
+    }
+  }
 }
 
 .select {
@@ -63,6 +124,83 @@
     transform: translateY(-50%);
   }
 
+  .custom-dropdown-arrow {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 11px;
+    height: 11px;
+    z-index: 2;
+    pointer-events: none;
+    transition: transform 0.2s ease;
+  }
+
+  .search-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #FFF;
+    border-radius: 4px;
+    border: 1px solid #B9C6D4;
+    display: flex;
+    align-items: center;
+    padding: 0 11px;
+    z-index: 10;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    .search-icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+    
+    .search-input-overlay {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: $fontOpenSans;
+      font-size: 14px;
+      color: #333;
+      direction: rtl;
+      text-align: right;
+      height: 100%;
+      
+      &::placeholder {
+        color: #999;
+        opacity: 0.7;
+      }
+      
+      &:focus {
+        outline: none;
+      }
+    }
+    
+    .search-close-icon {
+      cursor: pointer;
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #666;
+      margin-left: 8px;
+      flex-shrink: 0;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: #333;
+      }
+    }
+  }
+
+  &.multiselect .search-overlay {
+    gap: 10px;
+  }
+
   .mat-option,
   .mat-mdc-option,
   .mat-mdc-option.mdc-list-item {
@@ -78,7 +216,6 @@
     box-sizing: border-box !important;
   }
 
-  // Center the select trigger content
   ::ng-deep .mat-mdc-select-trigger {
     display: flex !important;
     align-items: center !important;
@@ -91,9 +228,49 @@
     }
     
     .mat-mdc-select-arrow-wrapper {
-      display: flex !important;
-      align-items: center !important;
-      height: 100% !important;
+      display: none !important;
+    }
+  }
+
+  &.search-active {
+    ::ng-deep .mat-mdc-select-trigger {
+      .mat-mdc-select-placeholder {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        text-overflow: ellipsis !important;
+      }
+
+      .mat-mdc-select-value {
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+      
+      .mat-mdc-select-arrow-wrapper {
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+    }
+  }
+
+  &.multiselect {    
+    
+    .mat-icon {
+      right: 11px;
+      left: auto;
+      margin-left: 0;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      right: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 4px;
+      background: #B9C6D4;
+      border-radius: 50%;
+      opacity: 0.6;
     }
   }
 }
@@ -108,24 +285,19 @@
     top: 50%;
     transform: translateY(-50%);
   }
-}
 
-.search-input {
-  width: 100%;
-  border: none;
-  height: 40px;
-  font-family: $fontOpenSans;
-  padding-right: 16px;
-  opacity: 0.7;
-  text-align: right;
-  border: 1px solid $colorLightBlueBorder;
-  border-radius: 4px;
+  .search-overlay {
+    padding: 0 11px;
+    .search-close-icon {
+      margin-left: 0;
+      margin-right: 8px;
+    }
+  }
 
-  &:focus {
-    outline: none !important;
-    border-radius: 4px;
-    border: 1px solid var(--black, #000);
-    background: var(--white, #FFF);
+  &.multiselect {
+    .mat-icon {
+      display: none;
+    }
   }
 }
 
@@ -149,7 +321,6 @@
   margin-left: 8px !important;
 }
 
-// Additional Material Design option height enforcement
 ::ng-deep .mat-mdc-option {
   height: 35px !important;
   min-height: 35px !important;
@@ -174,7 +345,6 @@
   }
 }
 
-// Also target the older class for backward compatibility
 ::ng-deep .mat-option {
   height: 35px !important;
   min-height: 35px !important;
@@ -198,6 +368,7 @@
   flex-wrap: wrap;
   gap: 5px;
   margin-top: 6px;
+  min-height: 20px;
   
   .selected-item-tag {
     display: flex;
@@ -221,7 +392,6 @@
       text-align: right;
     }
 
-
     .mat-icon {
       width: 10px;
       height: 10px;
@@ -240,3 +410,4 @@
     }
   }
 }
+

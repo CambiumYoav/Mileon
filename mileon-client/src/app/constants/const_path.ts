@@ -31,6 +31,7 @@ export class ConstPath {
   public static BACK_ARROW = '../assets/icons/back-arrow.svg';
   public static UP_ARROW = '../assets/icons/arrow-up.svg';
   public static BACK_ARROW_BLACK = '../assets/icons/back-arrow-black.svg';
+  public static ARROW_DOWN = '../assets/icons/arrow-down.svg';
   public static REMINDER = '../assets/icons/reminder.svg';
   public static REFRESH_SQUARE = '../assets/icons/refresh-square.svg';
   public static BANK = '../assets/icons/bank.svg';

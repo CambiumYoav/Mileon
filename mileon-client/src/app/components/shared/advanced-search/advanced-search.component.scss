@@ -203,7 +203,7 @@
 ::ng-deep .clear-all-btn {
   display: flex;
   padding: 10px 20px;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 10px;
   border-radius: 4px;
@@ -220,6 +220,7 @@
   text-decoration-thickness: auto;
   text-underline-offset: auto;
   text-underline-position: from-font;
+  margin-right: 390px !important;
 }
 
 ::ng-deep .cdk-program-focused {

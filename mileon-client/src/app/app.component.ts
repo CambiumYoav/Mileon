@@ -69,6 +69,7 @@ export class AppComponent {
                 displayName: 'עירייה',
                 type: FieldTypeEnum.Select,
                 length: FieldLengthEnum.Medium,
+                multipleSelect: true,
                 dataFunction: {
                   name: 'getMunicipalities',
                   function: () => this.mockMunicipalities
@@ -95,8 +96,10 @@ export class AppComponent {
                 displayName: 'סטטוס',
                 type: FieldTypeEnum.Select,
                 length: FieldLengthEnum.Short,
+                multipleSelect: false,
                 dataFunction: {
-                  name: 'getStatuses'
+                  name: 'getStatuses',
+                  function: () => this.mockStatuses
                 }
               }
             ]

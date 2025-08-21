@@ -10,6 +10,8 @@
   </div>
   <div
     [class.input-fill]="appearance != 'standard'"
+    [class.search-active]="isSearchVisible"
+    [class.multiselect]="isMultiSelect"
     class="select"
     [ngClass]="{
       invalidInput: !isValid,
@@ -20,6 +22,32 @@
       <mat-icon class="ml-2" (click)="clearSelectionAndUpdateDateAccordingly()">clear</mat-icon>
     </span>
     
+    <!-- Custom dropdown arrow icon -->
+    <img 
+      class="custom-dropdown-arrow" 
+      [src]="Icons.ARROW_DOWN" 
+      alt="dropdown arrow"
+    />
+    
+    <!-- Search input overlay - only shown when displaySearch is true -->
+    <div class="search-overlay" *ngIf="displaySearch && isSearchVisible">
+      <img 
+        class="search-icon" 
+        [src]="Icons.SEARCH" 
+        alt="search icon"
+      />
+      <input
+        matInput
+        class="search-input-overlay"
+        [placeholder]="searchPlaceholder"
+        [formControl]="filterFormControl"
+        (focus)="onSearchFocus()"
+        (blur)="onSearchBlur()"
+        (keydown.escape)="hideSearch()"
+        (keydown.enter)="hideSearch()"
+      />
+      <mat-icon class="search-close-icon" (click)="hideSearch()">close</mat-icon>
+    </div>
     
     <mat-select
       appInfiniteScroll
@@ -30,15 +58,9 @@
       [placeholder]="placeholder"
       aria-disabled="true"
       [compareWith]="compareValues"
+      (openedChange)="onSelectOpened($event)"
+      [attr.data-multiselect]="isMultiSelect"
     >
-    <div class="search-container" *ngIf="displaySearch">
-      <input
-        matInput
-        class="search-input"
-        [placeholder]="searchPlaceholder"
-        [formControl]="filterFormControl"
-      />
-    </div>
       <div *ngIf="items$ | async as retrievedItems; else waitingResponse">
         <mat-option
           *ngFor="let item of retrievedItems"

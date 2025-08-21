@@ -82,6 +82,7 @@ export class SelectComponent
   @Input() disabled: boolean = false;
 
   endOfData: boolean = false;
+  isSearchVisible: boolean = false;
 
   filterFormControl: FormControl = new FormControl('');
 
@@ -104,7 +105,6 @@ export class SelectComponent
       (value: string) => {
         if (this.isServerSide) {
           this.setDataListParams(value);
-          // this.itemFilterServerSide.emit(value);
         } else {
           this.filterStaticList(value);
         }
@@ -339,6 +339,49 @@ export class SelectComponent
       if (this.selectParams.ids && this.selectParams.ids.length > 0) {
         this.selectParams.ids = currentValue;
       }
+    }
+  }
+
+  onSelectOpened(isOpened: boolean): void {
+    if (isOpened && this.displaySearch) {
+      this.isSearchVisible = true;
+      // Clear any previous search
+      this.filterFormControl.setValue('');
+      // Focus the search input after a short delay to ensure it's rendered
+      setTimeout(() => {
+        const searchInput = document.querySelector('.search-input-overlay') as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }, 100);
+    } else {
+      this.isSearchVisible = false;
+      // Clear search when select closes
+      this.filterFormControl.setValue('');
+    }
+  }
+
+  onSearchFocus(): void {
+    // Keep search visible when focused
+    this.isSearchVisible = true;
+  }
+
+  onSearchBlur(): void {
+    // Hide search when blurred (unless select is still open)
+    setTimeout(() => {
+      if (!this.control.disabled && !this.control.value) {
+        this.isSearchVisible = false;
+      }
+    }, 150);
+  }
+
+  hideSearch(): void {
+    this.isSearchVisible = false;
+    this.filterFormControl.setValue('');
+    // Focus back to the select
+    const selectElement = document.querySelector('.mat-mdc-select-trigger') as HTMLElement;
+    if (selectElement) {
+      selectElement.focus();
     }
   }
 }
