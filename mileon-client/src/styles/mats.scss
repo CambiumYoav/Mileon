@@ -495,6 +495,22 @@ input.mat-input-element {
   }
 }
 
+
+.mat-calendar-body-in-range {
+  background: #D3F0FF !important;
+}
+
+
+
+  .mat-calendar-body-cell-preview,
+  .mat-calendar-body-cell-preview::after {
+    content: none !important;
+    display: none !important;
+    background: #D3F0FF !important;
+    border: none !important;
+  }
+
+  
 // ============================================================================
 // UTILITY CLASSES
 // ============================================================================
