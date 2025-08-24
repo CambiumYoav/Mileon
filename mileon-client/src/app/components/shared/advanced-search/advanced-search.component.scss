@@ -157,7 +157,8 @@
   padding: 10px 20px;
   justify-content: flex-start;
   align-items: center;
-  gap: 10px;
+  row-gap: 20px;
+  column-gap: 10px;
   flex-shrink: 0;
   align-self: stretch;
 }
@@ -270,4 +271,51 @@ text-underline-position: from-font;
 
 ::ng-deep .cdk-program-focused {
   display: none;
+}
+
+// Textarea styles
+.textarea-container {
+  width: 100%;
+  
+  .title-placeholder {
+    color: var(--black, #000);
+    text-align: right;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin: 0 0 6px 0;
+  }
+  
+  .textarea-input {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px 11px;
+    border: 1px solid #B9C6D4;
+    border-radius: 4px;
+    background: #ffffff;
+    font-family: 'Assistant', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    text-align: right;
+    color: #333;
+    resize: vertical;
+    outline: none;
+    
+    &:focus {
+      border: 1px solid var(--black, #000);
+    }
+    
+    &::placeholder {
+      color: #999;
+    }
+    
+    &:disabled {
+      border: 1px solid #B9C6D4;
+      background: #E3E7EB;
+      opacity: 0.5;
+    }
+  }
 }

@@ -13,24 +13,22 @@ import { Icon } from './types/icon';
 import { AppService } from './app.service';
 import { PreviewFileType } from './types/previewFile';
 import { InputSizeEnum } from './types/enum/inputSizeEnum';
-import { AdvancedForm, FieldTypeEnum, FieldLengthEnum } from './types/advanced-search/form-tab.model';
-import { InputDateComponent } from "./components/shared/base/inputs/input-date/input-date.component";
-import { InputPhoneComponent } from "./components/shared/base/inputs/input-phone/input-phone.component";
-import { InputCheckboxComponent } from "./components/shared/base/inputs/input-checkbox/input-checkbox.component";
-import { SelectComponent } from "./components/shared/base/select/select.component";
+import { AdvancedForm, FieldTypeEnum, FieldLengthEnum , FieldSize } from './types/advanced-search/form-tab.model';
 import { TextareaCommentsComponent } from "./components/shared/base/inputs/textarea-comments/textarea-comments.component";
+import { DropdownWindowComponent } from "./components/shared/dropdown-window/dropdown-window.component";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  imports: [BaseComponents, SharedImports, InputDateComponent, InputPhoneComponent, InputCheckboxComponent, SelectComponent, TextareaCommentsComponent], 
+  imports: [BaseComponents, SharedImports, TextareaCommentsComponent, DropdownWindowComponent], 
 })
 export class AppComponent {
 
   InputSizeEnum = InputSizeEnum;
   FieldTypeEnum = FieldTypeEnum;
   FieldLengthEnum = FieldLengthEnum;
+  FieldSize = FieldSize;
 
   title = 'mileon-client';
 
@@ -47,13 +45,43 @@ export class AppComponent {
                 name: 'fullName',
                 displayName: 'שם מלא',
                 type: FieldTypeEnum.Text,
-                length: FieldLengthEnum.Medium
+                length: FieldLengthEnum.Medium,
+                size: FieldSize.Medium
               },
               {
                 name: 'nid',
                 displayName: 'מספר זהות',
                 type: FieldTypeEnum.Text,
-                length: FieldLengthEnum.Short
+                length: FieldLengthEnum.Short,
+                size: FieldSize.Medium
+              },
+              {
+                name: 'nidLarge',
+                displayName: 'מספר זהות (ארוך)',
+                type: FieldTypeEnum.Text,
+                length: FieldLengthEnum.Long,
+                size: FieldSize.Small
+              },
+              {
+                name: 'phone',
+                displayName: 'טלפון',
+                type: FieldTypeEnum.Phone,
+                length: FieldLengthEnum.Short,
+                size: FieldSize.Small
+              },
+              {
+                name: 'email',
+                displayName: 'אימייל',
+                type: FieldTypeEnum.Text,
+                length: FieldLengthEnum.Medium,
+                size: FieldSize.Medium
+              },
+              {
+                name: 'description',
+                displayName: 'תיאור מפורט',
+                type: FieldTypeEnum.Text,
+                length: FieldLengthEnum.Long,
+                size: FieldSize.ExtraLarge
               }
             ]
           }
@@ -647,10 +675,16 @@ export class AppComponent {
       // Advanced search form groups
       basic: new FormGroup({
         fullName: new FormControl(''),
-        nid: new FormControl('')
+        nid: new FormControl(''),
+        nidLarge: new FormControl(''),
+        comments: new FormControl(''),
+        phone: new FormControl(''),
+        email: new FormControl(''),
+        description: new FormControl('')
       }),
       location: new FormGroup({
-        municipality: new FormControl('')
+        municipality: new FormControl(''),
+        comments: new FormControl('')
       }),
       dates: new FormGroup({
         violationDate: new FormControl(null),
@@ -716,6 +750,24 @@ export class AppComponent {
     if (basicFilters.nid) {
       filteredData = filteredData.filter(item => 
         item.nid?.includes(basicFilters.nid)
+      );
+    }
+    
+    if (basicFilters.phone) {
+      filteredData = filteredData.filter(item => 
+        item.phone?.includes(basicFilters.phone)
+      );
+    }
+    
+    if (basicFilters.comments) {
+      filteredData = filteredData.filter(item => 
+        item.comments?.toLowerCase().includes(basicFilters.comments.toLowerCase())
+      );
+    }
+    
+    if (locationFilters.comments) {
+      filteredData = filteredData.filter(item => 
+        item.locationComments?.toLowerCase().includes(locationFilters.comments.toLowerCase())
       );
     }
     

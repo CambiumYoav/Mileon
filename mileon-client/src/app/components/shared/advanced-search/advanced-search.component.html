@@ -48,6 +48,7 @@
                   [formControlName]="field.name || ''"
                   [connectedField]="field.connectedField"
                   [title]="field.displayName || ''"
+                  [size]="getInputSize(field.size)"
                 ></app-input-text>
 
                 <app-input-checkbox
@@ -69,6 +70,33 @@
                   [title]="field.displayName || ''"
                   [formControlName]="field.name || ''"
                 ></app-date-time>
+
+                <app-input-phone
+                  *ngSwitchCase="FieldTypeEnum.Phone"
+                  [title]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
+                  [isValid]="true"
+                ></app-input-phone>
+
+                <app-input-time
+                  *ngSwitchCase="FieldTypeEnum.Time"
+                  [title]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
+                ></app-input-time>
+
+                <!-- Simple textarea for basic text input -->
+                <div
+                  *ngSwitchCase="FieldTypeEnum.Textarea"
+                  class="textarea-container"
+                >
+                  <div class="title-placeholder">{{ field.displayName || '' }}</div>
+                  <textarea
+                    [formControlName]="field.name || ''"
+                    [placeholder]="field.displayName || ''"
+                    class="textarea-input"
+                    rows="3"
+                  ></textarea>
+                </div>
 
                 <!-- <div *ngSwitchDefault>output2</div> -->
               </div>
