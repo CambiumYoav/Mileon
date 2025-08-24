@@ -146,8 +146,8 @@
     align-items: center !important;
     direction: rtl !important;
     text-align: center !important;
-    width: 100% !important;
-    height: 100% !important;
+    width: 90% !important;
+    height: 90% !important;
     margin: 0 !important;
     padding: 0 !important;
     position: absolute !important;
@@ -254,24 +254,7 @@
       background: transparent !important;
       color: #ccc !important;
     }
-  }
-  
-  // Month/day cells sizing
-  &:not(.mat-calendar-body-year-cell) {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-  }
-  
-  // Year cells sizing
-  &.mat-calendar-body-year-cell {
-    width: 60px !important;
-    height: 40px !important;
-    min-width: 60px !important;
-    min-height: 40px !important;
-  }
-}
+  }}
 
 // ============================================================================
 // CALENDAR CONTROLS
@@ -559,6 +542,9 @@ input.mat-input-element {
   display: flex !important;
   justify-content: flex-start !important;
   align-items: flex-start !important;
+  direction: rtl !important;
+  position: absolute !important;
+  right: 30px !important;
 }
 
 // Select panel specific overlay positioning
@@ -657,12 +643,6 @@ input.mat-input-element {
   .mat-datepicker-content {
     padding: 12px !important;
     margin: 8px !important;
-  }
-  
-  ::ng-deep .mat-calendar-body-cell-content {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 13px !important;
   }
   
   .mat-datepicker-actions {

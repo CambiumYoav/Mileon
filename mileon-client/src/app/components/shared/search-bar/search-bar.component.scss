@@ -465,19 +465,44 @@ form {
   }
 }
 
-
-
 ::ng-deep .mat-date-range-picker .mat-calendar-period-button {
   font-family: 'Assistant', 'Open Sans', sans-serif !important;
   font-weight: 700 !important;
+  direction: rtl !important;
 }
 
 ::ng-deep .mat-date-range-picker .mat-calendar-table-header th {
   font-family: 'Assistant', 'Open Sans', sans-serif !important;
   font-weight: 500 !important;
+  direction: rtl !important;
+  text-align: center !important;
 }
 
 ::ng-deep .mat-date-range-picker .mat-calendar-controls {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-body {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-table {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-body-row {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-body-cell {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-header {
   direction: rtl !important;
 }
 
@@ -487,7 +512,23 @@ form {
   input {
     text-align: right !important;
     font-family: 'Assistant', 'Open Sans', sans-serif !important;
+    direction: rtl !important;
   }
+}
+
+// Additional RTL styling for the date picker overlay
+::ng-deep .mat-datepicker-content {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-datepicker-actions {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+}
+
+// Ensure the calendar icon displays properly in RTL
+::ng-deep .mat-datepicker-toggle {
+  direction: rtl !important;
 }
 
 .selected-date-range {
