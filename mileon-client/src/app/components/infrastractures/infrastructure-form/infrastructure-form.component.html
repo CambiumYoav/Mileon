@@ -1,0 +1,231 @@
+<div class="infrastructure-container p-4">
+  <div class="inline-header">
+    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+    <h5 class="title">{{ title }}</h5>
+  </div>
+  <!-- Form -->
+  <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
+    <div class="form-container">
+      <!-- Loop through rows -->
+      <div class="form-row" *ngFor="let row of rows">
+        <!-- Loop through fields within a row -->
+        <!-- <div
+          *ngFor="let field of row.row"
+          [class]="'form-field' + field.size"
+          [ngClass]="{
+            disabled: !!field.disabled,
+            inputError:
+              (dynamicForm.get(field.name)?.invalid &&
+              dynamicForm.get(field.name)?.touched &&
+              !!dynamicForm.get(field.name)?.errors) || 
+              (isSubmitted && dynamicForm.get(field.name)?.errors?.['required'])
+          }"
+        > -->
+        <div
+          *ngFor="let field of row.row"
+          [class]="'form-field' + field.size"
+          [ngClass]="{
+    disabled: !!field.disabled,
+    inputError: 
+      (field.type === 'fromTo' && (
+        dynamicForm.get(field.name + '.from')?.invalid && (dynamicForm.get(field.name + '.from')?.touched || isSubmitted) ||
+        dynamicForm.get(field.name + '.to')?.invalid && (dynamicForm.get(field.name + '.to')?.touched || isSubmitted)
+      )) ||
+      (field.type !== 'fromTo' && (
+        dynamicForm.get(field.name)?.invalid &&
+        dynamicForm.get(field.name)?.touched &&
+        !!dynamicForm.get(field.name)?.errors
+      )) ||
+      (isSubmitted && dynamicForm.get(field.name)?.errors?.['required'])
+  }"
+        >
+          <!-- Field Content -->
+          <ng-container *ngIf="!field.hide">
+            <!-- Field Label -->
+            <label class="title-placeholder" [for]="field.name">
+              <img
+                *ngIf="field.isRequired"
+                class="required-icon"
+                [src]="Icons.ASTERISK_RED"
+              />
+              {{ field.label }}
+            </label>
+
+            <!-- Field Types -->
+            <ng-container [ngSwitch]="field.type">
+              <!-- Text Input -->
+              <input
+                *ngSwitchCase="'text'"
+                [id]="field.name"
+                [type]="field.type"
+                [formControlName]="field.name"
+              />
+
+              <!-- Number Input -->
+              <input
+                *ngSwitchCase="'number'"
+                [id]="field.name"
+                type="number"
+                [formControlName]="field.name"
+              />
+
+              <!-- Checkbox -->
+              <ng-container *ngSwitchCase="'checkbox'">
+                <div
+                  *ngIf="field.name !== 'isActive'"
+                  class="checkbox-container"
+                >
+                  <input
+                    [id]="field.name"
+                    type="checkbox"
+                    [formControlName]="field.name"
+                    checked="field.value"
+                    [title]="field.name"
+                  />
+                  <div *ngIf="field.name !== 'isActive'" class="checkbox-label">
+                    {{ field.placeholder }}
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'checkbox'">
+                <app-input-checkbox-option-group
+                  *ngIf="field.name === 'isActive'"
+                  [options]="optionsApps"
+                  [isDisabled]="field.name === 'isActive' && !isEdit"
+                ></app-input-checkbox-option-group>
+              </ng-container>
+              <!-- Radio Buttons -->
+              <ng-container *ngSwitchCase="'radio'">
+                <div class="d-flex">
+                  <div
+                    class="radio-container"
+                    *ngFor="let option of field.options"
+                  >
+                    <input
+                      [id]="field.name + '-' + option.value"
+                      type="radio"
+                      [formControlName]="field.name"
+                      [name]="field.name"
+                      [value]="option.value"
+                      class="form-radio"
+                    />
+                    <p>{{ option.display }}</p>
+                  </div>
+                </div>
+              </ng-container>
+             
+              <!-- Select Dropdown -->
+              <div *ngSwitchCase="'select'">
+                <mat-form-field appearance="fill">
+                  <mat-select
+                    [formControlName]="field.name"
+                    [id]="field.name"
+                    [value]="field.value"
+                    [disabled]="field.name === 'isActive' && !isEdit"
+                    [multiple]="field.isMultiSelect"
+                  >
+                    <mat-option
+                      *ngFor="let option of field.options"
+                      [value]="option.value"
+                    >
+                      {{ option.display }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div
+                *ngSwitchCase="'selectWithLookup'"
+                [class]="'field-' + field.size"
+              >
+                <app-select
+                  fxFill
+                  appearance="fill"
+                  [bindLabelKeys]="field.bindLabelKeys"
+                  [formControlName]="field.name"
+                  [dataFunction]="field.dataFunction"
+                  searchPlaceholder="חיפוש"
+                  bindLabelKey="value"
+                  [isValid]="dynamicForm.get(field.name)?.valid || isSubmitted"
+                  bindValueKey="id"
+                  [isMultiSelect]="field.isMultiSelect"
+                  [placeholder]="field.label"
+                ></app-select>
+              </div>
+
+              <!-- From-To Input -->
+              <ng-container *ngSwitchCase="'fromTo'">
+                <div class="fromTo-container" formGroupName="{{ field.name }}">
+                  <input
+                    *ngFor="let fromToField of field.fields"
+                    [id]="fromToField.name"
+                    type="text"
+                    [formControlName]="fromToField.name"
+                    [name]="fromToField.name"
+                    [placeholder]="fromToField.placeholder"
+                  />
+                </div>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'texts'">
+                <div [class]="'field-' + field.type">
+                  <input
+                    *ngFor="let input of field.nestedInputs"
+                    [id]="input.name"
+                    type="text"
+                    [formControlName]="input.name"
+                    [name]="input.name"
+                    [placeholder]="input.placeholder"
+                  />
+                </div>
+              </ng-container>
+            </ng-container>
+
+            <!-- Validation Errors -->
+            <!-- <div
+              *ngIf="
+                dynamicForm.get(field.name)?.invalid &&
+                dynamicForm.get(field.name)?.touched
+              "
+              class="validation-errors"
+            >
+              <small *ngIf="dynamicForm.get(field.name)?.errors?.['required']">
+                שדה חובה
+              </small>
+            </div> -->
+          </ng-container>
+        </div>
+      </div>
+
+      <div *ngIf="isSigns">
+        <app-file-upload-new
+          (fileSelected)="getUploadedFile($event)"
+          [selectedFiles]="filesToUpload"
+          [documentTypes]="fileTypes"
+          [allowedFileTypes]="[
+            FileType.DOCX,
+            FileType.PDF,
+            FileType.JPG,
+            FileType.DOC,
+            FileType.PNG
+          ]"
+        ></app-file-upload-new>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div
+      [ngClass]="{
+        'button-container': true,
+        'signs-button-container': isSigns
+      }"
+    >
+      <app-button
+        [buttonText]="'שמור שינויים'"
+        (clickFunction)="onSubmit()"
+        [buttonClass]="'general-btn-fill '"
+      ></app-button>
+    </div>
+  </form>
+</div>

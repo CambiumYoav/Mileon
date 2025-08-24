@@ -264,14 +264,14 @@
 
   <app-button
   [buttonText]="'עריכת תשתית'"
-  (clickFunction)="openSaveModal()"
+  (clickFunction)="openInfrastructureModal()"
   [buttonClass]="'general-btn-fill'"
 ></app-button>
 
 
 <!-- edit modal -->
 <app-generic-modal
-  [isModalOpen]="isSaveModalOpen"
+  [isModalOpen]="isInfrastructureModalOpen"
   (modalClosed)="closeInfrastructureModal()"
   (componentEvent)="onInfrastructureModalEvent($event)"
 >

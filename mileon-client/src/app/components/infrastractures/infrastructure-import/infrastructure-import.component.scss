@@ -1,0 +1,82 @@
+@import "../../../../styles/elements.scss";
+
+:host {
+  .infrastructure-container {
+    width: 624px !important;
+    // height: 495px;
+    height: 100%;
+    // width: 100%;
+    // max-height: 495px;
+
+    .inline-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .title {
+        color: black;
+        font-weight: 800;
+        font-family: $fontOpenSans;
+        direction: rtl;
+        font-size: 18px;
+        line-height: 25px;
+        margin: 0;
+      }
+
+      .exit-icon {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .content-container {
+    display: flex;
+    direction: rtl;
+    margin-top: 30px;
+    flex-direction: column;
+
+    .text {
+      font-family: $fontOpenSans;
+      font-style: normal;
+      font-size: 12px;
+      line-height: 16px;
+      text-align: right;
+    }
+    .text-bold-modal {
+      font-size: 13px;
+      line-height: 18px;
+      font-family: $fontOpenSans;
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    .file-upload-wrapper {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    margin-top: 85px;
+
+    ::ng-deep app-button {
+      margin: 2px;
+      button {
+        margin: 0 !important;
+        padding: 0 35px;
+      }
+    }
+  }
+}
+
+:host ::ng-deep app-file-upload-new {
+  width: 100%;
+  .button-container {
+    background-color: $colorLightGray !important;
+  }
+}

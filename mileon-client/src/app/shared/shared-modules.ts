@@ -19,6 +19,9 @@ import { SearchBarComponent } from '../components/shared/search-bar/search-bar.c
 import { SelectComponent } from '../components/shared/base/select/select.component';
 import { AdvancedSearchComponent } from '../components/shared/advanced-search/advanced-search.component';
 import { GenericModalComponent } from '../components/shared/generic-modal/generic-modal.component';
+import { InfrastructureImportComponent } from '../components/infrastractures/infrastructure-import/infrastructure-import.component';
+import { InfrastructureFormComponent } from '../components/infrastractures/infrastructure-form/infrastructure-form.component';
+import { InputCheckboxOptionGroupComponent } from '../components/shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
 
 export const SharedModules = [CommonModule, RouterOutlet];
 
@@ -49,5 +52,8 @@ export const BaseComponents = [
   SearchBarComponent,
   SelectComponent,
   AdvancedSearchComponent,
-  GenericModalComponent
+  GenericModalComponent,
+  InfrastructureImportComponent,
+  InfrastructureFormComponent,
+  InputCheckboxOptionGroupComponent
 ];

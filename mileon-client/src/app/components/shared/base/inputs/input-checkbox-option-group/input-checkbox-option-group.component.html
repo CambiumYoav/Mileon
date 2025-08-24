@@ -1,0 +1,24 @@
+<div [class.disabled]="isDisabled">
+  <div class="inline-header">
+    <img *ngIf="isRequired" class="exit-icon" [src]="Icons.ASTERISK_RED" />
+    <div class="title-placeholder">{{ title }}</div>
+  </div>
+  <div class="checkbox-group">
+    <div
+      class="checkbox"
+      *ngFor="let option of options"
+      [ngClass]="!isValid ? 'invalidInput' : ''"
+    >
+      <div class="inline">
+        <input
+          type="checkbox"
+          class="check"
+          [id]="option.value"
+          [checked]="option.checked || false"
+          (change)="toggleCheckbox(option.value, $event)"
+        />
+        <label [for]="option.value" class="label">{{ option.label }}</label>
+      </div>
+    </div>
+  </div>
+</div>
