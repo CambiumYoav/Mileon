@@ -64,13 +64,21 @@
       <div *ngIf="items$ | async as retrievedItems; else waitingResponse">
         <mat-option
           *ngFor="let item of retrievedItems"
-          [value]="item[bindValueKey]"
+          [value]="isMultiSelect ? item : item[bindValueKey]"
         >
           <ng-container *ngIf="bindLabelKeys; else elseBlock">
-            <span>{{ constructLabel(item, bindLabelKeys) }}</span>
+            <span 
+              appTruncatedTextTooltip 
+              [tooltipText]="constructLabel(item, bindLabelKeys)"
+              [maxWidth]="180"
+            >{{ constructLabel(item, bindLabelKeys) }}</span>
           </ng-container>
           <ng-template #elseBlock>
-            <span>{{ item[bindLabelKey] || item.name || item.section }}</span>
+            <span 
+              appTruncatedTextTooltip 
+              [tooltipText]="item[bindLabelKey] || item.name || item.section"
+              [maxWidth]="180"
+            >{{ item[bindLabelKey] || item.name || item.section }}</span>
           </ng-template>
         </mat-option>
       </div>
@@ -84,8 +92,13 @@
   <!-- Selected items display section -->
   <div class="selected-items-container" *ngIf="isMultiSelect && control?.value && control.value.length > 0">
     <div class="selected-item-tag" *ngFor="let selectedValue of control.value; let i = index">
-      <span class="tag-text">{{ getSelectedItemLabel(selectedValue) }}</span>
-      <mat-icon class="remove-icon" (click)="removeSelectedItem(i)">close</mat-icon>
+      <span 
+        class="tag-text" 
+        appTruncatedTextTooltip 
+        [tooltipText]="getSelectedItemLabel(selectedValue)"
+        [maxWidth]="150"
+      >{{ getSelectedItemLabel(selectedValue) }}</span>
+      <mat-icon class="remove-icon" (click)="removeSelectedItem(i, $event)">close</mat-icon>
     </div>
   </div>
 </div>

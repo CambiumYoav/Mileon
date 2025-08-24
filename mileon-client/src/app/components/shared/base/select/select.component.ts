@@ -32,6 +32,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { InfiniteScrollDirective } from '../../../../directives/infinite-scroll.directive';
+import { TruncatedTextTooltipDirective } from '../../../../directives/truncated-text-tooltip.directive';
 
 @Component({
   selector: 'app-select',
@@ -47,6 +48,7 @@ import { InfiniteScrollDirective } from '../../../../directives/infinite-scroll.
     MatInputModule,
     MatOptionModule,
     InfiniteScrollDirective,
+    TruncatedTextTooltipDirective,
   ],
   providers: [
     {
@@ -134,9 +136,14 @@ export class SelectComponent
     this.listObj$ = this.selectService.listsObj.asObservable();
     
     if (this.control.value) {
-      this.selectParams.ids = Array.isArray(this.control.value)
-        ? this.control.value
-        : [this.control.value];
+      if (this.isMultiSelect) {
+        // For multi-select, ensure we have full objects, not just IDs
+        this.selectParams.ids = this.control.value.map((item: any) => 
+          typeof item === 'object' ? item[this.bindValueKey] : item
+        );
+      } else {
+        this.selectParams.ids = [this.control.value];
+      }
     }
     this.setConnectedFieldValue();
     this.setDataListParams();
@@ -306,38 +313,49 @@ export class SelectComponent
   }
 
   compareValues(option1: any, option2: any): boolean {
+    if (this.isMultiSelect) {
+      // For multi-select, we store full objects, so compare by ID
+      if (typeof option1 === 'object' && typeof option2 === 'object') {
+        return option1[this.bindValueKey] === option2[this.bindValueKey];
+      } else if (typeof option1 === 'object') {
+        return option1[this.bindValueKey] === option2;
+      } else if (typeof option2 === 'object') {
+        return option1 === option2[this.bindValueKey];
+      }
+    }
+    // For single select, compare directly
     return option1 === option2;
   }
 
   getSelectedItemLabel(selectedValue: any): string {
-    // Find the item in the current items list to get the label
-    let currentItems: any[] = [];
-    this.items$.subscribe(items => {
-      currentItems = items;
-    }).unsubscribe();
-    
-    const selectedItem = currentItems.find(item => item[this.bindValueKey] === selectedValue);
-    
-    if (selectedItem) {
+    // For multi-select, we now store full item objects, so this is much simpler
+    if (typeof selectedValue === 'object' && selectedValue !== null) {
       if (this.bindLabelKeys) {
-        return this.constructLabel(selectedItem, this.bindLabelKeys);
+        return this.constructLabel(selectedValue, this.bindLabelKeys);
       } else {
-        return selectedItem[this.bindLabelKey] || selectedItem.name || selectedItem.section || selectedValue;
+        return selectedValue[this.bindLabelKey] || selectedValue.name || selectedValue.section || 'Unknown';
       }
     }
     
+    // Fallback for single select or edge cases
     return selectedValue;
   }
 
-  removeSelectedItem(index: number): void {
+  removeSelectedItem(index: number, event: Event): void {
+    // Prevent the event from bubbling up and closing the select
+    event.stopPropagation();
+    event.preventDefault();
+    
     if (this.isMultiSelect && this.control.value) {
       const currentValue = [...this.control.value];
       currentValue.splice(index, 1);
       this.control.setValue(currentValue);
       
-      // Update the selectParams.ids if needed
+      // Update the selectParams.ids if needed - extract IDs from full objects
       if (this.selectParams.ids && this.selectParams.ids.length > 0) {
-        this.selectParams.ids = currentValue;
+        this.selectParams.ids = currentValue.map((item: any) => 
+          typeof item === 'object' ? item[this.bindValueKey] : item
+        );
       }
     }
   }

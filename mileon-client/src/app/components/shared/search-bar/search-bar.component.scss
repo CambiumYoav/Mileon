@@ -360,7 +360,6 @@ form {
     }
   }
   
-  // Further reduce sizes for very small screens
   .search-bar-md,
   .search-bar-lg,
   .search-bar-xl {
@@ -376,93 +375,8 @@ form {
   }
 }
 
-// Hebrew date picker styling
-::ng-deep .mat-date-range-picker {
-  direction: rtl !important;
-  
-  .mat-calendar-table-header th {
-    direction: rtl !important;
-    text-align: center !important;
-  }
-  
-  .mat-calendar-body-cell-content {
-    direction: rtl !important;
-    text-align: center !important;
-  }
-  
-  // Ensure the calendar grid respects RTL layout
-  .mat-calendar-table {
-    direction: rtl !important;
-  }
-  
-  // Force RTL for calendar body rows
-  .mat-calendar-body-row {
-    direction: rtl !important;
-  }
-  
-  // Ensure calendar cells are properly aligned
-  .mat-calendar-body-cell {
-    direction: rtl !important;
-    text-align: center !important;
-  }
-}
 
-// Additional RTL calendar styling
-::ng-deep .mat-calendar {
-  direction: rtl !important;
-  
-  .mat-calendar-table {
-    direction: rtl !important;
-  }
-  
-  .mat-calendar-body-row {
-    direction: rtl !important;
-  }
-  
-  .mat-calendar-body-cell {
-    direction: rtl !important;
-    text-align: center !important;
-  }
-}
 
-// Specific styling for Hebrew date picker
-::ng-deep .hebrew-date-picker {
-  direction: rtl !important;
-  
-  .mat-calendar {
-    direction: rtl !important;
-    
-    .mat-calendar-table {
-      direction: rtl !important;
-      
-      .mat-calendar-table-header {
-        direction: rtl !important;
-        
-        th {
-          direction: rtl !important;
-          text-align: center !important;
-        }
-      }
-      
-      .mat-calendar-body {
-        direction: rtl !important;
-        
-        .mat-calendar-body-row {
-          direction: rtl !important;
-          display: flex !important;
-          flex-direction: row-reverse !important;
-          
-          .mat-calendar-body-cell {
-            direction: rtl !important;
-            text-align: center !important;
-          }
-        }
-      }
-    }
-  }
-}
-
-// Hebrew month and day name styling for range picker
 ::ng-deep .mat-date-range-picker .mat-calendar-period-button {
   font-family: 'Assistant', 'Open Sans', sans-serif !important;
   font-weight: 700 !important;
@@ -473,12 +387,10 @@ form {
   font-weight: 500 !important;
 }
 
-// Ensure proper RTL layout for Hebrew range picker
 ::ng-deep .mat-date-range-picker .mat-calendar-controls {
   direction: rtl !important;
 }
 
-// Style for the date range input fields
 ::ng-deep .mat-date-range-input {
   direction: rtl !important;
   
@@ -488,13 +400,12 @@ form {
   }
 }
 
-// Selected date range display styling
 .selected-date-range {
   text-align: right !important;
   direction: rtl !important;
   font-family: 'Assistant', 'Open Sans', sans-serif !important;
   margin-top: 8px;
-  
+    
   span {
     color: var(--blue, #387EC4);
     font-size: 14px;

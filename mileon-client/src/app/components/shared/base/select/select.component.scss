@@ -25,6 +25,15 @@
     text-align: right !important;
     width: 100% !important;
   }
+  
+  // Ensure text truncation for long options
+  span {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
 }
 
 ::ng-deep .mat-pseudo-checkbox{
@@ -214,6 +223,9 @@
     gap: 23px !important;
     align-self: stretch !important;
     box-sizing: border-box !important;
+    
+    // Ensure proper text handling
+    overflow: hidden;
   }
 
   ::ng-deep .mat-mdc-select-trigger {
@@ -301,6 +313,16 @@
   }
 }
 
+.title-placeholder{
+  color: var(--black, #000);
+  text-align: right;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0 0 6px 0 !important;
+}
+
 .invalidInput {
   border: 1px solid crimson;
   box-shadow: none !important;
@@ -360,6 +382,53 @@
   &.mat-option-selected {
     background-color: #D3F0FF !important;
   }
+  
+  // Ensure text truncation for long options
+  span {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
+}
+
+// Custom tooltip styles
+::ng-deep .custom-select-tooltip {
+  position: fixed !important;
+  z-index: 9999 !important;
+  font-family: $fontOpenSans;
+  
+  // Animation
+  opacity: 0;
+  animation: tooltipFadeIn 0.2s ease-in-out forwards;
+  
+  // Ensure tooltip is above other elements
+  pointer-events: none;
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    max-width: 250px;
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+  
+  @media (max-width: 480px) {
+    max-width: 200px;
+    font-size: 10px;
+    padding: 5px 8px;
+  }
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 // Selected items styling
@@ -390,6 +459,10 @@
       font-family: $fontOpenSans;
       direction: rtl;
       text-align: right;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .mat-icon {

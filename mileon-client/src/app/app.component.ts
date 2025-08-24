@@ -107,6 +107,7 @@ export class AppComponent {
           }
         ]
       }
+
     ]
   };
   
@@ -602,7 +603,8 @@ export class AppComponent {
     { id: 2, value: 'בטיפול', label: 'בטיפול' },
     { id: 3, value: 'פתוח', label: 'פתוח' },
     { id: 4, value: 'ממתין לאישור', label: 'ממתין לאישור' },
-    { id: 5, value: 'הושלם', label: 'הושלם' }
+    { id: 5, value: 'הושלם', label: 'הושלם' },
+    { id: 6, value: 'ממתין xxkaxsaikwuchgdskachdiksahdcikuzjbgscdgsaueydhickzujxhc uch iujhscd  uych asauhf  hsdcujhds  shkxc dsuchkjxhyekdchzxd ffyhzkxhlzshvjdh ', label: 'ממתין לאישור' },
   ];
 
   // Data functions for select components
@@ -718,9 +720,25 @@ export class AppComponent {
     }
     
     if (locationFilters.municipality) {
-      // Now municipality is an ID from the select component
+      // Handle both array of objects and single object from select component
+      let municipalityIds: number[] = [];
+      
+      if (Array.isArray(locationFilters.municipality)) {
+        // Multi-select: extract IDs from objects
+        municipalityIds = locationFilters.municipality.map((item: any) => 
+          typeof item === 'object' ? parseInt(item.id) : parseInt(item)
+        );
+      } else {
+        // Single select: extract ID from object or use directly
+        municipalityIds = [typeof locationFilters.municipality === 'object' 
+          ? parseInt(locationFilters.municipality.id) 
+          : parseInt(locationFilters.municipality)
+        ];
+      }
+      
+      // Filter by municipality IDs
       filteredData = filteredData.filter(item => 
-        item.municipalityId === parseInt(locationFilters.municipality)
+        municipalityIds.includes(item.municipalityId)
       );
     }
     
@@ -733,9 +751,16 @@ export class AppComponent {
     }
     
     if (dateFilters.status) {
-      // Now status is an ID from the select component
+      // Handle both object and direct value from select component
+      let statusId: number;
+      if (typeof dateFilters.status === 'object') {
+        statusId = parseInt(dateFilters.status.id);
+      } else {
+        statusId = parseInt(dateFilters.status);
+      }
+      
       filteredData = filteredData.filter(item => 
-        item.statusId === parseInt(dateFilters.status)
+        item.statusId === statusId
       );
     }
     

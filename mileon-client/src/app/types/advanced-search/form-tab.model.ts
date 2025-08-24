@@ -65,6 +65,7 @@ export enum FieldTypeEnum {
 }
 
 export enum FieldLengthEnum {
+  ExtraLong = 'extraLong',
   Long = 'long',
   Medium = 'medium',
   Short = 'short',
