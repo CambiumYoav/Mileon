@@ -64,6 +64,7 @@
   </div>
   <app-dropdown-window
     *ngIf="dropdownWindowOpened"
+    [searchBarWidth]="searchBarWidth"
     (closeDropdownEvent)="closeDropdownWindow()"
   >
     <app-advanced-search

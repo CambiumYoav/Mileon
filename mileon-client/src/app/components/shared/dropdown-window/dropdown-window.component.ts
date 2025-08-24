@@ -5,6 +5,7 @@ import {
   HostListener,
   OnInit,
   Output,
+  Input,
 } from '@angular/core';
 
 @Component({
@@ -14,6 +15,7 @@ import {
 })
 export class DropdownWindowComponent implements OnInit {
   @Output() closeDropdownEvent: EventEmitter<void> = new EventEmitter();
+  @Input() searchBarWidth: string = 'auto';
 
   constructor(private elementRef: ElementRef) {}
 

@@ -144,7 +144,37 @@ export class SearchBarComponent
   }
 
   get sizeClass(): string {
-    return `search-bar-${this.size}`;
+    switch (this.size) {
+      case InputSizeEnum.Sm:
+        return 'search-bar-sm';
+      case InputSizeEnum.Md:
+        return 'search-bar-md';
+      case InputSizeEnum.Base:
+        return 'search-bar-base';
+      case InputSizeEnum.Lg:
+        return 'search-bar-lg';
+      case InputSizeEnum.Xl:
+        return 'search-bar-xl';
+      default:
+        return 'search-bar-base';
+    }
+  }
+
+  get searchBarWidth(): string {
+    switch (this.size) {
+      case InputSizeEnum.Sm:
+        return '500px';
+      case InputSizeEnum.Md:
+        return '800px';
+      case InputSizeEnum.Base:
+        return '100%';
+      case InputSizeEnum.Lg:
+        return '1100px';
+      case InputSizeEnum.Xl:
+        return '100%';
+      default:
+        return '100%';
+    }
   }
 
   _searchTextValue: string = '';
