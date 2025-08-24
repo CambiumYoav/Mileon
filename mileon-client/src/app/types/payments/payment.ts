@@ -1,11 +1,11 @@
 export class Payment {
-    paymentOptionId: number;
+    paymentOptionId!: number;
     creditCardTransactionId?: string;
     amount?: number;
 }
 
 export class TicketPaymentBalance {
-    sumPaymentBalance: number;
-    numOfItems: number;
+    sumPaymentBalance!: number;
+    numOfItems!: number;
 }
 

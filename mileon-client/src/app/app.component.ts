@@ -16,14 +16,112 @@ import { InputSizeEnum } from './types/enum/inputSizeEnum';
 import { AdvancedForm, FieldTypeEnum, FieldLengthEnum , FieldSize } from './types/advanced-search/form-tab.model';
 import { TextareaCommentsComponent } from "./components/shared/base/inputs/textarea-comments/textarea-comments.component";
 import { DropdownWindowComponent } from "./components/shared/dropdown-window/dropdown-window.component";
+import { ConfirmationModalComponent } from "./components/shared/confirmation-modal/confirmation-modal.component";
+import { AppModalComponent } from "./components/shared/app-modal/app-modal.component";
+import { ModalService } from './services/modal.service';
+import { GenericModalComponent, ModalButton } from './components/shared/generic-modal/generic-modal.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  imports: [BaseComponents, SharedImports, TextareaCommentsComponent, DropdownWindowComponent], 
+  imports: [
+    BaseComponents, 
+    SharedImports, 
+    TextareaCommentsComponent, 
+    DropdownWindowComponent, 
+    ConfirmationModalComponent, 
+    AppModalComponent,
+    GenericModalComponent,
+  ], 
 })
 export class AppComponent {
+
+  isSaveModalOpen = false;
+  isInfrastructureModalOpen = false;
+  
+
+  openSaveModal() {
+    this.isSaveModalOpen = true;
+  }
+  
+  closeModal() {
+    this.isSaveModalOpen = false;
+  }
+
+  openInfrastructureModal() {
+    this.isInfrastructureModalOpen = true;
+  }
+
+  closeInfrastructureModal() {
+    this.isInfrastructureModalOpen = false;
+  }
+
+  saveInfrastructureForm() {
+    console.log('Saving infrastructure form...');
+    this.toastr.success('התשתית נשמרה בהצלחה!');
+    this.closeInfrastructureModal();
+  }
+
+  onInfrastructureModalEvent(event: any) {
+    console.log('Infrastructure modal event:', event);
+    
+    if (event.type === 'formSubmitted') {
+      console.log('Form submitted with data:', event.data);
+      this.saveInfrastructureForm();
+    } else if (event.type === 'formCancelled') {
+      this.closeInfrastructureModal();
+    }
+  }
+
+  private getMockInfrastructureData(): any[] {
+    // Mock data for infrastructure form
+    return [
+      {
+        row: [
+          {
+            name: 'name',
+            label: 'שם התשתית',
+            type: 'text',
+            size: 'md',
+            value: '',
+            validations: { required: true },
+            hide: false,
+            isRequired: true
+          },
+          {
+            name: 'type',
+            label: 'סוג התשתית',
+            type: 'select',
+            size: 'md',
+            value: '',
+            options: [
+              { value: 'road', display: 'כביש' },
+              { value: 'bridge', display: 'גשר' },
+              { value: 'tunnel', display: 'מנהרה' }
+            ],
+            validations: { required: true },
+            hide: false,
+            isRequired: true
+          }
+        ]
+      },
+      {
+        row: [
+          {
+            name: 'description',
+            label: 'תיאור',
+            type: 'text',
+            size: 'xl',
+            value: '',
+            validations: { maxLength: 500 },
+            hide: false,
+            isRequired: false
+          }
+        ]
+      }
+    ];
+  }
 
   InputSizeEnum = InputSizeEnum;
   FieldTypeEnum = FieldTypeEnum;
@@ -576,10 +674,17 @@ export class AppComponent {
   
   // Generate suggestions from the data
   searchSuggestions: string[] = [];
-  
+  modalButtons: ModalButton[] = [
+    {
+      label: 'סגור',
+      action: () => this.closeModal(),
+      buttonClass: 'outline-btn button-base'
+    },
+  ];
   previewFile: PreviewFileType | undefined;
   searchText: string = '';
   newComment: any;
+
   
 
   
@@ -653,7 +758,8 @@ export class AppComponent {
 
   constructor(
     private toastr: ToastrService,
-    private appService: AppService
+    private appService: AppService,
+    private modalService: ModalService
   ) {}
   
   ngOnInit() {

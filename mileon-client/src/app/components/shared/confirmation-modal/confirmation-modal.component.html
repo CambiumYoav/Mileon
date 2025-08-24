@@ -1,0 +1,17 @@
+<app-modal
+  [isModalOpen]="isModalOpen"
+  [modalSize]="modalSize"
+  [buttons]="modalButtons"
+  (isModalClosed)="closeModal()"
+  [title]="title"
+  [hideExitIcon]="true"
+>
+  <div>
+    <div class="mb-2">
+      <img *ngIf="showDangerIcon" [src]="Icons.DANGER" />
+      <p class="text-bolder-modal">
+        {{ message }}
+      </p>
+    </div>
+  </div>
+</app-modal>

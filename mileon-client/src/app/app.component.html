@@ -3,7 +3,7 @@
 </div> -->
 
 
-<div class="p-2 d-flex flex-column gap-2">
+<!-- <div class="p-2 d-flex flex-column gap-2">
   <button class="primary-btn button-icon-lg">
     כפתור <i class="fa fa-check"></i>
   </button>
@@ -61,7 +61,7 @@
     <input type="checkbox" class="checkbox-base checkbox-secondary" checked />
     Accept terms
   </label>
-</div>
+</div> -->
 
 
 
@@ -133,7 +133,7 @@
 
 
 <!-- Search bar for table -->
-<div style="margin: 20px; padding-top: 100px;" >
+<!-- <div style="margin: 20px; padding-top: 100px;" >
   <h3>Table Search</h3>
   <app-search-bar 
     [size]="InputSizeEnum.Md"
@@ -172,8 +172,7 @@
   (onRowEvent)="onRowEvent($event)"
 >
 </app-table>
-
-</div>
+</div> -->
 
 
 
@@ -261,8 +260,47 @@
 </div>
 
 
-<div>
+<div style="margin: 20px; background-color: #f0f0f0;">
 
+  <app-button
+  [buttonText]="'עריכת תשתית'"
+  (clickFunction)="openSaveModal()"
+  [buttonClass]="'general-btn-fill'"
+></app-button>
+
+
+<!-- edit modal -->
+<app-generic-modal
+  [isModalOpen]="isSaveModalOpen"
+  (modalClosed)="closeInfrastructureModal()"
+  (componentEvent)="onInfrastructureModalEvent($event)"
+>
+</app-generic-modal>
+
+
+<!-- Original Save Modal -->
+<!-- <app-modal
+[isModalOpen]="isSaveModalOpen"
+[title]="'כותרת - לורם איפסום'"
+[message]="'לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קולהע צופעט למרקוח איבן איף, ברומץ כלרשט מיחוצים. קלאצי קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח. לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קולהע צופעט למרקוח איבן איף, ברומץ כלרשט מיחוצים. קלאצי קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח.'"
+[modalSize]="'md'"
+(isModalClosed)="closeModal()"
+[hideExitIcon]="true"
+[buttons]="modalButtons"
+>
+</app-modal> -->
+
+  <!-- <app-confirmation-modal
+    [isModalOpen]="isSaveModalOpen"
+    (onConfirm)="saveAuthorityForms()"
+    (isModalClosed)="closeModal()"
+    [title]="'האם אתה בטוח?'"
+    [message]="'האם אתה בטוח שברצונך למחוק את הקובץ?'"
+    [cancelLabel]="'ביטול'"
+    [confirmLabel]="'מחק'"
+    [cancelButtonClass]="'outline-btn button-base'"
+    [confirmButtonClass]="'primary-btn button-base'"
+  ></app-confirmation-modal> -->
 </div>
 
 

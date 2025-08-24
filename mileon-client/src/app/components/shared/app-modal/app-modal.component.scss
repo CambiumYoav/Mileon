@@ -1,0 +1,106 @@
+@import "../../../../styles/elements.scss";
+
+.app-modal {
+  &.modal-title {
+    color: #000;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    font-family: $fontOpenSans;
+  }
+
+  &.modal-header {
+    direction: rtl;
+    border: none;
+    padding: 20px !important;
+  }
+
+  &.modal-footer {
+    padding: 20px !important;
+    direction: rtl;
+    border-top: none;
+    justify-content: space-between;
+    &.no-amount-data {
+      justify-content: flex-end;
+    }
+  }
+  //check if not broke any thing
+  &.modal-body {
+    padding: 20px !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    direction: rtl;
+  }
+
+  &.modal-message{
+    color: #000;
+    text-align: right;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: end;
+    width: auto;
+    gap: 20px;
+  }
+}
+
+.modal-message-container{
+  padding: 0 20px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.modal-body{
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: end;
+  width: auto;
+}
+
+
+.exit-icon {
+  left: 35px;
+  top: 28px;
+  position: absolute;
+  cursor: pointer;
+}
+
+.amount-data-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: $fontOpenSans;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  color: #000;
+  text-decoration: underline;
+}
+
+.amount-data-label .data-item {
+  display: flex;
+}
+
+.amount-data-label .data-label,
+.amount-data-label .data-value {
+  margin: 0 2px;
+}
+
+.amount-data-label .data-value.sum-payment-balance,
+.amount-data-label .data-value.num-of-items {
+  padding-right: 1px;
+}

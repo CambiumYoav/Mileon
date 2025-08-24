@@ -18,6 +18,7 @@ import { InputTextComponent } from '../components/shared/base/inputs/input-text/
 import { SearchBarComponent } from '../components/shared/search-bar/search-bar.component';
 import { SelectComponent } from '../components/shared/base/select/select.component';
 import { AdvancedSearchComponent } from '../components/shared/advanced-search/advanced-search.component';
+import { GenericModalComponent } from '../components/shared/generic-modal/generic-modal.component';
 
 export const SharedModules = [CommonModule, RouterOutlet];
 
@@ -30,6 +31,7 @@ export const SharedImports = [
   ...SharedModules,
   ...MaterialModule,
 ];
+
 export const SharedComponents = [HeaderComponent];
 
 export const BaseComponents = [
@@ -46,5 +48,6 @@ export const BaseComponents = [
   InputTextComponent,
   SearchBarComponent,
   SelectComponent,
-  AdvancedSearchComponent
+  AdvancedSearchComponent,
+  GenericModalComponent
 ];
