@@ -24,7 +24,7 @@
         [disableRipple]="true"
         matSuffix
         [for]="picker"
-        (click)="$event.stopPropagation()"
+        (click)="onDatePickerToggle(); $event.stopPropagation()"
         *ngIf="showDatePicker && !form.get('searchText')?.value"
       >
         <mat-icon matDatepickerToggleIcon>

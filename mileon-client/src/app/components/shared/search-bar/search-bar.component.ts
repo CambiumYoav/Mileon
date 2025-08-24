@@ -303,4 +303,12 @@ export class SearchBarComponent
     this.closeDropdownWindow();
     this.optionSelected.emit(item);
   }
+
+  onDatePickerToggle() {
+    // Close the advanced search window if it's open when date picker is toggled
+    if (this.advancedSearchOpened) {
+      this.advancedSearchOpened = false;
+      this.closeDropdownWindow();
+    }
+  }
 }

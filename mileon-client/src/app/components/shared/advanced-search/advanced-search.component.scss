@@ -84,6 +84,10 @@
       border-bottom: 1px solid #B9C6D4 !important;
     }
 
+    .mdc-tab__content{
+      height: 16px !important;
+    }
+
     // Style only the content tabs, exclude the disabled "Clear All" tab
     .mat-mdc-tab.mdc-tab:not(.mat-mdc-tab-disabled) {
       display: flex;
@@ -93,6 +97,7 @@
       border-radius: 4px;
       background: #D3F0FF;
       position: relative;
+      height: 37px !important;
 
       // Active state
       &.mdc-tab--active {
@@ -130,27 +135,6 @@
   }
 }
 
-
-.clear-all-btn{
-  background: #000 !important;
-  color: #fff !important; 
-  padding: 10px 20px;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-  border-radius: 4px;
-  text-align: right;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  text-decoration-line: underline;
-  text-decoration-style: solid;
-  text-decoration-skip-ink: none;
-  text-decoration-thickness: auto;
-  text-underline-offset: auto;
-  text-underline-position: from-font;
-}
 
 .input-group{
   display: flex;
@@ -219,8 +203,8 @@
 // Floating reset button styles
 .floating-reset-btn {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 15px;  
+  left: 30px;
   z-index: 1000;
   padding: 7.5px 31px;
   width: fit-content;
@@ -231,7 +215,6 @@
   padding: 12px 20px;
   font-size: 16px;
   font-weight: 700;
-  // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   cursor: pointer;
 
