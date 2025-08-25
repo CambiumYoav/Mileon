@@ -263,23 +263,41 @@
 <div style="margin: 20px; background-color: #f0f0f0;">
 
   <app-button
-  [buttonText]="'עריכת תשתית'"
-  (clickFunction)="openInfrastructureModal()"
-  [buttonClass]="'general-btn-fill'"
+  [buttonText]="'הודעה'"
+  (clickFunction)="openSaveModal()"
+  [buttonClass]="'outline-secondary-btn button-base'"
+  style="margin: 10px;"
 ></app-button>
 
+  <app-button
+    [buttonText]="'אישור'"
+    (clickFunction)="openConfirmationModal()"
+    [buttonClass]="'outline-secondary-btn button-base'"
+    style="margin: 10px;"
+  ></app-button>
 
-<!-- edit modal -->
-<app-generic-modal
-  [isModalOpen]="isInfrastructureModalOpen"
-  (modalClosed)="closeInfrastructureModal()"
-  (componentEvent)="onInfrastructureModalEvent($event)"
->
-</app-generic-modal>
+  <app-button
+    [buttonText]="'יבוא'"
+    (clickFunction)="openDialogImport()"
+    [buttonClass]="'outline-secondary-btn button-base'"
+    style="margin: 10px;"
+  ></app-button>
 
+  <app-button
+[buttonText]="'בחירה'"
+(clickFunction)="openDialogExport()"
+[buttonClass]="'outline-secondary-btn button-base'"
+style="margin: 10px;"
+></app-button>
 
-<!-- Original Save Modal -->
-<!-- <app-modal
+  <app-button
+  [buttonText]="'עריכה'"
+  (clickFunction)="openDialogForm()"
+  [buttonClass]="'outline-secondary-btn button-base'"
+  style="margin: 10px;"
+></app-button>
+
+<app-modal
 [isModalOpen]="isSaveModalOpen"
 [title]="'כותרת - לורם איפסום'"
 [message]="'לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קולהע צופעט למרקוח איבן איף, ברומץ כלרשט מיחוצים. קלאצי קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח. לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קולהע צופעט למרקוח איבן איף, ברומץ כלרשט מיחוצים. קלאצי קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח.'"
@@ -288,19 +306,18 @@
 [hideExitIcon]="true"
 [buttons]="modalButtons"
 >
-</app-modal> -->
+</app-modal>
 
-  <!-- <app-confirmation-modal
-    [isModalOpen]="isSaveModalOpen"
-    (onConfirm)="saveAuthorityForms()"
-    (isModalClosed)="closeModal()"
+  <app-confirmation-modal
+    [isModalOpen]="isConfirmationModalOpen"
+    (isModalClosed)="closeConfirmationModal()"
     [title]="'האם אתה בטוח?'"
     [message]="'האם אתה בטוח שברצונך למחוק את הקובץ?'"
     [cancelLabel]="'ביטול'"
     [confirmLabel]="'מחק'"
     [cancelButtonClass]="'outline-btn button-base'"
     [confirmButtonClass]="'primary-btn button-base'"
-  ></app-confirmation-modal> -->
+  ></app-confirmation-modal>
 </div>
 
 

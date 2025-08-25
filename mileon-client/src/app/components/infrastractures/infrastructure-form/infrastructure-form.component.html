@@ -1,7 +1,7 @@
 <div class="infrastructure-container p-4">
   <div class="inline-header">
-    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
     <h5 class="title">{{ title }}</h5>
+    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
   </div>
   <!-- Form -->
   <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
@@ -54,20 +54,24 @@
             <!-- Field Types -->
             <ng-container [ngSwitch]="field.type">
               <!-- Text Input -->
-              <input
+              <app-input-text
                 *ngSwitchCase="'text'"
-                [id]="field.name"
-                [type]="field.type"
+                [title]="field.label"
+                [placeholder]="field.placeholder || field.label" 
                 [formControlName]="field.name"
-              />
+                [isRequired]="field.isRequired"
+                [isValid]="!dynamicForm.get(field.name)?.invalid || !dynamicForm.get(field.name)?.touched"
+              ></app-input-text>
 
               <!-- Number Input -->
-              <input
+              <app-input-text
                 *ngSwitchCase="'number'"
-                [id]="field.name"
-                type="number"
+                [title]="field.label"
+                [placeholder]="field.placeholder || field.label"
                 [formControlName]="field.name"
-              />
+                [isRequired]="field.isRequired"
+                [isValid]="!dynamicForm.get(field.name)?.invalid || !dynamicForm.get(field.name)?.touched"
+              ></app-input-text>
 
               <!-- Checkbox -->
               <ng-container *ngSwitchCase="'checkbox'">
@@ -95,6 +99,7 @@
                   [isDisabled]="field.name === 'isActive' && !isEdit"
                 ></app-input-checkbox-option-group>
               </ng-container>
+
               <!-- Radio Buttons -->
               <ng-container *ngSwitchCase="'radio'">
                 <div class="d-flex">
@@ -116,23 +121,47 @@
               </ng-container>
              
               <!-- Select Dropdown -->
-              <div *ngSwitchCase="'select'">
-                <mat-form-field appearance="fill">
-                  <mat-select
-                    [formControlName]="field.name"
-                    [id]="field.name"
-                    [value]="field.value"
-                    [disabled]="field.name === 'isActive' && !isEdit"
-                    [multiple]="field.isMultiSelect"
-                  >
-                    <mat-option
-                      *ngFor="let option of field.options"
-                      [value]="option.value"
-                    >
-                      {{ option.display }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+              <app-select
+                *ngSwitchCase="'select'"
+                [title]="field.label"
+                [placeholder]="field.placeholder || field.label"
+                [formControlName]="field.name"
+                [appearance]="'fill'"
+                [isMultiSelect]="field.isMultiSelect || false"
+                [isRequired]="field.isRequired"
+                [isValid]="!dynamicForm.get(field.name)?.invalid || !dynamicForm.get(field.name)?.touched"
+                [items$]="of(field.options || [])"
+                [bindValueKey]="'value'"
+                [bindLabelKey]="'display'"
+              ></app-select>
+
+              <!-- Date Input -->
+              <app-input-date
+                *ngSwitchCase="'date'"
+                [title]="field.label"
+                [placeholder]="field.placeholder || field.label"
+                [formControlName]="field.name"
+              ></app-input-date>
+
+              <!-- Phone Input -->
+              <app-input-phone
+                *ngSwitchCase="'phone'"
+                [title]="field.label"
+                [placeholder]="field.placeholder || field.label"
+                [formControlName]="field.name"
+                [isRequired]="field.isRequired"
+                [isValid]="!dynamicForm.get(field.name)?.invalid || !dynamicForm.get(field.name)?.touched"
+              ></app-input-phone>
+
+              <!-- Text Area -->
+              <div *ngSwitchCase="'text-area'" class="textarea-container">
+                <div class="title-placeholder">{{ field.label }}</div>
+                <textarea
+                  [formControlName]="field.name"
+                  [placeholder]="field.placeholder"
+                  class="textarea-input"
+                  rows="3"
+                ></textarea>
               </div>
 
               <div
@@ -224,7 +253,7 @@
       <app-button
         [buttonText]="'שמור שינויים'"
         (clickFunction)="onSubmit()"
-        [buttonClass]="'general-btn-fill '"
+        [buttonClass]="'primary-btn button-base'"
       ></app-button>
     </div>
   </form>

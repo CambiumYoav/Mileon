@@ -55,22 +55,30 @@
 
 .input-text-sm .input-fill,
 .input-text-sm .input-text {
+  max-width: 80px !important;
+  min-width: 80px !important;
   width: 80px !important;
   text-align: center;
 }
 
 .input-text-md .input-fill,
 .input-text-md .input-text {
+  max-width: 210px !important;
+  min-width: 210px !important;
   width: 210px !important;
 }
 
 .input-text-lg .input-fill,
 .input-text-lg .input-text {
+  max-width: 300px !important;
+  min-width: 300px !important;
   width: 300px !important;
 }
 
 .input-text-xl .input-fill,
 .input-text-xl .input-text {
+  max-width: 420px !important;
+  min-width: 420px !important;
   width: 420px !important;
 }
 
@@ -89,6 +97,12 @@
   background: transparent;
   outline: none;
   width: 100%;
+
+  &:disabled {
+    border-radius: 4px;
+    border: 1px solid #C5C6C7;
+    background: var(--light-grey, #E3E7EB);
+  }
 }
 
 .title-placeholder{

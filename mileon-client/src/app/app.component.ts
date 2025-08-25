@@ -14,91 +14,197 @@ import { AppService } from './app.service';
 import { PreviewFileType } from './types/previewFile';
 import { InputSizeEnum } from './types/enum/inputSizeEnum';
 import { AdvancedForm, FieldTypeEnum, FieldLengthEnum , FieldSize } from './types/advanced-search/form-tab.model';
-import { TextareaCommentsComponent } from "./components/shared/base/inputs/textarea-comments/textarea-comments.component";
-import { DropdownWindowComponent } from "./components/shared/dropdown-window/dropdown-window.component";
 import { ConfirmationModalComponent } from "./components/shared/confirmation-modal/confirmation-modal.component";
 import { AppModalComponent } from "./components/shared/app-modal/app-modal.component";
-import { ModalService } from './services/modal.service';
-import { GenericModalComponent, ModalButton } from './components/shared/generic-modal/generic-modal.component';
+import { InfrastructureService } from './services/infrastructure.service';
+import { InfrastructureService as InfrastructureDataService } from './components/infrastractures/infrastructure.service';
+import { ModalButton } from './components/shared/generic-modal/generic-modal.component';
+import { InfrastructureFormComponent } from './components/infrastractures/infrastructure-form/infrastructure-form.component';
+import { InfrastructureForms } from './types/infrastructure/infrastructure-table.model';
+import { InfrastructureTableAction, InfrastructureTablesTypes } from './types/enum/infrastructureTablesEnum';
+import { StreetsTypes } from './types/infrastructure/infrastructureFilterOptions';
+import { ErrorSuccessMessages } from './types/enum/error-success-messages';
+import { InfrastructureExportComponent } from './components/infrastractures/infrastructure-export/infrastructure-export.component';
+import { MatDialog } from '@angular/material/dialog';
+import { InfrastructureImportComponent } from './components/infrastractures/infrastructure-import/infrastructure-import.component';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  standalone: true,
   imports: [
     BaseComponents, 
     SharedImports, 
-    TextareaCommentsComponent, 
-    DropdownWindowComponent, 
     ConfirmationModalComponent, 
     AppModalComponent,
-    GenericModalComponent,
   ], 
 })
 export class AppComponent {
 
+  constructor(
+    private toastr: ToastrService,
+    private appService: AppService,
+    private dialog: MatDialog,
+    private infrastructureService: InfrastructureService,
+    private infrastructureDataService: InfrastructureDataService
+  ) {}
+
+
   isSaveModalOpen = false;
-  isInfrastructureModalOpen = false;
-  
+  filesToUpload: any[] = [];  
+  InputSizeEnum = InputSizeEnum;
+  FieldTypeEnum = FieldTypeEnum;
+  FieldLengthEnum = FieldLengthEnum;
+  FieldSize = FieldSize;
 
   openSaveModal() {
     this.isSaveModalOpen = true;
   }
+
+  isConfirmationModalOpen = false;
   
+  openConfirmationModal() {
+    this.isConfirmationModalOpen = true;
+  }
+  
+
   closeModal() {
     this.isSaveModalOpen = false;
   }
 
-  openInfrastructureModal() {
-    this.isInfrastructureModalOpen = true;
+  closeConfirmationModal() {
+    this.isConfirmationModalOpen = false;
   }
 
-  closeInfrastructureModal() {
-    this.isInfrastructureModalOpen = false;
-  }
 
-  saveInfrastructureForm() {
-    console.log('Saving infrastructure form...');
-    this.toastr.success('התשתית נשמרה בהצלחה!');
-    this.closeInfrastructureModal();
-  }
-
-  onInfrastructureModalEvent(event: any) {
-    console.log('Infrastructure modal event:', event);
-    
-    if (event.type === 'formSubmitted') {
-      console.log('Form submitted with data:', event.data);
-      this.saveInfrastructureForm();
-    } else if (event.type === 'formCancelled') {
-      this.closeInfrastructureModal();
+  async openDialogForm(isEdit: boolean = false) {
+    let dialogComponent = InfrastructureFormComponent;
+    if (dialogComponent) {
+      let dialogData = this.getMockInfrastructureData();
+      const dialogRef = this.dialog.open(dialogComponent, {
+        data: { form: dialogData, title: 'עריכת רשומה', isEdit: isEdit, isSigns: false },
+      });
+      const dialogInstance = dialogRef.componentInstance;
+      dialogInstance.dataSubject.subscribe((result: any) => {
+        const action = result.isEdit
+          ? InfrastructureTableAction.Update
+          : InfrastructureTableAction.Add;
+        this.handleInsertOrUpdate(result.form, action);
+      });
     }
   }
 
+  async openDialogExport() {
+    let dialogComponent = InfrastructureExportComponent;
+    if (dialogComponent) {
+      const dialogRef = this.dialog.open(dialogComponent, {
+        autoFocus: false,
+
+        data: {
+          description: 'קוד,צבע,סטטוס,קוד לאוטומציה.',
+        },
+      });
+      const dialogInstance = dialogRef.componentInstance;
+      dialogInstance.dataSubject.subscribe(() => {
+        this.infrastructureDataService.exportTableData(this.infrastructureService.form, InfrastructureTablesTypes.Street);
+        this.infrastructureService.closeAllInfrastructureDialogs();
+      });
+    }
+  }
+
+
+  async openDialogImport() {
+    let dialogComponent = InfrastructureImportComponent;
+    if (dialogComponent) {
+      const dialogRef = this.dialog.open(dialogComponent, {
+        autoFocus: false,
+        data: {
+          isSignsImport: false,
+          description: 'קוד, שם אזור,הגדרת אזור',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result && result.uploadedFiles) {
+          this.filesToUpload = result.uploadedFiles;
+        } else {
+          console.log('Dialog was closed without uploading files.');
+        }
+      });
+    }
+  }
+  
+
+  async handleInsertOrUpdate(
+    data: any,
+    action: InfrastructureTableAction
+  ) {
+    try {
+      const updatedObject = {
+        ...data,
+        streetID: data.streetID,
+        authorityID: '1', // ← your authority ID
+      };
+
+      const result = await this.infrastructureDataService.insertToTypeTableDynamic(
+        new StreetsTypes(updatedObject),
+        InfrastructureTablesTypes.Street,
+        action
+      );
+      if (result && result?.success) {
+        // this.loadData(this.infrastructureSearchFormService.form);
+        // this.dialog.closeAll();
+        if (action == InfrastructureTableAction.Add) {
+          this.toastr.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
+        }
+        if (action == InfrastructureTableAction.Update) {
+          this.toastr.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
+        }
+      }
+    } catch (e) {
+      this.toastr.error(ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER);
+      console.error(e);
+    }
+  }
+
+
+
+
   private getMockInfrastructureData(): any[] {
-    // Mock data for infrastructure form
+    // Mock data for infrastructure form using real input types and styling
     return [
       {
         row: [
           {
-            name: 'name',
-            label: 'שם התשתית',
-            type: 'text',
-            size: 'md',
+            name: 'type',
+            label: 'סוג התשתית',
+            type: 'select',
+            size: InputSizeEnum.Md,
             value: '',
+            options: [
+              { value: 'road', display: 'כביש' },
+              { value: 'bridge', display: 'גשר' },
+              { value: 'tunnel', display: 'מנהרה' },
+              { value: 'highway', display: 'אוטוסטרדה' },
+              { value: 'railway', display: 'מסילת ברזל' }
+            ],
             validations: { required: true },
             hide: false,
             isRequired: true
           },
           {
-            name: 'type',
-            label: 'סוג התשתית',
+            name: 'status',
+            label: 'סטטוס',
             type: 'select',
-            size: 'md',
-            value: '',
+            size: InputSizeEnum.Md,
+            value: 'active',
             options: [
-              { value: 'road', display: 'כביש' },
-              { value: 'bridge', display: 'גשר' },
-              { value: 'tunnel', display: 'מנהרה' }
+              { value: 'active', display: 'פעיל' },
+              { value: 'inactive', display: 'לא פעיל' },
+              { value: 'maintenance', display: 'בתחזוקה' },
+              { value: 'construction', display: 'בבנייה' }
             ],
             validations: { required: true },
             hide: false,
@@ -109,24 +215,121 @@ export class AppComponent {
       {
         row: [
           {
-            name: 'description',
-            label: 'תיאור',
+            name: 'name',
+            label: 'שם התשתית',
             type: 'text',
-            size: 'xl',
+            size: InputSizeEnum.Md,
             value: '',
-            validations: { maxLength: 500 },
+            validations: { required: true },
+            hide: false,
+            isRequired: true,
+            placeholder: 'הקלד את שם התשתית'
+          },
+          {
+            name: 'code',
+            label: 'קוד התשתית',
+            type: 'text',
+            size: InputSizeEnum.Sm,
+            value: '',
+            validations: { required: true, pattern: '^[A-Z0-9]+$' },
+            hide: false,
+            isRequired: true,
+            placeholder: 'קוד ייחודי'
+          },
+        ]
+      },
+      {
+        row: [
+          {
+            name: 'startDate',
+            label: 'תאריך התחלה',
+            type: 'date',
+            size: InputSizeEnum.Md,
+            value: '',
+            validations: { required: true },
+            hide: false,
+            isRequired: true
+          },
+          {
+            name: 'endDate',
+            label: 'תאריך סיום',
+            type: 'date',
+            size: InputSizeEnum.Md,
+            value: '',
+            validations: { required: false },
             hide: false,
             isRequired: false
+          },
+          {
+            name: 'name',
+            label: 'שם התשתית',
+            type: 'text',
+            size: InputSizeEnum.Md,
+            value: '',
+            validations: { required: true },
+            hide: false,
+            isRequired: true,
+            placeholder: 'הקלד את שם התשתית'
+          },
+        ]
+      },
+      {
+        row: [
+          {
+            name: 'location',
+            label: 'מיקום גיאוגרפי',
+            type: 'text',
+            size: InputSizeEnum.Lg,
+            value: '',
+            validations: { required: true },
+            hide: false,
+            isRequired: true,
+            placeholder: 'כתובת או קואורדינטות'
+          },
+          {
+            name: 'name',
+            label: 'שם התשתית',
+            type: 'text',
+            size: InputSizeEnum.Md,
+            value: '',
+            validations: { required: true },
+            hide: false,
+            isRequired: true,
+            placeholder: 'הקלד את שם התשתית'
+          },
+          {
+            name: 'name',
+            label: 'שם התשתית',
+            type: 'text',
+            size: FieldSize.Medium,
+            value: '',
+            validations: { required: true },
+            hide: false,
+            isRequired: true,
+            placeholder: 'הקלד את שם התשתית',
+            disabled: true
+          },
+        ]
+      },
+      {
+        row: [
+          {
+            name: 'contactPhone',
+            label: 'טלפון ליצירת קשר',
+            type: 'checkbox',
+            size: InputSizeEnum.Md,
+            value: '',
+            validations: { required: false, pattern: '^[0-9-+\\s()]+$' },
+            hide: false,
+            isRequired: false,
+            placeholder: 'פירוט דוח'
           }
         ]
       }
     ];
   }
 
-  InputSizeEnum = InputSizeEnum;
-  FieldTypeEnum = FieldTypeEnum;
-  FieldLengthEnum = FieldLengthEnum;
-  FieldSize = FieldSize;
+
 
   title = 'mileon-client';
 
@@ -756,16 +959,11 @@ export class AppComponent {
     }
   };
 
-  constructor(
-    private toastr: ToastrService,
-    private appService: AppService,
-    private modalService: ModalService
-  ) {}
+
   
   ngOnInit() {
     this.appService.currentModuleName = 'TicketsNewModule';
-    
-    // Initialize form with all necessary controls including advanced search fields
+  
     this.form = new FormGroup({
       searchText: new FormControl(''),
       currentPage: new FormControl(1),

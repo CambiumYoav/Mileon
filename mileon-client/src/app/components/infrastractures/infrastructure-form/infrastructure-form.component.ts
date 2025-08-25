@@ -11,7 +11,7 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { ConstPath } from '../../../constants/const_path';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
 import {
@@ -24,13 +24,26 @@ import { UploadedFile } from '../../../types/uploadedFile';
 import { CheckboxOption } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
 import { Utils } from '../../../utils/utils';
 import { BaseComponents, SharedImports } from '../../../shared/shared-modules';
+import { InputTextComponent } from '../../shared/base/inputs/input-text/input-text.component';
+import { SelectComponent } from '../../shared/base/select/select.component';
+import { InputDateComponent } from '../../shared/base/inputs/input-date/input-date.component';
+import { InputPhoneComponent } from '../../shared/base/inputs/input-phone/input-phone.component';
+import { InputCheckboxOptionGroupComponent } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
 
 @Component({
   selector: 'app-infrastructure-form',
   templateUrl: './infrastructure-form.component.html',
   styleUrls: ['./infrastructure-form.component.scss'],
   standalone: true,
-  imports: [BaseComponents, SharedImports],
+  imports: [
+    SharedImports, 
+    BaseComponents,
+    InputTextComponent,
+    SelectComponent,
+    InputDateComponent,
+    InputPhoneComponent,
+    InputCheckboxOptionGroupComponent
+  ],
 })
 export class InfrastructureFormComponent implements OnInit {
   readonly Icons = ConstPath; // Path to icons
@@ -47,6 +60,9 @@ export class InfrastructureFormComponent implements OnInit {
   filesToUpload: UploadedFile[] = [];
   FileType = FileType;
   isEdit: boolean = false;
+  
+  // Add the 'of' operator for the select component
+  of = of;
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<InfrastructureFormComponent>,
