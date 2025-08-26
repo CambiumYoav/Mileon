@@ -1,16 +1,14 @@
-import { Component, forwardRef, Injector, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Injector, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component'; 
 import { ConstPath } from '../../../../../constants/const_path';
-import { SharedImports } from '../../../../../shared/shared-modules';
 import { InputSizeEnum } from '../../../../../types/enum/inputSizeEnum';
-
+import { SharedImports } from '../../../../../shared/shared-modules';
 
 @Component({
   selector: 'app-input-text',
   templateUrl: './input-text.component.html',
   styleUrls: ['./input-text.component.scss'],
-  standalone: true,
   imports: [SharedImports],
   providers: [
     {
@@ -22,12 +20,15 @@ import { InputSizeEnum } from '../../../../../types/enum/inputSizeEnum';
 })
 export class InputTextComponent
   extends FormControlValueAccessorConnector
-  implements OnInit, ControlValueAccessor
+  implements OnInit, OnChanges, ControlValueAccessor
 {
   inputSize: any;
+  private _disabled: boolean = false;
+  
   constructor(injector: Injector) {
     super(injector);
   }
+  
   InputSizeEnum = InputSizeEnum;
   Icons = ConstPath;
   
@@ -48,9 +49,19 @@ export class InputTextComponent
 
   @Input()
   isTooltip: boolean = false;
+  
   @Input()
   isRequired: boolean | undefined = false;
-  @Input() disabled: boolean = false;
+  
+  @Input()
+  set disabled(value: boolean) {
+    this._disabled = value;
+    this.updateDisabledState();
+  }
+  
+  get disabled(): boolean {
+    return this._disabled;
+  }
 
   get sizeClass(): string {
     return `input-text-${this.size}`;
@@ -66,6 +77,30 @@ export class InputTextComponent
   }
 
   ngOnInit(): void {
-    this.checkConnectedField();
+    try {
+      this.checkConnectedField();
+    } catch (error) {
+      // If ControlContainer is not available, create a local FormControl
+      if (!this.formControl) {
+        this.formControl = new FormControl('');
+      }
+    }
+    this.updateDisabledState();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['disabled']) {
+      this.updateDisabledState();
+    }
+  }
+
+  private updateDisabledState(): void {
+    if (this.formControl) {
+      if (this._disabled) {
+        this.formControl.disable();
+      } else {
+        this.formControl.enable();
+      }
+    }
   }
 }

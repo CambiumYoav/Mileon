@@ -8,14 +8,15 @@ import {
 } from '../../../types/enum/fileType.enum';
 import { IdValuePair } from '../../../types/legalRequest/legal-request-file-type-response';
 import { UploadedFile } from '../../../types/uploadedFile';
-import { BaseComponents, SharedImports } from '../../../shared/shared-modules';
+import { SharedImports } from '../../../shared/shared-modules';
+import { ButtonComponent } from "../../shared/base/button/button.component";
+import { FileUploadNewComponent } from "../../shared/base/upload-files/upload-files.component";
 
 @Component({
   selector: 'app-infrastructure-import',
   templateUrl: './infrastructure-import.component.html',
   styleUrls: ['./infrastructure-import.component.scss'],
-  standalone: true,
-  imports: [BaseComponents, SharedImports],
+  imports: [SharedImports, ButtonComponent, FileUploadNewComponent],
 })
 export class InfrastructureImportComponent implements OnInit {
   // Constants and Enums

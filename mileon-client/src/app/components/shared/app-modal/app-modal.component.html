@@ -40,7 +40,7 @@
         *ngFor="let button of buttons"
         [buttonText]="button.label"
         (clickFunction)="buttonClicked(button)"
-        [buttonClass]="button.buttonClass || 'general-btn-fill'"
+        [buttonClass]="button.buttonClass || 'primary-btn'"
       >
       </app-button>
     </div>

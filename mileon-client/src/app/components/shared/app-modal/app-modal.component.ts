@@ -55,7 +55,12 @@ export class AppModalComponent implements OnChanges {
     this.buttons = buttonsData;
   }
   open() {
-    const modalOptions: any = { ariaLabelledBy: 'modal-basic-title' };
+    const modalOptions: any = { 
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      backdrop: 'static',
+      keyboard: false
+    };
 
     if (this.modalSize) {
       modalOptions.size = this.modalSize;

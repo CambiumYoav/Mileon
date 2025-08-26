@@ -4,6 +4,7 @@
 @use "bootstrap/scss/bootstrap" as *;
 @import "./elements.scss";
 @import "./mats.scss";
+// @import "./inputs.scss";
 
 // @import "./search.scss";
 // @import "./actions_ticket.scss";
@@ -137,7 +138,7 @@ body {
 }
 
 .cdk-overlay-dark-backdrop {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.40);
 }
 
 th[sortable] {

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConstPath } from '../../../../../constants/const_path';
-import { BaseComponents, SharedImports } from '../../../../../shared/shared-modules';
-import { CommonModule } from '@angular/common';
+import { SharedImports } from '../../../../../shared/shared-modules';
 
 export interface CheckboxOption {
   value: string | number | any;
@@ -12,8 +11,7 @@ export interface CheckboxOption {
   selector: 'app-input-checkbox-option-group',
   templateUrl: './input-checkbox-option-group.component.html',
   styleUrls: ['./input-checkbox-option-group.component.scss'],
-  standalone: true,
-  imports: [BaseComponents, SharedImports, CommonModule],
+  imports: [SharedImports],
 })
 export class InputCheckboxOptionGroupComponent implements OnInit {
   Icons = ConstPath;
@@ -71,55 +69,4 @@ export class InputCheckboxOptionGroupComponent implements OnInit {
       option.checked = this.selectedValues.includes(Number(option.value));
     });
   }
-  // ngOnInit(): void {
-  //   this.selectedValues = this.options
-  //     .filter((option) => option.checked)
-  //     .map((option) => option.value.toString());
-  // }
-
-  // // toggleCheckbox(value: number | number, event: any): void {
-  // //   const checked: boolean = event.target.checked;
-  // //   if (checked === undefined) return; // Exit if checked is not provided
-  // //   if (checked) {
-  // //     this.selectedValues.push(value);
-  // //   } else {
-  // //     console.log(this.selectedValues);
-  // //     console.log(value);
-  // //     this.selectedValues = this.selectedValues.filter((val) => val !== value);
-  // //   }
-
-  // //   console.log(this.selectedValues);
-
-  // //   this.selectionChange.emit(this.selectedValues);
-  // // }
-  // toggleCheckbox(value: number | string, event: Event): void {
-  //   const checked = (event.target as HTMLInputElement).checked;
-  //   const numericValue = Number(value);
-
-  //   if (checked) {
-  //     if (!this.selectedValues.includes(numericValue)) {
-  //       this.selectedValues.push(numericValue);
-  //     }
-  //   } else {
-  //     this.selectedValues = this.selectedValues.filter(
-  //       (val) => val !== numericValue
-  //     );
-  //   }
-
-  //   // עדכון checked לכל option בהתאם לערכים החדשים
-  //   this.options.forEach((option) => {
-  //     option.checked = this.selectedValues.includes(Number(option.value));
-  //   });
-  //   console.log([...this.selectedValues]);
-  //   this.selectionChange.emit([...this.selectedValues]);
-  // }
-
-  // writeValue(value: any): void {
-  //   if (value !== undefined) {
-  //     this.selectedValues = Array.isArray(value) ? value : [];
-  //     this.options.forEach((option) => {
-  //       option.checked = this.selectedValues.includes(option.value.toString());
-  //     });
-  //   }
-  // }
 }

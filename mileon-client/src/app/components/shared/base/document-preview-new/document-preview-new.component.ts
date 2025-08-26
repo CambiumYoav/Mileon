@@ -12,16 +12,15 @@ import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { ConstPath } from '../../../../constants/const_path';
 import { BaseService } from '../../../../services/base.service';
 import { PreviewFileType } from '../../../../types/previewFile';
-import { CommonModule } from '@angular/common';
 import { saveAs } from 'file-saver';
 import { UploadStatus } from '../../../../types/enum/uploadStatus.enum';
+import { SharedImports } from '../../../../shared/shared-modules';
 
 @Component({
   selector: 'app-document-preview-new',
   templateUrl: './document-preview-new.component.html',
   styleUrls: ['./document-preview-new.component.scss'],
-  standalone: true,
-  imports: [CommonModule],
+  imports: [SharedImports],
 })
 export class DocumentPreviewNewComponent implements OnInit, OnChanges {
   @Input()

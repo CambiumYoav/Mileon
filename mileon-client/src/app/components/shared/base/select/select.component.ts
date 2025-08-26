@@ -25,31 +25,13 @@ import { of } from 'rxjs/internal/observable/of';
 import { Observable, BehaviorSubject, takeUntil, debounceTime } from 'rxjs';
 import { SelectParams } from '../../../../types/advanced-search/select-option.model';
 import { ConstPath } from '../../../../constants/const_path';
-import { CommonModule } from '@angular/common';
-import { MatSelectModule } from '@angular/material/select';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatOptionModule } from '@angular/material/core';
-import { InfiniteScrollDirective } from '../../../../directives/infinite-scroll.directive';
-import { TruncatedTextTooltipDirective } from '../../../../directives/truncated-text-tooltip.directive';
+import { SharedImports } from '../../../../shared/shared-modules';
 
 @Component({
   selector: 'app-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatOptionModule,
-    InfiniteScrollDirective,
-    TruncatedTextTooltipDirective,
-  ],
+  imports: [SharedImports],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -75,13 +57,14 @@ export class SelectComponent
   @Input() bindLabelKeys: string[] | undefined;
   @Input() searchPlaceholder: string = '';
   @Output() itemFilterServerSide = new EventEmitter<string>();
-  @Input() isMultiSelect: boolean | undefined = true;
+  @Input() isMultiSelect!: boolean;
   @Input() ids: string[] | number[] = [];
   @Input() isValid: boolean | undefined = true;
   @Input() connectedFiledValue: any;
   @Input() displaySearch: boolean = true;
   @Input() isRequired: boolean | undefined = false;
   @Input() disabled: boolean = false;
+  @Input() options: any[] = []; // Add support for static options
 
   endOfData: boolean = false;
   isSearchVisible: boolean = false;
@@ -115,7 +98,7 @@ export class SelectComponent
   }
 
   private filterStaticList(value: string) {
-    const currentItems = this.currentStaticItems;
+    const currentItems = this.options && this.options.length > 0 ? this.options : this.currentStaticItems;
     const filterValue = this._normalizeValue(value);
     this.items$ = of(
       currentItems.filter((item) =>
@@ -126,7 +109,9 @@ export class SelectComponent
 
   private _normalizeValue(value: any): string {
     if (typeof value != 'string') {
-      value = value[this.bindLabelKey];
+      // Try different possible label properties
+      const labelValue = value[this.bindLabelKey] || value.display || value.label || value.name || value.value || '';
+      value = labelValue;
     }
     return value.toLowerCase().replace(/\s/g, '');
   }
@@ -148,6 +133,26 @@ export class SelectComponent
     this.setConnectedFieldValue();
     this.setDataListParams();
     this.listenToFilterFormControlChanges();
+
+    // Handle static options if provided
+    if (this.options && this.options.length > 0) {
+      this.items$ = of(this.options);
+      this.isServerSide = false;
+      this.currentStaticItems = this.options;
+    }
+    // Handle dataFunction directly if it's a static function
+    else if (this.dataFunction && this.dataFunction.function) {
+      try {
+        const staticData = this.dataFunction.function();
+        if (Array.isArray(staticData)) {
+          this.items$ = of(staticData);
+          this.isServerSide = false;
+          this.currentStaticItems = staticData;
+        }
+      } catch (error) {
+        console.warn('Error executing dataFunction:', error);
+      }
+    }
 
     this.listObj$.pipe(takeUntil(this.componentDestroyed$)).subscribe((res) => {
       if (this.dataFunction && this.dataFunction.name !== undefined) {
@@ -195,6 +200,23 @@ export class SelectComponent
           this.selectParams.searchText = term;
         }
       }
+      
+      // If we have static options, don't make server calls
+      if (this.options && this.options.length > 0) {
+        if (term) {
+          this.filterStaticList(term);
+        }
+        return;
+      }
+      
+      // If we have a static function, don't make server calls
+      if (this.dataFunction.function && !this.isServerSide) {
+        if (term) {
+          this.filterStaticList(term);
+        }
+        return;
+      }
+      
       if (this.filterFormControl.enabled && !isControlDisabled)
         this.getDataList(this.selectParams);
     }
@@ -296,6 +318,13 @@ export class SelectComponent
       this.isServerSide = false;
     }
 
+    // Handle static options changes
+    if (changes['options'] && this.options && this.options.length > 0) {
+      this.items$ = of(this.options);
+      this.isServerSide = false;
+      this.currentStaticItems = this.options;
+    }
+
     if (changes['ids']) {
       this.items$ = of([]);
       this.endOfData = false;
@@ -323,7 +352,16 @@ export class SelectComponent
         return option1 === option2[this.bindValueKey];
       }
     }
-    // For single select, compare directly
+    
+    // For single select, compare directly or by value key
+    if (typeof option1 === 'object' && typeof option2 === 'object') {
+      return option1[this.bindValueKey] === option2[this.bindValueKey];
+    } else if (typeof option1 === 'object') {
+      return option1[this.bindValueKey] === option2;
+    } else if (typeof option2 === 'object') {
+      return option1 === option2[this.bindValueKey];
+    }
+    
     return option1 === option2;
   }
 
@@ -333,7 +371,13 @@ export class SelectComponent
       if (this.bindLabelKeys) {
         return this.constructLabel(selectedValue, this.bindLabelKeys);
       } else {
-        return selectedValue[this.bindLabelKey] || selectedValue.name || selectedValue.section || 'Unknown';
+        // Try different possible label properties
+        return selectedValue[this.bindLabelKey] || 
+               selectedValue.display || 
+               selectedValue.label || 
+               selectedValue.name || 
+               selectedValue.value || 
+               'Unknown';
       }
     }
     
@@ -356,6 +400,11 @@ export class SelectComponent
         this.selectParams.ids = currentValue.map((item: any) => 
           typeof item === 'object' ? item[this.bindValueKey] : item
         );
+      }
+      
+      // If we have static options, update the currentStaticItems
+      if (this.options && this.options.length > 0) {
+        this.currentStaticItems = this.options;
       }
     }
   }

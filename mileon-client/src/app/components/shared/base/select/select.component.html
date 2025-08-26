@@ -54,7 +54,7 @@
       (scrolled)="updateCurrentPage()"
       [formControl]="control"
       disableOptionCentering
-      [multiple]="isMultiSelect ?? true"
+      [multiple]="isMultiSelect"
       [placeholder]="placeholder"
       aria-disabled="true"
       [compareWith]="compareValues"
@@ -69,15 +69,11 @@
           <ng-container *ngIf="bindLabelKeys; else elseBlock">
             <span 
               appTruncatedTextTooltip 
-              [tooltipText]="constructLabel(item, bindLabelKeys)"
-              [maxWidth]="180"
             >{{ constructLabel(item, bindLabelKeys) }}</span>
           </ng-container>
           <ng-template #elseBlock>
             <span 
               appTruncatedTextTooltip 
-              [tooltipText]="item[bindLabelKey] || item.name || item.section"
-              [maxWidth]="180"
             >{{ item[bindLabelKey] || item.name || item.section }}</span>
           </ng-template>
         </mat-option>
@@ -95,8 +91,6 @@
       <span 
         class="tag-text" 
         appTruncatedTextTooltip 
-        [tooltipText]="getSelectedItemLabel(selectedValue)"
-        [maxWidth]="150"
       >{{ getSelectedItemLabel(selectedValue) }}</span>
       <mat-icon class="remove-icon" (click)="removeSelectedItem(i, $event)">close</mat-icon>
     </div>

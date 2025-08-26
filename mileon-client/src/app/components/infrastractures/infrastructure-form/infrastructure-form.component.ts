@@ -21,28 +21,25 @@ import {
 import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
 import { IdValuePair } from '../../../types/legalRequest/legal-request-file-type-response';
 import { UploadedFile } from '../../../types/uploadedFile';
-import { CheckboxOption } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
+import { CheckboxOption, InputCheckboxOptionGroupComponent } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
 import { Utils } from '../../../utils/utils';
-import { BaseComponents, SharedImports } from '../../../shared/shared-modules';
-import { InputTextComponent } from '../../shared/base/inputs/input-text/input-text.component';
-import { SelectComponent } from '../../shared/base/select/select.component';
-import { InputDateComponent } from '../../shared/base/inputs/input-date/input-date.component';
-import { InputPhoneComponent } from '../../shared/base/inputs/input-phone/input-phone.component';
-import { InputCheckboxOptionGroupComponent } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
+import { SharedImports } from '../../../shared/shared-modules';
+import { ButtonComponent } from "../../shared/base/button/button.component";
+import { FileUploadNewComponent } from "../../shared/base/upload-files/upload-files.component";
+import { InputTextComponent } from "../../shared/base/inputs/input-text/input-text.component";
+import { SelectComponent } from "../../shared/base/select/select.component";
 
 @Component({
   selector: 'app-infrastructure-form',
   templateUrl: './infrastructure-form.component.html',
   styleUrls: ['./infrastructure-form.component.scss'],
-  standalone: true,
   imports: [
     SharedImports, 
-    BaseComponents,
+    ButtonComponent, 
+    FileUploadNewComponent, 
+    InputCheckboxOptionGroupComponent,
     InputTextComponent,
-    SelectComponent,
-    InputDateComponent,
-    InputPhoneComponent,
-    InputCheckboxOptionGroupComponent
+    SelectComponent
   ],
 })
 export class InfrastructureFormComponent implements OnInit {

@@ -7,14 +7,13 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ConstPath } from '../../../../../constants/const_path';
-import { CommonModule } from '@angular/common';
+import { SharedImports } from '../../../../../shared/shared-modules';
 
 @Component({
   selector: 'app-input-phone',
   templateUrl: './input-phone.component.html',
   styleUrls: ['./input-phone.component.scss'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [SharedImports],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

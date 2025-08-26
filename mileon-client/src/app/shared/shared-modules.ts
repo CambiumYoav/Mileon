@@ -20,6 +20,9 @@ import { SelectComponent } from '../components/shared/base/select/select.compone
 import { AdvancedSearchComponent } from '../components/shared/advanced-search/advanced-search.component';
 import { GenericModalComponent } from '../components/shared/generic-modal/generic-modal.component';
 import { InputCheckboxOptionGroupComponent } from '../components/shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
+import { InputDateComponent } from '../components/shared/base/inputs/input-date/input-date.component';
+import { InputPhoneComponent } from '../components/shared/base/inputs/input-phone/input-phone.component';
+import { InputCheckboxComponent } from '../components/shared/base/inputs/input-checkbox/input-checkbox.component';
 
 export const SharedModules = [CommonModule, RouterOutlet];
 
@@ -41,7 +44,6 @@ export const BaseComponents = [
   TableComponent,
   ActiveComponent,
   CheckboxComponent,
-  BaseComponent,
   RadioButtonComponent,
   RedLineErrorComponent,
   FileUploadNewComponent,
@@ -51,5 +53,9 @@ export const BaseComponents = [
   SelectComponent,
   AdvancedSearchComponent,
   GenericModalComponent,
-  InputCheckboxOptionGroupComponent
+  InputCheckboxOptionGroupComponent,
+  InputDateComponent,
+  InputPhoneComponent,
+  InputCheckboxComponent,
+  InputCheckboxOptionGroupComponent,
 ];

@@ -56,22 +56,20 @@
               <!-- Text Input -->
               <app-input-text
                 *ngSwitchCase="'text'"
+                [id]="field.name"
+                [placeholder]="field.label"
                 [title]="field.label"
-                [placeholder]="field.placeholder || field.label" 
-                [formControlName]="field.name"
                 [isRequired]="field.isRequired"
-                [isValid]="!dynamicForm.get(field.name)?.invalid || !dynamicForm.get(field.name)?.touched"
+                [formControlName]="field.name"
               ></app-input-text>
 
               <!-- Number Input -->
-              <app-input-text
+              <input
                 *ngSwitchCase="'number'"
-                [title]="field.label"
-                [placeholder]="field.placeholder || field.label"
+                [id]="field.name"
+                type="number"
                 [formControlName]="field.name"
-                [isRequired]="field.isRequired"
-                [isValid]="!dynamicForm.get(field.name)?.invalid || !dynamicForm.get(field.name)?.touched"
-              ></app-input-text>
+              />
 
               <!-- Checkbox -->
               <ng-container *ngSwitchCase="'checkbox'">
@@ -99,7 +97,6 @@
                   [isDisabled]="field.name === 'isActive' && !isEdit"
                 ></app-input-checkbox-option-group>
               </ng-container>
-
               <!-- Radio Buttons -->
               <ng-container *ngSwitchCase="'radio'">
                 <div class="d-flex">
@@ -121,47 +118,21 @@
               </ng-container>
              
               <!-- Select Dropdown -->
-              <app-select
-                *ngSwitchCase="'select'"
-                [title]="field.label"
-                [placeholder]="field.placeholder || field.label"
-                [formControlName]="field.name"
-                [appearance]="'fill'"
-                [isMultiSelect]="field.isMultiSelect || false"
-                [isRequired]="field.isRequired"
-                [isValid]="!dynamicForm.get(field.name)?.invalid || !dynamicForm.get(field.name)?.touched"
-                [items$]="of(field.options || [])"
-                [bindValueKey]="'value'"
-                [bindLabelKey]="'display'"
-              ></app-select>
-
-              <!-- Date Input -->
-              <app-input-date
-                *ngSwitchCase="'date'"
-                [title]="field.label"
-                [placeholder]="field.placeholder || field.label"
-                [formControlName]="field.name"
-              ></app-input-date>
-
-              <!-- Phone Input -->
-              <app-input-phone
-                *ngSwitchCase="'phone'"
-                [title]="field.label"
-                [placeholder]="field.placeholder || field.label"
-                [formControlName]="field.name"
-                [isRequired]="field.isRequired"
-                [isValid]="!dynamicForm.get(field.name)?.invalid || !dynamicForm.get(field.name)?.touched"
-              ></app-input-phone>
-
-              <!-- Text Area -->
-              <div *ngSwitchCase="'text-area'" class="textarea-container">
-                <div class="title-placeholder">{{ field.label }}</div>
-                <textarea
-                  [formControlName]="field.name"
-                  [placeholder]="field.placeholder"
-                  class="textarea-input"
-                  rows="3"
-                ></textarea>
+              <div *ngSwitchCase="'select'">
+                <app-select
+                  fxFill
+                  appearance="outline"
+                  [placeholder]="field.label || ''"
+                  [bindLabelKeys]="field.bindLabelKeys"
+                  [formControlName]="field.name || ''"
+                  [dataFunction]="field.dataFunction"
+                  [options]="field.options || []"
+                  searchPlaceholder="חיפוש"
+                  bindLabelKey="display"
+                  bindValueKey="value"
+                  [isMultiSelect]="field.isMultiSelect || false"
+                  [title]="field.label || ''"
+                  ></app-select>
               </div>
 
               <div
@@ -174,12 +145,13 @@
                   [bindLabelKeys]="field.bindLabelKeys"
                   [formControlName]="field.name"
                   [dataFunction]="field.dataFunction"
+                  [options]="field.options || []"
                   searchPlaceholder="חיפוש"
-                  bindLabelKey="value"
+                  bindLabelKey="display"
                   [isValid]="dynamicForm.get(field.name)?.valid || isSubmitted"
-                  bindValueKey="id"
-                  [isMultiSelect]="field.isMultiSelect"
-                  [placeholder]="field.label"
+                  bindValueKey="value"
+                  [isMultiSelect]="field.isMultiSelect || false"
+                  [placeholder]="field.label || ''"
                 ></app-select>
               </div>
 
@@ -253,7 +225,7 @@
       <app-button
         [buttonText]="'שמור שינויים'"
         (clickFunction)="onSubmit()"
-        [buttonClass]="'primary-btn button-base'"
+        [buttonClass]="'primary-btn btn-fill '"
       ></app-button>
     </div>
   </form>

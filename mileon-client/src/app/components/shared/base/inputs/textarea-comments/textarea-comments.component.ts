@@ -11,7 +11,6 @@ import { SharedImports } from '../../../../../shared/shared-modules';
   selector: 'app-textarea-comments',
   templateUrl: './textarea-comments.component.html',
   styleUrls: ['./textarea-comments.component.scss'],
-  standalone: true,
   imports: [SharedImports],
   providers: [
     {

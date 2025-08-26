@@ -25,7 +25,7 @@ import { InfrastructureImportComponent } from './infrastructure-import/infrastru
 import { TableService } from '../shared/table/table.service';
 // import { InfrastructureAreasComponent } from './infrastructure-areas/infrastructure-areas.component';
 // import { InfrastructuresChipsComponent } from './infrastructures-chips/infrastructures-chips.component';
-// import { InfrastructuresFormWrapperComponent } from './infrastructures-form-wrapper/infrastructures-form-wrapper.component';
+import { InfrastructuresFormWrapperComponent } from './infrastructures-form-wrapper/infrastructures-form-wrapper.component';
 // import { InfrastructuresTicketsSourceTableComponent } from './infrastructures-tickets-source-table/infrastructures-tickets-source-table.component';
 // import { InfrastructuresTicketsStagesStatusesComponent } from './infrastructures-tickets-stages-and-statuses/infrastructures-tickets-stages-statuses/infrastructures-tickets-stages-statuses.component';
 // import { InfrastructuresTicketsStagesComponent } from './infrastructures-tickets-stages-and-statuses/infrastructures-tickets-stages/infrastructures-tickets-stages.component';

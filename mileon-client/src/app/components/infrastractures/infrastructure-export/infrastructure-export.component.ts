@@ -6,14 +6,14 @@ import {
 } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { ConstPath } from '../../../constants/const_path';
-import { BaseComponents, SharedImports } from '../../../shared/shared-modules';
+import { SharedImports } from '../../../shared/shared-modules';
+import { ButtonComponent } from "../../shared/base/button/button.component";
 
 @Component({
   selector: 'app-infrastructure-export',
   templateUrl: './infrastructure-export.component.html',
   styleUrls: ['./infrastructure-export.component.scss'],
-  standalone: true,
-  imports: [ BaseComponents, SharedImports],
+  imports: [SharedImports, ButtonComponent],
 })
 export class InfrastructureExportComponent implements OnInit {
   Icons = ConstPath;

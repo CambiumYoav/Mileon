@@ -11,6 +11,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { MatCalendarCellClassFunction, MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 import he from '@angular/common/locales/he';
+import { SharedImports } from '../../../../../shared/shared-modules';
 
 // Register Hebrew locale
 registerLocaleData(he);
@@ -66,8 +67,8 @@ export class HebrewDateAdapter extends NativeDateAdapter {
   selector: 'app-input-date',
   templateUrl: './input-date.component.html',
   styleUrls: ['./input-date.component.scss'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDatepickerModule, MatInputModule, MatIconModule, MatFormFieldModule], 
+  imports: [SharedImports],
+
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

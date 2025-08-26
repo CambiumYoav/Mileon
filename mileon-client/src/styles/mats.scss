@@ -425,9 +425,9 @@ input.mat-input-element {
   justify-content: flex-start !important;
   align-items: stretch !important;
   flex-shrink: 0 !important;
-  position: relative !important;
-  top: 5px !important;
-  left: 2px !important;
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
   z-index: 1000 !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -544,21 +544,26 @@ input.mat-input-element {
   align-items: flex-start !important;
   direction: rtl !important;
   position: absolute !important;
-  right: 30px !important;
+  top: 10px !important;
+  left: 10px !important;
 }
 
 // Select panel specific overlay positioning
 .mat-select-panel {
   margin-top: 5px !important;
-  position: relative !important;
+  position: absolute !important;
+  top: 10% !important;
+  left: 0 !important;
 }
 
 
 // Also target the older class for backward compatibility
 ::ng-deep .mat-select-panel {
-  margin-top: 10px !important;
-  margin-left: -14px !important;
+  margin-top: 5px !important;
+  margin-left: 0 !important;
   transform: translateY(0) !important;
+  top: 10% !important;
+  left: 0 !important;
 }
 
 
@@ -580,16 +585,20 @@ input.mat-input-element {
 
 // Override Material's default select panel positioning - using MDC classes
 ::ng-deep .cdk-overlay-pane.mat-mdc-select-panel {
-  margin-top: 10px !important;
-  margin-left: -14px !important;
+  margin-top: 5px !important;
+  margin-left: 0 !important;
   transform: translateY(0) !important;
+  top: 10% !important;
+  left: 0 !important;
 }
 
 // Also target the older class for backward compatibility
 ::ng-deep .cdk-overlay-pane.mat-select-panel {
-  margin-top: 10px !important;
-  margin-left: -14px !important;
+  margin-top: 5px !important;
+  margin-left: 0 !important;
   transform: translateY(0) !important;
+  top: 10% !important;
+  left: 0 !important;
 }
 
 
@@ -597,10 +606,10 @@ input.mat-input-element {
 // Also target the older class for backward compatibility
 ::ng-deep .mat-select-panel {
   position: absolute !important;
-  top: 100% !important;
+  top: 10% !important;
   left: 0 !important;
-  margin-top: 10px !important;
-  margin-left: -14px !important;
+  margin-top: 5px !important;
+  margin-left: 0 !important;
   z-index: 1000 !important;
 }
 

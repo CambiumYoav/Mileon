@@ -1,14 +1,13 @@
 import { Component, Injector, Input, OnInit, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component';
-import { CommonModule } from '@angular/common';
+import { SharedImports } from '../../../../../shared/shared-modules';
 
 @Component({
   selector: 'app-input-checkbox',
   templateUrl: './input-checkbox.component.html',
   styleUrls: ['./input-checkbox.component.scss'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [SharedImports],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

@@ -48,11 +48,6 @@
     padding: 0 !important;
   }
 
-  .inline-header {
-    padding-bottom: 20px;
-  }
-
-
   .button-container {
     width: 100%;
     display: flex;
@@ -65,21 +60,20 @@
         margin-left: 10px;
       }
   }
-
-
+  
 
  ::ng-deep .form-container {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
-    row-gap: 15px !important;
-    column-gap: 15px !important;
+    gap: 20px; 
 
     .form-row {
-      row-gap: 15px !important;
-      column-gap: 15px !important;
-    }
+        display: flex;
+        flex-direction: row;
+        gap: 15px; 
+      }
   }
   
   .checkbox-container {
@@ -97,3 +91,58 @@
     border: 1px solid var(--grey, #B9C6D4);
     background: var(--back, #F7F9FC);
   }
+
+.infrastructures-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  h2 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  p {
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+}
+
+.test-inputs {
+  margin-top: 30px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  
+  h3 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .input-group {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: white;
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+    
+    app-input-text,
+    app-input-date,
+    app-input-phone,
+    app-input-checkbox-option-group {
+      display: block;
+      width: 100%;
+    }
+  }
+}

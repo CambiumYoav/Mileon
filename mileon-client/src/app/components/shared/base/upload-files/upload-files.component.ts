@@ -22,14 +22,14 @@ import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../../types/enum/error-success-messages';
 import { UserService } from '../../../../services/user.service';
 import { SessionService } from '../../../../services/session.service';
+import { SharedImports } from '../../../../shared/shared-modules';
 import { DocumentPreviewNewComponent } from "../document-preview-new/document-preview-new.component";
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-file-upload-new',
   templateUrl: './upload-files.component.html',
   styleUrls: ['./upload-files.component.scss'],
-  standalone: true,
+  imports: [SharedImports, DocumentPreviewNewComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -37,7 +37,6 @@ import { CommonModule } from '@angular/common';
       multi: true,
     },
   ],
-  imports: [DocumentPreviewNewComponent, CommonModule],
 })
 export class FileUploadNewComponent
   extends FormControlValueAccessorConnector

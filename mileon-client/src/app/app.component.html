@@ -185,8 +185,8 @@
 
 <div style="margin: 20px;" [formGroup]="form">
 
-    <!-- text input
-  <app-input-text 
+    <!-- text input -->
+  <!-- <app-input-text 
   [size]="InputSizeEnum.Sm"
     [title]="'מספרים'" 
     [placeholder]="'00:00'"
@@ -196,6 +196,7 @@
   [size]="InputSizeEnum.Md"
     [title]="'כותרת-רגילה'" 
     [placeholder]="'כותרת-רגילה'"
+    [disabled]="true"
   ></app-input-text>
   <br>
   <app-input-text 
@@ -208,6 +209,7 @@
     [size]="InputSizeEnum.Xl"
     [title]="'כותרת-טקסט ארוך'" 
     [placeholder]="'כותרת-טקסט ארוך'"
+    [disabled]="true"
   ></app-input-text>
 
   <br> -->
@@ -260,7 +262,7 @@
 </div>
 
 
-<div style="margin: 20px; background-color: #f0f0f0;">
+<div style="margin: 20px;">
 
   <app-button
   [buttonText]="'הודעה'"
@@ -297,6 +299,13 @@ style="margin: 10px;"
   style="margin: 10px;"
 ></app-button>
 
+<app-button
+[buttonText]="'כפול'"
+(clickFunction)="openDoubleDialogForm(true)"
+[buttonClass]="'outline-secondary-btn button-base'"
+style="margin: 10px;"
+></app-button>
+
 <app-modal
 [isModalOpen]="isSaveModalOpen"
 [title]="'כותרת - לורם איפסום'"
@@ -318,7 +327,3 @@ style="margin: 10px;"
     [cancelButtonClass]="'outline-btn button-base'"
     [confirmButtonClass]="'primary-btn button-base'"
   ></app-confirmation-modal>
-</div>
-
-
-

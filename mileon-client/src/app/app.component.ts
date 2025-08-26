@@ -16,24 +16,24 @@ import { InputSizeEnum } from './types/enum/inputSizeEnum';
 import { AdvancedForm, FieldTypeEnum, FieldLengthEnum , FieldSize } from './types/advanced-search/form-tab.model';
 import { ConfirmationModalComponent } from "./components/shared/confirmation-modal/confirmation-modal.component";
 import { AppModalComponent } from "./components/shared/app-modal/app-modal.component";
-import { InfrastructureService } from './services/infrastructure.service';
 import { InfrastructureService as InfrastructureDataService } from './components/infrastractures/infrastructure.service';
 import { ModalButton } from './components/shared/generic-modal/generic-modal.component';
 import { InfrastructureFormComponent } from './components/infrastractures/infrastructure-form/infrastructure-form.component';
-import { InfrastructureForms } from './types/infrastructure/infrastructure-table.model';
+import { InfrastructureForms, InfrastructureTable } from './types/infrastructure/infrastructure-table.model';
 import { InfrastructureTableAction, InfrastructureTablesTypes } from './types/enum/infrastructureTablesEnum';
 import { StreetsTypes } from './types/infrastructure/infrastructureFilterOptions';
 import { ErrorSuccessMessages } from './types/enum/error-success-messages';
 import { InfrastructureExportComponent } from './components/infrastractures/infrastructure-export/infrastructure-export.component';
 import { MatDialog } from '@angular/material/dialog';
 import { InfrastructureImportComponent } from './components/infrastractures/infrastructure-import/infrastructure-import.component';
+import { DynamicRow } from './types/infrastructure/InfrastructureTypes';
+import { InfrastructuresFormWrapperComponent } from './components/infrastractures/infrastructures-form-wrapper/infrastructures-form-wrapper.component';
 
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  standalone: true,
   imports: [
     BaseComponents, 
     SharedImports, 
@@ -42,22 +42,52 @@ import { InfrastructureImportComponent } from './components/infrastractures/infr
   ], 
 })
 export class AppComponent {
-
-  constructor(
-    private toastr: ToastrService,
-    private appService: AppService,
-    private dialog: MatDialog,
-    private infrastructureService: InfrastructureService,
-    private infrastructureDataService: InfrastructureDataService
-  ) {}
-
-
+  dialogData: DynamicRow[] = [];
+  ownerDialogData: DynamicRow[] = [];
+  petDialogData: DynamicRow[] = [];
+  tableData: InfrastructureTable[] = [];
   isSaveModalOpen = false;
   filesToUpload: any[] = [];  
   InputSizeEnum = InputSizeEnum;
   FieldTypeEnum = FieldTypeEnum;
   FieldLengthEnum = FieldLengthEnum;
   FieldSize = FieldSize;
+
+  selectedUserData: Subject<any> = new Subject<any>();
+  loader: boolean = false;
+  showPaginator: boolean = true;
+  TicketStagesIcons: Icon[] = [];
+  selectedFiles: any[] = [];
+
+  form: FormGroup = new FormGroup({});
+  pageSize: number = 100;
+
+
+  
+  // Generate suggestions from the data
+  searchSuggestions: string[] = [];
+  modalButtons: ModalButton[] = [
+    {
+      label: 'סגור',
+      action: () => this.closeModal(),
+      buttonClass: 'primary-btn button-base'
+    }
+  ];
+  previewFile: PreviewFileType | undefined;
+  searchText: string = '';
+  newComment: any;
+
+  
+
+  constructor(
+    private toastr: ToastrService,
+    private appService: AppService,
+    private dialog: MatDialog,
+    private infrastructureDataService: InfrastructureDataService
+  ) {}
+
+
+
 
   openSaveModal() {
     this.isSaveModalOpen = true;
@@ -82,7 +112,11 @@ export class AppComponent {
   async openDialogForm(isEdit: boolean = false) {
     let dialogComponent = InfrastructureFormComponent;
     if (dialogComponent) {
-      let dialogData = this.getMockInfrastructureData();
+      let dialogData = this.dialogData;
+      if (!isEdit) {
+        const form = new InfrastructureForms();
+        dialogData = form.InfrastructureTypeForm;
+      }
       const dialogRef = this.dialog.open(dialogComponent, {
         data: { form: dialogData, title: 'עריכת רשומה', isEdit: isEdit, isSigns: false },
       });
@@ -92,6 +126,49 @@ export class AppComponent {
           ? InfrastructureTableAction.Update
           : InfrastructureTableAction.Add;
         this.handleInsertOrUpdate(result.form, action);
+      });
+    }
+  }
+
+  async openDoubleDialogForm(isEdit: boolean = false) {
+    let dialogComponent = InfrastructuresFormWrapperComponent;
+
+    if (dialogComponent) {
+      // Reset the dialog data if not editing
+      let ownerDialogData = isEdit
+        ? this.ownerDialogData
+        : new InfrastructureForms().InfrastructureChipsOwnerForm;
+      let petDialogData = isEdit
+        ? this.petDialogData
+        : new InfrastructureForms().InfrastructureChipsPetForm;
+
+      const dialogRef = this.dialog.open(dialogComponent, {
+        autoFocus: false,
+        data: {
+          mainTitle: isEdit ? 'עריכת רשומה' : 'הוספת רשומה', // Dynamic title
+          sections: [
+            {
+              title: 'פרטי הבעלים', // Title for the owner section
+              rows: ownerDialogData, // Fields for the owner section
+            },
+            {
+              title: 'פרטי בעל חיים', // Title for the pet section
+              rows: petDialogData, // Fields for the pet section
+            },
+          ],
+          isEdit: isEdit,
+        },
+      });
+
+      const dialogInstance = dialogRef.componentInstance;
+
+      dialogInstance.dataSubject.subscribe((result) => {
+        const action = result.isEdit
+          ? InfrastructureTableAction.Update
+          : InfrastructureTableAction.Add;
+        this.handleInsertOrUpdate(result.form, action);
+
+        console.log(result);
       });
     }
   }
@@ -107,9 +184,9 @@ export class AppComponent {
         },
       });
       const dialogInstance = dialogRef.componentInstance;
-      dialogInstance.dataSubject.subscribe(() => {
-        this.infrastructureDataService.exportTableData(this.infrastructureService.form, InfrastructureTablesTypes.Street);
-        this.infrastructureService.closeAllInfrastructureDialogs();
+      dialogInstance.dataSubject.subscribe(() => {  
+        this.infrastructureDataService.exportTableData(this.form, InfrastructureTablesTypes.Street);
+        // this.infrastructureDataService.closeAllInfrastructureDialogs();
       });
     }
   }
@@ -168,167 +245,6 @@ export class AppComponent {
       console.error(e);
     }
   }
-
-
-
-
-  private getMockInfrastructureData(): any[] {
-    // Mock data for infrastructure form using real input types and styling
-    return [
-      {
-        row: [
-          {
-            name: 'type',
-            label: 'סוג התשתית',
-            type: 'select',
-            size: InputSizeEnum.Md,
-            value: '',
-            options: [
-              { value: 'road', display: 'כביש' },
-              { value: 'bridge', display: 'גשר' },
-              { value: 'tunnel', display: 'מנהרה' },
-              { value: 'highway', display: 'אוטוסטרדה' },
-              { value: 'railway', display: 'מסילת ברזל' }
-            ],
-            validations: { required: true },
-            hide: false,
-            isRequired: true
-          },
-          {
-            name: 'status',
-            label: 'סטטוס',
-            type: 'select',
-            size: InputSizeEnum.Md,
-            value: 'active',
-            options: [
-              { value: 'active', display: 'פעיל' },
-              { value: 'inactive', display: 'לא פעיל' },
-              { value: 'maintenance', display: 'בתחזוקה' },
-              { value: 'construction', display: 'בבנייה' }
-            ],
-            validations: { required: true },
-            hide: false,
-            isRequired: true
-          }
-        ]
-      },
-      {
-        row: [
-          {
-            name: 'name',
-            label: 'שם התשתית',
-            type: 'text',
-            size: InputSizeEnum.Md,
-            value: '',
-            validations: { required: true },
-            hide: false,
-            isRequired: true,
-            placeholder: 'הקלד את שם התשתית'
-          },
-          {
-            name: 'code',
-            label: 'קוד התשתית',
-            type: 'text',
-            size: InputSizeEnum.Sm,
-            value: '',
-            validations: { required: true, pattern: '^[A-Z0-9]+$' },
-            hide: false,
-            isRequired: true,
-            placeholder: 'קוד ייחודי'
-          },
-        ]
-      },
-      {
-        row: [
-          {
-            name: 'startDate',
-            label: 'תאריך התחלה',
-            type: 'date',
-            size: InputSizeEnum.Md,
-            value: '',
-            validations: { required: true },
-            hide: false,
-            isRequired: true
-          },
-          {
-            name: 'endDate',
-            label: 'תאריך סיום',
-            type: 'date',
-            size: InputSizeEnum.Md,
-            value: '',
-            validations: { required: false },
-            hide: false,
-            isRequired: false
-          },
-          {
-            name: 'name',
-            label: 'שם התשתית',
-            type: 'text',
-            size: InputSizeEnum.Md,
-            value: '',
-            validations: { required: true },
-            hide: false,
-            isRequired: true,
-            placeholder: 'הקלד את שם התשתית'
-          },
-        ]
-      },
-      {
-        row: [
-          {
-            name: 'location',
-            label: 'מיקום גיאוגרפי',
-            type: 'text',
-            size: InputSizeEnum.Lg,
-            value: '',
-            validations: { required: true },
-            hide: false,
-            isRequired: true,
-            placeholder: 'כתובת או קואורדינטות'
-          },
-          {
-            name: 'name',
-            label: 'שם התשתית',
-            type: 'text',
-            size: InputSizeEnum.Md,
-            value: '',
-            validations: { required: true },
-            hide: false,
-            isRequired: true,
-            placeholder: 'הקלד את שם התשתית'
-          },
-          {
-            name: 'name',
-            label: 'שם התשתית',
-            type: 'text',
-            size: FieldSize.Medium,
-            value: '',
-            validations: { required: true },
-            hide: false,
-            isRequired: true,
-            placeholder: 'הקלד את שם התשתית',
-            disabled: true
-          },
-        ]
-      },
-      {
-        row: [
-          {
-            name: 'contactPhone',
-            label: 'טלפון ליצירת קשר',
-            type: 'checkbox',
-            size: InputSizeEnum.Md,
-            value: '',
-            validations: { required: false, pattern: '^[0-9-+\\s()]+$' },
-            hide: false,
-            isRequired: false,
-            placeholder: 'פירוט דוח'
-          }
-        ]
-      }
-    ];
-  }
-
 
 
   title = 'mileon-client';
@@ -440,8 +356,8 @@ export class AppComponent {
     ]
   };
   
-  form: FormGroup = new FormGroup({});
-  pageSize: number = 100;
+
+
   columns: Column[] = [
     {
       propertyName: 'selected',
@@ -874,32 +790,13 @@ export class AppComponent {
   
   
   data: any[] = [...this.originalData];
-  
-  // Generate suggestions from the data
-  searchSuggestions: string[] = [];
-  modalButtons: ModalButton[] = [
-    {
-      label: 'סגור',
-      action: () => this.closeModal(),
-      buttonClass: 'outline-btn button-base'
-    },
-  ];
-  previewFile: PreviewFileType | undefined;
-  searchText: string = '';
-  newComment: any;
-
-  
 
   
   get total(): number {
     return this.data.length;
   }
   
-  selectedUserData: Subject<any> = new Subject<any>();
-  loader: boolean = false;
-  showPaginator: boolean = true;
-  TicketStagesIcons: Icon[] = [];
-  selectedFiles: any[] = [];
+
   
   Icons = ConstPath;
 

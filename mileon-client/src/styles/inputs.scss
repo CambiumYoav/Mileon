@@ -17,7 +17,7 @@
   --dark-grey: #606060;
   
   // Spacing
-  --input-height: 40.644px;
+  --input-height: 40px;
   --input-padding: 10px 11px;
   --input-border-radius: 4px;
   --input-gap: 10px;
@@ -30,6 +30,11 @@
   
   // Transitions
   --input-transition: all 0.2s ease;
+
+  --small-input-width: 80px;
+  --medium-input-width: 210px;
+  --large-input-width: 300px;
+  --xlarge-input-width: 420px;
 }
 
 // ============================================================================
@@ -156,7 +161,7 @@
 .input-text-sm {
   .input-fill,
   .input-text {
-    width: 80px !important;
+    width: var(--small-input-width) !important;
     text-align: center;
   }
 }
@@ -164,21 +169,21 @@
 .input-text-md {
   .input-fill,
   .input-text {
-    width: 210px !important;
+    width: var(--medium-input-width) !important;
   }
 }
 
 .input-text-lg {
   .input-fill,
   .input-text {
-    width: 300px !important;
+    width: var(--large-input-width) !important;
   }
 }
 
 .input-text-xl {
   .input-fill,
   .input-text {
-    width: 420px !important;
+    width: var(--xlarge-input-width) !important;
   }
 }
 
