@@ -37,6 +37,8 @@ import { TicketFilterOptions } from './types/filters/ticket/ticketFilterOptions'
 import { TicketsService } from './components/tickets-new/tickets.service'; 
 // import { ActionButtonsComponent } from './components/shared/action-buttons/action-buttons.component';
 import { ActionButtonNames } from './constants/action_buttons';
+import { TicketTimelineBarComponent } from "./components/authority-management/timeline/ticket-timeline-bar/ticket-timeline-bar.component";
+import { TimelineItem } from './types/timeline-settings/timeline-settings-types';
 
 @Component({
   selector: 'app-root',
@@ -48,8 +50,9 @@ import { ActionButtonNames } from './constants/action_buttons';
     ConfirmationModalComponent,
     AppModalComponent,
     TagComponent,
-    TicketsTableNewComponent
-  ], 
+    TicketsTableNewComponent,
+    TicketTimelineBarComponent
+], 
 })
 export class AppComponent {
   dialogData: DynamicRow[] = [];
@@ -73,6 +76,130 @@ export class AppComponent {
 
   form: FormGroup = new FormGroup({});
   pageSize: number = 100;
+
+
+  steps: TimelineItem[] = [
+    {
+      order: 1,
+      text: 'התראה',
+      imgSrc: 'car.svg',
+      path: '/stage1',
+      validateFields: ['field1', 'field2'],
+      errors: 0,
+      isUpdated: false,
+      seen: true,
+      updatedCount: 0,
+      description: 'שלב ראשון - התראה ראשונית',
+      title: 'התראה',
+      isMoveable: false,
+      iconId: 1,
+      enumName: 'WARNING',
+      isActive: true
+    },
+    {
+      order: 2,
+      text: 'אירוע',
+      imgSrc: 'bus.svg',
+      path: '/stage2',
+      validateFields: ['field3', 'field4'],
+      errors: 0,
+      isUpdated: false,
+      seen: false,
+      updatedCount: 0,
+      description: 'שלב שני - טיפול באירוע',
+      title: 'אירוע',
+      isMoveable: false,
+      iconId: 2,
+      enumName: 'EVENT',
+      isActive: false
+    },
+    {
+      order: 3,
+      text: 'דו"ח חלון',
+      imgSrc: 'building.svg',
+      path: '/stage3',
+      validateFields: ['field5', 'field6'],
+      errors: 0,
+      isUpdated: false,
+      seen: false,
+      updatedCount: 0,
+      description: 'שלב שלישי - דוח חלון',
+      title: 'דו"ח חלון',
+      isMoveable: false,
+      iconId: 3,
+      enumName: 'WINDOW_REPORT',
+      isActive: false
+    },
+    {
+      order: 4,
+      text: 'הלבשה משרד התחבורה',
+      imgSrc: 'danger.svg',
+      path: '/stage4',
+      validateFields: ['field7', 'field8'],
+      errors: 0,
+      isUpdated: false,
+      seen: false,
+      updatedCount: 0,
+      description: 'שלב רביעי - הלבשה משרד התחבורה',
+      title: 'הלבשה משרד התחבורה',
+      isMoveable: false,
+      iconId: 4,
+      enumName: 'TRANSPORT_MINISTRY',
+      isActive: false
+    },
+    {
+      order: 5,
+      text: 'הלבשה משרד הפנים',
+      imgSrc: 'judgeYellow.svg',
+      path: '/stage5',
+      validateFields: ['field9', 'field10'],
+      errors: 0,
+      isUpdated: false,
+      seen: false,
+      updatedCount: 0,
+      description: 'שלב חמישי - הלבשה משרד הפנים',
+      title: 'הלבשה משרד הפנים',
+      isMoveable: false,
+      iconId: 5,
+      enumName: 'INTERIOR_MINISTRY',
+      isActive: false
+    },
+    {
+      order: 6,
+      text: 'הודעת תשלום',
+      imgSrc: 'bank.svg',
+      path: '/stage6',
+      validateFields: ['field11', 'field12'],
+      errors: 0,
+      isUpdated: false,
+      seen: false,
+      updatedCount: 0,
+      description: 'שלב שישי - הודעת תשלום',
+      title: 'הודעת תשלום',
+      isMoveable: false,
+      iconId: 6,
+      enumName: 'PAYMENT_NOTICE',
+      isActive: false
+    },
+    {
+      order: 7,
+      text: 'אכיפה - טופס 1',
+      imgSrc: 'glass.svg',
+      path: '/stage7',
+      validateFields: ['field13', 'field14'],
+      errors: 0,
+      isUpdated: false,
+      seen: false,
+      updatedCount: 0,
+      description: 'שלב שביעי - אכיפה טופס 1',
+      title: 'אכיפה - טופס 1',
+      isMoveable: false,
+      iconId: 7,
+      enumName: 'ENFORCEMENT_FORM1',
+      isActive: false
+    }
+  ];
+  isFirstTime: boolean = true;
 
   // actionButtonsComponent: ActionButtonsComponent;
 

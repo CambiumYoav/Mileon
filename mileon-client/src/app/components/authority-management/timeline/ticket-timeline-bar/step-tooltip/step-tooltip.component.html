@@ -1,0 +1,15 @@
+<div
+  class="description-tooltip"
+  (mouseenter)="show = true"
+  (mouseleave)="show = false"
+>
+  !
+</div>
+<div
+  class="step-tooltip"
+  [ngClass]="{ last: last }"
+  *ngIf="show && (title || description)"
+>
+  <h5 *ngIf="title" class="title">{{ title }}</h5>
+  <p *ngIf="description" class="description">{{ description }}</p>
+</div>

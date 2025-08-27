@@ -1,0 +1,220 @@
+@import "../../../../../styles/elements.scss";
+
+:host {
+  direction: rtl;
+  font-family: $fontAssistant;
+
+  // Time-line container
+  .time-line {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    min-height: 70px;
+
+    // Line styles
+    .line {
+      background-color: lightgray;
+      height: 3px;
+      min-width: 213px;
+
+      &.gray {
+        background-color: $colorLightBlueBorder !important;
+      }
+    }
+
+    // Step container
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 75px;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+
+      // Stage label (text above step)
+      .stage {
+        font-weight: 600;
+        font-size: 13px;
+        color: $colorDarkBlue2;
+        position: absolute;
+        top: -15px;
+        width: max-content;
+        display: flex;
+        align-items: center;
+      }
+
+      // Circle around step
+      .circle {
+        background-color: #E3E7EB;
+        border: 2px solid #B9C6D4;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        // Updated state circle
+        &.updated {
+          background-color: #d4f8d3 !important;
+        }
+
+        // Hover state
+        &:hover {
+          background-color: #D3F0FF !important;
+        }
+
+        // Error count container
+        .errors-container {
+          position: absolute;
+          background: white;
+          width: 23px;
+          height: 23px;
+          border-radius: 50%;
+          top: 0px;
+          right: -9px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+
+          .errors {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #F00;
+            background: #FFE0E3;
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+
+            span {
+              margin: 0;
+              padding: 0;
+              color: white;
+              font-size: 11px;
+            }
+          }
+        }
+
+        // Updated count container
+        .updated-container {
+          position: absolute;
+          background: white;
+          width: 23px;
+          height: 23px;
+          border-radius: 50%;
+          top: 0px;
+          right: -9px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+
+          .updated {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #19A58C;
+            background: #D4F8D3;
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+
+            span {
+              margin: 0;
+              padding: 0;
+              color: white;
+              font-size: 11px;
+            }
+          }
+        }
+        &.step-missed {
+          background-color: #ffe0e3;
+          border: 5px solid red;
+        }
+      }
+
+      // Red circle (used for some specific state)
+      .red-circle {
+        background-color: $colorPink;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      // Gray circle (for some states)
+      &.gray {
+        .circle {
+          background-color: $colorLightBlueBorder !important;
+        }
+      }
+
+      // Selected step circle
+      &.selected {
+        .circle {
+          background-color: #B9C6D4;
+        }
+      }
+
+      // Date below the step
+      .date {
+        color: $colorGray;
+        font-weight: 300;
+        font-size: 14px;
+        line-height: 18px;
+        height: 18px;
+      }
+
+      .change-order {
+        position: absolute;
+        bottom: -20px;
+        button {
+          background-color: transparent;
+          border: 0;
+          &.switchStep {
+            background-color: red;
+          }
+          img {
+            width: 24px;
+            height: auto;
+          }
+        }
+      }
+    }
+
+    // Wrapper for the line
+    .wrap-line {
+      background-color: $colorGreen;
+      height: 5px;
+      width: 94%;
+      margin: auto;
+    }
+
+    // Wrapper for the steps, with padding and spacing
+    .wrap-steps {
+      position: absolute;
+      width: 100%;
+      display: flex;
+      padding-left: 100px;
+      justify-content: space-between;
+    }
+  }
+
+  // Responsive styles for smaller screens
+  @media (max-width: 1300px) {
+    .step {
+      width: 230px !important;
+    }
+
+    .line {
+      width: 100px !important;
+    }
+  }
+}

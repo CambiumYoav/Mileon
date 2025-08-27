@@ -1,0 +1,55 @@
+@import "../../../../../../styles/elements.scss";
+.description-tooltip {
+  background-color: black;
+  width: 16px;
+  height: 16px;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: -25px;
+  bottom: 2px;
+}
+.step-tooltip {
+  position: absolute;
+  background: white;
+  color: black;
+  width: 291px;
+  padding: 20px 15px;
+  z-index: 10;
+  top: -90px;
+  right: calc(100% + 35px);
+  border-radius: 5px;
+  box-shadow: 10px 10px 111px -46px rgba(0, 0, 0, 0.75);
+
+  &.last {
+    left: 0;
+    right: unset;
+    top: -130px;
+  }
+  &.show {
+    display: block;
+  }
+
+  &.hide {
+    display: none;
+  }
+  h5 {
+    margin: 0;
+    text-align: right;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: $fontOpenSans;
+    text-decoration: underline;
+  }
+  p {
+    margin: 0;
+    text-align: right;
+    font-weight: 400;
+    font-size: 15px;
+    font-family: $fontOpenSans;
+  }
+}
