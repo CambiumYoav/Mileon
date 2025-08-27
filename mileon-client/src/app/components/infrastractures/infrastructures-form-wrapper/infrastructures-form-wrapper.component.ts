@@ -6,26 +6,24 @@ import {
   Validators,
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ConstPath } from '../../../constants/const_path';
+import { ConstPath } from '../../../constants/const_path';   
 import { InfrastructureFormComponent } from '../infrastructure-form/infrastructure-form.component';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
 import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
-import { SharedImports } from '../../../shared/shared-modules';
-import { ButtonComponent } from "../../shared/base/button/button.component";
-import { SelectComponent } from "../../shared/base/select/select.component";
+import { BaseComponents, SharedImports } from '../../../shared/shared-modules';
 
 @Component({
   selector: 'app-infrastructures-form-wrapper',
   templateUrl: './infrastructures-form-wrapper.component.html',
   styleUrls: ['./infrastructures-form-wrapper.component.scss'],
-  imports: [SharedImports, ButtonComponent, SelectComponent],
+  imports: [SharedImports ,BaseComponents]
 })
 export class InfrastructuresFormWrapperComponent implements OnInit {
   Icons = ConstPath;
   mainTitle: string = '';
-  sectionsFormGroup: FormGroup;
+  sectionsFormGroup: FormGroup; 
   formSections: { title: string; rows: DynamicRow[] }[] = [];
   dataSubject = new Subject<any>();
   isSubmitted = false;
@@ -86,16 +84,25 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
             validations.push(Validators.max(field.validations.max));
         }
 
-        formGroup.addControl(
-          field.name,
-          this.fb.control(
-            {
-              value: field.value || '',
-              disabled: field.disabled || false,
-            },
-            validations
-          )
-        );
+        // Handle fromTo field type
+        if (field.type === 'fromTo' && field.fields && field.fields.length > 0) {
+          const fromToGroup = this.fb.group({
+            from: [field.fields[0]?.value || '', validations],
+            to: [field.fields[1]?.value || '', validations],
+          });
+          formGroup.addControl(field.name, fromToGroup);
+        } else {
+          formGroup.addControl(
+            field.name,
+            this.fb.control(
+              {
+                value: field.value || '',
+                disabled: field.disabled || false,
+              },
+              validations
+            )
+          );
+        }
       });
     });
 
@@ -140,7 +147,7 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
   }
 
   combineFormData(): any {
-    return Object.keys(this.sectionsFormGroup.controls).reduce((acc: any, key: any) => {
+    return Object.keys(this.sectionsFormGroup.controls).reduce((acc: any, key) => {
       const sectionValue = (
         this.sectionsFormGroup.get(key) as FormGroup
       )?.getRawValue(); // Include disabled fields

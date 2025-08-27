@@ -64,12 +64,33 @@
               ></app-input-text>
 
               <!-- Number Input -->
-              <input
+              <app-input-text
                 *ngSwitchCase="'number'"
                 [id]="field.name"
-                type="number"
+                [placeholder]="field.label"
+                [title]="field.label"
+                [isRequired]="field.isRequired"
                 [formControlName]="field.name"
-              />
+              ></app-input-text>
+
+              <!-- Date Input -->
+              <app-input-date
+                *ngSwitchCase="'date'"
+                [title]="field.label"
+                [placeholder]="field.label"
+                [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted"
+                [formControlName]="field.name"
+              ></app-input-date>
+
+              <!-- Phone Input -->
+              <app-input-phone
+                *ngSwitchCase="'phone'"
+                [title]="field.label"
+                [placeholder]="field.label"
+                [isRequired]="field.isRequired"
+                [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted"
+                [formControlName]="field.name"
+              ></app-input-phone>
 
               <!-- Checkbox -->
               <ng-container *ngSwitchCase="'checkbox'">
@@ -77,20 +98,11 @@
                   *ngIf="field.name !== 'isActive'"
                   class="checkbox-container"
                 >
-                  <input
-                    [id]="field.name"
-                    type="checkbox"
+                  <app-input-checkbox
+                    [title]="field.label"
                     [formControlName]="field.name"
-                    checked="field.value"
-                    [title]="field.name"
-                  />
-                  <div *ngIf="field.name !== 'isActive'" class="checkbox-label">
-                    {{ field.placeholder }}
-                  </div>
+                  ></app-input-checkbox>
                 </div>
-              </ng-container>
-
-              <ng-container *ngSwitchCase="'checkbox'">
                 <app-input-checkbox-option-group
                   *ngIf="field.name === 'isActive'"
                   [options]="optionsApps"
@@ -152,6 +164,8 @@
                   bindValueKey="value"
                   [isMultiSelect]="field.isMultiSelect || false"
                   [placeholder]="field.label || ''"
+                  [title]="field.label"
+                  [isRequired]="field.isRequired"
                 ></app-select>
               </div>
 

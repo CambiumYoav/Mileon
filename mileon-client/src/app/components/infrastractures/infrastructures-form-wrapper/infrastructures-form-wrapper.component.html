@@ -53,6 +53,7 @@
                     *ngSwitchCase="'date'"
                     [ngStyle]="{ height: '40px', width: '180px' }"
                     [title]="field.label"
+                    [isValid]="isFieldValid(field.name, formSections[0].title)"
                     [formControlName]="field.name"
                   ></app-input-date>
 
@@ -81,12 +82,47 @@
                       [ngStyle]="{ height: '40px', width: '180px' }"
                       appearance="fill"
                       [formControlName]="field.name"
+                      [dataFunction]="field.dataFunction"
+                      [options]="field.options || []"
                       searchPlaceholder="חיפוש"
                       bindLabelKey="value"
                       bindValueKey="id"
-                
+                      [isMultiSelect]="field.isMultiSelect || false"
+                      [title]="field.label"
+                      [isRequired]="field.isRequired"
                     ></app-select>
                   </div>
+
+                  <!-- Checkbox -->
+                  <ng-container *ngSwitchCase="'checkbox'">
+                    <app-input-checkbox
+                      [title]="field.label"
+                      [formControlName]="field.name"
+                    ></app-input-checkbox>
+                  </ng-container>
+
+                  <!-- From-To Input -->
+                  <ng-container *ngSwitchCase="'fromTo'">
+                    <div class="fromTo-container" formGroupName="{{ field.name }}">
+                      <input
+                        *ngFor="let fromToField of field.fields"
+                        [id]="fromToField.name"
+                        type="text"
+                        [formControlName]="fromToField.name"
+                        [name]="fromToField.name"
+                        [placeholder]="fromToField.placeholder"
+                      />
+                    </div>
+                  </ng-container>
+
+                  <!-- Phone Input -->
+                  <app-input-phone
+                    *ngSwitchCase="'phone'"
+                    [title]="field.label"
+                    [isRequired]="field.isRequired"
+                    [isValid]="isFieldValid(field.name, formSections[0].title)"
+                    [formControlName]="field.name"
+                  ></app-input-phone>
 
                   <ng-container *ngSwitchCase="'radio'">
                     <div class="d-flex">
@@ -185,6 +221,7 @@
                     *ngSwitchCase="'date'"
                     [ngStyle]="{ height: '40px', width: '180px' }"
                     [title]="field.label"
+                    [isValid]="isFieldValid(field.name, formSections[1].title)"
                     [formControlName]="field.name"
                   ></app-input-date>
 
@@ -237,11 +274,48 @@
                       [ngStyle]="{ height: '40px', width: '180px' }"
                       appearance="fill"
                       [formControlName]="field.name"
+                      [dataFunction]="field.dataFunction"
+                      [options]="field.options || []"
                       searchPlaceholder="חיפוש"
                       bindLabelKey="value"
                       bindValueKey="id"
+                      [isMultiSelect]="field.isMultiSelect || false"
+                      [title]="field.label"
+                      [isRequired]="field.isRequired"
                     ></app-select>
                   </div>
+
+                  <!-- Checkbox -->
+                  <ng-container *ngSwitchCase="'checkbox'">
+                    <app-input-checkbox
+                      [title]="field.label"
+                      [formControlName]="field.name"
+                    ></app-input-checkbox>
+                  </ng-container>
+
+                  <!-- From-To Input -->
+                  <ng-container *ngSwitchCase="'fromTo'">
+                    <div class="fromTo-container" formGroupName="{{ field.name }}">
+                      <input
+                        *ngFor="let fromToField of field.fields"
+                        [id]="fromToField.name"
+                        type="text"
+                        [formControlName]="fromToField.name"
+                        [name]="fromToField.name"
+                        [placeholder]="fromToField.placeholder"
+                      />
+                    </div>
+                  </ng-container>
+
+                  <!-- Phone Input -->
+                  <app-input-phone
+                    *ngSwitchCase="'phone'"
+                    [title]="field.label"
+                    [placeholder]="field.label"
+                    [isRequired]="field.isRequired"
+                    [isValid]="isFieldValid(field.name, formSections[1].title)"
+                    [formControlName]="field.name"
+                  ></app-input-phone>
 
                   <ng-container *ngSwitchCase="'radio'">
                     <div class="d-flex">

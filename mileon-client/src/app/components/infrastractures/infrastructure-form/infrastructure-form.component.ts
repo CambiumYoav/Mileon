@@ -21,26 +21,16 @@ import {
 import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
 import { IdValuePair } from '../../../types/legalRequest/legal-request-file-type-response';
 import { UploadedFile } from '../../../types/uploadedFile';
-import { CheckboxOption, InputCheckboxOptionGroupComponent } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
+import { CheckboxOption } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
 import { Utils } from '../../../utils/utils';
-import { SharedImports } from '../../../shared/shared-modules';
-import { ButtonComponent } from "../../shared/base/button/button.component";
-import { FileUploadNewComponent } from "../../shared/base/upload-files/upload-files.component";
-import { InputTextComponent } from "../../shared/base/inputs/input-text/input-text.component";
-import { SelectComponent } from "../../shared/base/select/select.component";
+import { BaseComponents, SharedImports } from '../../../shared/shared-modules';
+
 
 @Component({
   selector: 'app-infrastructure-form',
   templateUrl: './infrastructure-form.component.html',
   styleUrls: ['./infrastructure-form.component.scss'],
-  imports: [
-    SharedImports, 
-    ButtonComponent, 
-    FileUploadNewComponent, 
-    InputCheckboxOptionGroupComponent,
-    InputTextComponent,
-    SelectComponent
-  ],
+  imports: [SharedImports,BaseComponents],
 })
 export class InfrastructureFormComponent implements OnInit {
   readonly Icons = ConstPath; // Path to icons

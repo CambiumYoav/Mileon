@@ -38,7 +38,7 @@
                   (itemFilterServerSide)="waitForFilterResponse($event)"
                   bindLabelKey="value"
                   bindValueKey="id"
-                  [isMultiSelect]="field.multipleSelect"
+                  [isMultiSelect]="field.multipleSelect || false"
                   [title]="field.displayName || ''"
                   ></app-select>
 
