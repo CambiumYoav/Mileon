@@ -18,6 +18,16 @@ export class TagComponent implements OnInit {
   @Input()
   public pattern: string | RegExp = '';
 
+  @Input()
+  public fontSize?: string = '16px';
+
+  @Input()
+  public size: 'small' | 'large' = 'small';
+
+  get dynamicFontSize(): string {
+    return this.size === 'large' ? '24px' : '16px';
+  }
+
   constructor() {}
 
   ngOnInit(): void {}

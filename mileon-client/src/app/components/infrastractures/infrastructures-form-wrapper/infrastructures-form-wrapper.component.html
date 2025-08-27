@@ -60,40 +60,38 @@
                   ></app-input-date>
 
                   <!-- Select Dropdown -->
-                  <mat-form-field appearance="fill" *ngSwitchCase="'select'">
-                    <mat-select
-                      [id]="field.name"
-                      [formControlName]="field.name"
-                      [value]="field.value"
-                    >
-                      <mat-option
-                        *ngFor="let option of field.options"
-                        [value]="option.value"
-                      >
-                        {{ option.display }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                  <app-select
+                    *ngSwitchCase="'select'"
+                    fxFill
+                    appearance="outline"
+                    [placeholder]="field.label || ''"
+                    [bindLabelKeys]="field.bindLabelKeys"
+                    [formControlName]="field.name || ''"
+                    [dataFunction]="field.dataFunction"
+                    [options]="field.options || []"
+                    searchPlaceholder="חיפוש"
+                    bindLabelKey="display"
+                    bindValueKey="value"
+                    [isMultiSelect]="field.isMultiSelect || false"
+                    [title]="field.label || ''"
+                  ></app-select>
 
-                  <div
+                  <app-select
                     *ngSwitchCase="'selectWithLookup'"
                     [ngStyle]="{ height: '40px', width: '180px' }"
-                  >
-                  <app-select
-                  fxFill
-                  appearance="outline"
-                  [placeholder]="field.label || ''"
-                  [bindLabelKeys]="field.bindLabelKeys"
-                  [formControlName]="field.name || ''"
-                  [dataFunction]="field.dataFunction"
-                  [options]="field.options || []"
-                  searchPlaceholder="חיפוש"
-                  bindLabelKey="display"
-                  bindValueKey="value"
-                  [isMultiSelect]="field.isMultiSelect || false"
-                  [title]="field.label || ''"
+                    fxFill
+                    appearance="outline"
+                    [placeholder]="field.label || ''"
+                    [bindLabelKeys]="field.bindLabelKeys"
+                    [formControlName]="field.name || ''"
+                    [dataFunction]="field.dataFunction"
+                    [options]="field.options || []"
+                    searchPlaceholder="חיפוש"
+                    bindLabelKey="display"
+                    bindValueKey="value"
+                    [isMultiSelect]="field.isMultiSelect || false"
+                    [title]="field.label || ''"
                   ></app-select>
-                  </div>
 
                   <!-- Checkbox -->
                   <ng-container *ngSwitchCase="'checkbox'">
@@ -223,7 +221,6 @@
 
                   <app-input-date
                     *ngSwitchCase="'date'"
-                    [ngStyle]="{ height: '40px', width: '180px' }"
                     [title]="field.label"
                     [isValid]="isFieldValid(field.name, formSections[1].title)"
                     [formControlName]="field.name"
@@ -269,42 +266,38 @@
                     </mat-error>
                   </mat-form-field> -->
 
-                  <div *ngSwitchCase="'select'">
-                    <app-select
-                      fxFill
-                      appearance="outline"
-                      [placeholder]="field.label || ''"
-                      [bindLabelKeys]="field.bindLabelKeys"
-                      [formControlName]="field.name || ''"
-                      [dataFunction]="field.dataFunction"
-                      [options]="field.options || []"
-                      searchPlaceholder="חיפוש"
-                      bindLabelKey="display"
-                      bindValueKey="value"
-                      [isMultiSelect]="field.isMultiSelect || false"
-                      [title]="field.label || ''"
-                      ></app-select>
-                  </div>
+                  <app-select
+                    *ngSwitchCase="'select'"
+                    fxFill
+                    appearance="outline"
+                    [placeholder]="field.label || ''"
+                    [bindLabelKeys]="field.bindLabelKeys"
+                    [formControlName]="field.name || ''"
+                    [dataFunction]="field.dataFunction"
+                    [options]="field.options || []"
+                    searchPlaceholder="חיפוש"
+                    bindLabelKey="display"
+                    bindValueKey="value"
+                    [isMultiSelect]="field.isMultiSelect || false"
+                    [title]="field.label || ''"
+                  ></app-select>
 
-                  <div
+                  <app-select
                     *ngSwitchCase="'selectWithLookup'"
                     [ngStyle]="{ height: '40px', width: '180px' }"
-                  >
-                  <app-select
-                  fxFill
-                  appearance="outline"
-                  [placeholder]="field.label || ''"
-                  [bindLabelKeys]="field.bindLabelKeys"
-                  [formControlName]="field.name || ''"
-                  [dataFunction]="field.dataFunction"
-                  [options]="field.options || []"
-                  searchPlaceholder="חיפוש"
-                  bindLabelKey="display"
-                  bindValueKey="value"
-                  [isMultiSelect]="field.isMultiSelect || false"
-                  [title]="field.label || ''"
+                    fxFill
+                    appearance="outline"
+                    [placeholder]="field.label || ''"
+                    [bindLabelKeys]="field.bindLabelKeys"
+                    [formControlName]="field.name || ''"
+                    [dataFunction]="field.dataFunction"
+                    [options]="field.options || []"
+                    searchPlaceholder="חיפוש"
+                    bindLabelKey="display"
+                    bindValueKey="value"
+                    [isMultiSelect]="field.isMultiSelect || false"
+                    [title]="field.label || ''"
                   ></app-select>
-                  </div>
 
                   <!-- Checkbox -->
                   <ng-container *ngSwitchCase="'checkbox'">

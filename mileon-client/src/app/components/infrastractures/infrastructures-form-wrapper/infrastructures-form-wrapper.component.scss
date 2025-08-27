@@ -186,17 +186,19 @@
   // }
 
   .form-title {
+    color: #000000;
     font-size: 18px;
     text-align: right;
     font-family: $fontOpenSans;
     font-weight: 800;
   }
   .form-section-title {
+    color: #000000;
     font-size: 16px;
     text-align: right;
     font-family: $fontOpenSans;
     font-weight: 800;
-    margin-bottom: 0px;
+    margin-bottom: 15px;
   }
 
   .disabled {

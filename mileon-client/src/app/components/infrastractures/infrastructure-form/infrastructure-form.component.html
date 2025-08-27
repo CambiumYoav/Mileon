@@ -130,44 +130,40 @@
               </ng-container>
              
               <!-- Select Dropdown -->
-              <div *ngSwitchCase="'select'">
-                <app-select
-                  fxFill
-                  appearance="outline"
-                  [placeholder]="field.label || ''"
-                  [bindLabelKeys]="field.bindLabelKeys"
-                  [formControlName]="field.name || ''"
-                  [dataFunction]="field.dataFunction"
-                  [options]="field.options || []"
-                  searchPlaceholder="חיפוש"
-                  bindLabelKey="display"
-                  bindValueKey="value"
-                  [isMultiSelect]="field.isMultiSelect || false"
-                  [title]="field.label || ''"
-                  ></app-select>
-              </div>
+              <app-select
+                *ngSwitchCase="'select'"
+                fxFill
+                appearance="outline"
+                [placeholder]="field.label || ''"
+                [bindLabelKeys]="field.bindLabelKeys"
+                [formControlName]="field.name || ''"
+                [dataFunction]="field.dataFunction"
+                [options]="field.options || []"
+                searchPlaceholder="חיפוש"
+                bindLabelKey="display"
+                bindValueKey="value"
+                [isMultiSelect]="field.isMultiSelect || false"
+                [title]="field.label || ''"
+                ></app-select>
 
-              <div
+              <app-select
                 *ngSwitchCase="'selectWithLookup'"
                 [class]="'field-' + field.size"
-              >
-                <app-select
-                  fxFill
-                  appearance="fill"
-                  [bindLabelKeys]="field.bindLabelKeys"
-                  [formControlName]="field.name"
-                  [dataFunction]="field.dataFunction"
-                  [options]="field.options || []"
-                  searchPlaceholder="חיפוש"
-                  bindLabelKey="display"
-                  [isValid]="dynamicForm.get(field.name)?.valid || isSubmitted"
-                  bindValueKey="value"
-                  [isMultiSelect]="field.isMultiSelect || false"
-                  [placeholder]="field.label || ''"
-                  [title]="field.label"
-                  [isRequired]="field.isRequired"
+                fxFill
+                appearance="fill"
+                [bindLabelKeys]="field.bindLabelKeys"
+                [formControlName]="field.name"
+                [dataFunction]="field.dataFunction"
+                [options]="field.options || []"
+                searchPlaceholder="חיפוש"
+                bindLabelKey="display"
+                [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted"
+                bindValueKey="value"
+                [isMultiSelect]="field.isMultiSelect || false"
+                [placeholder]="field.label || ''"
+                [title]="field.label"
+                [isRequired]="field.isRequired"
                 ></app-select>
-              </div>
 
               <!-- From-To Input -->
               <ng-container *ngSwitchCase="'fromTo'">

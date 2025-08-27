@@ -42,8 +42,8 @@ export class StatusService {
       },
       7: {
         // name: 'בהסדר',
-        bgColor: ColorsHex.Water,
-        textColor: ColorsHex.CyanBlueAzure,
+        bgColor: ColorsHex.LightPink,
+        textColor: ColorsHex.DarkPink,
       },
     },
     ParkingPermitsModule: {

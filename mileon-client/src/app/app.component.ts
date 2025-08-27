@@ -28,17 +28,27 @@ import { MatDialog } from '@angular/material/dialog';
 import { InfrastructureImportComponent } from './components/infrastractures/infrastructure-import/infrastructure-import.component';
 import { DynamicRow } from './types/infrastructure/InfrastructureTypes';
 import { InfrastructuresFormWrapperComponent } from './components/infrastractures/infrastructures-form-wrapper/infrastructures-form-wrapper.component';
-
+import { TagComponent } from "./components/shared/base/tag/tag.component";
+import { TicketsTableNewComponent } from "./components/tickets-new/tickets-table-new/tickets-table-new.component";
+import { TableComponent } from "./components/shared/table/table.component";
+import { TicketIcons } from './types/ticket/ticket-icons.model';
+import { TicketNew } from './types/ticket';
+import { TicketFilterOptions } from './types/filters/ticket/ticketFilterOptions';
+import { TicketsService } from './components/tickets-new/tickets.service'; 
+// import { ActionButtonsComponent } from './components/shared/action-buttons/action-buttons.component';
+import { ActionButtonNames } from './constants/action_buttons';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  imports: [
-    BaseComponents, 
-    SharedImports, 
-    ConfirmationModalComponent, 
+    imports: [
+    BaseComponents,
+    SharedImports,
+    ConfirmationModalComponent,
     AppModalComponent,
+    TagComponent,
+    TicketsTableNewComponent
   ], 
 })
 export class AppComponent {
@@ -56,11 +66,25 @@ export class AppComponent {
   selectedUserData: Subject<any> = new Subject<any>();
   loader: boolean = false;
   showPaginator: boolean = true;
-  TicketStagesIcons: Icon[] = [];
+
+  TicketStagesIcons: Icon[] = TicketIcons.TicketStagesIcons;
+  
   selectedFiles: any[] = [];
 
   form: FormGroup = new FormGroup({});
   pageSize: number = 100;
+
+  // actionButtonsComponent: ActionButtonsComponent;
+
+  selectedTicketData$: Subject<TicketNew> = new Subject<TicketNew>();
+
+  actionButtonsList: ActionButtonNames[] = [
+    'Payment',
+    'SendToPhone',
+    'SendEmail',
+    'PrintToPDF',
+  ];
+
 
 
   
@@ -83,7 +107,8 @@ export class AppComponent {
     private toastr: ToastrService,
     private appService: AppService,
     private dialog: MatDialog,
-    private infrastructureDataService: InfrastructureDataService
+    private infrastructureDataService: InfrastructureDataService,
+    private ticketsService: TicketsService,
   ) {}
 
 
@@ -115,7 +140,7 @@ export class AppComponent {
       let dialogData = this.dialogData;
       if (!isEdit) {
         const form = new InfrastructureForms();
-        dialogData = form.InfrastructureTicketsSourceForm;
+        dialogData = form.InfrastructurePlaintiffsCausesForm;
       }
       const dialogRef = this.dialog.open(dialogComponent, {
         data: { form: dialogData, title: 'עריכת רשומה', isEdit: isEdit, isSigns: false },
@@ -358,103 +383,107 @@ export class AppComponent {
   
 
 
-  columns: Column[] = [
-    {
-      propertyName: 'selected',
-      displayName: 'בחירה',
-      type: ColumnTypeEnum.Checkbox,
-      canSort: false,
-      sortByServer: false
-    },
-    {
-      propertyName: 'status',
-      displayName: 'סטטוס',
-      type: ColumnTypeEnum.Tag,
-      canSort: true,
-      sortByServer: false,
-      fieldId: 'statusId'
-    },
-    {
-      propertyName: 'municipality',
-      displayName: 'עירייה',
-      type: ColumnTypeEnum.Text,
-      canSort: true,
-      sortByServer: false
-    },
-    {
-      propertyName: 'nid',
-      displayName: 'מספר זהות',
-      type: ColumnTypeEnum.Text,
-      canSort: true,
-      sortByServer: false
-    },
-    {
-      propertyName: 'fullName',
-      displayName: 'שם מלא',
-      type: ColumnTypeEnum.Text,
-      canSort: true,
-      sortByServer: false
-    },
-    {
-      propertyName: 'violationDate',
-      displayName: 'תאריך עבירה',
-      type: ColumnTypeEnum.Date,
-      canSort: true,
-      sortByServer: false
-    },
-    {
-      propertyName: 'reportNumber',
-      displayName: 'מספר דוח',
-      type: ColumnTypeEnum.Text,
-      canSort: true,
-      sortByServer: false,
-      textOverflow: true
-    },
-    {
-      propertyName: 'inputField',
-      displayName: 'מספר זהות',
-      type: ColumnTypeEnum.Input,
-      canSort: false,
-      sortByServer: false
-    },
-    {
-      propertyName: 'yesNoRadio',
-      displayName: 'כן/לא',
-      type: ColumnTypeEnum.Radio,
-      canSort: false,
-      sortByServer: false
-    },
-    {
-      propertyName: 'additionalReports',
-      displayName: 'דוחות נוספים',
-      type: ColumnTypeEnum.Currency,
-      canSort: true,
-      sortByServer: false
-    },
-    {
-      propertyName: 'actions',
-      displayName: 'פעולות',
-      type: ColumnTypeEnum.Icon,
-      canSort: false,
-      sortByServer: false
-    }
-  ];
+  // columns: Column[] = [
+  //   {
+  //     propertyName: 'selected',
+  //     displayName: 'בחירה',
+  //     type: ColumnTypeEnum.Checkbox,
+  //     canSort: false,
+  //     sortByServer: false
+  //   },
+  //   {
+  //     propertyName: 'status',
+  //     displayName: 'סטטוס',
+  //     type: ColumnTypeEnum.Tag,
+  //     canSort: true,
+  //     sortByServer: false,
+  //     fieldId: 'statusId'
+  //   },
+  //   {
+  //     propertyName: 'municipality',
+  //     displayName: 'עירייה',
+  //     type: ColumnTypeEnum.Text,
+  //     canSort: true,
+  //     sortByServer: false
+  //   },
+  //   {
+  //     propertyName: 'nid',
+  //     displayName: 'מספר זהות',
+  //     type: ColumnTypeEnum.Text,
+  //     canSort: true,
+  //     sortByServer: false
+  //   },
+  //   {
+  //     propertyName: 'fullName',
+  //     displayName: 'שם מלא',
+  //     type: ColumnTypeEnum.Text,
+  //     canSort: true,
+  //     sortByServer: false
+  //   },
+  //   {
+  //     propertyName: 'violationDate',
+  //     displayName: 'תאריך עבירה',
+  //     type: ColumnTypeEnum.Date,
+  //     canSort: true,
+  //     sortByServer: false
+  //   },
+  //   {
+  //     propertyName: 'reportNumber',
+  //     displayName: 'מספר דוח',
+  //     type: ColumnTypeEnum.Text,
+  //     canSort: true,
+  //     sortByServer: false,
+  //     textOverflow: true
+  //   },
+  //   {
+  //     propertyName: 'ticketStageName',
+  //     displayName: 'שלב',
+  //     type: ColumnTypeEnum.Text,
+  //     canSort: true,
+  //     sortByServer: false,
+  //     fieldId: 'ticketStageID',
+  //     hasIcon: true
+  //   },
+  //   {
+  //     propertyName: 'inputField',
+  //     displayName: 'מספר זהות',
+  //     type: ColumnTypeEnum.Input,
+  //     canSort: false,
+  //     sortByServer: false
+  //   },
+  //   {
+  //     propertyName: 'yesNoRadio',
+  //     displayName: 'כן/לא',
+  //     type: ColumnTypeEnum.Radio,
+  //     canSort: false,
+  //     sortByServer: false
+  //   },
+  //   {
+  //     propertyName: 'additionalReports',
+  //     displayName: 'דוחות נוספים',
+  //     type: ColumnTypeEnum.Currency,
+  //     canSort: true,
+  //     sortByServer: false
+  //   },
+  //   {
+  //     propertyName: 'actions',
+  //     displayName: 'פעולות',
+  //     type: ColumnTypeEnum.Icon,
+  //     canSort: false,
+  //     sortByServer: false
+  //   }
+  // ];
+  
   
   originalData: any[] = [
     {
       id: 1,
-      selected: false,
-      reportNumber: '1585123121594',
-      inputField: '',
-      yesNoRadio: 'לא',
       violationDate: '2025-01-09',
-      fullName: 'ישראל ישראלי',
       nid: '245987630',
-      municipality: 'באר שבע',
-      municipalityId: 1,
-      status: 'פתוח',
-      statusId: 3,
-      additionalReports: 526
+      additionalReports: 526,
+      TicketStagesIcons: this.TicketStagesIcons,
+      ticketStageID: 1,
+      ticketStageName: 'התראה'
     },
     {
       id: 2,
@@ -469,7 +498,10 @@ export class AppComponent {
       municipalityId: 2,
       status: 'סגור',
       statusId: 1,
-      additionalReports: 526
+      additionalReports: 526,
+      TicketStagesIcons: this.TicketStagesIcons,
+      ticketStageID: 2,
+      ticketStageName: 'אירוע'
     },
     {
       id: 3,
@@ -484,7 +516,10 @@ export class AppComponent {
       municipalityId: 3,
       status: 'פתוח',
       statusId: 3,
-      additionalReports: 526
+      additionalReports: 526,
+      TicketStagesIcons: this.TicketStagesIcons,
+      ticketStageID: 3,
+      ticketStageName: 'דו"ח חלון'
     },
     {
       id: 4,
@@ -499,302 +534,49 @@ export class AppComponent {
       municipalityId: 4,
       status: 'סגור',
       statusId: 1,
-      additionalReports: 526
+      additionalReports: 526,
+      TicketStagesIcons: this.TicketStagesIcons,
+      ticketStageID: 4,
+      ticketStageName: 'הלבשה משרד התחבורה'
     },
     {
-      id: 5,
-      selected: false,
-      reportNumber: '1585123121598',
-      inputField: '',
-      yesNoRadio: 'כן',
-      violationDate: '2025-11-18',
-      fullName: 'ישראל ישראלי',
+      id: 1,
+      violationDate: '2025-01-09',
       nid: '245987630',
-      municipality: 'דימונה',
-      municipalityId: 5,
-      status: 'פתוח',
-      statusId: 3,
-      additionalReports: 526
+      additionalReports: 526,
+      TicketStagesIcons: this.TicketStagesIcons,
+      ticketStageID: 5,
+      ticketStageName: 'הלבשה משרד הפנים'
     },
     {
-      id: 6,
-      selected: false,
-      reportNumber: '1585123121599',
-      inputField: '',
-      yesNoRadio: 'כן',
-      violationDate: '2026-03-03',
-      fullName: 'ישראל ישראלי',
+      id: 1,
+      violationDate: '2025-01-09',
       nid: '245987630',
-      municipality: 'חיפה',
-      municipalityId: 6,
-      status: 'סגור',
-      statusId: 1,
-      additionalReports: 526
+      additionalReports: 526,
+      TicketStagesIcons: this.TicketStagesIcons,
+      ticketStageID: 6,
+      ticketStageName: 'הודעת תשלום'
     },
     {
-      id: 7,
-      selected: false,
-      reportNumber: '1585123121600',
-      inputField: '',
-      yesNoRadio: 'כן',
-      violationDate: '2025-08-15',
-      fullName: 'ישראל ישראלי',
+      id: 1,
+      violationDate: '2025-01-09',
       nid: '245987630',
-      municipality: 'נתניה',
-      municipalityId: 7,
-      status: 'פתוח',
-      statusId: 3,
-      additionalReports: 526
+      additionalReports: 526,
+      TicketStagesIcons: this.TicketStagesIcons,
+      ticketStageID: 7,
+      ticketStageName: 'אכיפה - טופס 1'
     },
-    {
-      id: 8,
-      selected: false,
-      reportNumber: '1585123121601',
-      inputField: '',
-      yesNoRadio: 'כן',
-      violationDate: '2025-09-22',
-      fullName: 'ישראל ישראלי',
-      nid: '245987630',
-      municipality: 'ראשון לציון',
-      municipalityId: 8,
-      status: 'סגור',
-      statusId: 1,
-      additionalReports: 526
-    },
-    {
-      id: 9,
-      selected: false,
-      reportNumber: '1585123121602',
-      inputField: '',
-      yesNoRadio: 'כן',
-      violationDate: '2025-10-07',
-      fullName: 'ישראל ישראלי',
-      nid: '245987630',
-      municipality: 'מודיעין',
-      municipalityId: 9,
-      status: 'פתוח',
-      statusId: 3,
-      additionalReports: 526
-    },
-    {
-      id: 10,
-      selected: false,
-      reportNumber: '1585123121603',
-      inputField: '',
-      yesNoRadio: 'כן',
-      violationDate: '2025-12-12',
-      fullName: 'ישראל ישראלי',
-      nid: '245987630',
-      municipality: 'קיסריה',
-      municipalityId: 10,
-      status: 'סגור',
-      statusId: 1,
-      additionalReports: 526
-    },
-    {
-      id: 11,
-      selected: false,
-      reportNumber: '1585123121604',
-      inputField: '',
-      yesNoRadio: 'לא',
-      violationDate: '2025-11-18',
-      fullName: 'שרה כהן',
-      nid: '123456789',
-      municipality: 'תל אביב',
-      municipalityId: 3,
-      status: 'פתוח',
-      statusId: 3,
-      additionalReports: 342
-    },
-    {
-      id: 12,
-      selected: false,
-      reportNumber: '1585123121605',
-      inputField: '',
-      yesNoRadio: 'כן',
-      violationDate: '2025-10-25',
-      fullName: 'משה לוי',
-      nid: '987654321',
-      municipality: 'חיפה',
-      municipalityId: 6,
-      status: 'סגור',
-      statusId: 1,
-      additionalReports: 189
-    },
-    {
-      id: 13,
-      selected: false,
-      reportNumber: '1585123121606',
-      inputField: '',
-      yesNoRadio: 'לא',
-      violationDate: '2025-09-30',
-      fullName: 'רחל גולדברג',
-      nid: '456789123',
-      municipality: 'ירושלים',
-      municipalityId: 11,
-      status: 'פתוח',
-      statusId: 3,
-      additionalReports: 567
-    },
-    {
-      id: 14,
-      selected: false,
-      reportNumber: '1585123121607',
-      inputField: '',
-      yesNoRadio: 'כן',
-      violationDate: '2025-08-14',
-      fullName: 'דוד רוזן',
-      nid: '789123456',
-      municipality: 'באר שבע',
-      municipalityId: 1,
-      status: 'סגור',
-      statusId: 1,
-      additionalReports: 234
-    },
-    {
-      id: 15,
-      selected: false,
-      reportNumber: '1585123121608',
-      inputField: '',
-      yesNoRadio: 'לא',
-      violationDate: '2025-07-22',
-      fullName: 'מיכל שפירא',
-      nid: '321654987',
-      municipality: 'אשדוד',
-      municipalityId: 12,
-      status: 'פתוח',
-      statusId: 3,
-      additionalReports: 445
-    },
-    {
-      id: 16,
-      selected: false,
-      reportNumber: '1585123121609',
-      inputField: '',
-      yesNoRadio: 'כן',
-      violationDate: '2025-06-15',
-      fullName: 'יוסי ברק',
-      nid: '654987321',
-      municipality: 'פתח תקווה',
-      municipalityId: 13,
-      status: 'סגור',
-      statusId: 1,
-      additionalReports: 378
-    },
-    {
-      id: 17,
-      selected: false,
-      reportNumber: '1585123121610',
-      inputField: '',
-      yesNoRadio: 'לא',
-      violationDate: '2025-05-08',
-      fullName: 'נועה אברהם',
-      nid: '147258369',
-      municipality: 'רחובות',
-      municipalityId: 14,
-      status: 'פתוח',
-      statusId: 3,
-      additionalReports: 612
-    },
-    {
-      id: 18,
-      selected: false,
-      reportNumber: '1585123121611',
-      inputField: '',
-      yesNoRadio: 'כן',
-      violationDate: '2025-04-12',
-      fullName: 'עמיר כהן',
-      nid: '963852741',
-      municipality: 'הרצליה',
-      municipalityId: 15,
-      status: 'סגור',
-      statusId: 1,
-      additionalReports: 298
-    },
-    {
-      id: 19,
-      selected: false,
-      reportNumber: '1585123121612',
-      inputField: '',
-      yesNoRadio: 'לא',
-      violationDate: '2025-03-25',
-      fullName: 'דנה לוי',
-      nid: '852963741',
-      municipality: 'רמת גן',
-      municipalityId: 16,
-      status: 'פתוח',
-      statusId: 3,
-      additionalReports: 456
-    },
-    {
-      id: 20,
-      selected: false,
-      reportNumber: '1585123121612',
-      inputField: '',
-      yesNoRadio: 'לא',
-      violationDate: '2025-03-25',
-      fullName: 'דנה לוי',
-      nid: '852963741',
-      municipality: 'רמת גן',
-      municipalityId: 16,
-      status: 'פתוח',
-      statusId: 1,
-      additionalReports: 456
-    },
-    {
-      id: 21,
-      selected: false,
-      reportNumber: '1585123121612',
-      inputField: '',
-      yesNoRadio: 'לא',
-      violationDate: '2025-03-25',
-      fullName: 'דנה לוי',
-      nid: '852963741',
-      municipality: 'רמת גן',
-      municipalityId: 16,
-      status: 'פתוח',
-      statusId: 1,
-      additionalReports: 456
-    },
-    {
-      id: 22,
-      selected: false,
-      reportNumber: '1585123121612',
-      inputField: '',
-      yesNoRadio: 'לא',
-      violationDate: '2025-03-25',
-      fullName: 'דנה לוי',
-      nid: '852963741',
-      municipality: 'רמת גן',
-      municipalityId: 16,
-      status: 'פתוח',
-      statusId: 1,
-      additionalReports: 456
-    },
-    {
-      id: 23,
-      selected: false,
-      reportNumber: '1585123121612',
-      inputField: '',
-      yesNoRadio: 'לא',
-      violationDate: '2025-03-25',
-      fullName: 'דנה לוי',
-      nid: '852963741',
-      municipality: 'רמת גן',
-      municipalityId: 16,
-      status: 'פתוח',
-      statusId: 1,
-      additionalReports: 456
-    }
   ];
+
+  list: TicketNew[] = [...this.originalData];
+
+  count: number = 0;
   
   
   data: any[] = [...this.originalData];
 
   
-  get total(): number {
-    return this.data.length;
-  }
+  total: number = 0;
   
 
   
@@ -855,6 +637,27 @@ export class AppComponent {
       function: () => this.mockStatuses
     }
   };
+
+  async loadData(filter: TicketFilterOptions) {
+    this.loader = true;
+    try {
+      const res = await this.ticketsService.getTickets(filter);
+      if (res && res.list) {
+        this.list = res.list.map((p) => new TicketNew(p));
+        this.total = res.list.length ? res.total : 0; 
+        this.count = res.count;
+      }
+      if (!res?.list.length) {
+        // this.actionButtonsComponent?.toggleDisabled(
+        //   this.actionButtonsList,
+        //   true
+        // );
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    this.loader = false;
+  }
 
 
   

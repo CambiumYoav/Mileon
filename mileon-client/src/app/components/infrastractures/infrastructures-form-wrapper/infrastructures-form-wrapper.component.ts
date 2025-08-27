@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
 import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
 import { BaseComponents, SharedImports } from '../../../shared/shared-modules';
+import { FieldTypeEnum } from '../../../types/advanced-search/form-tab.model';
 
 @Component({
   selector: 'app-infrastructures-form-wrapper',
@@ -28,6 +29,7 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
   dataSubject = new Subject<any>();
   isSubmitted = false;
   private _skipFormValidation = false;
+FieldTypeEnum = FieldTypeEnum;
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<InfrastructureFormComponent>,

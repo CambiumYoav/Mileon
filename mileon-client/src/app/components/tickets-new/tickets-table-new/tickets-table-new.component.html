@@ -1,0 +1,13 @@
+<app-table
+  [data]="data"
+  [columns]="columns"
+  [total]="total"
+  [form]="ticketForm"
+  (onRowEvent)="goToDetails($event)"
+  [showPaginator]="showPaginator"
+  (onFormChanges)="emitServerSort($event)"
+  [selectedItemData]="selectedTicketData"
+  [icons]="TicketStagesIcons"
+  [loader]="loader"
+>
+</app-table>

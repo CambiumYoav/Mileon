@@ -327,3 +327,60 @@ style="margin: 10px;"
     [cancelButtonClass]="'outline-btn button-base'"
     [confirmButtonClass]="'primary-btn button-base'"
   ></app-confirmation-modal>
+
+
+  </div>
+
+
+  <div style="margin: 20px; display: flex; gap: 20px; flex-direction: column;"> 
+    small
+    <app-tag
+        [tagName]="'בהסדר'"
+        [tagId]="'7'"
+        [size]="'small'">
+    </app-tag>
+    <app-tag
+        [tagName]="'בזיכוי'"
+        [tagId]="'6'"
+        [size]="'small'">
+    </app-tag>
+    <app-tag
+        [tagName]="'חלקי'"
+        [tagId]="'5'"
+        [size]="'small'">
+    </app-tag>
+    large
+    <app-tag
+        [tagName]="'מוקפא'"
+        [tagId]="'4'"
+        [size]="'large'">
+    </app-tag>
+    <app-tag
+        [tagName]="'בוטל'"
+        [tagId]="'2'"
+        [size]="'large'">
+    </app-tag>
+    <app-tag
+        [tagName]="'פתוח'"
+        [tagId]="'3'"
+        [size]="'large'">
+    </app-tag>
+    <app-tag
+        [tagName]="'סגור'"
+        [tagId]="'1'"
+        [size]="'large'">
+    </app-tag>
+
+    <div class="row">
+      <app-tickets-table-new
+        [data]="list"
+        [total]="total"
+        [count]="count"
+        (onFormChanges)="loadData($event)"
+        [selectedTicketData]="selectedTicketData$"
+        tableColumns="TicketsNewColumns"
+        [loader]="loader"
+      >
+      </app-tickets-table-new>
+    </div>
+  </div>

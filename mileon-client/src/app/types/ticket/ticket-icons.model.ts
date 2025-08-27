@@ -27,7 +27,8 @@ export class TicketIcons {
     },
     {
       id: 5,
-      src: this.Icons.STAGE5,
+      src: this.Icons.STAGE4,
+      // src: this.Icons.STAGE5,
       displayName: 'הלבשה משרד הפנים',
     },
     {

@@ -24,6 +24,7 @@ import { UploadedFile } from '../../../types/uploadedFile';
 import { CheckboxOption } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
 import { Utils } from '../../../utils/utils';
 import { BaseComponents, SharedImports } from '../../../shared/shared-modules';
+import { FieldTypeEnum } from '../../../types/advanced-search/form-tab.model';
 
 
 @Component({
@@ -47,7 +48,7 @@ export class InfrastructureFormComponent implements OnInit {
   filesToUpload: UploadedFile[] = [];
   FileType = FileType;
   isEdit: boolean = false;
-  
+  FieldTypeEnum = FieldTypeEnum;
   // Add the 'of' operator for the select component
   of = of;
   constructor(

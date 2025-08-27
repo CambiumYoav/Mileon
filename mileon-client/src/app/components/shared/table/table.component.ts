@@ -51,43 +51,43 @@ export class TableComponent
   Icons = ConstPath;
   errorMsg: string = '';
 
-  @Input({ required: true })
+  @Input()
   columns?: Column[];
 
-  @Input({ required: true })
+  @Input()
   icon?: Icon | string;
 
-  @Input({ required: true })
+  @Input()
   data?: any[];
 
   @Input()
   total: number = 0;
 
-  @Input({ required: true })
+  @Input()
   form?: FormGroup;
 
   @Input()
   count?: number;
 
-  @Input({ required: true })
-  pageSize?: number;
+  @Input()
+  pageSize: number = 14;
 
-  @Input({ required: true })
+  @Input()
   showPaginator: boolean = true;
 
-  @Input({ required: true })
+  @Input()
   icons: Icon[] = [];
 
-  @Input({ required: true }) selectedItemData?: Subject<any>;
+  @Input() selectedItemData?: Subject<any>;
 
   selectedPage: number = 1;
 
-  @Input({ required: true })
+  @Input()
   parentComponentName!: string;
 
-  @Input({ required: true }) loader: boolean = true;
+  @Input() loader: boolean = true;
 
-  @Input({ required: true }) isCheckboxsSelected: boolean = true;
+  @Input() isCheckboxsSelected: boolean = true;
 
   data$: Observable<any[]>;
 
@@ -184,7 +184,7 @@ export class TableComponent
 
   setTableData() {
     this.tableService.columns = this.columns || [];
-    this.tableService.pageSize = this.pageSize || 14; 
+    this.tableService.pageSize = this.pageSize as number; 
     this.tableService.page = this.selectedPage;
     this.tableService.dataSubject$.next(this.data || []);
     this.tableService.totalSubject$.next(this.total);
@@ -242,9 +242,11 @@ export class TableComponent
     this.tableService.totalSubject$.next(0);
   }
 
-  getIconById(id: number) {
-    const icon = this.icons.find((icon) => icon.id === id) as Icon;
-    return icon;
+  getIconById(id: number): Icon | undefined {
+    if (!this.icons || !Array.isArray(this.icons) || !id) {
+      return undefined;
+    }
+    return this.icons.find((icon) => icon.id === id);
   }
 
   getIconPath(iconName: string | Icon | undefined): string {

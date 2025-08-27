@@ -1,0 +1,17 @@
+@import '../../../../styles/elements.scss';
+
+:host {
+    font-family: $fontOpenSans ;
+
+    .mat-datepicker-toggle {
+        height: 53px !important;
+        font-family: $fontOpenSans !important;
+    }
+
+    .input{
+        &::placeholder{
+            color: #C7C7C7;
+        }
+    }
+
+}
