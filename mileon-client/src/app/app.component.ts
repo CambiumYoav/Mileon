@@ -115,7 +115,7 @@ export class AppComponent {
       let dialogData = this.dialogData;
       if (!isEdit) {
         const form = new InfrastructureForms();
-        dialogData = form.InfrastructureTypeForm;
+        dialogData = form.InfrastructureChipsPetForm;
       }
       const dialogRef = this.dialog.open(dialogComponent, {
         data: { form: dialogData, title: 'עריכת רשומה', isEdit: isEdit, isSigns: false },

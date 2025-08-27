@@ -107,6 +107,9 @@ export class SelectService {
         const lookupMethod = (this.lookupNewService as any)[dataFunction.name];
         if (typeof lookupMethod === 'function') {
           res = (await lookupMethod(paramObj))[dataFunction.objName];
+        } else {
+          console.error(`Method ${dataFunction.name} not found in LookupNewService`);
+          return { isEndOfData: true, isServerSide: false };
         }
       } else {
         if (dataFunction.function) {
@@ -116,6 +119,9 @@ export class SelectService {
           const lookupMethod = (this.lookupNewService as any)[dataFunction.name];
           if (typeof lookupMethod === 'function') {
             res = await lookupMethod(paramObj);
+          } else {
+            console.error(`Method ${dataFunction.name} not found in LookupNewService`);
+            return { isEndOfData: true, isServerSide: false };
           }
         }
       }

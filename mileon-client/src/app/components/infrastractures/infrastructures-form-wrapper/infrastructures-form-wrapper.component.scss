@@ -2,33 +2,8 @@
 @import "../../../../styles/elements.scss";
 @import "../infrastructures.component.scss";
 
-// Field size classes
-.Regular-size {
-  width: 180px;
-}
-
-.Double-size {
-  width: 375px;
-}
-
-.Small-size {
-  width: 87.45px;
-}
-
-.Square-size {
-  width: 403px;
-}
-
-.Medium-size {
-  width: 250px;
-}
-
-.Large-size {
-  width: 761px;
-}
-
 .infrastructure-container {
-  width: 834px;
+  width: 930px;
   .inline-header {
     display: flex;
     align-items: center;
@@ -83,14 +58,10 @@
       padding: 20px;
       gap: 15px;
     }
-    .input {
-      background-color: white;
-    }
   }
 
   .form-container {
     display: flex;
-    width: 75%;
     flex-wrap: wrap;
     margin-bottom: 50px;
     flex-direction: column;
@@ -100,31 +71,23 @@
       flex-direction: row;
       gap: 15px;
       margin-bottom: 20px;
+      width: 100%;
     }
 
     .form-field {
       position: relative;
       display: flex;
       flex-direction: column;
+      min-width: 210px;
       
       .title-placeholder {
-        position: absolute;
-        top: -20px;
-        width: max-content;
-        font-size: 14px;
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 5px;
+        display: none;
         
         .required-icon {
           width: 8px;
           height: 8px;
           margin-right: 4px;
         }
-      }
-      
-      input, select, mat-form-field, app-input-text, app-input-date, app-select {
-        margin-top: 5px;
       }
     }
   }
@@ -134,21 +97,7 @@
     flex-direction: column;
     direction: rtl;
     gap: 20px;
-    
-    label {
-      position: absolute;
-      top: -20px;
-      width: max-content;
-    }
 
-    input {
-      background-color: #f7f9fc;
-      height: 40px;
-      width: 180px;
-      border-radius: 4px;
-      border: 1px solid #e3e7eb;
-      padding-right: 10px;
-    }
 
     .radio-container {
       display: flex;
@@ -182,9 +131,6 @@
       flex-direction: row;
       justify-content: space-between;
 
-      input {
-        width: 87.45px;
-      }
     }
 
     ::ng-deep mat-form-field {
@@ -263,8 +209,4 @@
   .required-icon {
     margin-bottom: 2px;
   }
-}
-
-::ng-deep app-input-date .input-fill {
-  background-color: white;
 }

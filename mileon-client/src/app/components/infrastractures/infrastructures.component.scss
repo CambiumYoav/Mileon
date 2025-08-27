@@ -9,12 +9,13 @@
       transform: translate(-50%, -50%);
     }
   }
+
   
   ::ng-deep .mat-mdc-dialog-surface {
       padding: 20px !important;
       height: auto !important;
       width: fit-content !important;
-      max-width: 90vw !important;
+      max-width: 93vw !important;
       min-width: 600px !important;
       position: fixed !important;
       top: 50% !important;
@@ -27,6 +28,9 @@
       overflow-y: auto !important;
       display: flex !important;
       animation: dropDown 0.3s ease-out !important;
+
+      scrollbar-width:thin;
+      scrollbar-color: #B0B0B0 #E9E9E9;
     }
     
   
@@ -91,58 +95,3 @@
     border: 1px solid var(--grey, #B9C6D4);
     background: var(--back, #F7F9FC);
   }
-
-.infrastructures-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  
-  h2 {
-    color: #333;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  p {
-    color: #666;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-}
-
-.test-inputs {
-  margin-top: 30px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  
-  h3 {
-    color: #333;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .input-group {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    background-color: white;
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #555;
-    }
-    
-    app-input-text,
-    app-input-date,
-    app-input-phone,
-    app-input-checkbox-option-group {
-      display: block;
-      width: 100%;
-    }
-  }
-}

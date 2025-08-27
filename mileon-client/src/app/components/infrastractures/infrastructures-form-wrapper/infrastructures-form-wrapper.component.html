@@ -14,9 +14,8 @@
           <div class="form-row" *ngFor="let row of formSections[0].rows">
             <!-- Loop through fields in each row -->
             <div
-              class="form-field"
+              [class]="'form-field' + field.size"
               *ngFor="let field of row.row"
-              [ngStyle]="{ width: field.size }"
               [ngClass]="{
                 disabled: !!field.disabled,
                 inputError: ((sectionsFormGroup.get(formSections[0].title)?.get(field.name)?.invalid || false) &&
@@ -179,9 +178,8 @@
           <div class="form-row" *ngFor="let row of formSections[1].rows">
             <!-- Loop through fields in each row -->
             <div
-              class="form-field"
+              [class]="'form-field' + field.size"
               *ngFor="let field of row.row"
-              [ngStyle]="{ width: field.size }"
               [ngClass]="{
                 disabled: !!field.disabled,
                 inputError: ((sectionsFormGroup.get(formSections[1].title)?.get(field.name)?.invalid || false) &&
