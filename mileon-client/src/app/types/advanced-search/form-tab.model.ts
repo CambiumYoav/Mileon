@@ -1,4 +1,4 @@
-import { display } from 'ngx-bootstrap-icons';
+// import { display } from 'ngx-bootstrap-icons';
 export interface AdvancedForm {
   tabs: Tab[];
 }
@@ -19,6 +19,7 @@ export interface Field {
   displayName: string;
   type: FieldType;
   length: FieldLength;
+  size?: FieldSize;
   dataFunction?: DataFunction;
   connectedField?: string;
   multipleSelect?: boolean; // only for type select
@@ -62,10 +63,19 @@ export enum FieldTypeEnum {
   Phone = 'phone',
   CheckboxWithOptions = 'checkboxOptions',
   SelectWithNoLookup = 'selectNoLookup',
+  Textarea = 'textarea',
 }
 
 export enum FieldLengthEnum {
+  ExtraLong = 'extraLong',
   Long = 'long',
   Medium = 'medium',
   Short = 'short',
+}
+
+export enum FieldSize {
+  Small = 'small',
+  Medium = 'medium',
+  Large = 'large',
+  ExtraLarge = 'extraLarge',
 }

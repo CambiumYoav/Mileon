@@ -1,0 +1,38 @@
+<div class="generic-modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="generic-modal" [ngClass]="getModalSizeClass()" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h4 class="modal-title">{{ config.title }}</h4>
+      <img
+        *ngIf="!config.hideExitIcon"
+        class="exit-icon"
+        [src]="Icons.EXIT"
+        (click)="closeModal()"
+        alt="Close"
+      />
+    </div>
+
+    <!-- Modal Message (if provided) -->
+    <div class="modal-message" *ngIf="config.message">
+      <p>{{ config.message }}</p>
+    </div>
+
+    <!-- Dynamic Component Container -->
+    <div class="modal-body" *ngIf="config.component">
+      <ng-container #componentContainer></ng-container>
+    </div>
+
+    <!-- Modal Footer with Buttons -->
+    <div class="modal-footer" *ngIf="config.buttons && config.buttons.length > 0">
+      <div class="button-container">
+        <app-button
+          *ngFor="let button of config.buttons"
+          [buttonText]="button.label"
+          (clickFunction)="buttonClicked(button)"
+          [buttonClass]="button.buttonClass || 'outline-btn button-base'"
+        >
+        </app-button>
+      </div>
+    </div>
+  </div>
+</div>

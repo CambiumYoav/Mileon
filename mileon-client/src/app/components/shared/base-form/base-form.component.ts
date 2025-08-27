@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SharedImports } from '../../../shared/shared-modules';
 import { FormGroup, FormControl, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { Observable, distinctUntilChanged, takeUntil, debounceTime } from 'rxjs';
-import { BaseComponent } from '../base/base.componenet';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-base-form',

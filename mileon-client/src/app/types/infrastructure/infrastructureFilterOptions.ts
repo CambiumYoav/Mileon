@@ -183,8 +183,8 @@ export class StreetsTypes {
     this.automationCode = args.automationCode || null;
     this.parkingAutomationCode = args.parkingAutomationCode || null;
     this.businessAutomationCode = args.businessAutomationCode || null;
-    this.isActive = args.isActive = true;
-    this.sendToDevice = args.sendToDevice = false;
+    this.isActive = args.isActive || true;
+    this.sendToDevice = args.sendToDevice || false;
     this.authority = args.authority || null;
     this.city = args.city || null;
     this.area = args.area || null;
@@ -298,13 +298,13 @@ export class CitizensTypes {
 }
 
 export class Street {
-  streetName: string;
+  streetName?: string;
 }
 export class City {
-  cityName: string;
+  cityName?: string;
 }
 export class Address {
-  street: Street;
+  street?: Street;
   addressId?: string;
   houseNumber?: string;
   apartment?: string;
@@ -360,7 +360,7 @@ export class ChipsTypes {
     this.lastName = args.lastName;
     this.addressId = args.addressId;
     this.address = args.address;
-    this.streetName = args.address?.street.streetName || args.streetName;
+    this.streetName = args.address?.street?.streetName || args.streetName;
     this.houseNumber = args.houseNumber;
     this.city = args.city;
     this.phone = args.phone;
@@ -571,8 +571,8 @@ export class CitizenPhones {
 }
 
 export class TicketType {
-  ticketTypeID: number;
-  ticketTypeName: string;
+  ticketTypeID?: number;
+  ticketTypeName?: string;
 }
 export class ViolationsTypes {
   violationID?: string | null;

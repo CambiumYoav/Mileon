@@ -9,13 +9,13 @@ export class Table {
 
 export class Column {
   /** List of options */
-  displayName: string;
-  propertyName: string;
+  displayName!: string;
+  propertyName!: string;
   sortField?: string;
   fieldId?: any;
-  canSort: boolean;
-  type: ColumnType;
-  sortByServer: boolean;
+  canSort!: boolean;
+  type!: ColumnType;
+  sortByServer!: boolean;
   hasIcon?: boolean;
   additionalText?: string;
   textOverflow?: boolean;
@@ -48,7 +48,8 @@ export enum ColumnTypeEnum {
   Dropdown = 'dll',
   SubStageIcon = 'subStageIcon',
   ActiveStatus= 'activeStatus',
-  Select='select'
+  Select='select',
+  Input = 'input'
 }
 
 // export class Row {

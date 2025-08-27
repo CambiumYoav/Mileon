@@ -1,0 +1,20 @@
+<div [class.disabled]="disabled">
+  <div class="inline-header">
+    <img *ngIf="isRequired" class="exit-icon" [src]="Icons.ASTERISK_RED" />
+    <div class="title-placeholder">{{ title }}</div>
+  </div>
+  <div class="phone-group" [ngClass]="!isValid ? 'invalidInput' : ''">
+    <!-- Combined Phone Input -->
+    <div class="input-fill phone-input">
+      <img class="call-icon" [src]="Icons.CALL" alt="phone icon" />
+      <input
+        class="hide-border-input input-text"
+        [placeholder]="combinedPlaceholder"
+        [formControl]="combinedPhoneControl"
+        maxlength="14"
+        type="text"
+      />
+    </div>
+  </div>
+  <span *ngIf="!isValid" class="error">{{ errorMessage }}</span>
+</div>

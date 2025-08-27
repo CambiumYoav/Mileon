@@ -1,0 +1,388 @@
+<div class="infrastructure-container p-4">
+  <div class="inline-header">
+    <h5 class="title">{{ mainTitle }}</h5>
+    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+  </div>
+  <form [formGroup]="sectionsFormGroup" (ngSubmit)="onSubmit()">
+    <!-- Loop through sections -->
+    <div class="form-section-owner">
+      <fieldset>
+        <!-- Section Title -->
+        <h5 class="form-section-title">{{ formSections[0].title }}</h5>
+        <div class="form-container" [formGroupName]="formSections[0].title">
+          <!-- Loop through rows in the section -->
+          <div class="form-row" *ngFor="let row of formSections[0].rows">
+            <!-- Loop through fields in each row -->
+            <div
+              [class]="'form-field' + field.size"
+              *ngFor="let field of row.row"
+              [ngClass]="{
+                disabled: !!field.disabled,
+                inputError: ((sectionsFormGroup.get(formSections[0].title)?.get(field.name)?.invalid || false) &&
+                            (sectionsFormGroup.get(formSections[0].title)?.get(field.name)?.touched || false)) ||
+                           (isSubmitted && (sectionsFormGroup.get(formSections[0].title)?.get(field.name)?.errors?.['required'] || false))
+              }"
+            >
+              <ng-container *ngIf="!field.hide">
+                <label class="title-placeholder" [for]="field.name">
+                  <img
+                    *ngIf="field.isRequired"
+                    class="required-icon"
+                    [src]="Icons.ASTERISK_RED"
+                  />
+                  {{ field.label }}
+                </label>
+                <ng-container [ngSwitch]="field.type">
+                  <!-- Text Input -->
+                  <app-input-text
+                    *ngSwitchCase="'text'"
+                    [id]="field.name"
+                    [placeholder]="field.label"
+                    [title]="field.label"
+                    [formControlName]="field.name"/>
+
+                  <!-- Number Input -->
+                  <app-input-text
+                    *ngSwitchCase="'number'"
+                    [id]="field.name"
+                    [placeholder]="field.label"
+                    [title]="field.label"
+                    [formControlName]="field.name"
+                  />
+
+                  <app-input-date
+                    *ngSwitchCase="'date'"
+                    [ngStyle]="{ height: '40px', width: '180px' }"
+                    [placeholder]="field.label"
+                    [title]="field.label"
+                    [isValid]="isFieldValid(field.name, formSections[0].title)"
+                    [formControlName]="field.name"
+                  ></app-input-date>
+
+                  <!-- Select Dropdown -->
+                  <app-select
+                    *ngSwitchCase="'select'"
+                    fxFill
+                    appearance="outline"
+                    [placeholder]="field.label || ''"
+                    [bindLabelKeys]="field.bindLabelKeys"
+                    [formControlName]="field.name || ''"
+                    [dataFunction]="field.dataFunction"
+                    [options]="field.options || []"
+                    searchPlaceholder="חיפוש"
+                    bindLabelKey="display"
+                    bindValueKey="value"
+                    [isMultiSelect]="field.isMultiSelect || false"
+                    [title]="field.label || ''"
+                  ></app-select>
+
+                  <app-select
+                    *ngSwitchCase="'selectWithLookup'"
+                    [ngStyle]="{ height: '40px', width: '180px' }"
+                    fxFill
+                    appearance="outline"
+                    [placeholder]="field.label || ''"
+                    [bindLabelKeys]="field.bindLabelKeys"
+                    [formControlName]="field.name || ''"
+                    [dataFunction]="field.dataFunction"
+                    [options]="field.options || []"
+                    searchPlaceholder="חיפוש"
+                    bindLabelKey="display"
+                    bindValueKey="value"
+                    [isMultiSelect]="field.isMultiSelect || false"
+                    [title]="field.label || ''"
+                  ></app-select>
+
+                  <!-- Checkbox -->
+                  <ng-container *ngSwitchCase="'checkbox'">
+                    <app-input-checkbox
+                      [title]="field.label"
+                      [formControlName]="field.name"
+                    ></app-input-checkbox>
+                  </ng-container>
+
+                  <!-- From-To Input -->
+                  <ng-container *ngSwitchCase="'fromTo'">
+                    <div class="fromTo-container" formGroupName="{{ field.name }}">
+                      <input
+                        *ngFor="let fromToField of field.fields"
+                        [id]="fromToField.name"
+                        type="text"
+                        [formControlName]="fromToField.name"
+                        [name]="fromToField.name"
+                        [placeholder]="fromToField.placeholder"
+                      />
+                    </div>
+                  </ng-container>
+
+                  <!-- Phone Input -->
+                  <app-input-phone
+                    *ngSwitchCase="'phone'"
+                    [title]="field.label" 
+                    [placeholder]="field.label"
+                    [isRequired]="field.isRequired"
+                    [isValid]="isFieldValid(field.name, formSections[0].title)"
+                    [formControlName]="field.name"
+                  ></app-input-phone>
+
+                  <ng-container *ngSwitchCase="'radio'">
+                    <div class="d-flex">
+                      <div
+                        class="radio-container"
+                        *ngFor="let option of field.options"
+                      >
+                        <input
+                          [id]="field.name + '-' + option.value"
+                          type="radio"
+                          [formControlName]="field.name"
+                          [name]="field.name"
+                          [value]="option.value"
+                          class="form-radio"
+                        />
+                        <p>{{ option.display }}</p>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+
+                <!-- Validation Errors -->
+                <!-- <div
+                  *ngIf="
+                    sectionsFormGroup.get(section.title)?.get(field.name)
+                      ?.invalid &&
+                    sectionsFormGroup.get(section.title)?.get(field.name)
+                      ?.touched
+                  "
+                  class="validation-errors"
+                >
+                  <small
+                    *ngIf="
+                      sectionsFormGroup
+                        .get(section.title)
+                        ?.get(field.name)?.errors?.['required']
+                    "
+                  >
+                  </small>
+                </div> -->
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="form-section-pet">
+      <fieldset>
+        <!-- Section Title -->
+        <h5 class="form-section-title">{{ formSections[1].title }}</h5>
+        <div class="form-container" [formGroupName]="formSections[1].title">
+          <!-- Loop through rows in the section -->
+          <div class="form-row" *ngFor="let row of formSections[1].rows">
+            <!-- Loop through fields in each row -->
+            <div
+              [class]="'form-field' + field.size"
+              *ngFor="let field of row.row"
+              [ngClass]="{
+                disabled: !!field.disabled,
+                inputError: ((sectionsFormGroup.get(formSections[1].title)?.get(field.name)?.invalid || false) &&
+                            (sectionsFormGroup.get(formSections[1].title)?.get(field.name)?.touched || false)) ||
+                           (isSubmitted && (sectionsFormGroup.get(formSections[1].title)?.get(field.name)?.errors?.['required'] || false))
+              }"
+            >
+              <ng-container *ngIf="!field.hide">
+                <label class="title-placeholder" [for]="field.name">
+                  <img
+                    *ngIf="field.isRequired"
+                    class="required-icon"
+                    [src]="Icons.ASTERISK_RED"
+                  />
+                  {{ field.label }}
+                </label>
+                <ng-container [ngSwitch]="field.type">
+                  <!-- Text Input -->
+                  <app-input-text
+                    class="input"
+                    *ngSwitchCase="'text'"
+                    [placeholder]="field.label"
+                    [id]="field.name"
+                    [title]="field.label"
+                    [formControlName]="field.name"
+                  />
+
+                  <!-- Number Input -->
+                  <app-input-text 
+                    class="input"
+                    *ngSwitchCase="'number'"
+                    [id]="field.name"
+                    [placeholder]="field.label"
+                    [title]="field.label"
+                    [formControlName]="field.name"
+                  />
+
+                  <app-input-date
+                    *ngSwitchCase="'date'"
+                    [title]="field.label"
+                    [isValid]="isFieldValid(field.name, formSections[1].title)"
+                    [formControlName]="field.name"
+                  ></app-input-date>
+
+                  <!-- Select Dropdown
+                  <mat-form-field appearance="fill" *ngSwitchCase="'select'">
+                    <mat-select
+                      [id]="field.name"
+                      [formControlName]="field.name"
+                      [value]="field.value"
+                    >
+                      <mat-option
+                        *ngFor="let option of field.options"
+                        [value]="option.value"
+                      >
+                        {{ option.display }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="
+                        sectionsFormGroup
+                          .get(formSections[1].title)
+                          ?.get(field.name)
+                          ?.hasError('required')
+                      "
+                    >
+                      שדה זה הוא חובה
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        sectionsFormGroup
+                          .get(formSections[1].title)
+                          ?.get(field.name)
+                          ?.hasError('pattern') &&
+                        !sectionsFormGroup
+                          .get(formSections[1].title)
+                          ?.get(field.name)
+                          ?.hasError('required')
+                      "
+                    >
+                      ערך לא תקין
+                    </mat-error>
+                  </mat-form-field> -->
+
+                  <app-select
+                    *ngSwitchCase="'select'"
+                    fxFill
+                    appearance="outline"
+                    [placeholder]="field.label || ''"
+                    [bindLabelKeys]="field.bindLabelKeys"
+                    [formControlName]="field.name || ''"
+                    [dataFunction]="field.dataFunction"
+                    [options]="field.options || []"
+                    searchPlaceholder="חיפוש"
+                    bindLabelKey="display"
+                    bindValueKey="value"
+                    [isMultiSelect]="field.isMultiSelect || false"
+                    [title]="field.label || ''"
+                  ></app-select>
+
+                  <app-select
+                    *ngSwitchCase="'selectWithLookup'"
+                    [ngStyle]="{ height: '40px', width: '180px' }"
+                    fxFill
+                    appearance="outline"
+                    [placeholder]="field.label || ''"
+                    [bindLabelKeys]="field.bindLabelKeys"
+                    [formControlName]="field.name || ''"
+                    [dataFunction]="field.dataFunction"
+                    [options]="field.options || []"
+                    searchPlaceholder="חיפוש"
+                    bindLabelKey="display"
+                    bindValueKey="value"
+                    [isMultiSelect]="field.isMultiSelect || false"
+                    [title]="field.label || ''"
+                  ></app-select>
+
+                  <!-- Checkbox -->
+                  <ng-container *ngSwitchCase="'checkbox'">
+                    <app-input-checkbox
+                      [title]="field.label"
+                      [formControlName]="field.name"
+                    ></app-input-checkbox>
+                  </ng-container>
+
+                  <!-- From-To Input -->
+                  <ng-container *ngSwitchCase="'fromTo'">
+                    <div class="fromTo-container" formGroupName="{{ field.name }}">
+                      <input
+                        *ngFor="let fromToField of field.fields"
+                        [id]="fromToField.name"
+                        type="text"
+                        [formControlName]="fromToField.name"
+                        [name]="fromToField.name"
+                        [placeholder]="fromToField.placeholder"
+                      />
+                    </div>
+                  </ng-container>
+
+                  <!-- Phone Input -->
+                  <app-input-phone
+                    *ngSwitchCase="'phone'"
+                    [title]="field.label"
+                    [placeholder]="field.label"
+                    [isRequired]="field.isRequired"
+                    [isValid]="isFieldValid(field.name, formSections[1].title)"
+                    [formControlName]="field.name"
+                  ></app-input-phone>
+
+                  <ng-container *ngSwitchCase="'radio'">
+                    <div class="d-flex">
+                      <div
+                        class="radio-container"
+                        *ngFor="let option of field.options"
+                      >
+                        <input
+                          [id]="field.name + '-' + option.value"
+                          type="radio"
+                          [formControlName]="field.name"
+                          [name]="field.name"
+                          [value]="option.value"
+                          class="form-radio"
+                        />
+                        <p>{{ option.display }}</p>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+
+                <!-- Validation Errors -->
+                <!-- <div
+                  *ngIf="
+                    sectionsFormGroup.get(section.title)?.get(field.name)
+                      ?.invalid &&
+                    sectionsFormGroup.get(section.title)?.get(field.name)
+                      ?.touched
+                  "
+                  class="validation-errors"
+                >
+                  <small
+                    *ngIf="
+                      sectionsFormGroup
+                        .get(section.title)
+                        ?.get(field.name)?.errors?.['required']
+                    "
+                  >
+                  </small>
+                </div> -->
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-container">
+      <app-button
+        [buttonText]="'שמור שינויים'"
+        (clickFunction)="onSubmit()"
+      ></app-button>
+    </div>
+  </form>
+</div>

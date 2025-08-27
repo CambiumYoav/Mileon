@@ -1,0 +1,7 @@
+<div class="results-container" dir="rtl">
+  <ul class="results-list">
+    <li class="result-item" *ngFor="let item of getUniqueOptions(); index as i" (click)="goToDetails(item)">
+      <span class="option-text">{{ item.displayValue }}</span>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,15 @@
+<div class="wrap-content-card">
+    <div class="wrap-details">
+        <div class="content-card">
+            <div class="wrap-content">
+                <div class="wrap-reserved">
+                    <span class="reserved" [ngClass]="{'chosen': isChosen(r.id)}"
+                        (click)="addOrRemoveComment(r.id)" *ngFor="let r of reservedComments">
+                        {{r.content}}
+                    </span>
+                </div>
+                <textarea class="content" placeholder="הוסף טקסט" [(ngModel)]="newComment.text"></textarea>  
+            </div>
+        </div>
+    </div>
+</div>

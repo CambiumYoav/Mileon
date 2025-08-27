@@ -1,0 +1,694 @@
+// Custom Material Date Picker Styling
+// This file overrides Angular Material's default date picker styles
+
+// Import Material theming
+@use '@angular/material' as mat;
+
+// ============================================================================
+// DATE PICKER CONTENT OVERLAY
+// ============================================================================
+.mat-datepicker-content {
+  position: relative !important;
+  top: 15px !important;
+  right: -13px !important;
+  background: #FFF !important;
+  border-radius: 4px !important;
+  border: 1px solid #F5F7FA !important;
+  box-shadow: 0 6px 12px 0 rgba(171, 190, 209, 0.30) !important;
+}
+
+
+// ============================================================================
+// CALENDAR STRUCTURE
+// ============================================================================
+::ng-deep {
+  // Override Material's default calendar positioning
+  .mat-calendar-body-cell {
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .mat-calendar-body-cell-content {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+  }
+  // Main calendar container
+  .mat-calendar {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 300px !important;
+    direction: rtl !important;
+  }
+
+  // Calendar body
+  .mat-calendar-body {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    flex: 1 !important;
+    min-height: 250px !important;
+    padding: 8px 0 !important;
+  }
+
+  // Calendar table
+  .mat-calendar-table {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-collapse: separate !important;
+    border-spacing: 4px !important;
+    width: 100% !important;
+  }
+
+  // Calendar table header
+  .mat-calendar-table-header {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    margin-bottom: 8px !important;
+    gap: 21px;
+    
+    th {
+      padding: 12px 8px !important;
+      font-weight: 500 !important;
+      color: #333 !important;
+      text-align: center !important;
+      font-size: 14px !important;
+      direction: rtl !important;
+      font-family: 'Assistant', 'Open Sans', sans-serif !important;
+    }
+  }
+
+  // Calendar body table
+  .mat-calendar-body-table {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    flex: 1 !important;
+    margin: 0 auto !important;
+  }
+
+  // Calendar body rows
+  .mat-calendar-body-row {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    flex: 1 !important;
+    gap: 4px !important;
+  }
+
+  // Calendar body header
+  .mat-calendar-body-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 16px !important;
+    width: 100% !important;
+  }
+
+
+  // Calendar body cells
+  .mat-calendar-body-cell {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    direction: rtl !important;
+    text-align: center !important;
+    padding: 0 !important;
+    position: relative !important;
+  }
+
+  .mat-calendar-body-cell-content {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    direction: rtl !important;
+    text-align: center !important;
+    width: 90% !important;
+    height: 90% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  
+
+  // Previous/Next month dates
+  .mat-calendar-body-in-preview,
+  .mat-calendar-body-out-preview {
+    color: #666 !important;
+    opacity: 0.8 !important;
+    font-weight: 400 !important;
+    
+    &:hover {
+      background: #f8f9fa !important;
+      color: #333 !important;
+      opacity: 1 !important;
+    }
+  }
+
+  // Make previous month dates more visible
+  .mat-calendar-body-in-preview {
+    color: #555 !important;
+    opacity: 0.9 !important;
+    font-weight: 500 !important;
+  }
+}
+
+.mat-calendar {
+  width: 400px !important;
+  height: 400px !important;
+}
+
+
+
+.mat-calendar-content {
+  padding: 0 24px !important;
+}
+
+
+  // Calendar body label
+  .mat-calendar-body-label {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: transparent !important;
+    text-align: center !important;
+    flex: 1 !important;
+  }
+
+  .mat-calendar-body-cell,
+  .mat-calendar-body-cell::after,
+  .mat-calendar-body-cell::before{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    align-self: stretch !important;
+    gap: 21px !important;
+    direction: rtl !important;
+  }
+
+// Date buttons
+.mat-calendar-body-cell-content {
+  // border: none !important;
+  border-radius: 4px !important;
+  // background: transparent !important;
+  // color: #333 !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 20px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  
+  &:hover {
+    background: #f0f8ff !important;
+    color: #007bff !important;
+  }
+  
+  &.mat-calendar-body-selected {
+    border-radius: 4px !important;
+    background: var(--meilon-light-blue, #86D0F7) !important;
+  }
+  
+  &.mat-calendar-body-today {
+    border: 2px solid #007bff !important;
+    color: #007bff !important;
+    font-weight: 600 !important;
+  }
+  
+  &.mat-calendar-body-disabled {
+    color: #ccc !important;
+    cursor: not-allowed !important;
+    
+    &:hover {
+      background: transparent !important;
+      color: #ccc !important;
+    }
+  }}
+
+// ============================================================================
+// CALENDAR CONTROLS
+// ============================================================================
+
+.mat-calendar-header{
+  padding: 12px 24px 8px 24px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  align-self: stretch !important;
+  gap: 21px !important;
+  direction: rtl !important;
+}
+
+.mat-calendar-controls {
+  margin: 0 auto !important;
+  direction: rtl !important;
+  position: relative !important;
+
+  .mat-calendar-next-button {
+    order: 1 !important;
+    margin-left: auto !important;
+  }
+
+  .mat-calendar-previous-button {
+    order: 3 !important;
+    margin-right: auto !important;
+  }
+  
+  .mat-calendar-period-button {
+    order: 2 !important;
+    flex: none !important;
+    text-align: center !important;
+    color: #387EC4 !important;
+    font-size: 18px !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    line-height: 24px !important;
+    font-family: 'Assistant', 'Open Sans', sans-serif !important;
+  }
+}
+
+// ============================================================================
+// NAVIGATION BUTTONS
+// ============================================================================
+.mat-calendar-next-button,
+.mat-calendar-previous-button {
+  background: none !important;
+  color: #387EC4 !important;
+  border: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+  
+  .mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+// ============================================================================
+// PERIOD BUTTON
+// ============================================================================
+::ng-deep .mat-calendar-period-button {
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+// ============================================================================
+// FORM FIELD STYLING
+// ============================================================================
+.mat-form-field {
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+  
+  .mat-form-field-underline {
+    display: none !important;
+  }
+  
+  .mat-form-field-infix {
+    padding: 0 !important;
+    border: none !important;
+  }
+  
+  .mat-form-field-suffix {
+    top: 0 !important;
+  }
+}
+
+// ============================================================================
+// INPUT STYLING
+// ============================================================================
+input.mat-input-element {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 14px !important;
+  color: #333 !important;
+  
+  &::placeholder {
+    color: #999 !important;
+  }
+  
+  &:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
+
+
+// ============================================================================
+// SELECT PANEL STYLING
+// ============================================================================
+::ng-deep .mat-mdc-select-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 1000 !important;
+  
+  // Position scrollbar under the input
+  &::-webkit-scrollbar {
+    width: 100% !important;
+    height: 6px !important;
+    position: absolute !important;
+    bottom: -6px !important;
+    left: 0 !important;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 3px !important;
+    margin: 0 14px !important;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1 !important;
+    border-radius: 3px !important;
+    
+    &:hover {
+      background: #a8a8a8 !important;
+    }
+  }
+}
+
+
+.mat-mdc-select-panel {
+  border-radius: 4px !important;
+  border: none !important;
+  background: #FFF !important;
+  box-shadow: 0 0 12px -1px #D2DBE8 !important;
+  display: flex !important;
+  width: 210px !important;
+  flex-direction: column !important;
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  flex-shrink: 0 !important;
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  z-index: 1000 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+// Also target the older class for backward compatibility
+.mat-select-panel-animations-enabled {
+  border-radius: 4px !important;
+  border: none !important;
+  background: #FFF !important;
+  box-shadow: 0 0 12px -1px #D2DBE8 !important;
+  display: flex !important;
+  width: 210px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: 280px !important;
+  flex-direction: column !important;
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  flex-shrink: 0 !important;
+  margin-top: 10px !important;
+  margin-left: -14px !important;
+  position: relative !important;
+  
+  // Position scrollbar under the input
+  &::-webkit-scrollbar {
+    width: 100% !important;
+    height: 6px !important;
+    position: absolute !important;
+    bottom: -6px !important;
+    left: 0 !important;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 3px !important;
+    margin: 0 14px !important;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1 !important;
+    border-radius: 3px !important;
+    
+    &:hover {
+      background: #a8a8a8 !important;
+    }
+  }
+}
+
+
+.mat-calendar-body-in-range {
+  background: #D3F0FF !important;
+}
+
+
+
+  .mat-calendar-body-cell-preview,
+  .mat-calendar-body-cell-preview::after {
+    content: none !important;
+    display: none !important;
+    background: #D3F0FF !important;
+    border: none !important;
+  }
+
+  
+// ============================================================================
+// UTILITY CLASSES
+// ============================================================================
+.mdc-button__label polygon {
+  display: none !important;
+}
+
+.mat-calendar-table-header-divider {
+  display: none !important;
+}
+
+// ============================================================================
+// FOCUS STYLES
+// ============================================================================
+::ng-deep .mat-calendar-body-cell-content:focus {
+  outline: 2px solid #007bff !important;
+  outline-offset: 2px !important;
+}
+
+// ============================================================================
+// CALENDAR ICON STYLING
+// ============================================================================
+.calendarImg {
+  opacity: 0.7 !important;
+  transition: opacity 0.2s ease !important;
+  
+  &:hover {
+    opacity: 1 !important;
+  }
+}
+
+// ============================================================================
+// DATE PICKER ACTIONS
+// ============================================================================
+.mat-datepicker-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 15px !important;
+  padding: 0 24px !important;
+}
+
+// ============================================================================
+// OVERLAY POSITIONING
+// ============================================================================
+.cdk-overlay-pane {
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  direction: rtl !important;
+  position: absolute !important;
+  top: 10px !important;
+  left: 10px !important;
+}
+
+// Select panel specific overlay positioning
+.mat-select-panel {
+  margin-top: 5px !important;
+  position: absolute !important;
+  top: 10% !important;
+  left: 0 !important;
+}
+
+
+// Also target the older class for backward compatibility
+::ng-deep .mat-select-panel {
+  margin-top: 5px !important;
+  margin-left: 0 !important;
+  transform: translateY(0) !important;
+  top: 10% !important;
+  left: 0 !important;
+}
+
+
+// Select option group styling
+.mat-select-panel .mat-optgroup {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+// Select option group label styling
+.mat-select-panel .mat-optgroup-label {
+  padding: 8px 10px !important;
+  direction: rtl !important;
+  text-align: right !important;
+  font-weight: 500 !important;
+  color: #333 !important;
+  text-align: right !important;
+}
+
+// Override Material's default select panel positioning - using MDC classes
+::ng-deep .cdk-overlay-pane.mat-mdc-select-panel {
+  margin-top: 5px !important;
+  margin-left: 0 !important;
+  transform: translateY(0) !important;
+  top: 10% !important;
+  left: 0 !important;
+}
+
+// Also target the older class for backward compatibility
+::ng-deep .cdk-overlay-pane.mat-select-panel {
+  margin-top: 5px !important;
+  margin-left: 0 !important;
+  transform: translateY(0) !important;
+  top: 10% !important;
+  left: 0 !important;
+}
+
+
+
+// Also target the older class for backward compatibility
+::ng-deep .mat-select-panel {
+  position: absolute !important;
+  top: 10% !important;
+  left: 0 !important;
+  margin-top: 5px !important;
+  margin-left: 0 !important;
+  z-index: 1000 !important;
+}
+
+// Fix for the select trigger positioning - using MDC classes
+::ng-deep .mat-mdc-select-trigger {
+  position: relative !important;
+}
+
+// Also target the older class for backward compatibility
+::ng-deep .mat-select-trigger {
+  position: relative !important;
+}
+
+// Additional MDC select field styling
+::ng-deep .mat-mdc-form-field {
+  .mat-mdc-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+  
+  .mat-mdc-form-field-underline {
+    display: none !important;
+  }
+  
+  .mat-mdc-form-field-infix {
+    padding: 0 !important;
+    border: none !important;
+  }
+  
+  .mat-mdc-form-field-suffix {
+    top: 0 !important;
+  }
+}
+
+
+
+// ============================================================================
+// RESPONSIVE DESIGN
+// ============================================================================
+@media (max-width: 480px) {
+  .mat-datepicker-content {
+    padding: 12px !important;
+    margin: 8px !important;
+  }
+  
+  .mat-datepicker-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+    
+    .mat-button-base {
+      width: 100% !important;
+      justify-content: center !important;
+    }
+  }
+}
+
+// ============================================================================
+// HEBREW TEXT SUPPORT
+// ============================================================================
+[dir="rtl"] .mat-calendar-body-cell-content {
+  font-family: 'Assistant', 'Open Sans', sans-serif !important;
+}
+
+// ============================================================================
+// CUSTOM SCROLLBAR
+// ============================================================================
+.mat-datepicker-content::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.mat-datepicker-content::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+  border-radius: 3px !important;
+}
+
+.mat-datepicker-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1 !important;
+  border-radius: 3px !important;
+  
+  &:hover {
+    background: #a8a8a8 !important;
+  }
+}

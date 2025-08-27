@@ -8,9 +8,7 @@ export interface Status {
     [key: number]: StatusAttributes;
 }
 
-export class StatusAttributes {
+export interface StatusAttributes {
     bgColor: ColorsHex;
     textColor: ColorsHex;
 }
-
-type StatusOptions = 'Active' | 'NotActive' | 'Bakasha';

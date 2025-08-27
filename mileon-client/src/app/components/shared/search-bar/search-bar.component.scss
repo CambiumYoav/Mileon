@@ -1,0 +1,545 @@
+:host ::ng-deep mat-datepicker-toggle {
+  .mat-icon {
+    line-height: 0;
+    cursor: pointer;
+  }
+  
+}
+
+
+form {
+  position: relative;
+  width: 100%;
+  
+}
+
+.search-area {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  z-index: 1000 !important;
+
+  .start {
+    width:  100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .search-icon {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--blue, #387EC4);
+      text-align: right;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;      
+
+      &::placeholder {
+        color: var(--blue, #387EC4);
+      }
+
+      // Styles when input has value
+      // &:not(:placeholder-shown){
+      //   color: var(--black, #000);
+      //   text-align: right;
+      //   font-size: 24px;
+      //   font-style: normal;
+      //   font-weight: 400;
+      //   line-height: normal;
+      // }
+    }
+
+    .text{
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  
+
+    // Error state for the container
+    &.error,
+    &.ng-invalid.ng-touched {
+      border-radius: 8px;
+      border: 1px solid var(--red, #F00);
+      background: var(--white, #FFF);
+      box-shadow: 0 0 8px 0 rgba(255, 36, 36, 0.59);
+    }
+
+    // Disabled state for the container
+    &:disabled,
+    &.disabled {
+      background: #E3E7EB;
+      border-color: #606060;
+      cursor: not-allowed;
+      opacity: 0.6;
+      
+      .search-icon {
+        opacity: 0.5;
+      }
+      
+      .text {
+        color: #606060;
+      }
+    }
+  }
+  
+  .end {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .clear-icon,
+    #filter-icon {
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+      
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// Error message styles
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  
+  .error-text {
+    color: var(--red, #F00);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    padding: 8px 16px;
+    background-color: rgba(255, 0, 0, 0.1);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+  }
+}
+
+// Search bar size variants
+.search-bar-sm {
+  .search-area {
+    border-radius: 8px;
+    border: 1px solid var(--melion-blue, #21527D);
+    background: var(--white, #FFF);
+    width: 500px;
+    height: 64px;
+    flex-shrink: 0;
+    padding: 15px 20px; 
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .start {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input{
+      display: none;
+    }
+
+
+
+    
+    .text {
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      gap: 14px;
+    }
+  }
+}
+
+
+.search-bar-md {
+  .search-area {
+    border-radius: 8px;
+    border: 1px solid var(--melion-blue, #21527D);
+    background: var(--white, #FFF);
+    width: 800px;
+    height: 64px;
+    flex-shrink: 0;
+    padding: 15px 20px; 
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .start {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input{
+      &:not(:placeholder-shown){
+        color: var(--black, #000);
+        text-align: right;
+        font-family: "Open Sans";
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+      }
+    }
+
+
+    
+    .text {
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  }
+}
+
+.search-bar-lg {
+  .search-area {
+    border-radius: 8px;
+    border: 1px solid var(--melion-blue, #21527D);
+    background: var(--white, #FFF);
+    width: 1100px;
+    height: 64px;
+    flex-shrink: 0;
+    padding: 15px 20px; 
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .start {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input{
+      &:not(:placeholder-shown){
+        color: var(--black, #000);
+        text-align: right;
+        font-family: "Open Sans";
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+      }
+    }
+
+    
+    .text {
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  }
+}
+
+.search-bar-base {
+  .search-area {
+    border-radius: 8px;
+    border: 1px solid var(--melion-blue, #21527D);
+    background: var(--white, #FFF);
+    width: 100%;
+    height: 64px;
+    flex-shrink: 0;
+    padding: 15px 20px; 
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .start {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input{
+      &:not(:placeholder-shown){
+        color: var(--black, #000);
+        text-align: right;
+        font-family: "Open Sans";
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+      }
+    }
+
+    
+    .text {
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  }
+}
+
+.search-bar-xl {
+  .search-area {
+    border-radius: 8px;
+    border: 1px solid var(--melion-blue, #21527D);
+    background: var(--white, #FFF);
+    width: 100%;
+    height: 64px;
+    flex-shrink: 0;
+    padding: 15px 20px; 
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .start {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input{
+      &:not(:placeholder-shown){
+        color: var(--black, #000);
+        text-align: right;
+        font-family: "Open Sans";
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+      }
+    }
+
+    
+    .text {
+      color: var(--black, #000);
+      text-align: right;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  }
+}
+
+
+// Theme variations
+.search-bar-primary {
+  .search-area {
+    border-color: #007bff;
+    
+    &:focus-within {
+      border-color: #0056b3;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+  }
+}
+
+.search-bar-success {
+  .search-area {
+    border-color: #28a745;
+    
+    &:focus-within {
+      border-color: #1e7e34;
+      box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+    }
+  }
+}
+
+.search-bar-warning {
+  .search-area {
+    border-color: #ffc107;
+    
+    &:focus-within {
+      border-color: #e0a800;
+      box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.25);
+    }
+  }
+}
+
+.search-bar-danger {
+  .search-area {
+    border-color: #dc3545;
+    
+    &:focus-within {
+      border-color: #c82333;
+      box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+    }
+  }
+}
+
+
+
+// Responsive design
+@media (max-width: 768px) {
+  form {
+    max-width: 100%;
+  }
+  
+  .search-area {
+    .start {
+      .text {
+        display: none; // Hide the search title on small screens
+      }
+    }
+    
+    .end {
+      padding-right: 8px;
+      gap: 4px;
+    }
+  }
+  
+  // Adjust sizes for mobile
+  .search-bar-lg,
+  .search-bar-xl {
+    .search-area {
+      height: 56px;
+      
+      .input {
+        height: 56px;
+        padding: 12px 16px;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .search-area {
+    .start {
+      padding-left: 8px;
+      
+      .search-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 6px;
+      }
+    }
+    
+    .end {
+      padding-right: 6px;
+    }
+  }
+  
+  .search-bar-md,
+  .search-bar-lg,
+  .search-bar-xl {
+    .search-area {
+      height: 48px;
+      
+      .input {
+        height: 48px;
+        padding: 10px 14px;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-period-button {
+  font-family: 'Assistant', 'Open Sans', sans-serif !important;
+  font-weight: 700 !important;
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-table-header th {
+  font-family: 'Assistant', 'Open Sans', sans-serif !important;
+  font-weight: 500 !important;
+  direction: rtl !important;
+  text-align: center !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-controls {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-body {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-table {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-body-row {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-body-cell {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-picker .mat-calendar-header {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-date-range-input {
+  direction: rtl !important;
+  
+  input {
+    text-align: right !important;
+    font-family: 'Assistant', 'Open Sans', sans-serif !important;
+    direction: rtl !important;
+  }
+}
+
+// Additional RTL styling for the date picker overlay
+::ng-deep .mat-datepicker-content {
+  direction: rtl !important;
+}
+
+::ng-deep .mat-datepicker-actions {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+}
+
+// Ensure the calendar icon displays properly in RTL
+::ng-deep .mat-datepicker-toggle {
+  direction: rtl !important;
+}
+
+.selected-date-range {
+  text-align: right !important;
+  direction: rtl !important;
+  font-family: 'Assistant', 'Open Sans', sans-serif !important;
+  margin-top: 8px;
+    
+  span {
+    color: var(--blue, #387EC4);
+    font-size: 14px;
+    font-weight: 500;
+  }
+}

@@ -1,0 +1,15 @@
+.green-checkbox {
+    input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      box-sizing: border-box;
+      background: #f7f9fc;
+      border: 1px solid #002741;
+      border-radius: 4px;
+      cursor: pointer;
+      &:checked {
+        accent-color: #3b9968;
+      }
+    }
+  }
+  

@@ -1,0 +1,125 @@
+@import "../../../../../styles/elements.scss";
+
+:host {
+  position: relative;
+  direction: rtl;
+  font-family: $fontOpenSans;
+
+  .document-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border: none;
+
+    &.card {
+      height: auto;
+      border-radius: 8px !important;
+      box-shadow: none;
+
+          &.failed {
+      background-color: #FFE0E3 !important;
+
+       .error-icon {
+        width: 20px;
+        height: 20px;
+       }
+
+       .primary-error {
+        color: #0C3058;
+        font-weight: bold;
+        font-size: 16px;
+       }
+
+       .secondary-error {
+        color: #666;
+        font-size: 14px;
+       }
+
+       }
+    }
+    }
+
+    .file-info-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 87px;
+      padding: 8.167px 22px;
+      border-radius: 8px;
+      background: var(--light-blue, #D3F0FF);
+
+      &:hover {
+        background-color: var(--light-blue, #EDF9FF);
+      }
+
+    }
+
+    .failed {
+      background: #FFE0E3 !important;
+    }
+
+    .file-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      img {
+        width: 30px;
+        height: 30px;   
+        aspect-ratio: 1/1;
+      }
+
+      .file-name-details {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .file-name-text {
+        overflow: hidden;
+        color: var(--text-text-50, #0C3058);
+        text-align: right;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 24px;
+      }
+
+      .file-size-text {
+        color: var(--text-text-40, #3A5778);
+      text-align: right;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px;
+      }
+    }
+
+    .file-actions {
+      display: flex;
+      gap: 10px;
+
+      img {
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        position: relative;
+        top: -22px;
+        z-index: 10;
+
+      }
+
+      .attach-icon {
+        cursor: pointer;
+        height: 36px;
+        margin-top: 2px;
+      }
+    }
+
+  }
+

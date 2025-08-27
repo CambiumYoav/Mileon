@@ -1,0 +1,14 @@
+<app-search-bar
+  [form]="ticketsSearchForm"
+  [advancedSearch]="advancedSearch"
+  (search)="sendFormValue($event)"
+  [submitOnKey]="true"
+  [resultData]="resultData"
+  [total]="total"
+  [searchTextValue]="searchText"
+  [hasResultsDropdown]="hasResultsDropdown"
+  searchBy="שם מלא, מספר רכב, מספר דו״ח, תעודת זהות"
+  (executeAction)="goToSearchResults()"
+  searchTitle="חיפוש דוח"
+  [showPlaceholder]="true"
+></app-search-bar>

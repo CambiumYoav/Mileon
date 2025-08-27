@@ -1,0 +1,97 @@
+// Drop-down animation keyframes
+@keyframes dropDown {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  
+  ::ng-deep .mat-mdc-dialog-surface {
+      padding: 20px !important;
+      height: auto !important;
+      width: fit-content !important;
+      max-width: 93vw !important;
+      min-width: 600px !important;
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      z-index: 1000 !important;
+      background-color: white !important;
+      border-radius: 4px !important;
+      padding: 20px !important;
+      overflow-y: auto !important;
+      display: flex !important;
+      animation: dropDown 0.3s ease-out !important;
+
+      scrollbar-width:thin;
+      scrollbar-color: #B0B0B0 #E9E9E9;
+    }
+    
+  
+  // Ensure proper dialog sizing
+  ::ng-deep .infrastructure-dialog .mat-mdc-dialog-surface {
+    padding: 0 !important;
+    gap: 20px !important;
+  }
+
+  .form{
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .infrastructure-container {
+    padding: 0 !important;
+  }
+
+  .button-container {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding-top: 20px;
+    gap: 20px;
+
+    app-button {
+        margin-left: 10px;
+      }
+  }
+  
+
+ ::ng-deep .form-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px; 
+
+    .form-row {
+        display: flex;
+        flex-direction: row;
+        gap: 15px; 
+      }
+  }
+  
+  .checkbox-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    width: 100%;
+    height: 50px;
+    padding: 20px;
+    gap: 10px;
+
+    border-radius: 6px;
+    border: 1px solid var(--grey, #B9C6D4);
+    background: var(--back, #F7F9FC);
+  }

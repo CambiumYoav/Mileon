@@ -1,0 +1,5 @@
+<div class="title-placeholder">{{ title }}</div>
+<div class="input-fill"
+     [class.invalidInput]="control?.parent?.errors?.['hoursRange'] && (control?.dirty || control?.touched)">
+  <input [formControl]="control" (blur)="onBlur()" class="hide-border-input" type="time" [placeholder]="placeholder" />
+</div>

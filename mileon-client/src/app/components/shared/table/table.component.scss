@@ -1,0 +1,247 @@
+@import "../../../../styles/elements.scss";
+
+.table {
+  background: #F7F9FC;
+  border-bottom: 1px solid #B9C6D4;
+  background: #F7F9FC;
+    // border-collapse: collapse;
+  border-radius: 4px;
+  table-layout: auto;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  color: #d8e4f1;
+}
+
+tbody {
+  display: block; /* Make tbody a block element */
+  height: 565px; /* Height for 14 rows (14 × 40px) */
+  max-height: 565px;
+  overflow-y: auto; /* Enable vertical scrolling */
+  scrollbar-width:thin;
+  scrollbar-color: #B0B0B0 #E9E9E9;
+}
+
+tbody tr {
+  cursor: pointer;
+  display: table; 
+  width: 100%; 
+  table-layout: fixed; 
+}
+
+thead tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+tbody tr:last-child {
+  border-bottom-style: hidden;
+}
+
+div.table-container {
+  border: 1px solid #d8e4f1;
+  border-radius: 14px;
+  transform: rotate(0deg);
+  // height: 652px; 
+  overflow: auto; 
+  &::-webkit-scrollbar {
+    display: none; 
+  }
+}
+
+table {
+  border-spacing: 0;
+  width: 100%;
+  margin: 0;
+  table-layout: auto;
+  border-collapse: collapse;
+}
+
+  td {
+    padding: 4px 8px 4px 8px;
+    border-bottom: 1px solid #B9C6D4;
+    background: #F7F9FC;
+    color: var(--black, #000);
+    text-align: right;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    height: 40px;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+
+  }
+
+.fixedwidth {
+  width: auto !important;
+  min-width: 2rem;
+}
+
+
+th .title {
+  color: #F7F9FC;
+  
+}
+
+th {
+  background: #387EC4;
+  height: 50px;
+  padding: 8px 12px 8px 12px;
+  text-align: right;
+  vertical-align: middle;
+  display: table-cell;
+  position: sticky; 
+  top: 0; 
+  z-index: 10; 
+}
+
+.header-icon {
+  width: 8.235px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 5px;
+  margin-bottom: 3px;
+}
+
+
+thead {
+  display: table; 
+  // width: 100%; 
+  table-layout: fixed; 
+}
+
+.blue {
+    color: var(--blue, #387EC4);
+    text-align: right;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+
+.inactive-row {
+  background-color: #e3e7eb !important;
+  border-bottom: 1px solid #b9c6d4;
+  
+  td {
+    background-color: #e3e7eb !important;
+    color: #666 !important;
+  }
+
+  .blue {
+    color: #666 !important;
+  }
+
+  .tag {
+    background-color: #F7F9FC !important;
+    color: #666 !important;
+  }
+
+}
+
+.icon-img {
+  width: 18px;
+  height: 18px;
+}
+
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+input[type='radio'].custom-colored-radio {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #999;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+}
+input.custom-colored-radio.green-blink {
+  background-color: #B3F1B2;
+  animation: blink 1.2s infinite;
+}
+
+input.custom-colored-radio.yellow-blink {
+  background-color: #FFF9C6;
+  animation: blink 1.2s infinite;
+}
+
+input.custom-colored-radio.orange-blink {
+  background-color: #ff9800;
+  animation: blink 1.2s infinite;
+}
+
+input.custom-colored-radio.red-blink {
+  background-color: #FFE0E3;
+  animation: blink 1.2s infinite;
+}
+
+input.custom-colored-radio.gray {
+  background-color: #9e9e9e;
+}
+
+
+.report-number {
+    color: var(--black, #000);
+    text-align: right;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+}
+
+
+
+input.custom-colored-radio:checked::after {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+
+.input-field {
+  height: 30px;
+  border: 1px solid #606060;
+  border-radius: 3px;
+  
+  &:focus {
+    outline: none;
+    border-color: #387EC4;
+    box-shadow: 0 0 0 2px rgba(56, 126, 196, 0.2);
+    background-color: #fff;
+  }
+
+  &::placeholder {
+    color: #606060;
+    text-align: right;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+    font-family: "Open Sans";
+  }
+
+  &:invalid {
+    border-color: #dc3545;
+  }
+}
+

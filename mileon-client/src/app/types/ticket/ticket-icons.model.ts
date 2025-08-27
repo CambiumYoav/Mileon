@@ -1,4 +1,4 @@
-import { ConstPath } from 'src/app/constants/const_path';
+import { ConstPath } from '../../constants/const_path';
 import { Icon } from '../icon';
 
 export class TicketIcons {
@@ -27,7 +27,8 @@ export class TicketIcons {
     },
     {
       id: 5,
-      src: this.Icons.STAGE5,
+      src: this.Icons.STAGE4,
+      // src: this.Icons.STAGE5,
       displayName: 'הלבשה משרד הפנים',
     },
     {

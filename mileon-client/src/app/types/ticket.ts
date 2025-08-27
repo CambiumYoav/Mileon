@@ -2,55 +2,53 @@ import { Citizen } from "./citizen";
 import {ListCountResult} from "./listCountResult";
 
 export class Ticket {
-  authorityName: string;
-  name: string;
-  nid: string;
-  citizenID: string;
+  authorityName!: string;
+  name!: string;
+  nid!: string;
+  citizenID!: string;
   mainPhone?: string;
   email?: string;
-  ticketGivingDate: Date;
-  ticketID: string;
-  ticketNumber: string;
-  ticketStatusID: number;
-  ticketSubStatusID: number;
-  ticketTypeID: number;
-  violationDate: Date;
-  fineAmount: number;
-  ticketStageID: number;
+  ticketGivingDate!: Date;
+  ticketID!: string;
+  ticketNumber!: string;
+  ticketStatusID!: number;
+  ticketSubStatusID!: number;
+  ticketTypeID!: number;
+  violationDate!: Date;
+  fineAmount!: number;
+  ticketStageID!: number;
   vehicleNumber?: number;
   isChecked?: boolean;
 }
 
 export class TicketNew {
-  authorityName: string;
+  authorityName!: string;    
   authorityID?: number;
-  citizenID: string;
-  name: string;
-  nid: string;
-  email: string;
-  mainPhone: string;
-  ticketID: string;
-  ticketNumber: string;
-  ticketStatusID: number;
-  ticketSubStatusID: number;
-  ticketStatusName: string;
-  ticketTypeID: number;
-  ticketTypeName: string;
-  fineAmount: number;
-  paymentBalance: number;
-  ticketStageID: number;
+  citizenID!: string;
+  name!: string;
+  nid!: string;
+  email!: string;
+  mainPhone!: string;
+  ticketID!: string;
+  ticketNumber!: string;
+  ticketStatusID!: number;
+  ticketSubStatusID!: number;
+  ticketStatusName!: string;
+  ticketTypeID!: number;
+  ticketTypeName!: string;
+  fineAmount!: number;
+  paymentBalance!: number;
+  ticketStageID!: number;
   vehicleNumber?: number;
   isChecked?: boolean;
   cn?: string;
-  lastUpdatedByUserName: string;
-  ticketGivingDate: string | Date;
-  ticketStageName: string;
-  violationDate: string | Date;
+  lastUpdatedByUserName!: string;
+  ticketGivingDate!: string | Date;
+  ticketStageName!: string;
+  violationDate!: string | Date;
   AdditionalReportsAmount?: number;
   Owner?: Citizen;
   passportID?: string;
-
-
 
   constructor(args?: any) {
     if (args && typeof args === 'object') {

@@ -1,0 +1,154 @@
+@import "../../../../styles/elements.scss";
+
+// Global modal centering styles
+:host ::ng-deep .modal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+}
+
+:host ::ng-deep .modal-dialog {
+  margin: 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+  max-width: 90vw !important;
+}
+
+:host ::ng-deep .modal-content {
+  margin: auto !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  width: 100% !important;
+}
+
+// Responsive centering for different screen sizes
+@media (max-width: 768px) {
+  :host ::ng-deep .modal-dialog {
+    max-width: 95vw !important;
+    margin: 10px !important;
+  }
+  
+  :host ::ng-deep .modal {
+    padding: 10px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  :host ::ng-deep .modal-dialog {
+    max-width: 98vw !important;
+    margin: 5px !important;
+  }
+  
+  :host ::ng-deep .modal {
+    padding: 5px !important;
+  }
+}
+
+.app-modal {
+  &.modal-title {
+    color: #000;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    font-family: $fontOpenSans;
+  }
+
+  &.modal-header {
+    direction: rtl;
+    border: none;
+    padding: 20px !important;
+  }
+
+  &.modal-footer {
+    padding: 20px !important;
+    direction: rtl;
+    border-top: none;
+    justify-content: space-between;
+    &.no-amount-data {
+      justify-content: flex-end;
+    }
+  }
+  //check if not broke any thing
+  &.modal-body {
+    padding: 20px !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    direction: rtl;
+  }
+
+  &.modal-message{
+    color: #000;
+    text-align: right;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-end;
+    width: auto;
+    gap: 20px !important;
+    margin: 0 !important;
+  }
+}
+
+.modal-message-container{
+  padding: 0 20px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.modal-body{
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: end;
+  width: auto;
+}
+
+
+.exit-icon {
+  left: 35px;
+  top: 28px;
+  position: absolute;
+  cursor: pointer;
+}
+
+.amount-data-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: $fontOpenSans;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  color: #000;
+  text-decoration: underline;
+}
+
+.amount-data-label .data-item {
+  display: flex;
+}
+
+.amount-data-label .data-label,
+.amount-data-label .data-value {
+  margin: 0 2px;
+}
+
+.amount-data-label .data-value.sum-payment-balance,
+.amount-data-label .data-value.num-of-items {
+  padding-right: 1px;
+}

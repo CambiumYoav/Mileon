@@ -1,0 +1,14 @@
+<div
+  [class]="
+    className
+      ? className + ' align-items-center d-flex gap-2'
+      : 'checkbox align-items-center d-flex gap-2'
+  "
+>
+  <input
+    type="checkbox"
+    class="input-fill-checkbox check"
+    [formControl]="control"
+  />
+  <span class="title">{{ placeholder }}</span>
+</div>

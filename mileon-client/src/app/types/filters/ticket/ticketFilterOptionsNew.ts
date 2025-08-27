@@ -4,7 +4,7 @@ import {
   FieldTypeEnum,
 } from '../../advanced-search/form-tab.model';
 import { FilterOptions } from '../filterOptions';
-import { Patterns } from 'src/app/validators/validationPatterns';
+import { Patterns } from '../../../validators/validationPatterns';
 
 export class TicketFilterOptions extends FilterOptions {
   violationDetailsFilter?: ViolationDetailsFilter;

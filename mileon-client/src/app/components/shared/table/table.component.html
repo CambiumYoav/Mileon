@@ -1,1 +1,237 @@
-<p>table works!</p>
+<div>
+  <!-- <app-red-line-error [errorMsg]="errorMsg"></app-red-line-error> -->
+  <div class="table-container">
+    <table class="table table-hover shadow-table">
+      <thead>
+        <tr>
+          <ng-container *ngFor="let column of columns">
+            <th
+              sortable
+              *ngIf="column.type !== ColumnTypeEnum.Hidden"
+              [sortable]="column.sortField || column.propertyName"
+              scope="col"
+              (sort)="onSort($event)"
+              [canSort]="column.canSort"
+              [sortByServer]="column.sortByServer"
+            > 
+              <span class="title">
+                {{ column.displayName }}
+              </span>
+              <img 
+                *ngIf="icon" 
+                [src]="getIconPath(icon)" 
+                class="header-icon" 
+                alt="filter icon"
+              />
+            </th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <div
+          class="d-flex justify-content-center align-items-center loader"
+          *ngIf="loader"
+        >
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <ng-template #table [ngIf]="(data$ | async)?.length && !loader">
+          <tr
+            class="user-select-none"
+            style="line-height: 8px; height: 8px"
+            *ngFor="let item of data$ | async"
+            (click)="onRowClick(item, $event)"
+            [ngClass]="{ 'inactive-row': item.isActive === false }"
+          >
+            <ng-container *ngFor="let column of columns">
+              <td
+                *ngIf="column.type !== ColumnTypeEnum.Hidden"
+                [ngClass]="{
+                  'radio-td': column.type === ColumnTypeEnum.Radio,
+                  'text-overflow-ellipsis': column.textOverflow
+                }"
+                [ngClass]="{
+                  'checkbox-td': column.type === ColumnTypeEnum.Checkbox,
+                  'text-overflow-ellipsis': column.textOverflow
+                }"
+              >
+               
+                <!-- <input
+                  *ngIf="column.type === ColumnTypeEnum.Radio"
+                  type="radio"
+                  [name]="'radio-' + item.id"
+                  [value]="item"
+                  
+                  (change)="onSelectedRowIdChange(item)"
+                />
+                <input
+                  *ngIf="column.type === ColumnTypeEnum.Radio"
+                  type="radio"
+                  [name]="
+                    parentComponentName + '_radioGroup' || 'tableRadioGroup'
+                  "
+                  [value]="item"
+                  (change)="onSelectedRowIdChange(item)"
+                /> -->
+                <app-radio-button
+                  *ngIf="column.type === ColumnTypeEnum.Radio"
+                  [options]="[
+                    { value: 'כן', label: 'כן' },
+                    { value: 'לא', label: 'לא' }
+                  ]"
+                  [name]="'yesNoRadio-' + item.id"
+                  [value]="item[column.propertyName]"
+                  (valueChange)="onRadioChange(item, column.propertyName, $event)"
+                  type="default"
+                  direction="horizontal"
+                ></app-radio-button>
+                <app-radio-button
+                  *ngIf="column.type === ColumnTypeEnum.ActiveStatus"
+                  [options]="[
+                    { 
+                      value: 'active', 
+                      label: '', 
+                      colorClass: getRadioColorClassByLastTicketTime(item.lastTicketTime)
+                    }
+                  ]"
+                  [name]="'activeStatus-' + item.id"
+                  value="active"
+                  (valueChange)="onSelectedRowIdChange(item)"
+                  type="colored"
+                  direction="horizontal"
+                ></app-radio-button>
+                <span
+                  *ngIf="
+                    column.type === ColumnTypeEnum.Text && column.hasCheckbox
+                  "
+                  class="d-flex align-items-center"
+                >
+                  <app-icon
+                    *ngIf="column.hasIcon"
+                    [icon]="getIconById(item[column.fieldId])"
+                  ></app-icon>
+
+                  <app-checkbox
+                    class="me-2"
+                    *ngIf="column.hasCheckbox"
+                    (change)="onSelectedRowIdChange(item)"
+                    [isDisabled]="true"
+                    [checked]="isCheckboxsSelected"
+                    [ngClass]="{
+                      'input-fill-disable ': isCheckboxsSelected,
+                      checkbox: !isCheckboxsSelected
+                    }"
+                  ></app-checkbox>
+
+                  <span
+                    *ngIf="!column.hasIcon && column.propertyName !== 'nid'"
+                  >
+                    {{ item[column.propertyName] }}
+                    {{
+                      column.additionalText ? item[column.additionalText] : ""
+                    }}
+                  </span>
+
+                  <span
+                    *ngIf="!column.hasIcon && column.propertyName === 'nid'"
+                  >
+                    {{ item | renderIdentity }}
+                  </span>
+                </span>
+                <span
+                  *ngIf="
+                    column.type === ColumnTypeEnum.Text && !column.hasCheckbox
+                  "
+                >
+                  <app-icon
+                    *ngIf="column.hasIcon"
+                    [icon]="getIconById(item[column.fieldId])"
+                  >
+                  </app-icon>
+
+                  <app-checkbox
+                    class="checkbox-td"
+                    *ngIf="column.hasCheckbox"
+                    (change)="onSelectedRowIdChange(item)"
+                  ></app-checkbox>
+                  <span
+                    *ngIf="!column.hasIcon && column.propertyName !== 'nid'"
+                  >
+                    {{ item[column.propertyName] }}
+                    {{
+                      column.additionalText ? item[column.additionalText] : ""
+                    }}
+                  </span>
+                  <span
+                    *ngIf="!column.hasIcon && column.propertyName === 'nid'"
+                  >
+                    {{ item | renderIdentity }}
+                  </span>
+                </span>
+
+                <input
+                  *ngIf="column.type === ColumnTypeEnum.Input"
+                  type="text"
+                  class="form-control input-field"
+                  [value]="item[column.propertyName]"
+                  (input)="onInputChange(item, column.propertyName, $event)"
+                  (keypress)="onKeyPress($event)"
+                  placeholder="הקלד כאן..."
+                  maxlength="9"
+                  pattern="[0-9]*"
+                />
+                <span
+                  *ngIf="column.type === ColumnTypeEnum.Currency"
+                  [ngClass]="column.textColor ?? 'blue'"
+                >
+                  {{ item[column.propertyName] | currency : "₪ " }}
+                </span>
+                <!-- <span>₪</span> -->
+                <span *ngIf="column.type === ColumnTypeEnum.Date">
+                  {{ item[column.propertyName] | date : "dd/MM/yyyy" }}
+                </span>
+
+                <span *ngIf="column.type === ColumnTypeEnum.DateTime">
+                  {{ item[column.propertyName] | date : "HH:mm | dd.MM.yyyy" }}
+                </span>
+
+                <app-checkbox
+                  *ngIf="column.type === ColumnTypeEnum.Checkbox"
+                  [initialValue]="item[column.propertyName]"
+                  (change)="onSelectedRowIdChange(item)"
+                ></app-checkbox>
+
+                <app-tag
+                  *ngIf="column.type === ColumnTypeEnum.Tag"
+                  [tagName]="item[column.propertyName]"
+                  [tagId]="item[column.fieldId]"
+                ></app-tag>
+
+                <div class="d-flex justify-content-center">
+                  <span
+                    *ngIf="column.type === ColumnTypeEnum.Icon"
+                    (click)="onRowClick(item, $event)"
+                    style="margin-left: 40px"
+                  >
+                    <img [src]="getIconPath(column.icon)" class="icon-img" />
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+          </tr>
+          <!-- last row is needed to fill the gap: -->
+          <tr></tr>
+        </ng-template>
+      </tbody>
+    </table>
+  </div>
+  <app-paginator
+    [showPaginator]="showPaginator"
+    [total]="total$ | async"
+    (pageChanger)="pageChanges($event)"
+    [pageSize]="pageSize || 14" 
+    [selectedPage]="selectedPage"
+  >
+  </app-paginator>
+</div>

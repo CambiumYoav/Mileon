@@ -26,6 +26,8 @@ export enum ColorsHex {
   TeaGreen = '#D4F8D3',
   JungleGreen = '#19A58C',
   Pink = '#FFE0E3',
+  LightPink = '#FFE5F9',
+  DarkPink = '#FF47B5',
 }
 
 // names are taken from https://www.color-name.com/

@@ -1,0 +1,62 @@
+<div
+  class="paginator align-items-center d-flex flex-row-reverse justify-content-center"
+  *ngIf="showPaginator && pages && pages.length > 1"
+>
+  <!-- Page Selection Dropdown -->
+  <div class="page-dropdown-container">
+    <select 
+      class="page-dropdown" 
+      [value]="selectedPage"
+      (change)="onPageDropdownChange($event)"
+      [disabled]="totalPages <= 1"
+    >
+      <option *ngFor="let page of getAllPages()" [value]="page">
+        {{ page }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Last page button (swapped from first) -->
+  <i
+    (click)="setSelectedPage(totalPages)"
+    class="angle double-angle fa fa-angle-double-left"
+    [class.disabled]="selectedPage === totalPages"
+  ></i>
+
+  <!-- Next page button (swapped from previous) -->
+  <i
+    (click)="setSelectedPage(selectedPage + 1)"
+    class="angle fa fa-angle-left"
+    [class.disabled]="selectedPage === totalPages"
+  ></i>
+
+  <span
+    class="page"
+    *ngFor="let page of pages.slice().reverse(); index as i"
+    [class.current]="page === selectedPage"
+    (click)="setSelectedPage(page)"
+    >{{ page }}</span
+  >
+
+  <!-- Previous page button (swapped from next) -->
+  <i
+    (click)="setSelectedPage(selectedPage - 1)"
+    class="angle fa fa-angle-right"
+    [class.disabled]="selectedPage === 1"
+  ></i>
+
+  <!-- First page button (swapped from last) -->
+  <i
+    (click)="setSelectedPage(1)"
+    class="angle double-angle fa fa-angle-double-right"
+    [class.disabled]="selectedPage === 1"
+  ></i>
+
+  <!-- Display showing current range of items -->
+  <div class="items-display">
+    <span class="items-text">מציג</span>
+    <span class="items-range">{{ getEndItem() }}-{{ getStartItem() }}</span>
+    <span class="items-text">מתוך</span>
+    <span class="total-items">{{ total }}</span>
+  </div>
+</div>

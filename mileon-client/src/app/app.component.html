@@ -1,6 +1,8 @@
-<div class="direction: rtl">
+<!-- <div class="direction: rtl">
   <router-outlet></router-outlet>
-</div>
+</div> -->
+
+
 <!-- <div class="p-2 d-flex flex-column gap-2">
   <button class="primary-btn button-icon-lg">
     כפתור <i class="fa fa-check"></i>
@@ -59,15 +61,326 @@
     <input type="checkbox" class="checkbox-base checkbox-secondary" checked />
     Accept terms
   </label>
-</div>
-<app-table></app-table> -->
-<!-- <app-table></app-table> -->
-<!-- <div class="p-2 d-flex flex-column gap-2">
-  <app-checkbox
-    (valueChanged)="showSuccess()"
-    [isDisabled]="true"
-    [checked]="true"
-    [label]="'הצג רשומות לא פעילות '"
-  >
-  </app-checkbox>
 </div> -->
+
+
+
+
+
+
+ 
+
+
+<!-- Search bar with different sizes -->
+<!-- <div style="margin: 20px;">
+  <h3>Small Size</h3>
+  <app-search-bar 
+    [size]="InputSizeEnum.Sm"
+    [form]="form" 
+    [showFilters]="true"
+    (search)="sendFormValue($event)"
+    [submitOnKey]="true"
+    [resultData]="data"
+    [total]="total"
+    [searchTextValue]="searchText"
+    [showDatePicker]="true"
+    [hasResultsDropdown]="false"
+    searchBy="שם משתמש,שם מלא,תעודת זהות..."
+    searchTitle="חיפוש"
+    [showPlaceholder]="true"
+  ></app-search-bar>
+</div>
+
+
+<div style="margin: 20px;">
+  <h3>Medium Size</h3>
+  <app-search-bar 
+    [size]="InputSizeEnum.Md"
+    [form]="form" 
+    [showFilters]="true"
+    (search)="sendFormValue($event)"
+    [submitOnKey]="true"
+    [resultData]="data"
+    [total]="total"
+    [searchTextValue]="searchText"
+    [showDatePicker]="true"
+    [hasResultsDropdown]="false"
+    searchBy="שם משתמש,שם מלא,תעודת זהות..."
+    searchTitle="חיפוש"
+    [showPlaceholder]="true"
+  ></app-search-bar>
+</div>
+
+<div style="margin: 20px;">
+  <h3>Large Size</h3>
+  <app-search-bar 
+    [size]="InputSizeEnum.Lg"
+    [form]="form" 
+    [showFilters]="true"
+    (search)="sendFormValue($event)"
+    [submitOnKey]="true"
+    [resultData]="data"
+    [total]="total"
+    [searchTextValue]="searchText"
+    [showDatePicker]="true"
+    [hasResultsDropdown]="false"
+    searchBy="שם משתמש,שם מלא,תעודת זהות..."
+    searchTitle="חיפוש"
+    [showPlaceholder]="true"
+    [disabled]="true"
+  ></app-search-bar>
+</div> -->
+
+
+<!-- Search bar for table -->
+<!-- <div style="margin: 20px; padding-top: 100px;" >
+  <h3>Table Search</h3>
+  <app-search-bar 
+    [size]="InputSizeEnum.Md"
+    [form]="form" 
+    [showFilters]="true"
+    (search)="sendFormValue($event)"
+    [submitOnKey]="true"
+    [resultData]="data"
+    [total]="total"
+    [searchTextValue]="searchText"
+    [showDatePicker]="true"
+    [hasResultsDropdown]="true"
+    searchBy="שם משתמש,שם מלא,תעודת זהות..."
+    searchTitle="חיפוש בטבלה"
+    [showPlaceholder]="true"
+    [advancedSearch]="advancedSearch"
+    (optionSelected)="onOptionSelected($event)"
+  ></app-search-bar>
+</div>
+
+<div style="margin: 20px;">
+
+  <app-table
+  [data]="data"
+  [columns]="columns"
+  [total]="total"
+  [form]="form"
+  [showPaginator]="showPaginator"
+  [selectedItemData]="selectedUserData"
+  [icons]="TicketStagesIcons"
+  [loader]="loader"
+  [pageSize]="pageSize"
+  [parentComponentName]="'app-table'"
+  [isCheckboxsSelected]="true"
+  [icon]="Icons.FILTER_ICON"
+  (onRowEvent)="onRowEvent($event)"
+>
+</app-table>
+</div> -->
+
+
+
+<!-- <div class="upload-container" style="margin: 20px;">
+  <app-file-upload-new 
+  [selectedFiles]="selectedFiles"
+  ></app-file-upload-new>
+</div> -->
+
+
+<div style="margin: 20px;" [formGroup]="form">
+
+    <!-- text input -->
+  <!-- <app-input-text 
+  [size]="InputSizeEnum.Sm"
+    [title]="'מספרים'" 
+    [placeholder]="'00:00'"
+  ></app-input-text>
+  <br>
+  <app-input-text 
+  [size]="InputSizeEnum.Md"
+    [title]="'כותרת-רגילה'" 
+    [placeholder]="'כותרת-רגילה'"
+    [disabled]="true"
+  ></app-input-text>
+  <br>
+  <app-input-text 
+  [size]="InputSizeEnum.Lg"
+    [title]="'טקסט של התווית'" 
+    [placeholder]="'טקסט של התווית'"
+  ></app-input-text>
+  <br>
+  <app-input-text 
+    [size]="InputSizeEnum.Xl"
+    [title]="'כותרת-טקסט ארוך'" 
+    [placeholder]="'כותרת-טקסט ארוך'"
+    [disabled]="true"
+  ></app-input-text>
+
+  <br> -->
+
+  <!-- date input
+  <app-input-date
+  [formControlName]="'lastUpdate'"
+  [title]="'תאריך קליטה אחרון'"
+  [placeholder]="'dd-mm-yyyy'"
+  [isValid]="true"
+  ></app-input-date> -->
+
+  <!-- <br>
+
+  phone input
+  <app-input-phone
+  [title]="'טלפון'"
+  [formControlName]="'phone'"
+  [isValid]="true"
+  [isRequired]="true"
+  ></app-input-phone> -->
+
+  <!-- <br>
+
+  select input
+  <app-select
+  fxFill
+  [ngStyle]="{ height: '40px', width: '180px' }"
+  appearance="fill"
+  [bindLabelKeys]="['value']"
+  [formControlName]="'selectValue'"
+  [dataFunction]="dataFunction.getMunicipalities" 
+  searchPlaceholder="חיפוש"
+  bindLabelKey="value"
+  bindValueKey="id"
+  [isMultiSelect]="true"
+  ></app-select>
+
+  <br> -->
+
+  <!-- <app-input-checkbox
+  [title]="'בחירה'"
+  [formControlName]="'checkboxValue'"
+  ></app-input-checkbox> -->
+
+  <!-- <app-textarea-comments
+  [newComment]="newComment"
+  ></app-textarea-comments> -->
+
+</div>
+
+
+<!-- <div style="margin: 20px;">
+
+  <app-button
+  [buttonText]="'הודעה'"
+  (clickFunction)="openSaveModal()"
+  [buttonClass]="'outline-secondary-btn button-base'"
+  style="margin: 10px;"
+></app-button>
+
+  <app-button
+    [buttonText]="'אישור'"
+    (clickFunction)="openConfirmationModal()"
+    [buttonClass]="'outline-secondary-btn button-base'"
+    style="margin: 10px;"
+  ></app-button>
+
+  <app-button
+    [buttonText]="'יבוא'"
+    (clickFunction)="openDialogImport()"
+    [buttonClass]="'outline-secondary-btn button-base'"
+    style="margin: 10px;"
+  ></app-button>
+
+  <app-button
+[buttonText]="'בחירה'"
+(clickFunction)="openDialogExport()"
+[buttonClass]="'outline-secondary-btn button-base'"
+style="margin: 10px;"
+></app-button>
+
+  <app-button
+  [buttonText]="'עריכה'"
+  (clickFunction)="openDialogForm()"
+  [buttonClass]="'outline-secondary-btn button-base'"
+  style="margin: 10px;"
+></app-button>
+
+<app-button
+[buttonText]="'כפול'"
+(clickFunction)="openDoubleDialogForm(false)"
+[buttonClass]="'outline-secondary-btn button-base'"
+style="margin: 10px;"
+></app-button>
+
+<app-modal
+[isModalOpen]="isSaveModalOpen"
+[title]="'כותרת - לורם איפסום'"
+[message]="'לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קולהע צופעט למרקוח איבן איף, ברומץ כלרשט מיחוצים. קלאצי קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח. לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קולהע צופעט למרקוח איבן איף, ברומץ כלרשט מיחוצים. קלאצי קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח.'"
+[modalSize]="'md'"
+(isModalClosed)="closeModal()"
+[hideExitIcon]="true"
+[buttons]="modalButtons"
+>
+</app-modal>
+
+  <app-confirmation-modal
+    [isModalOpen]="isConfirmationModalOpen"
+    (isModalClosed)="closeConfirmationModal()"
+    [title]="'האם אתה בטוח?'"
+    [message]="'האם אתה בטוח שברצונך למחוק את הקובץ?'"
+    [cancelLabel]="'ביטול'"
+    [confirmLabel]="'מחק'"
+    [cancelButtonClass]="'outline-btn button-base'"
+    [confirmButtonClass]="'primary-btn button-base'"
+  ></app-confirmation-modal>
+
+
+  </div> -->
+
+
+  <div style="margin: 20px; display: flex; gap: 20px; flex-direction: column;"> 
+    small
+    <app-tag
+        [tagName]="'בהסדר'"
+        [tagId]="'7'"
+        [size]="'small'">
+    </app-tag>
+    <app-tag
+        [tagName]="'בזיכוי'"
+        [tagId]="'6'"
+        [size]="'small'">
+    </app-tag>
+    <app-tag
+        [tagName]="'חלקי'"
+        [tagId]="'5'"
+        [size]="'small'">
+    </app-tag>
+    large
+    <app-tag
+        [tagName]="'מוקפא'"
+        [tagId]="'4'"
+        [size]="'large'">
+    </app-tag>
+    <app-tag
+        [tagName]="'בוטל'"
+        [tagId]="'2'"
+        [size]="'large'">
+    </app-tag>
+    <app-tag
+        [tagName]="'פתוח'"
+        [tagId]="'3'"
+        [size]="'large'">
+    </app-tag>
+    <app-tag
+        [tagName]="'סגור'"
+        [tagId]="'1'"
+        [size]="'large'">
+    </app-tag>
+
+    <div class="row">
+      <app-tickets-table-new
+        [data]="list"
+        [total]="total"
+        [count]="count"
+        (onFormChanges)="loadData($event)"
+        [selectedTicketData]="selectedTicketData$"
+        tableColumns="TicketsNewColumns"
+        [loader]="loader"
+      >
+      </app-tickets-table-new>
+    </div>
+  </div>
