@@ -50,9 +50,6 @@ export class TicketNew {
   Owner?: Citizen;
   passportID?: string;
 
-
-  
-
   constructor(args?: any) {
     if (args && typeof args === 'object') {
       Object.assign(this, args);
