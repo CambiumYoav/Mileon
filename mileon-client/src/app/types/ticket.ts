@@ -51,6 +51,7 @@ export class TicketNew {
   passportID?: string;
 
 
+  
 
   constructor(args?: any) {
     if (args && typeof args === 'object') {
