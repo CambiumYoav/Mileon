@@ -37,6 +37,7 @@
                   <app-input-text
                     *ngSwitchCase="'text'"
                     [id]="field.name"
+                    [placeholder]="field.label"
                     [title]="field.label"
                     [formControlName]="field.name"/>
 
@@ -44,6 +45,7 @@
                   <app-input-text
                     *ngSwitchCase="'number'"
                     [id]="field.name"
+                    [placeholder]="field.label"
                     [title]="field.label"
                     [formControlName]="field.name"
                   />
@@ -51,6 +53,7 @@
                   <app-input-date
                     *ngSwitchCase="'date'"
                     [ngStyle]="{ height: '40px', width: '180px' }"
+                    [placeholder]="field.label"
                     [title]="field.label"
                     [isValid]="isFieldValid(field.name, formSections[0].title)"
                     [formControlName]="field.name"
@@ -76,20 +79,20 @@
                     *ngSwitchCase="'selectWithLookup'"
                     [ngStyle]="{ height: '40px', width: '180px' }"
                   >
-                    <app-select
-                      fxFill
-                      [ngStyle]="{ height: '40px', width: '180px' }"
-                      appearance="fill"
-                      [formControlName]="field.name"
-                      [dataFunction]="field.dataFunction"
-                      [options]="field.options || []"
-                      searchPlaceholder="חיפוש"
-                      bindLabelKey="value"
-                      bindValueKey="id"
-                      [isMultiSelect]="field.isMultiSelect || false"
-                      [title]="field.label"
-                      [isRequired]="field.isRequired"
-                    ></app-select>
+                  <app-select
+                  fxFill
+                  appearance="outline"
+                  [placeholder]="field.label || ''"
+                  [bindLabelKeys]="field.bindLabelKeys"
+                  [formControlName]="field.name || ''"
+                  [dataFunction]="field.dataFunction"
+                  [options]="field.options || []"
+                  searchPlaceholder="חיפוש"
+                  bindLabelKey="display"
+                  bindValueKey="value"
+                  [isMultiSelect]="field.isMultiSelect || false"
+                  [title]="field.label || ''"
+                  ></app-select>
                   </div>
 
                   <!-- Checkbox -->
@@ -117,7 +120,8 @@
                   <!-- Phone Input -->
                   <app-input-phone
                     *ngSwitchCase="'phone'"
-                    [title]="field.label"
+                    [title]="field.label" 
+                    [placeholder]="field.label"
                     [isRequired]="field.isRequired"
                     [isValid]="isFieldValid(field.name, formSections[0].title)"
                     [formControlName]="field.name"
@@ -201,6 +205,7 @@
                   <app-input-text
                     class="input"
                     *ngSwitchCase="'text'"
+                    [placeholder]="field.label"
                     [id]="field.name"
                     [title]="field.label"
                     [formControlName]="field.name"
@@ -211,6 +216,7 @@
                     class="input"
                     *ngSwitchCase="'number'"
                     [id]="field.name"
+                    [placeholder]="field.label"
                     [title]="field.label"
                     [formControlName]="field.name"
                   />
@@ -223,7 +229,7 @@
                     [formControlName]="field.name"
                   ></app-input-date>
 
-                  <!-- Select Dropdown -->
+                  <!-- Select Dropdown
                   <mat-form-field appearance="fill" *ngSwitchCase="'select'">
                     <mat-select
                       [id]="field.name"
@@ -261,26 +267,43 @@
                     >
                       ערך לא תקין
                     </mat-error>
-                  </mat-form-field>
+                  </mat-form-field> -->
+
+                  <div *ngSwitchCase="'select'">
+                    <app-select
+                      fxFill
+                      appearance="outline"
+                      [placeholder]="field.label || ''"
+                      [bindLabelKeys]="field.bindLabelKeys"
+                      [formControlName]="field.name || ''"
+                      [dataFunction]="field.dataFunction"
+                      [options]="field.options || []"
+                      searchPlaceholder="חיפוש"
+                      bindLabelKey="display"
+                      bindValueKey="value"
+                      [isMultiSelect]="field.isMultiSelect || false"
+                      [title]="field.label || ''"
+                      ></app-select>
+                  </div>
 
                   <div
                     *ngSwitchCase="'selectWithLookup'"
                     [ngStyle]="{ height: '40px', width: '180px' }"
                   >
-                    <app-select
-                      fxFill
-                      [ngStyle]="{ height: '40px', width: '180px' }"
-                      appearance="fill"
-                      [formControlName]="field.name"
-                      [dataFunction]="field.dataFunction"
-                      [options]="field.options || []"
-                      searchPlaceholder="חיפוש"
-                      bindLabelKey="value"
-                      bindValueKey="id"
-                      [isMultiSelect]="field.isMultiSelect || false"
-                      [title]="field.label"
-                      [isRequired]="field.isRequired"
-                    ></app-select>
+                  <app-select
+                  fxFill
+                  appearance="outline"
+                  [placeholder]="field.label || ''"
+                  [bindLabelKeys]="field.bindLabelKeys"
+                  [formControlName]="field.name || ''"
+                  [dataFunction]="field.dataFunction"
+                  [options]="field.options || []"
+                  searchPlaceholder="חיפוש"
+                  bindLabelKey="display"
+                  bindValueKey="value"
+                  [isMultiSelect]="field.isMultiSelect || false"
+                  [title]="field.label || ''"
+                  ></app-select>
                   </div>
 
                   <!-- Checkbox -->
