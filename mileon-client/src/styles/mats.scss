@@ -130,17 +130,6 @@
   }
 
 
-  // Calendar body cells
-  .mat-calendar-body-cell {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    direction: rtl !important;
-    text-align: center !important;
-    padding: 0 !important;
-    position: relative !important;
-  }
-
   .mat-calendar-body-cell-content {
     display: flex !important;
     justify-content: center !important;
@@ -205,6 +194,8 @@
   .mat-calendar-body-cell,
   .mat-calendar-body-cell::after,
   .mat-calendar-body-cell::before{
+    // width: 32px !important;
+    height: 32px !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
@@ -237,6 +228,7 @@
   }
   
   &.mat-calendar-body-selected {
+    width: 75%!important;
     border-radius: 4px !important;
     background: var(--meilon-light-blue, #86D0F7) !important;
   }
@@ -268,7 +260,6 @@
   align-items: center !important;
   align-self: stretch !important;
   gap: 21px !important;
-  direction: rtl !important;
 }
 
 .mat-calendar-controls {
@@ -295,7 +286,6 @@
     font-style: normal !important;
     font-weight: 700 !important;
     line-height: 24px !important;
-    font-family: 'Assistant', 'Open Sans', sans-serif !important;
   }
 }
 

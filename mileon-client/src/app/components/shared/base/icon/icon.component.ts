@@ -17,7 +17,7 @@ export class IconComponent {
   cssClass: string = '';
 
   @Input()
-  size: 'small' | 'large' = 'large';
+  size: 'small' | 'large' = 'small';
 
   constructor() { }
 
