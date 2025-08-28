@@ -1,0 +1,68 @@
+<div class="actions">
+  <div class="wrap-btns">
+    <div class="btns">
+      <!-- <div class="wrap-bubble">
+                <div class="bubble">
+                    <span>יתרה לתשלום על סך דוחות נבחרים </span>
+                    <br />
+                    <b>{{0}}₪</b>
+                    <div class="traingle"></div>
+                </div>
+            </div> -->
+
+      <div class="constant-btns">
+        <!-- <button matTooltip="להשמעת קבצי קול" [matTooltipClass]="['custom-tooltip','microphone-tooltip']" Tooltip
+                    *ngIf="showMicrophone" class="action-btn-ticket">
+                    <img [src]="microphoneSvg" class="microphone" />
+                </button> -->
+        <div *ngFor="let button of allowedButtons">
+          <!-- {{button.value}} -->
+          <ng-container *ngIf="!button.disabled">
+            <app-button
+              [buttonText]="button.text"
+              [imgSrc]="button.imgSrc"
+              (click)="button.disabled ? null : performAction(button.text)"
+              [tooltipText]="button.tooltipText"
+              [tooltipClass]="button.tooltipClass"
+              [isDisabled]="button.disabled"
+            >
+            </app-button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <span class="error">{{ errorContent }}</span>
+  </div>
+</div>
+
+<!-- <app-modal
+  [title]="'דרישות תשלום'"
+  [buttons]="modalButtons"
+  [isModalOpen]="isTicketPaymentModalOpen"
+  (isModalClosed)="closeTicketPaymentModal()"
+  [amountData]="amountData"
+  [modalSize]="'lg'"
+>
+  <app-tickets-for-payment-checkbox
+    *ngIf="moduleEnum == ModuleEnum.TicketsNewModule && recordId"
+    [recordId]="recordId"
+    [moduleEnum]="moduleEnum"
+    (modalButtonsChange)="handleModalButtonsChange($event)"
+    (amountChanged)="handleAmountChange($event)"
+  ></app-tickets-for-payment-checkbox>
+</app-modal>
+
+<app-modal
+  [title]="'יצירת בקשה חדשה'"
+  [isModalOpen]="isNewLegalRequestModalOpen"
+  (isModalClosed)="closeNewLegalRequestModal()"
+  [modalSize]="'md'"
+  [buttons]="modalButtons"
+>
+  <app-select-request-type
+    [typeOptions]="LegalRequestTypeOptions"
+    (selectedValueChanged)="handleSelectedLegalRequestTypeChange($event)"
+    (modalButtonsChange)="handleModalButtonsChange($event)"
+  >
+  </app-select-request-type>
+</app-modal> -->

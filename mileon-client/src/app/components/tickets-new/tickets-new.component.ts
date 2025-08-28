@@ -26,6 +26,7 @@ import { AuthorityService } from '../../services/authority.service ';
 import { ButtonComponent } from '../shared/base/button/button.component';
 import { TicketsTableNewComponent } from './tickets-table-new/tickets-table-new.component';
 import { TicketsSearchComponent } from './tickets-search/tickets-search.component';
+import { ActionButtonsComponent } from '../shared/action-buttons/action-buttons.component';
 
 @Component({
   selector: 'app-tickets-new',
@@ -34,6 +35,7 @@ import { TicketsSearchComponent } from './tickets-search/tickets-search.componen
     ButtonComponent,
     TicketsTableNewComponent,
     TicketsSearchComponent,
+    ActionButtonsComponent
   ],
   templateUrl: './tickets-new.component.html',
   styleUrls: ['./tickets-new.component.scss'],
@@ -77,8 +79,8 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
     'PrintToPDF',
   ];
 
-  // @ViewChild('actionButtonsComponent', { static: false })
-  // actionButtonsComponent: ActionButtonsComponent;
+  @ViewChild('actionButtonsComponent', { static: false })
+  actionButtonsComponent!: ActionButtonsComponent;
 
   countTickets: number = 0;
   isSearchMode: boolean = false;
@@ -117,7 +119,7 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
 
   ngOnDestroy() {}
   ngAfterViewInit(): void {
-    // this.actionButtonsComponent?.toggleDisabled(this.actionButtonsList, true);
+    this.actionButtonsComponent?.toggleDisabled(this.actionButtonsList, true);
   }
 
   async loadData(filter: TicketFilterOptions) {
@@ -137,10 +139,10 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
         this.count = res.count;
       }
       if (!res?.list.length) {
-        // this.actionButtonsComponent?.toggleDisabled(
-        //   this.actionButtonsList,
-        //   true
-        // );
+        this.actionButtonsComponent?.toggleDisabled(
+          this.actionButtonsList,
+          true
+        );
       }
     } catch (e) {
       console.error(e);
