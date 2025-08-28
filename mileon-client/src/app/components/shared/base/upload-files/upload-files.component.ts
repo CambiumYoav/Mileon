@@ -150,9 +150,7 @@ export class FileUploadNewComponent
         this.toaster.error(ErrorSuccessMessages.FILE_SIZE_NOT_ALLOWED);
         return;
       }
-
-      console.log('Selected file:', this.file);
-      // Add to preview
+      
       this.addFileToPreview(this.file, UploadStatus.SUCCESS);
     }
   }

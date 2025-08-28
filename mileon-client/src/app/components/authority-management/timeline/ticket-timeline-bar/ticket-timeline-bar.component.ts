@@ -126,7 +126,6 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
       )
         ? TimelineStepsType.Enforcement
         : TimelineStepsType.TicketLifetime;
-      console.log(typeOfSettings);
       this.timelineService.updateStepOrder(typeOfSettings, updatedStepData);
       this.switchStep = undefined;
       this.sortSteps();

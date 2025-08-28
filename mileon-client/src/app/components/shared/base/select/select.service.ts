@@ -106,7 +106,7 @@ export class SelectService {
         // Use type assertion to handle dynamic property access
         const lookupMethod = (this.lookupNewService as any)[dataFunction.name];
         if (typeof lookupMethod === 'function') {
-          res = (await lookupMethod(paramObj))[dataFunction.objName];
+          res = (await lookupMethod.call(this.lookupNewService, paramObj))[dataFunction.objName];
         } else {
           console.error(`Method ${dataFunction.name} not found in LookupNewService`);
           return { isEndOfData: true, isServerSide: false };
@@ -118,7 +118,7 @@ export class SelectService {
           // Use type assertion to handle dynamic property access
           const lookupMethod = (this.lookupNewService as any)[dataFunction.name];
           if (typeof lookupMethod === 'function') {
-            res = await lookupMethod(paramObj);
+            res = await lookupMethod.call(this.lookupNewService, paramObj);
           } else {
             console.error(`Method ${dataFunction.name} not found in LookupNewService`);
             return { isEndOfData: true, isServerSide: false };
@@ -159,7 +159,7 @@ export class SelectService {
       return dataStatus;
     } catch (e) {
       console.error(e);
-      return undefined;
+      return { isEndOfData: true, isServerSide: false };
     }
   }
 }

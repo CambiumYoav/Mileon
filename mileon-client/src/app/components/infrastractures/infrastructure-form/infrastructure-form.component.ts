@@ -139,8 +139,6 @@ export class InfrastructureFormComponent implements OnInit {
 
   /** Handles form submission */
   onSubmit(): void {
-    console.log(this.dynamicForm);
-    console.log('File received from child component:', this.selectedFiles);
     if (this.dynamicForm.valid) {
       this.dataSubject.next({
         form: this.dynamicForm.value,

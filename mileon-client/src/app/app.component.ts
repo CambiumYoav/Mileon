@@ -351,8 +351,6 @@ export class AppComponent {
           ? InfrastructureTableAction.Update
           : InfrastructureTableAction.Add;
         this.handleInsertOrUpdate(result.form, action);
-
-        console.log(result);
       });
     }
   }
@@ -919,29 +917,8 @@ export class AppComponent {
     }, 500);
   }
 
-  onRowEvent(event: any): void {
-    if (event.action === 'edit') {
-      console.log('Edit clicked for item:', event.item);
-      // TODO: Implement edit functionality
-      this.showSuccess(); // Show success message for now
-    } else {
-      // Log boolean states for radio buttons
-      if (event.yesNoRadio_booleanState) {
-        console.log('YesNo Boolean State:', event.yesNoRadio_booleanState);
-      }
-      if (event.priority_booleanState) {
-        console.log('Priority Boolean State:', event.priority_booleanState);
-      }
-      if (event.approval_booleanState) {
-        console.log('Approval Boolean State:', event.approval_booleanState);
-      }
-    }
-  }
-
   sendFormValue(searchForm: any): void {
-    console.log('Search form received:', searchForm);
     const searchText = searchForm.get('searchText')?.value || '';
-    console.log('Search text:', searchText);
     this.searchText = searchText;
     
     // Get advanced search values
@@ -959,8 +936,7 @@ export class AppComponent {
     locationFilters: any, 
     dateFilters: any
   ): void {
-    console.log('Filtering data with advanced search:', { searchText, basicFilters, locationFilters, dateFilters });
-    
+
     let filteredData = [...this.originalData];
     
     // Apply basic search text filter
@@ -1054,10 +1030,8 @@ export class AppComponent {
   }
 
   private updateTableData(newData: any[]): void {
-    console.log('Updating table data:', newData.length, 'items');
     // Create a new array reference to trigger change detection
     this.data = [...newData];
-    console.log('Table data updated, new length:', this.data.length);
   }
 
   showSuccess() {
@@ -1105,7 +1079,6 @@ export class AppComponent {
 
   // Method to demonstrate boolean state manipulation
   logBooleanStates(): void {
-    console.log('Current data with boolean states:');
     this.data.forEach((item, index) => {
       console.log(`Item ${index + 1}:`, {
         id: item.id,
@@ -1129,8 +1102,6 @@ export class AppComponent {
         'medium': false,
         'low': true
       };
-      
-      console.log('Programmatically set first item priority to low');
       this.updateTableData(this.data);
     }
   }
