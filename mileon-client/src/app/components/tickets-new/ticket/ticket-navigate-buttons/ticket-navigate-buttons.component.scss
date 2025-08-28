@@ -1,0 +1,27 @@
+@import './../../../../../styles/elements.scss';
+:host{
+    .wrap-action-buttons {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-left: 25px;
+
+        .payment-tabs {
+            display: flex;
+            width: 50%;
+            margin-right: 50px;
+
+            .action-btn-ticket {
+                padding: 10px 14px;
+                background-color: $colorGreen;
+            }
+
+            .btn-active {
+                background-color: $colorDarkGreen;
+                color: white;
+            }
+        }
+    }
+
+}

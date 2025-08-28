@@ -1,0 +1,27 @@
+<div class="actions" [ngClass]="{ 'from-table': fromTable }">
+  <div class="wrap-btns">
+    <div class="btns">
+      <div class="constant-btns" [ngClass]="{ space: space }">
+        <button
+          class="microphone-btn"
+          matTooltip="להשמעת קבצי קול"
+          [matTooltipClass]="['custom-tooltip', 'microphone-tooltip']"
+          Tooltip
+          *ngIf="showMicrophone"
+          class="action-btn-ticket"
+        >
+          <img [src]="microphoneSvg" class="microphone" />
+        </button>
+
+        <app-action-buttons
+          #actionButtonsComponent
+          [buttonsList]="actionButtonsList"
+          [recordId]="ticketID"
+          [phoneNumber]="mainPhoneNumber"
+          [moduleEnum]="moduleEnum.TicketsNewModule"
+          [emailAddress]="emailAddress"
+        ></app-action-buttons>
+      </div>
+    </div>
+  </div>
+</div>

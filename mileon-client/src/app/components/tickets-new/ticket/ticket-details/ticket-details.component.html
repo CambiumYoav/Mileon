@@ -1,0 +1,363 @@
+<div *ngIf="!ticketIDFromExternalModule" class="back">
+  <img (click)="back()" [src]="arrowSvg" />
+  <span class="title">{{ title }}</span>
+</div>
+
+<div *ngIf="!ticketIDFromExternalModule" class="action-btns">
+  <app-action-buttons
+    #actionButtonsComponent
+    [buttonsList]="actionButtonsList"
+    [recordId]="ticketID"
+    [phoneNumber]="mainPhoneNumber"
+    [moduleEnum]="moduleEnum.TicketsNewModule"
+    [emailAddress]="emailAddress"
+  ></app-action-buttons>
+</div>
+
+<ng-container *ngIf="ticketDetails && formReady">
+  <div class="wrap-card">
+    <form [formGroup]="formGroup">
+      <div class="citizen card">
+        <div class="title-card">בעל העבירה</div>
+
+        <div class="content">
+          <div class="row-details">
+            <div class="wrap-item big-width">
+              <div class="item">
+                <div class="title">שם מלא</div>
+                <div class="info">
+                  {{ ticketDetails.citizen.firstName }}
+                  {{ ticketDetails.citizen.lastName }}
+                </div>
+                <!-- <div class="info">ישראל ישראלי</div> -->
+              </div>
+            </div>
+
+            <div class="wrap-item big-width">
+              <div class="item">
+                <div class="title">זהות / ח.פ</div>
+                <div class="info">
+                  {{ ticketDetails?.citizen | renderIdentity }}
+                </div>
+                <!-- <div class="info">20122203040</div> -->
+              </div>
+            </div>
+          </div>
+
+          <div class="row-details">
+            <div class="wrap-item">
+              <div class="item">
+                <div class="title">מספר נייד</div>
+                <div class="info edit">
+                  <ng-container>
+                    <input
+                      formControlName="phone"
+                      [(ngModel)]="phone.phone"
+                      class="hide-border-input"
+                      type="text"
+                      placeholder="הוסף מספר"
+                    />
+                    <img [src]="editSvg" />
+                  </ng-container>
+                </div>
+              </div>
+              <span
+                *ngIf="formGroup.controls['phone'].hasError('pattern')"
+                class="error-input"
+                >* מספר לא תקין</span
+              >
+            </div>
+
+            <div class="wrap-item">
+              <div class="item">
+                <div class="title">מספר נוסף</div>
+                <div class="info edit">
+                  <ng-container>
+                    <input
+                      class="hide-border-input"
+                      type="text"
+                      placeholder="הוסף מספר"
+                      formControlName="anotherPhone"
+                      [(ngModel)]="anotherPhone.phone"
+                    />
+                    <img [src]="editSvg" />
+                  </ng-container>
+                </div>
+              </div>
+              <span
+                *ngIf="formGroup.controls['anotherPhone'].hasError('pattern')"
+                class="error-input"
+                >* מספר לא תקין</span
+              >
+            </div>
+
+            <div class="wrap-item">
+              <div class="item">
+                <div class="title">מספר רכב</div>
+                <div class="info">
+                  {{ ticketDetails.vehicle?.vehicleNumber }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row-details">
+            <div class="wrap-item big-width strech">
+              <div class="item">
+                <div class="title">כתובת ראשית ממשרד הפנים</div>
+                <div class="info">
+                  <span>
+                    {{ homeAddressString }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="wrap-item big-width strech">
+              <div class="item">
+                <div class="title">כתובת לשליחת דואר</div>
+                <div class="info edit">
+                  <span>
+                    {{ postalAddressString }}
+                  </span>
+                  <img [src]="editSvg" (click)="goToTicketOwnerPage()" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row-details">
+            <div class="wrap-item big-width strech">
+              <div class="item">
+                <div class="title">מייל</div>
+                <div class="info edit">
+                  <input
+                    class="hide-border-input"
+                    type="text"
+                    placeholder="הוסף מייל"
+                    formControlName="email"
+                    [(ngModel)]="ticketDetails.citizen.email"
+                  />
+                  <img [src]="editSvg" />
+                </div>
+              </div>
+              <span
+                *ngIf="formGroup.controls['email'].hasError('pattern')"
+                class="error-input"
+                >* מייל לא תקין</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="wrap-btns">
+          <app-button
+            [buttonText]="' שמור '"
+            [isDisabled]="formGroup.invalid || !updateTicketOwnerButton"
+            (clickFunction)="save()"
+          >
+          </app-button>
+
+          <app-button
+            [buttonText]="' לכל הפרטים '"
+            (clickFunction)="moreDetails('owner')"
+            [sizeClass]="'button-base'"
+            [buttonClass]="'tertiary-btn'"
+          >
+          </app-button>
+        </div>
+      </div>
+
+      <div class="violation card">
+        <div class="title-card">פרטי העבירה</div>
+
+        <div class="content">
+          <div class="row-details">
+            <div class="wrap-item normal">
+              <div class="item">
+                <div class="title">מספר דוח</div>
+                <div class="info">{{ ticketDetails.ticketNumber }}</div>
+              </div>
+            </div>
+
+            <div class="wrap-item normal">
+              <div class="item">
+                <div class="title">תאריך</div>
+                <div class="info">
+                  <span
+                    >{{ ticketDetails.ticketGivingDate | date : "dd.MM.yy" }},
+                  </span>
+                  <!-- <span>ראשון, </span> -->
+                  <span
+                    >{{ days[ticketDetails.ticketGivingDate.getDay()] }},
+                  </span>
+                  <span
+                    >{{ ticketDetails.ticketGivingDate | date : " hh:mm:ss" }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="wrap-item normal">
+              <div class="item">
+                <div class="title">קנס מקור</div>
+                <div class="info edit">
+                  <span>{{ ticketDetails.fineAmount }} ₪</span>
+                  <span class="link" (click)="goToPaymentDetailsPage()"
+                    >לצפייה</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row-details small-row">
+            <div class="wrap-item small-width">
+              <div class="item">
+                <div class="title">תיאור העבירה</div>
+                <div class="info">{{ ticketDetails?.violationName }}</div>
+              </div>
+            </div>
+
+            <div class="wrap-item small-width">
+              <div class="item">
+                <div class="title">סעיף העבירה</div>
+                <div class="info">{{ ticketDetails?.violationSection }}</div>
+              </div>
+            </div>
+
+            <div class="wrap-item small-width">
+              <div class="item">
+                <div class="title">לתשלום עד</div>
+                <div class="info">
+                  {{ ticketDetails.paymentLastDate | date : "dd.MM.yy" }}
+                </div>
+              </div>
+            </div>
+
+            <div class="wrap-item small-width">
+              <div class="item">
+                <div class="title">יתרת דוח</div>
+                <div class="info">
+                  {{
+                    ticketDetails.paymentBalance
+                      | currency : "ILS" : "symbol-narrow"
+                  }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="images-content"
+            *ngIf="ticketDetails.violationFiles != []"
+          >
+            <label class="title">תמונות</label>
+            <div>
+              <app-media-gallery
+                [data]="ticketDetails.violationFiles"
+              ></app-media-gallery>
+            </div>
+          </div>
+        </div>
+
+        <div class="wrap-btns">
+          <app-button
+            [buttonText]="' לכל הפרטים '"
+            (clickFunction)="moreDetails('violation')"
+          >
+          </app-button>
+        </div>
+      </div>
+
+      <div class="call-summary card">
+        <div></div>
+        <div class="title-card call">
+          <img
+            matTooltip="צפייה בסיכומי שיחה"
+            [matTooltipClass]="['custom-tooltip', 'send-tooltip']"
+            Tooltip
+            [src]="eyeSvg"
+            (click)="
+              isList = true; isOpenCallSummary = true; isOpenAddNote = false
+            "
+          />
+          <span>סיכום שיחה אחרונה</span>
+        </div>
+
+        <div class="content">
+          <ng-container
+            *ngIf="callSummariesList && callSummariesList.length > 0"
+          >
+            <div class="row-details">
+              <div class="wrap-item big-width strech">
+                <div class="item">
+                  <div class="title">תאריך</div>
+                  <div class="info">
+                    <span
+                      >{{
+                        callSummariesList[0].createdDate | date : "dd.MM.yy"
+                      }},
+                    </span>
+                    <span
+                      >{{ callSummariesList[0].createdDate | date : " hh:mm" }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="wrap-item big-width strech">
+                <div class="item">
+                  <div class="title">מספר טלפון</div>
+                  <div class="info">{{ callSummariesList[0].phoneNumber }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="call-text">
+              <div class="wrap-reserved">
+                <span
+                  class="reserved"
+                  *ngFor="let r of callSummariesList[0].reservedes"
+                >
+                  {{ r.text }}
+                </span>
+              </div>
+              <span class="content">{{ callSummariesList[0].content }}</span>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="wrap-add-btn">
+          <button
+            class="add-summary"
+            (click)="
+              isList = false; isOpenCallSummary = true; isOpenAddNote = false
+            "
+          >
+            <img [src]="summarySvg" />
+            <span>הוסף סיכום חדש</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- <div class="time-line">
+    <app-ticket-timeline [ticketID]="ticketID"></app-ticket-timeline>
+  </div> -->
+</ng-container>
+
+<div
+  class="side-popup call-summary-popup"
+  *ngIf="isOpenCallSummary && callSummariesList"
+>
+  <app-call-summary
+    (addCallSummary)="addCallSummary($event)"
+    (close)="isOpenCallSummary = false"
+    [callSummariesList]="callSummariesList"
+    [phone]="phone ? phone.phone : ''"
+    [ticketId]="ticketID"
+    [isList]="isList"
+  >
+  </app-call-summary>
+</div>

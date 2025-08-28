@@ -76,14 +76,15 @@
                 /> -->
                 <app-radio-button
                   *ngIf="column.type === ColumnTypeEnum.Radio"
-                  [options]="getRadioOptions(column, item)"
-                  [name]="getRadioName(column, item)"
+                  [options]="[
+                    { value: 'כן', label: 'כן' },
+                    { value: 'לא', label: 'לא' }
+                  ]"
+                  [name]="'yesNoRadio-' + item.id"
                   [value]="item[column.propertyName]"
-                  [allowDeselect]="getAllowDeselect(column)"
                   (valueChange)="onRadioChange(item, column.propertyName, $event)"
-                  (selectionState)="onRadioSelectionState(item, column.propertyName, $event)"
-                  [type]="getRadioType(column)"
-                  [direction]="getRadioDirection(column)"
+                  type="default"
+                  direction="horizontal"
                 ></app-radio-button>
                 <app-radio-button
                   *ngIf="column.type === ColumnTypeEnum.ActiveStatus"
@@ -125,9 +126,6 @@
 
                   <span
                     *ngIf="!column.hasIcon && column.propertyName !== 'nid'"
-                    [class.text-overflow-tooltip]="column.textOverflow"
-                    appTruncatedTextTooltip
-                    [tooltipText]="column.textOverflow ? (item[column.propertyName] + (column.additionalText ? item[column.additionalText] : '')) : ''"
                   >
                     {{ item[column.propertyName] }}
                     {{
@@ -137,9 +135,6 @@
 
                   <span
                     *ngIf="!column.hasIcon && column.propertyName === 'nid'"
-                    [class.text-overflow-tooltip]="column.textOverflow"
-                    appTruncatedTextTooltip
-                    [tooltipText]="column.textOverflow ? (item | renderIdentity) : ''"
                   >
                     {{ item | renderIdentity }}
                   </span>
@@ -162,9 +157,6 @@
                   ></app-checkbox>
                   <span
                     *ngIf="!column.hasIcon && column.propertyName !== 'nid'"
-                    [class.text-overflow-tooltip]="column.textOverflow"
-                    appTruncatedTextTooltip
-                    [tooltipText]="column.textOverflow ? (item[column.propertyName] + (column.additionalText ? item[column.additionalText] : '')) : ''"
                   >
                     {{ item[column.propertyName] }}
                     {{
@@ -173,9 +165,6 @@
                   </span>
                   <span
                     *ngIf="!column.hasIcon && column.propertyName === 'nid'"
-                    [class.text-overflow-tooltip]="column.textOverflow"
-                    appTruncatedTextTooltip
-                    [tooltipText]="column.textOverflow ? (item | renderIdentity) : ''"
                   >
                     {{ item | renderIdentity }}
                   </span>
@@ -195,28 +184,15 @@
                 <span
                   *ngIf="column.type === ColumnTypeEnum.Currency"
                   [ngClass]="column.textColor ?? 'blue'"
-                  [class.text-overflow-tooltip]="column.textOverflow"
-                  appTruncatedTextTooltip
-                  [tooltipText]="column.textOverflow ? ((item[column.propertyName] | currency : '₪ ') || '') : ''"
                 >
                   {{ item[column.propertyName] | currency : "₪ " }}
                 </span>
                 <!-- <span>₪</span> -->
-                <span 
-                  *ngIf="column.type === ColumnTypeEnum.Date"
-                  [class.text-overflow-tooltip]="column.textOverflow"
-                  appTruncatedTextTooltip
-                  [tooltipText]="column.textOverflow ? ((item[column.propertyName] | date : 'dd/MM/yyyy') || '') : ''"
-                >
+                <span *ngIf="column.type === ColumnTypeEnum.Date">
                   {{ item[column.propertyName] | date : "dd/MM/yyyy" }}
                 </span>
 
-                <span 
-                  *ngIf="column.type === ColumnTypeEnum.DateTime"
-                  [class.text-overflow-tooltip]="column.textOverflow"
-                  appTruncatedTextTooltip
-                  [tooltipText]="column.textOverflow ? ((item[column.propertyName] | date : 'HH:mm | dd.MM.yyyy') || '') : ''"
-                >
+                <span *ngIf="column.type === ColumnTypeEnum.DateTime">
                   {{ item[column.propertyName] | date : "HH:mm | dd.MM.yyyy" }}
                 </span>
 

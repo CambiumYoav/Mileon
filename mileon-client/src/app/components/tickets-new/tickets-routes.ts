@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { TicketsNewComponent } from './tickets-new.component';
-import { ROUTE_PATH } from '../../constants/routerPath';
+import { ROUTE_PATH as RP } from '../../constants/routerPath';
 
 export const ticketsRoutes: Routes = [
   // { path: '', redirectTo: 'tickets', pathMatch: 'full' },
@@ -15,6 +15,60 @@ export const ticketsRoutes: Routes = [
     loadComponent: () =>
       import('./tickets-new.component').then(m => m.TicketsNewComponent),
   },
+    // /tickets/<RP.TicketsNew.Tickets>
+  {
+    path: RP.TicketsNew.Tickets,
+    loadComponent: () =>
+      import('./tickets-new.component').then(m => m.TicketsNewComponent),
+  },
+
+  // /tickets-new/<RP.TicketsNew.Ticket>/:id  -> shell with children
+  {
+    path: `${RP.TicketsNew.Ticket}/:id`,
+    loadComponent: () =>
+      import('./ticket/ticket.component').then(m => m.TicketComponent), // shell
+    children: [
+      // /tickets/<ticket>/:id  -> redirect to 'details'
+      { path: '', pathMatch: 'full', redirectTo: RP.TicketsNew.Details },
+
+      {
+        path: RP.TicketsNew.Details,
+        loadComponent: () =>
+          import('./ticket/ticket-details/ticket-details.component')
+            .then(m => m.TicketDetailsComponent),
+      },
+      //       {
+//         path: RP.TicketsNew.Violation,
+//         loadComponent: () =>
+//           import('./violation/ticket-violation-details.component')
+//             .then(m => m.TicketViolationDetailsComponent),
+//       },
+      {
+        path: RP.TicketsNew.Owner,
+        loadComponent: () =>
+          import('./ticket/ticket-owner-details/ticket-owner-details.component')
+            .then(m => m.TicketOwnerDetailsComponent),
+      },
+//       {
+//         path: RP.TicketsNew.PaymentHistory,
+//         loadComponent: () =>
+//           import('./payment/ticket-payment-details.component')
+//             .then(m => m.TicketPaymentDetailsComponent),
+//       },
+//       {
+//         path: RP.TicketsNew.ConnectedTickets,
+//         loadComponent: () =>
+//           import('./connected/ticket-connect-details.component')
+//             .then(m => m.TicketConnectDetailsComponent),
+//       },
+//       {
+//         path: RP.TicketsNew.History,
+//         loadComponent: () =>
+//           import('./history/ticket-history-action.component')
+//             .then(m => m.TicketHistoryActionComponent),
+//       },
+    ]
+    }
 ];
 
 ///
