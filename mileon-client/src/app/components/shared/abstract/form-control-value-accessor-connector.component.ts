@@ -6,11 +6,10 @@ import {
   FormControl,
   FormControlDirective,
 } from '@angular/forms';
-import { Component, Injector, Input, ViewChild } from '@angular/core';
+import { Component, Directive, Injector, Input, ViewChild } from '@angular/core';
+import { CORE_IMPORTS } from '../../../shared/shared-modules';
 
-@Component({
-  template: '',
-})
+@Directive() 
 export abstract class FormControlValueAccessorConnector
   extends BaseFormComponent
   implements ControlValueAccessor

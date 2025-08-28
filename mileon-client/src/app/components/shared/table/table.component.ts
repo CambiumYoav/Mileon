@@ -29,19 +29,28 @@ import { SortOrder } from '../../../types/enum/sort-order.enum';
 import { ConstPath } from '../../../constants/const_path';
 import { SharedImports } from '../../../shared/shared-modules';
 import { RenderIdentityPipe } from '../../../pipes/identity.pipe';
-import { PaginatorComponent } from "./paginator/paginator.component";
+import { PaginatorComponent } from './paginator/paginator.component';
 import { TagComponent } from '../base/tag/tag.component';
 import { CheckboxComponent } from '../base/checkbox/checkbox.component';
 import { RadioButtonComponent } from '../base/radio-button/radio-button.component';
 // import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
-import { IconComponent } from "../base/icon/icon.component";  
+import { IconComponent } from '../base/icon/icon.component';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
-  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent, RadioButtonComponent, IconComponent],
+  imports: [
+    SharedImports,
+    NgbdSortableHeader,
+    RenderIdentityPipe,
+    PaginatorComponent,
+    TagComponent,
+    CheckboxComponent,
+    RadioButtonComponent,
+    IconComponent,
+  ],
   providers: [TableService],
 })
 export class TableComponent
@@ -163,7 +172,7 @@ export class TableComponent
     if (changes['isChecked']?.currentValue !== undefined) {
       this.cdRef.detectChanges();
     }
-    
+
     // Always set table data when data changes
     if (changes['data'] && this.data && this.data.length > 0) {
       this.setTableData();
@@ -176,7 +185,7 @@ export class TableComponent
     this.selectedPage = currentPage;
     this.form?.get('currentPage')?.setValue(currentPage);
     this.onFormChanges.emit(this.form);
-    
+
     // Update table service and refresh data
     this.tableService.page = currentPage;
     this.setTableData();
@@ -184,7 +193,7 @@ export class TableComponent
 
   setTableData() {
     this.tableService.columns = this.columns || [];
-    this.tableService.pageSize = this.pageSize as number; 
+    this.tableService.pageSize = this.pageSize as number;
     this.tableService.page = this.selectedPage;
     this.tableService.dataSubject$.next(this.data || []);
     this.tableService.totalSubject$.next(this.total);
@@ -253,17 +262,17 @@ export class TableComponent
     if (!iconName) {
       return this.Icons.EDIT;
     }
-    
+
     // If it's already a string path, return it directly
     if (typeof iconName === 'string') {
       return iconName;
     }
-    
+
     // If it's an Icon object, use its src property
     if (iconName && typeof iconName === 'object' && 'src' in iconName) {
       return iconName.src;
     }
-    
+
     // Use type assertion to access the static property dynamically
     return (this.Icons as any)[iconName] || this.Icons.EDIT;
   }
@@ -295,7 +304,6 @@ export class TableComponent
     }
   }
 
-
   getRadioColorClassByLastTicketTime(timeStr: string | null): string {
     if (!timeStr) return 'gray';
 
@@ -318,10 +326,10 @@ export class TableComponent
   onRadioChange(item: any, propertyName: string, value: string): void {
     // Update the item's property value
     item[propertyName] = value;
-    
+
     // Emit the change event
     this.onSelectedRowIdChange(item);
-    
+
     // Update the table service data to reflect the change
     if (this.data) {
       this.tableService.dataSubject$.next([...this.data]);
@@ -331,10 +339,10 @@ export class TableComponent
   onInputChange(item: any, propertyName: string, event: any): void {
     // Update the item's property value
     item[propertyName] = event.target.value;
-    
+
     // Emit the change event
     this.onSelectedRowIdChange(item);
-    
+
     // Update the table service data to reflect the change
     if (this.data) {
       this.tableService.dataSubject$.next([...this.data]);
@@ -345,7 +353,7 @@ export class TableComponent
     // Allow only numeric input (0-9) and control keys
     const pattern = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
-    
+
     if (!pattern.test(inputChar) && event.charCode !== 0) {
       event.preventDefault();
     }

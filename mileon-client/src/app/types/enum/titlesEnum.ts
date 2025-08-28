@@ -57,4 +57,5 @@ export enum TitlesEnum {
   DraftsUpdateTitle = 'עריכת גלופה  ',
   LetterCreateTitle = 'מכתב חדש  ',
   LetterUpdateTitle = 'עריכת מכתב  ',
+  TicketsSearch='חיפוש דוחות',
 }
