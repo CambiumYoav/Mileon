@@ -92,7 +92,6 @@ export class AdvancedSearchComponent
   getSum(tabName: string) {
     // NOTE 🤢 ugly due to lack of dev time - needs refactor
     if (this.form && this.advancedForm) {
-      // console.log('@@@@@@@@@@@@@@@@@@', this.form, tabName);
 
       const formGroup = this.form.controls[tabName] as FormGroup;
       if (!formGroup) {

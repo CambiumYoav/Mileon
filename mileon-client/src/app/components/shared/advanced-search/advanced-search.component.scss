@@ -19,10 +19,29 @@
     transform: translateX(0px) !important;
   }
 
-  ::ng-deep
-    .mat-tab-header-pagination-controls-enabled
-    .mat-tab-header-pagination {
-    display: none !important;
+  // RTL support for tab pagination - enable pagination and fix direction
+  ::ng-deep .mat-tab-header-pagination {
+    direction: rtl !important;
+    display: flex !important;
+  }
+
+  // Swap the order of before/after pagination buttons for RTL
+  ::ng-deep .mat-tab-header-pagination-before {
+    order: 2 !important;
+  }
+
+  ::ng-deep .mat-tab-header-pagination-after {
+    order: 1 !important;
+  }
+
+  // Fix the pagination arrow directions for RTL
+  ::ng-deep .mat-tab-header-pagination-chevron {
+    transform: scaleX(-1) !important;
+  }
+
+  // Ensure tab list container supports RTL pagination
+  ::ng-deep .mat-tab-label-container {
+    direction: rtl !important;
   }
 
   ::ng-deep {

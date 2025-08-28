@@ -3,7 +3,8 @@
     mat-stretch-tabs="false" 
     mat-align-tabs="start"
     [disableRipple]="true"
-    [animationDuration]="0">
+    [animationDuration]="0"
+    dir="rtl">
     <form [formGroup]="form">
       <mat-tab
         *ngFor="let tab of advancedForm.tabs || []"

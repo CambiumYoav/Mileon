@@ -1,3 +1,25 @@
+@import "../../../../../../styles/checkboxs.scss";
+@import "../../../../../../styles/elements.scss";
+
+.checkbox {
+  margin-top: 10px;
+  input[type="checkbox"] {
+    @include base-checkbox();
+    background: #F7F9FC;
+  }
+  
+  .title {
+    color: var(--black, #000);
+    text-align: right;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    cursor: pointer;
+  }
+}
+
+// Legacy green checkbox styles (if still needed elsewhere)
 .green-checkbox {
     input[type="checkbox"] {
       width: 15px;

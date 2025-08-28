@@ -161,11 +161,12 @@ export class TableService {
       this._state;
     // 1. sort
     // let tableData;
+    // Get the current data from the subject (synchronously)
+    const currentData = this.dataSubject$.value;
     let tableData: any[] = [];
-    this.dataSubject$.subscribe((res) => {
-      tableData = res;
-      if (res?.length && this.columns) {
-        tableData = [...res];
+    
+    if (currentData?.length && this.columns) {
+      tableData = [...currentData];
         
         if (sortColumn && sortDirection) {
           tableData = sort(tableData, sortColumn, sortDirection);
@@ -203,19 +204,13 @@ export class TableService {
         //   matches(item, searchTerm, this.pipe)
         // );
 
-        // 3. paginate
-        if (pageSize > 0 && page > 0) {
-          const startIndex = (page - 1) * pageSize;
-          const endIndex = startIndex + pageSize;
-          tableData = tableData.slice(startIndex, endIndex);
-        }
-      }
-    });
-    // const total = tableData?.length;
-    let total;
-    this.total$.subscribe(val => {
-      total = val;
-    })
+      // Note: Client-side pagination is disabled here because the data
+      // is already paginated on the server side. The table receives
+      // only the current page's data from the API.
+    }
+    
+    // Get the current total (synchronously)
+    const total = this.totalSubject$.value;
     return of({ data: tableData, total });
   }
 }

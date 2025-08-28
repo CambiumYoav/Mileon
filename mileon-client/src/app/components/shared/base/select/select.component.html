@@ -15,7 +15,7 @@
     class="select"
     [ngClass]="{
       invalidInput: !isValid,
-      validInput: control?.valid && control?.touched
+      validInput: control?.value && control?.touched
     }"
   >
     <span *ngIf="control?.value && (isMultiSelect ? control.value.length : true)">

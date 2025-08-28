@@ -125,17 +125,14 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
   async loadData(filter: TicketFilterOptions) {
     this.loader = true;
     try {
-      console.log(filter);
       const newFilter = {
         ...filter,
 
         authorityID: this.currentAuthority,
       };
-      console.log(newFilter);
       const res = await this.ticketsService.getTickets(newFilter);
       if (res && res.list) {
         this.loader = false;
-        console.log('here,', res.list);
         this.list = res.list.map((p) => new TicketNew(p));
         this.total = res.total;
         this.count = res.count;
@@ -162,7 +159,6 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
     this.ticketsSearchFormService.clearForm();
   }
   onSelectedTicket(t: TicketNew | any) {
-    console.log('selected ticket', t);
     this.selectedTicket.set(t);
     this.emailAddress = t?.email ?? '';
     this.phoneNumber = t?.mainPhone ?? '';

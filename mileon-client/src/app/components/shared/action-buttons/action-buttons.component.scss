@@ -2,6 +2,11 @@
 
 :host {
 
+
+    // ::ng-deep .primary-btn{
+    //     width: calc(100% + 10px) !important;
+    //   }
+
     .actions {
         display: flex;
         justify-content: flex-end;
@@ -25,6 +30,7 @@
             .btns {
                 .constant-btns {
                     width: 100%;
+                    gap: 20px;
                     // margin-left: 50px;
                     display: flex;
                     justify-content: flex-end;

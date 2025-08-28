@@ -67,7 +67,6 @@ export class HeaderComponent implements OnInit {
     this.firstLetter = this.email.charAt(0).toUpperCase();
     // if your PermissionService exposes authority() as a signal:
     this.userAuthorityId = this.permission.authority?.() ?? '';
-console.log(this.userAuthorityId)
     // initialize lists
     this.loadMunicipals(this.userAuthorityId);
 

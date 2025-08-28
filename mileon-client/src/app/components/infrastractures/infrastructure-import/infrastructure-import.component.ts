@@ -64,7 +64,6 @@ export class InfrastructureImportComponent implements OnInit {
 
   // Handles file upload from child component
   getUploadedFile(file: File): void {
-    console.log('File received from child component:', file);
     this.selectedFiles = file;
     // Add logic to process or validate the file if needed
   }

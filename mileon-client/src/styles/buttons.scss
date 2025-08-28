@@ -10,6 +10,7 @@
   box-shadow: $shadow;
   cursor: pointer;
   transition: all 0.3s ease;
+  gap: 5px;
 
   &:hover {
     background-color: $colorLightBlueSecondery;
@@ -118,7 +119,7 @@
 }
 
 %btn-size-sm {
-  width: 54px !important;
+  // width: 54px !important;
   height: 27px !important;
   font-size: 14px;
   padding: 4px 10px;
@@ -127,7 +128,7 @@
 
 %btn-size-default {
   font-size: 16px;
-  width: 78px !important;
+  // width: 78px !important;
   height: 37px !important;
   padding: 7.5px 20px;
   border-radius: 4px;
@@ -135,7 +136,7 @@
 
 %btn-size-lg {
   font-size: 24px;
-  width: 107px !important;
+  // width: 107px !important;
   height: 50px !important;
   padding: 12px 20px;
   border-radius: 8px;
@@ -153,7 +154,7 @@
 }
 
 %btn-icon-size-sm {
-  width: 73px !important;
+  // width: 73px !important;
   height: 27px !important;
   font-size: 14px;
   padding: 4px 10px;
@@ -163,7 +164,7 @@
 
 %btn-icon-size-default {
   font-size: 16px;
-  width: 96px !important;
+  // width: 96px !important;
   height: 37px !important;
   padding: 7.5px 15px;
   border-radius: 4px;
@@ -172,7 +173,7 @@
 
 %btn-icon-size-lg {
   font-size: 24px;
-  width: 139px !important;
+  // width: 139px !important;
   height: 50px !important;
   padding: 9px 20px;
   border-radius: 8px;

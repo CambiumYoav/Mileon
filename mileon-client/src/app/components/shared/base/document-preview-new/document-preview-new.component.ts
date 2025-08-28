@@ -58,7 +58,6 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
 
   onDeleteIconClicked() {
     if (this.previewFile?.fileID) {
-      // console.log(this.previewFile?.fileID);
       this.deleteEvent.emit(this.previewFile.fileID); // emit the fileId
     }
   }
@@ -72,8 +71,6 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
         this.finalFileUrl
       );
     } else {
-      // console.log(this.previewFile.path);
-
       this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
         this.previewFile?.path ?? ''
       );
@@ -95,8 +92,6 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
   }
 
   onDownloadFileClicked() {
-    //Generally a good idea to encapsulate your HTTP Client.
-    console.log(this.finalFileUrl);
     if (!this.isFullPath) {
       this.http
         .get(this.finalFileUrl, { responseType: 'blob' as 'json' })

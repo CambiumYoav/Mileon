@@ -112,11 +112,15 @@ export class SelectComponent
 
   private _normalizeValue(value: any): string {
     if (typeof value != 'string') {
+      // Handle null/undefined values
+      if (value === null || value === undefined) {
+        return '';
+      }
       // Try different possible label properties
       const labelValue = value[this.bindLabelKey] || value.display || value.label || value.name || value.value || '';
       value = labelValue;
     }
-    return value.toLowerCase().replace(/\s/g, '');
+    return (value || '').toLowerCase().replace(/\s/g, '');
   }
 
   ngOnInit(): void {
@@ -127,7 +131,7 @@ export class SelectComponent
       if (this.isMultiSelect) {
         // For multi-select, ensure we have full objects, not just IDs
         this.selectParams.ids = this.control.value.map((item: any) => 
-          typeof item === 'object' ? item[this.bindValueKey] : item
+          (typeof item === 'object' && item !== null) ? item[this.bindValueKey] : item
         );
       } else {
         this.selectParams.ids = [this.control.value];
@@ -345,23 +349,28 @@ export class SelectComponent
   }
 
   compareValues(option1: any, option2: any): boolean {
+    // Handle null/undefined cases first
+    if (option1 === null && option2 === null) return true;
+    if (option1 === undefined && option2 === undefined) return true;
+    if (option1 === null || option1 === undefined || option2 === null || option2 === undefined) return false;
+
     if (this.isMultiSelect) {
       // For multi-select, we store full objects, so compare by ID
-      if (typeof option1 === 'object' && typeof option2 === 'object') {
+      if (typeof option1 === 'object' && option1 !== null && typeof option2 === 'object' && option2 !== null) {
         return option1[this.bindValueKey] === option2[this.bindValueKey];
-      } else if (typeof option1 === 'object') {
+      } else if (typeof option1 === 'object' && option1 !== null) {
         return option1[this.bindValueKey] === option2;
-      } else if (typeof option2 === 'object') {
+      } else if (typeof option2 === 'object' && option2 !== null) {
         return option1 === option2[this.bindValueKey];
       }
     }
     
     // For single select, compare directly or by value key
-    if (typeof option1 === 'object' && typeof option2 === 'object') {
+    if (typeof option1 === 'object' && option1 !== null && typeof option2 === 'object' && option2 !== null) {
       return option1[this.bindValueKey] === option2[this.bindValueKey];
-    } else if (typeof option1 === 'object') {
+    } else if (typeof option1 === 'object' && option1 !== null) {
       return option1[this.bindValueKey] === option2;
-    } else if (typeof option2 === 'object') {
+    } else if (typeof option2 === 'object' && option2 !== null) {
       return option1 === option2[this.bindValueKey];
     }
     
@@ -401,7 +410,7 @@ export class SelectComponent
       // Update the selectParams.ids if needed - extract IDs from full objects
       if (this.selectParams.ids && this.selectParams.ids.length > 0) {
         this.selectParams.ids = currentValue.map((item: any) => 
-          typeof item === 'object' ? item[this.bindValueKey] : item
+          (typeof item === 'object' && item !== null) ? item[this.bindValueKey] : item
         );
       }
       

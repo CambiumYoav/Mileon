@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import { SelectParams } from '../types/advanced-search/select-option.model';
 import { FilterOptions } from '../types/filters/filterOptions';
@@ -20,8 +20,8 @@ import { TemplatesTypesEnum } from '../types/enum/templatesTypesEnum';
 export class LookupNewService {
   apiController: string = 'Lookup';
   ticketLookups!: Lookup;
-  private httpService = inject(HttpService);
-  constructor() {}
+  
+  constructor(private httpService: HttpService) {}
 
   getAuthorities(filter?: SelectParams): Promise<ReturnedData<string>[]> {
     const res = this.httpService.getRequestWithQueryParams<ListData<string>[]>(

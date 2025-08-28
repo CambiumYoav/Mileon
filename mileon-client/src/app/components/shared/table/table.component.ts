@@ -159,8 +159,6 @@ export class TableComponent
   }
 
   pageChanges(currentPage: number) {
-    // this.searchFormService.updatePagingParams(currentPage);
-    // console.log(this.form, currentPage);
     this.selectedPage = currentPage;
     this.form?.get('currentPage')?.setValue(currentPage);
     this.onFormChanges.emit(this.form);
