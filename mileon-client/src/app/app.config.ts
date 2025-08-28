@@ -33,7 +33,7 @@ export const appConfig: ApplicationConfig = {
     // Core Angular providers
     DecimalPipe,
     DatePipe,
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: MAT_DATE_LOCALE, useValue: 'he-IL' },
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     { provide: ROUTER_CONFIGURATION, useValue: routerConfig },
     

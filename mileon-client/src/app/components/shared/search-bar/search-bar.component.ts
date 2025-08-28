@@ -22,13 +22,7 @@ import { InputSizeEnum } from '../../../types/enum/inputSizeEnum';
 import { DropdownWindowComponent } from "../dropdown-window/dropdown-window.component";
 import { AdvancedSearchComponent } from "../advanced-search/advanced-search.component";
 import { ResultsDropdownComponent } from "../results-dropdown/results-dropdown.component";
-import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { HebrewDateAdapter, HEBREW_DATE_FORMATS } from '../base/inputs/input-date/input-date.component';
-import { registerLocaleData } from '@angular/common';
-import he from '@angular/common/locales/he';
-
-// Register Hebrew locale
-registerLocaleData(he);
+import { HebrewDateService } from '../../../services/hebrew-date.service';
 
 
 @Component({
@@ -39,18 +33,7 @@ registerLocaleData(he);
   imports: [SharedImports, DropdownWindowComponent, AdvancedSearchComponent, ResultsDropdownComponent],
   providers: [
     SearchFormService,
-    {
-      provide: MAT_DATE_LOCALE,
-      useValue: 'he-IL'
-    },
-    {
-      provide: DateAdapter,
-      useClass: HebrewDateAdapter
-    },
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: HEBREW_DATE_FORMATS
-    }
+    ...HebrewDateService.getProviders()
   ],
 })
 export class SearchBarComponent

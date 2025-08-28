@@ -1,68 +1,11 @@
-import { Component, Injectable, Injector, Input, OnInit, forwardRef } from '@angular/core';
+import { Component, Injector, Input, OnInit, forwardRef } from '@angular/core';
 import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ConstPath } from '../../../../../constants/const_path'; 
-import { ErrorSuccessMessages } from '../../../../../types/enum/error-success-messages';
 import { ToastrService } from 'ngx-toastr';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { CommonModule, registerLocaleData } from '@angular/common';
-import { MatCalendarCellClassFunction, MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
-import he from '@angular/common/locales/he';
+import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 import { SharedImports } from '../../../../../shared/shared-modules';
-
-// Register Hebrew locale
-registerLocaleData(he);
-
-// Custom Hebrew date formats
-export const HEBREW_DATE_FORMATS = {
-  parse: {
-    dateInput: { day: 'numeric', month: 'numeric', year: '2-digit' },
-  },
-  display: {
-    dateInput: { day: 'numeric', month: 'numeric', year: '2-digit' },
-    monthYearLabel: { year: 'numeric', month: 'short' },
-    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
-    monthYearA11yLabel: { year: 'numeric', month: 'long' },
-  },
-};
-
-// Custom Hebrew date adapter
-@Injectable()
-export class HebrewDateAdapter extends NativeDateAdapter {
-  override getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
-    return [
-      'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
-      'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'
-    ];
-  }
-
-  override getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
-    return ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-  }
-
-  override getDateNames(): string[] {
-    return Array.from({length: 31}, (_, i) => (i + 1).toString());
-  }
-
-  // Override firstDayOfWeek to start with Sunday (0) for Hebrew calendar
-  override getFirstDayOfWeek(): number {
-    return 0; // Sunday
-  }
-
-  // Custom format method for DD/MM/YY format
-  override format(date: Date, displayFormat: any): string {
-    if (displayFormat === HEBREW_DATE_FORMATS.display.dateInput) {
-      const day = date.getDate().toString().padStart(2, '0');
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const year = date.getFullYear().toString().slice(-2); // Get last 2 digits
-      return `${day}/${month}/${year}`;
-    }
-    return super.format(date, displayFormat);
-  }
-}
+import { HebrewDateService } from '../../../../../services/hebrew-date.service';
 
 @Component({
   selector: 'app-input-date',
@@ -76,18 +19,7 @@ export class HebrewDateAdapter extends NativeDateAdapter {
       useExisting: forwardRef(() => InputDateComponent),
       multi: true,
     },
-    {
-      provide: MAT_DATE_LOCALE,
-      useValue: 'he-IL'
-    },
-    {
-      provide: DateAdapter,
-      useClass: HebrewDateAdapter
-    },
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: HEBREW_DATE_FORMATS
-    }
+    ...HebrewDateService.getProviders()
   ],
 })
 export class InputDateComponent
