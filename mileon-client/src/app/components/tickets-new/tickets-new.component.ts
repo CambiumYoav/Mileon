@@ -35,7 +35,7 @@ import { ActionButtonsComponent } from '../shared/action-buttons/action-buttons.
     ButtonComponent,
     TicketsTableNewComponent,
     TicketsSearchComponent,
-    ActionButtonsComponent
+    ActionButtonsComponent,
   ],
   templateUrl: './tickets-new.component.html',
   styleUrls: ['./tickets-new.component.scss'],
@@ -134,8 +134,10 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
       console.log(newFilter);
       const res = await this.ticketsService.getTickets(newFilter);
       if (res && res.list) {
+        this.loader = false;
+        console.log('here,', res.list);
         this.list = res.list.map((p) => new TicketNew(p));
-        this.total = res.list.length ? res.total : 0;
+        this.total = res.total;
         this.count = res.count;
       }
       if (!res?.list.length) {

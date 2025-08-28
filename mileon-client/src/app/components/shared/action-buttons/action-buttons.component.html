@@ -16,7 +16,7 @@
                     <img [src]="microphoneSvg" class="microphone" />
                 </button> -->
         <div *ngFor="let button of allowedButtons">
-          <!-- {{button.value}} -->
+   <!-- need to update -->
           <ng-container *ngIf="!button.disabled">
             <app-button
               [buttonText]="button.text"

@@ -27,9 +27,10 @@ import {
 } from '../../../constants/buttonEnum';
 import ParkingPermits = ROUTE_PATH.ParkingPermits;
 import { ButtonComponent } from '../base/button/button.component';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-action-buttons',
-  imports: [ButtonComponent],
+  imports: [ButtonComponent,CommonModule],
   templateUrl: './action-buttons.component.html',
   styleUrls: ['./action-buttons.component.scss'],
 })
