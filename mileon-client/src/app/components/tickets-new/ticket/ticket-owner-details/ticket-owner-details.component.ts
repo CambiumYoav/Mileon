@@ -34,12 +34,13 @@ import { ActionButtonsComponent } from '../../../shared/action-buttons/action-bu
 import { SelectComponent } from '../../../shared/base/select/select.component';
 import { Pipes } from '../../../../shared/shared-modules';
 import { CommonModule } from '@angular/common';
+import { ButtonComponent } from "../../../shared/base/button/button.component";
 
 @Component({
   selector: 'app-ticket-owner-details',
   templateUrl: './ticket-owner-details.component.html',
   styleUrls: ['./ticket-owner-details.component.scss'],
-  imports:[SelectComponent,ActionButtonsComponent,Pipes,CommonModule,FormsModule,ReactiveFormsModule]
+  imports: [ButtonComponent,SelectComponent, ActionButtonsComponent, Pipes, CommonModule, FormsModule, ReactiveFormsModule, ButtonComponent]
 })
 export class TicketOwnerDetailsComponent implements OnInit, AfterViewInit {
   ticketID: any;

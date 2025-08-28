@@ -1,184 +1,254 @@
 <div class="back">
-    <img (click)="back()" [src]="arrowSvg" />
-    <span class="title">{{title}}</span>
+  <img (click)="back()" [src]="arrowSvg" />
+  <span class="title">{{ title }}</span>
 </div>
 <div class="action-btns">
-    <app-action-buttons #actionButtonsComponent [buttonsList]="actionButtonsList" [recordId]="ticketID"
-        [phoneNumber]="mainPhoneNumber" [moduleEnum]="moduleEnum.TicketsNewModule" [emailAddress]="emailAddress">
-    </app-action-buttons>
+  <app-action-buttons
+    #actionButtonsComponent
+    [buttonsList]="actionButtonsList"
+    [recordId]="ticketID"
+    [phoneNumber]="mainPhoneNumber"
+    [moduleEnum]="moduleEnum.TicketsNewModule"
+    [emailAddress]="emailAddress"
+  >
+  </app-action-buttons>
 </div>
 
 <div class="wrap-card" *ngIf="ticketDetails && formReady">
-    <form [formGroup]="formGroup">
-        <div class="card">
-            <div class="row-details">
-                <div class="wrap-item">
-                    <div class="item">
-                        <div class="title">שם</div>
-                        <div class="info">{{ticketDetails.citizen?.firstName}} {{ticketDetails.citizen?.lastName}}</div>
-                    </div>
-                </div>
-
-                <div class="wrap-item">
-                    <div class="item">
-                        <div class="title">זהות / ח.פ</div>
-                      <div class="info">{{ ticketDetails?.citizen | renderIdentity }}</div>
-                    </div>
-                </div>
-              <div class="wrap-item">
-                <div class="item">
-                  <div class="title">מספר נייד</div>
-                  <div class="info edit">
-                    <ng-container *ngIf="phone">
-                      <input formControlName="phone" class="hide-border-input"
-                             type="text" placeholder="הוסף מספר">
-                      <img [src]="editSvg" />
-                    </ng-container>
-                  </div>
-                </div>
-                <span *ngIf="formGroup.controls['phone'].hasError('pattern')" class="error-input">* מספר לא תקין</span>
-              </div>
-
-              <div class="wrap-item">
-                <div class="item">
-                  <div class="title">מספר נוסף</div>
-                  <div class="info edit">
-                    <ng-container *ngIf="anotherPhone">
-                      <input class="hide-border-input" type="text" placeholder="הוסף מספר"
-                             formControlName="anotherPhone" >
-                      <img [src]="editSvg" />
-                    </ng-container>
-                  </div>
-                </div>
-                <span *ngIf="formGroup.controls['anotherPhone'].hasError('pattern')" class="error-input">* מספר לא תקין</span>
-              </div>
-
-
-              <div class="wrap-item  medium-width strech">
-                    <div class="item">
-                        <div class="title">מייל</div>
-                        <div class="info edit">
-                          <input class="hide-border-input" type="text" placeholder="הוסף מייל" formControlName="email"
-                                 [value]="ticketDetails?.citizen?.email" [(ngModel)]="ticketDetails.citizen.email">
-
-                          <img [src]="editSvg" />
-                        </div>
-                    </div>
-                    <span *ngIf="formGroup.controls['email'].hasError('pattern')" class="error-input">* מייל לא
-                        תקין</span>
-                </div>
+  <form [formGroup]="formGroup">
+    <div class="card">
+      <div class="row-details">
+        <div class="wrap-item">
+          <div class="item">
+            <div class="title">שם</div>
+            <div class="info">
+              {{ ticketDetails.citizen?.firstName }}
+              {{ ticketDetails.citizen?.lastName }}
             </div>
-
-            <div class="row-details">
-                <div class="wrap-item  big-width ">
-                    <div class="item">
-                        <div class="title">כתובת ראשית ממשרד הפנים</div>
-                        <div class="info">
-                            <span>
-                                <ng-container *ngIf="ticketDetails?.citizen?.interiorMinistryHomeAddress as address">
-                                    {{ address.cityName ? address.cityName +", " : ''}}
-                                    {{ address.streetName }}
-                                    {{ address.houseNumber ? ' ' + address.houseNumber : '' }}
-                                    {{ address.apartment ? ', דירה ' + address.apartment : '' }}
-                                    {{ address.entrance ? ', כניסה ' + address.entrance : '' }}
-                                    {{ address.postalCode ? ', מיקוד ' + address.postalCode : '' }}
-                                    {{ address.mailbox ? ', תא דואר ' + address.mailbox : '' }}
-                                  </ng-container>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row-details">
-                <div class="wrap-item  big-width">
-                    <div class="item">
-                        <div class="title">כתובת דואר ממשרד הפנים</div>
-                        <div class="info">
-                            <span>
-                                <ng-container *ngIf="ticketDetails?.citizen?.interiorMinistryPostalAddress as address">
-                                    {{ address.cityName ? address.cityName +", " : ''}}
-                                    {{ address.streetName }}
-                                    {{ address.houseNumber ? ' ' + address.houseNumber : '' }}
-                                    {{ address.apartment ? ', דירה ' + address.apartment : '' }}
-                                    {{ address.entrance ? ', כניסה ' + address.entrance : '' }}
-                                    {{ address.postalCode ? ', מיקוד ' + address.postalCode : '' }}
-                                    {{ address.mailbox ? ', תא דואר ' + address.mailbox : '' }}
-                                </ng-container>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div *ngFor="let tab of addressAdvancedForm.tabs">
-                <div class="main-title-row">
-                    <div class="main-title">{{tab.displayName}}</div>
-                </div>
-                <div class="row-details" *ngFor="let row of tab.rows">
-                        <div class="wrap-item" *ngFor="let field of row.group">
-                            <div class="item"  [formGroupName]="tab.name">
-                                <div class="title">{{field.displayName}}</div>
-                                <ng-container [ngSwitch]="field.type">
-                                    <app-select *ngSwitchCase="FieldTypeEnum.Select"
-                                                fxFill appearance="standard"
-                                                [dataFunction]="field.dataFunction"
-                                                bindLabelKey="value"
-                                                bindValueKey="id"
-                                                [formControlName]="field.name"
-                                                [isMultiSelect]="false">
-                                    </app-select>
-                                    <div class="info edit" *ngSwitchCase="FieldTypeEnum.Text">
-                                        <input class="hide-border-input" type="text"
-                                               [formControlName]="field.name" >
-                                               <!-- [(ngModel)]="ticketDetails.citizen[tab.name as keyof Citizen][field.name as keyof Citizen]" -->
-                                        <img [src]="editSvg" />
-                                    </div>
-                                </ng-container>
-                            </div>
-                           <span *ngIf="formGroup.get(tab.name)?.get(field.name)?.hasError('pattern')"  class="error-input">*לא תקין</span>
-                        </div>
-                </div>
-            </div>
-
-            <div class="row-details">
-                <div class="wrap-item">
-                    <div class="item">
-                        <div class="title">מספר רכב</div>
-                        <div class="info">{{ticketDetails.vehicle?.vehicleNumber}}</div>
-                    </div>
-                </div>
-                <div class="wrap-item">
-                    <div class="item">
-                        <div class="title">סוג הרכב</div>
-                        <div class="info" *ngIf="ticketDetails.vehicle">{{ticketDetails.vehicle?.modelName}}
-                        </div>
-                    </div>
-                </div>
-                <div class="wrap-item">
-                    <div class="item">
-                        <div class="title">יצרן הרכב</div>
-                        <div class="info">{{ticketDetails.vehicle?.manufacturerName}}</div>
-                    </div>
-                </div>
-                <div class="wrap-item">
-                    <div class="item">
-                        <div class="title">שנת ייצור</div>
-                        <div class="info">{{ticketDetails?.vehicle?.manufacturerYear}}</div>
-                    </div>
-                </div>
-                <div class="wrap-item">
-                    <div class="item">
-                        <div class="title">צבע הרכב</div>
-                        <div class="info">{{ticketDetails?.vehicle?.colorName}}</div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="wrap-btn">
-                <button class="general-btn btn-save" [disabled]="formGroup.invalid || !updateTicketOwnerButton" (click)="save()">שמור</button>
-            </div>
+          </div>
         </div>
-    </form>
+
+        <div class="wrap-item">
+          <div class="item">
+            <div class="title">זהות / ח.פ</div>
+            <div class="info">
+              {{ ticketDetails?.citizen | renderIdentity }}
+            </div>
+          </div>
+        </div>
+        <div class="wrap-item">
+          <div class="item">
+            <div class="title">מספר נייד</div>
+            <div class="info edit">
+              <ng-container *ngIf="phone">
+                <input
+                  formControlName="phone"
+                  class="hide-border-input"
+                  type="text"
+                  placeholder="הוסף מספר"
+                />
+                <img [src]="editSvg" />
+              </ng-container>
+            </div>
+          </div>
+          <span
+            *ngIf="formGroup.controls['phone'].hasError('pattern')"
+            class="error-input"
+            >* מספר לא תקין</span
+          >
+        </div>
+
+        <div class="wrap-item">
+          <div class="item">
+            <div class="title">מספר נוסף</div>
+            <div class="info edit">
+              <ng-container *ngIf="anotherPhone">
+                <input
+                  class="hide-border-input"
+                  type="text"
+                  placeholder="הוסף מספר"
+                  formControlName="anotherPhone"
+                />
+                <img [src]="editSvg" />
+              </ng-container>
+            </div>
+          </div>
+          <span
+            *ngIf="formGroup.controls['anotherPhone'].hasError('pattern')"
+            class="error-input"
+            >* מספר לא תקין</span
+          >
+        </div>
+
+        <div class="wrap-item medium-width strech">
+          <div class="item">
+            <div class="title">מייל</div>
+            <div class="info edit">
+              <input
+                class="hide-border-input"
+                type="text"
+                placeholder="הוסף מייל"
+                formControlName="email"
+                [value]="ticketDetails?.citizen?.email"
+                [(ngModel)]="ticketDetails.citizen.email"
+              />
+
+              <img [src]="editSvg" />
+            </div>
+          </div>
+          <span
+            *ngIf="formGroup.controls['email'].hasError('pattern')"
+            class="error-input"
+            >* מייל לא תקין</span
+          >
+        </div>
+      </div>
+
+      <div class="row-details">
+        <div class="wrap-item big-width">
+          <div class="item">
+            <div class="title">כתובת ראשית ממשרד הפנים</div>
+            <div class="info">
+              <span>
+                <ng-container
+                  *ngIf="
+                    ticketDetails?.citizen
+                      ?.interiorMinistryHomeAddress as address
+                  "
+                >
+                  {{ address.cityName ? address.cityName + ", " : "" }}
+                  {{ address.streetName }}
+                  {{ address.houseNumber ? " " + address.houseNumber : "" }}
+                  {{ address.apartment ? ", דירה " + address.apartment : "" }}
+                  {{ address.entrance ? ", כניסה " + address.entrance : "" }}
+                  {{
+                    address.postalCode ? ", מיקוד " + address.postalCode : ""
+                  }}
+                  {{ address.mailbox ? ", תא דואר " + address.mailbox : "" }}
+                </ng-container>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-details">
+        <div class="wrap-item big-width">
+          <div class="item">
+            <div class="title">כתובת דואר ממשרד הפנים</div>
+            <div class="info">
+              <span>
+                <ng-container
+                  *ngIf="
+                    ticketDetails?.citizen
+                      ?.interiorMinistryPostalAddress as address
+                  "
+                >
+                  {{ address.cityName ? address.cityName + ", " : "" }}
+                  {{ address.streetName }}
+                  {{ address.houseNumber ? " " + address.houseNumber : "" }}
+                  {{ address.apartment ? ", דירה " + address.apartment : "" }}
+                  {{ address.entrance ? ", כניסה " + address.entrance : "" }}
+                  {{
+                    address.postalCode ? ", מיקוד " + address.postalCode : ""
+                  }}
+                  {{ address.mailbox ? ", תא דואר " + address.mailbox : "" }}
+                </ng-container>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngFor="let tab of addressAdvancedForm.tabs">
+        <div class="main-title-row">
+          <div class="main-title">{{ tab.displayName }}</div>
+        </div>
+        <div class="row-details" *ngFor="let row of tab.rows">
+          <div class="wrap-item" *ngFor="let field of row.group">
+            <div class="item" [formGroupName]="tab.name">
+              <div class="title">{{ field.displayName }}</div>
+              <ng-container [ngSwitch]="field.type">
+                <app-select
+                  *ngSwitchCase="FieldTypeEnum.Select"
+                  fxFill
+                  appearance="standard"
+                  [dataFunction]="field.dataFunction"
+                  bindLabelKey="value"
+                  bindValueKey="id"
+                  [formControlName]="field.name"
+                  [isMultiSelect]="false"
+                >
+                </app-select>
+                <div class="info edit" *ngSwitchCase="FieldTypeEnum.Text">
+                  <input
+                    class="hide-border-input"
+                    type="text"
+                    [formControlName]="field.name"
+                  />
+                  <!-- [(ngModel)]="ticketDetails.citizen[tab.name as keyof Citizen][field.name as keyof Citizen]" -->
+                  <img [src]="editSvg" />
+                </div>
+              </ng-container>
+            </div>
+            <span
+              *ngIf="
+                formGroup.get(tab.name)?.get(field.name)?.hasError('pattern')
+              "
+              class="error-input"
+              >*לא תקין</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="row-details">
+        <div class="wrap-item">
+          <div class="item">
+            <div class="title">מספר רכב</div>
+            <div class="info">{{ ticketDetails.vehicle?.vehicleNumber }}</div>
+          </div>
+        </div>
+        <div class="wrap-item">
+          <div class="item">
+            <div class="title">סוג הרכב</div>
+            <div class="info" *ngIf="ticketDetails.vehicle">
+              {{ ticketDetails.vehicle?.modelName }}
+            </div>
+          </div>
+        </div>
+        <div class="wrap-item">
+          <div class="item">
+            <div class="title">יצרן הרכב</div>
+            <div class="info">
+              {{ ticketDetails.vehicle?.manufacturerName }}
+            </div>
+          </div>
+        </div>
+        <div class="wrap-item">
+          <div class="item">
+            <div class="title">שנת ייצור</div>
+            <div class="info">
+              {{ ticketDetails?.vehicle?.manufacturerYear }}
+            </div>
+          </div>
+        </div>
+        <div class="wrap-item">
+          <div class="item">
+            <div class="title">צבע הרכב</div>
+            <div class="info">{{ ticketDetails?.vehicle?.colorName }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrap-btn">
+        <app-button
+          [isDisabled]="formGroup.invalid || !updateTicketOwnerButton"
+          (clickFunction)="save()"
+          [buttonText]="'שמור'"
+        >
+        </app-button>
+      </div>
+    </div>
+  </form>
 </div>
