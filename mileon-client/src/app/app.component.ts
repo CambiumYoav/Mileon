@@ -7,7 +7,7 @@ import {
   SharedModules,
 } from './shared/shared-modules';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Column, ColumnTypeEnum } from './types/table';
+import { Column, ColumnTypeEnum, RadioButtonConfig } from './types/table';
 import { Subject } from 'rxjs';
 import { Icon } from './types/icon';
 import { AppService } from './app.service';
@@ -47,10 +47,6 @@ import { TimelineItem } from './types/timeline-settings/timeline-settings-types'
     imports: [
     BaseComponents,
     SharedImports,
-    ConfirmationModalComponent,
-    AppModalComponent,
-    TagComponent,
-    TicketsTableNewComponent,
     TicketTimelineBarComponent
 ], 
 })
@@ -196,6 +192,40 @@ export class AppComponent {
       isMoveable: false,
       iconId: 7,
       enumName: 'ENFORCEMENT_FORM1',
+      isActive: false
+    },
+    {
+      order: 8,
+      text: 'אכיפה - טופס 2',
+      imgSrc: 'paper-box.svg',
+      path: '/stage8',
+      validateFields: ['field15', 'field16'],
+      errors: 0,
+      isUpdated: false,
+      seen: false,
+      updatedCount: 0,
+      description: 'שלב שמיני - אכיפה טופס 2',
+      title: 'אכיפה - טופס 2',
+      isMoveable: false,
+      iconId: 7,
+      enumName: 'ENFORCEMENT_FORM2',
+      isActive: false
+    },
+    {
+      order: 9,
+      text: 'אכיפה - טופס 3',
+      imgSrc: 'blue-car.svg',
+      path: '/stage9',
+      validateFields: ['field17', 'field18'],
+      errors: 0,
+      isUpdated: false,
+      seen: false,
+      updatedCount: 0,
+      description: 'שלב תשיעי - אכיפה טופס 3',
+      title: 'אכיפה - טופס 3',
+      isMoveable: false,
+      iconId: 7,
+      enumName: 'ENFORCEMENT_FORM3',
       isActive: false
     }
   ];
@@ -510,96 +540,137 @@ export class AppComponent {
   
 
 
-  // columns: Column[] = [
-  //   {
-  //     propertyName: 'selected',
-  //     displayName: 'בחירה',
-  //     type: ColumnTypeEnum.Checkbox,
-  //     canSort: false,
-  //     sortByServer: false
-  //   },
-  //   {
-  //     propertyName: 'status',
-  //     displayName: 'סטטוס',
-  //     type: ColumnTypeEnum.Tag,
-  //     canSort: true,
-  //     sortByServer: false,
-  //     fieldId: 'statusId'
-  //   },
-  //   {
-  //     propertyName: 'municipality',
-  //     displayName: 'עירייה',
-  //     type: ColumnTypeEnum.Text,
-  //     canSort: true,
-  //     sortByServer: false
-  //   },
-  //   {
-  //     propertyName: 'nid',
-  //     displayName: 'מספר זהות',
-  //     type: ColumnTypeEnum.Text,
-  //     canSort: true,
-  //     sortByServer: false
-  //   },
-  //   {
-  //     propertyName: 'fullName',
-  //     displayName: 'שם מלא',
-  //     type: ColumnTypeEnum.Text,
-  //     canSort: true,
-  //     sortByServer: false
-  //   },
-  //   {
-  //     propertyName: 'violationDate',
-  //     displayName: 'תאריך עבירה',
-  //     type: ColumnTypeEnum.Date,
-  //     canSort: true,
-  //     sortByServer: false
-  //   },
-  //   {
-  //     propertyName: 'reportNumber',
-  //     displayName: 'מספר דוח',
-  //     type: ColumnTypeEnum.Text,
-  //     canSort: true,
-  //     sortByServer: false,
-  //     textOverflow: true
-  //   },
-  //   {
-  //     propertyName: 'ticketStageName',
-  //     displayName: 'שלב',
-  //     type: ColumnTypeEnum.Text,
-  //     canSort: true,
-  //     sortByServer: false,
-  //     fieldId: 'ticketStageID',
-  //     hasIcon: true
-  //   },
-  //   {
-  //     propertyName: 'inputField',
-  //     displayName: 'מספר זהות',
-  //     type: ColumnTypeEnum.Input,
-  //     canSort: false,
-  //     sortByServer: false
-  //   },
-  //   {
-  //     propertyName: 'yesNoRadio',
-  //     displayName: 'כן/לא',
-  //     type: ColumnTypeEnum.Radio,
-  //     canSort: false,
-  //     sortByServer: false
-  //   },
-  //   {
-  //     propertyName: 'additionalReports',
-  //     displayName: 'דוחות נוספים',
-  //     type: ColumnTypeEnum.Currency,
-  //     canSort: true,
-  //     sortByServer: false
-  //   },
-  //   {
-  //     propertyName: 'actions',
-  //     displayName: 'פעולות',
-  //     type: ColumnTypeEnum.Icon,
-  //     canSort: false,
-  //     sortByServer: false
-  //   }
-  // ];
+  columns: Column[] = [
+    {
+      propertyName: 'selected',
+      displayName: 'בחירה',
+      type: ColumnTypeEnum.Checkbox,
+      canSort: false,
+      sortByServer: false
+    },
+    {
+      propertyName: 'status',
+      displayName: 'סטטוס',
+      type: ColumnTypeEnum.Tag,
+      canSort: true,
+      sortByServer: false,
+      fieldId: 'statusId'
+    },
+    {
+      propertyName: 'municipality',
+      displayName: 'עירייה',
+      type: ColumnTypeEnum.Text,
+      canSort: true,
+      sortByServer: false
+    },
+    {
+      propertyName: 'nid',
+      displayName: 'מספר זהות',
+      type: ColumnTypeEnum.Text,
+      canSort: true,
+      sortByServer: false
+    },
+    {
+      propertyName: 'fullName',
+      displayName: 'שם מלא',
+      type: ColumnTypeEnum.Text,
+      canSort: true,
+      sortByServer: false
+    },
+    {
+      propertyName: 'violationDate',
+      displayName: 'תאריך עבירה',
+      type: ColumnTypeEnum.Date,
+      canSort: true,
+      sortByServer: false
+    },
+    {
+      propertyName: 'reportNumber',
+      displayName: 'מספר דוח',
+      type: ColumnTypeEnum.Text,
+      canSort: true,
+      sortByServer: false,
+      textOverflow: true
+    },
+    {
+      propertyName: 'ticketStageName',
+      displayName: 'שלב',
+      type: ColumnTypeEnum.Text,
+      canSort: true,
+      sortByServer: false,
+      fieldId: 'ticketStageID',
+      hasIcon: true
+    },
+    {
+      propertyName: 'inputField',
+      displayName: 'מספר זהות',
+      type: ColumnTypeEnum.Input,
+      canSort: false,
+      sortByServer: false
+    },
+    {
+      propertyName: 'yesNoRadio',
+      displayName: 'כן/לא',
+      type: ColumnTypeEnum.Radio,
+      canSort: false,
+      sortByServer: false,
+      radioConfig: {
+        options: [
+          { value: 'כן', label: 'כן' },
+          { value: 'לא', label: 'לא' }
+        ],
+        type: 'default',
+        direction: 'horizontal'
+      }
+    },
+    {
+      propertyName: 'priority',
+      displayName: 'עדיפות',
+      type: ColumnTypeEnum.Radio,
+      canSort: false,
+      sortByServer: false,
+      radioConfig: {
+        options: [
+          { value: 'high', label: 'גבוהה' },
+          { value: 'medium', label: 'בינונית' },
+          { value: 'low', label: 'נמוכה' }
+        ],
+        type: 'default',
+        direction: 'horizontal'
+      }
+    },
+    {
+      propertyName: 'approval',
+      displayName: 'אישור',
+      type: ColumnTypeEnum.Radio,
+      canSort: false,
+      sortByServer: false,
+      radioConfig: {
+        options: [
+          { value: 'approved', label: '✓' },
+          { value: 'pending', label: '?' },
+          { value: 'rejected', label: '✗' }
+        ],
+        type: 'default',
+        direction: 'vertical',
+        allowDeselect: true
+      }
+    },
+    {
+      propertyName: 'additionalReports',
+      displayName: 'דוחות נוספים',
+      type: ColumnTypeEnum.Currency,
+      canSort: true,
+      sortByServer: false
+    },
+    {
+      propertyName: 'actions',
+      displayName: 'פעולות',
+      type: ColumnTypeEnum.Icon,
+      canSort: false,
+      sortByServer: false
+    }
+  ];
   
   
   originalData: any[] = [
@@ -610,7 +681,10 @@ export class AppComponent {
       additionalReports: 526,
       TicketStagesIcons: this.TicketStagesIcons,
       ticketStageID: 1,
-      ticketStageName: 'התראה'
+      ticketStageName: 'התראה',
+      yesNoRadio: 'כן',
+      priority: 'high',
+      approval: 'approved'
     },
     {
       id: 2,
@@ -628,14 +702,16 @@ export class AppComponent {
       additionalReports: 526,
       TicketStagesIcons: this.TicketStagesIcons,
       ticketStageID: 2,
-      ticketStageName: 'אירוע'
+      ticketStageName: 'אירוע',
+      priority: 'medium',
+      approval: 'pending'
     },
     {
       id: 3,
       selected: false,
       reportNumber: '1585123121596',
       inputField: '',
-      yesNoRadio: 'כן',
+      yesNoRadio: 'לא',
       violationDate: '2026-03-30',
       fullName: 'ישראל ישראלי',
       nid: '245987630',
@@ -646,7 +722,9 @@ export class AppComponent {
       additionalReports: 526,
       TicketStagesIcons: this.TicketStagesIcons,
       ticketStageID: 3,
-      ticketStageName: 'דו"ח חלון'
+      ticketStageName: 'דו"ח חלון',
+      priority: 'low',
+      approval: 'rejected'
     },
     {
       id: 4,
@@ -664,34 +742,45 @@ export class AppComponent {
       additionalReports: 526,
       TicketStagesIcons: this.TicketStagesIcons,
       ticketStageID: 4,
-      ticketStageName: 'הלבשה משרד התחבורה'
+      ticketStageName: 'הלבשה משרד התחבורה',
+      priority: 'high',
+      approval: 'approved'
     },
     {
-      id: 1,
+      id: 5,
       violationDate: '2025-01-09',
       nid: '245987630',
       additionalReports: 526,
       TicketStagesIcons: this.TicketStagesIcons,
       ticketStageID: 5,
-      ticketStageName: 'הלבשה משרד הפנים'
+      ticketStageName: 'הלבשה משרד הפנים',
+      yesNoRadio: 'לא',
+      priority: 'medium',
+      approval: 'pending'
     },
     {
-      id: 1,
+      id: 6,
       violationDate: '2025-01-09',
       nid: '245987630',
       additionalReports: 526,
       TicketStagesIcons: this.TicketStagesIcons,
       ticketStageID: 6,
-      ticketStageName: 'הודעת תשלום'
+      ticketStageName: 'הודעת תשלום',
+      yesNoRadio: 'כן',
+      priority: 'low',
+      approval: 'approved'
     },
     {
-      id: 1,
+      id: 7,
       violationDate: '2025-01-09',
       nid: '245987630',
       additionalReports: 526,
       TicketStagesIcons: this.TicketStagesIcons,
       ticketStageID: 7,
-      ticketStageName: 'אכיפה - טופס 1'
+      ticketStageName: 'אכיפה - טופס 1',
+      yesNoRadio: 'כן',
+      priority: 'high',
+      approval: 'rejected'
     },
   ];
 
@@ -833,6 +922,17 @@ export class AppComponent {
       console.log('Edit clicked for item:', event.item);
       // TODO: Implement edit functionality
       this.showSuccess(); // Show success message for now
+    } else {
+      // Log boolean states for radio buttons
+      if (event.yesNoRadio_booleanState) {
+        console.log('YesNo Boolean State:', event.yesNoRadio_booleanState);
+      }
+      if (event.priority_booleanState) {
+        console.log('Priority Boolean State:', event.priority_booleanState);
+      }
+      if (event.approval_booleanState) {
+        console.log('Approval Boolean State:', event.approval_booleanState);
+      }
     }
   }
 
@@ -975,7 +1075,7 @@ export class AppComponent {
     }
   }
 
-  private getDisplayText(item: any): string {
+  private   getDisplayText(item: any): string {
    const searchText = this.form?.get('searchText')?.value || '';
     
     if (!searchText) {
@@ -999,5 +1099,37 @@ export class AppComponent {
     }
     
     return item.nid || item.municipality || item.reportNumber || item.fullName || 'אופציה';
+  }
+
+  // Method to demonstrate boolean state manipulation
+  logBooleanStates(): void {
+    console.log('Current data with boolean states:');
+    this.data.forEach((item, index) => {
+      console.log(`Item ${index + 1}:`, {
+        id: item.id,
+        yesNoRadio: item.yesNoRadio,
+        yesNoRadio_booleanState: item.yesNoRadio_booleanState,
+        priority: item.priority,
+        priority_booleanState: item.priority_booleanState,
+        approval: item.approval,
+        approval_booleanState: item.approval_booleanState
+      });
+    });
+  }
+
+  // Method to programmatically set radio button selections
+  setProgrammaticSelection(): void {
+    if (this.data.length > 0) {
+      // Set first item's priority to 'low'
+      this.data[0].priority = 'low';
+      this.data[0].priority_booleanState = {
+        'high': false,
+        'medium': false,
+        'low': true
+      };
+      
+      console.log('Programmatically set first item priority to low');
+      this.updateTableData(this.data);
+    }
   }
 }

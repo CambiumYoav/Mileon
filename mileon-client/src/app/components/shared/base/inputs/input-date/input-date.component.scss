@@ -83,22 +83,6 @@ mat-datepicker-toggle {
 
 }
 
-// // Move the toggle button to the left
-// ::ng-deep .mat-mdc-icon-button {
-//   position: relative !important;
-//   left: 5px !important;
-// }
-
-// // Target the touch target specifically
-// ::ng-deep .mat-mdc-icon-button .mat-mdc-button-touch-target {
-//   left: 35% !important;
-// }
-
-// // Alternative approach - move the entire toggle container
-// ::ng-deep mat-datepicker-toggle {
-//   transform: translateX(-15px) !important;
-// }
-
 .calendarImg {
   width: 20px !important;
   height: 20px !important;

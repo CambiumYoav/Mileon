@@ -18,7 +18,10 @@
     <label 
       [for]="name + '-' + option.value"
       class="radio-label"
-      [ngClass]="{ 'disabled': disabled }"
+      [ngClass]="{ 
+        'disabled': disabled,
+        'selected': isOptionSelected(option.value)
+      }"
     >
       {{ option.label }}
     </label>

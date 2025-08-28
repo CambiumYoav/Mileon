@@ -1,6 +1,6 @@
 import { SearchFormService } from './../search-bar/search-form.service';
 import { TableService } from './table.service';
-import { Column, ColumnTypeEnum } from './../../../types/table';
+import { Column, ColumnTypeEnum, RadioButtonConfig } from './../../../types/table';
 import {
   ChangeDetectorRef,
   EventEmitter,
@@ -34,14 +34,15 @@ import { TagComponent } from '../base/tag/tag.component';
 import { CheckboxComponent } from '../base/checkbox/checkbox.component';
 import { RadioButtonComponent } from '../base/radio-button/radio-button.component';
 // import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
-import { IconComponent } from "../base/icon/icon.component";  
+import { IconComponent } from "../base/icon/icon.component";
+import { TruncatedTextTooltipDirective } from '../../../directives/truncated-text-tooltip.directive';  
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
-  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent, RadioButtonComponent, IconComponent],
+  imports: [SharedImports, NgbdSortableHeader, RenderIdentityPipe, PaginatorComponent, TagComponent, CheckboxComponent, RadioButtonComponent, IconComponent, TruncatedTextTooltipDirective],
   providers: [TableService],
 })
 export class TableComponent
@@ -70,7 +71,7 @@ export class TableComponent
   count?: number;
 
   @Input()
-  pageSize: number = 14;
+  pageSize: number = 100;
 
   @Input()
   showPaginator: boolean = true;
@@ -319,6 +320,18 @@ export class TableComponent
     // Update the item's property value
     item[propertyName] = value;
     
+    // Update boolean state for each option
+    const column = this.columns?.find(col => col.propertyName === propertyName);
+    if (column?.radioConfig?.options) {
+      // Store boolean state for each option
+      const booleanStateProperty = `${propertyName}_booleanState`;
+      item[booleanStateProperty] = {};
+      
+      column.radioConfig.options.forEach(option => {
+        item[booleanStateProperty][option.value] = option.value === value;
+      });
+    }
+    
     // Emit the change event
     this.onSelectedRowIdChange(item);
     
@@ -326,6 +339,15 @@ export class TableComponent
     if (this.data) {
       this.tableService.dataSubject$.next([...this.data]);
     }
+  }
+
+  onRadioSelectionState(item: any, propertyName: string, state: {[key: string]: boolean}): void {
+    // Store the boolean state for each option
+    const booleanStateProperty = `${propertyName}_booleanState`;
+    item[booleanStateProperty] = state;
+    
+    // Emit the change event
+    this.onSelectedRowIdChange(item);
   }
 
   onInputChange(item: any, propertyName: string, event: any): void {
@@ -354,5 +376,59 @@ export class TableComponent
   onEditClick(item: any): void {
     // Emit the edit event with the item data
     this.onRowEvent.emit({ item, action: 'edit' });
+  }
+
+  getRadioOptions(column: Column, item: any): { value: string; label: string; colorClass?: string }[] {
+    if (column.radioConfig?.options) {
+      // Use configured options, processing dynamic values if needed
+      return column.radioConfig.options.map(option => {
+        let colorClass = option.colorClass;
+        
+        // Handle dynamic color class based on special function calls
+        if (colorClass === 'getRadioColorClassByLastTicketTime()') {
+          colorClass = this.getRadioColorClassByLastTicketTime(item.lastTicketTime);
+        }
+        
+        return {
+          ...option,
+          colorClass
+        };
+      });
+    }
+    
+    // Fallback to default yes/no options for backward compatibility
+    return [
+      { value: 'כן', label: 'כן' },
+      { value: 'לא', label: 'לא' }
+    ];
+  }
+
+  getRadioName(column: Column, item: any): string {
+    if (column.radioConfig?.name) {
+      return `${column.radioConfig.name}-${item.id}`;
+    }
+    return `${column.propertyName}-${item.id}`;
+  }
+
+  getRadioType(column: Column): 'default' | 'colored' {
+    return column.radioConfig?.type || 'default';
+  }
+
+  getRadioDirection(column: Column): 'horizontal' | 'vertical' {
+    return column.radioConfig?.direction || 'horizontal';
+  }
+
+  getRadioBooleanState(item: any, propertyName: string): {[key: string]: boolean} {
+    const booleanStateProperty = `${propertyName}_booleanState`;
+    return item[booleanStateProperty] || {};
+  }
+
+  isRadioOptionSelected(item: any, propertyName: string, optionValue: string): boolean {
+    const booleanState = this.getRadioBooleanState(item, propertyName);
+    return booleanState[optionValue] || false;
+  }
+
+  getAllowDeselect(column: Column): boolean {
+    return column.radioConfig?.allowDeselect || false;
   }
 }
