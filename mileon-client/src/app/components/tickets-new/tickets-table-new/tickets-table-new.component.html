@@ -6,7 +6,7 @@
   (onRowEvent)="goToDetails($event)"
   [showPaginator]="showPaginator"
   (onFormChanges)="emitServerSort($event)"
-  [selectedItemData]="selectedTicketData"
+  (rowSelected)="onRowSelected($event)"
   [icons]="TicketStagesIcons"
   [loader]="loader"
 >

@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, forwardRef } from '@angular/core';
+import { Component, Injectable, Injector, Input, OnInit, forwardRef } from '@angular/core';
 import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { ConstPath } from '../../../../../constants/const_path'; 
@@ -30,6 +30,7 @@ export const HEBREW_DATE_FORMATS = {
 };
 
 // Custom Hebrew date adapter
+@Injectable()
 export class HebrewDateAdapter extends NativeDateAdapter {
   override getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
     return [

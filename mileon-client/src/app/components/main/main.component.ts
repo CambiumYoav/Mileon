@@ -2,10 +2,11 @@ import { HttpHeaders } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { BaseService } from '../../services/base.service';
 import { BaseComponents, SharedComponents, SharedImports } from '../../shared/shared-modules';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-main',
-  imports: [SharedImports, SharedComponents],
+  imports: [SharedImports, SharedComponents,RouterOutlet],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })

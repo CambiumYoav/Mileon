@@ -23,8 +23,20 @@ import { InputCheckboxOptionGroupComponent } from '../components/shared/base/inp
 import { InputDateComponent } from '../components/shared/base/inputs/input-date/input-date.component';
 import { InputPhoneComponent } from '../components/shared/base/inputs/input-phone/input-phone.component';
 import { InputCheckboxComponent } from '../components/shared/base/inputs/input-checkbox/input-checkbox.component';
+import { BaseFormComponent } from '../components/shared/base-form/base-form.component';
+import { ActionButtonsComponent } from '../components/shared/action-buttons/action-buttons.component';
 
-export const SharedModules = [CommonModule, RouterOutlet];
+export const SharedModules = [CommonModule];
+
+export const CORE_IMPORTS = [
+  CommonModule,
+  FormsModule,
+  ReactiveFormsModule,
+  RouterOutlet,
+  NgbModule,
+  NgbNavModule,
+  DragDropModule,
+];
 
 export const SharedImports = [
   FormsModule,
@@ -40,6 +52,7 @@ export const SharedComponents = [HeaderComponent];
 
 export const BaseComponents = [
   BaseComponent,
+  BaseFormComponent,
   ButtonComponent,
   TableComponent,
   ActiveComponent,
@@ -57,4 +70,5 @@ export const BaseComponents = [
   InputDateComponent,
   InputPhoneComponent,
   InputCheckboxComponent,
+  ActionButtonsComponent
 ];

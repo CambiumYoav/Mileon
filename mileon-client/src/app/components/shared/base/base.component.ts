@@ -1,14 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Directive, OnDestroy } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { SharedImports } from '../../../shared/shared-modules';
+import { CORE_IMPORTS, SharedImports } from '../../../shared/shared-modules';
 
-@Component({
-  selector: 'app-base',
-  template: ``,
-  styles: [``],
-  standalone: true,
-  imports: [SharedImports],
-})
+@Directive()
 export class BaseComponent implements OnDestroy {
   componentDestroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 

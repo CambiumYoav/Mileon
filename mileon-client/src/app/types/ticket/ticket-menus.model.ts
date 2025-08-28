@@ -1,6 +1,6 @@
-import { ROUTE_PATH } from 'src/app/constants/routerPath';
+import { PermissionRoutes } from '../../constants/permissions.enum';
+import { ROUTE_PATH } from '../../constants/routerPath';
 import { SideMenu } from '../base/menu.model';
-import { PermissionRoutes } from 'src/app/constants/permissions.enum';
 
 export class TicketMenus {
   public static ticketDefaultTitle = 'חיפוש דוחות';
@@ -83,7 +83,7 @@ export class TicketMenus {
           PermissionRoutes.TICKETS_BY_IDENTITY,
           PermissionRoutes.TICKETS_BY_VEHICLE,
           PermissionRoutes.TICKET_LOOKUP,
-          PermissionRoutes.TICKETS_FINANCIAL_SUMMARY
+          PermissionRoutes.TICKETS_FINANCIAL_SUMMARY,
         ],
       },
       {
@@ -99,7 +99,7 @@ export class TicketMenus {
           PermissionRoutes.TICKET_LOOKUP,
           PermissionRoutes.TICKETS_DETAILS,
           PermissionRoutes.ADD_VIEW_TICKET_HISTORY,
-          PermissionRoutes.TICKETS_HISTORY
+          PermissionRoutes.TICKETS_HISTORY,
         ],
       },
     ],

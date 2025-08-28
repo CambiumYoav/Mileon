@@ -1,1 +1,51 @@
-<p>tickets-new works!</p>
+<div class="container-lg p-4">
+  <div class="row pb-4 align-items-center position-relative">
+    <div class="arrow-container" (click)="back()">
+      <img [src]="Icons.ARROW_LEFT" />
+    </div>
+    <span class="d-flex align-items-center heading col-5"
+      >{{ title }}
+      <span
+        *ngIf="
+          isBackOffice &&
+          ticketsSearchFormService.form.get('customFilters')?.value
+        "
+      >
+        <app-button [buttonText]="'נקה הכל'" (clickFunction)="clearAll()">
+        </app-button>
+      </span>
+    </span>
+  </div>
+  <div class="row pb-4">
+    <div class="header col-6">
+      <app-tickets-search
+        (onSearch)="loadData($event)"
+        [searchData]="searchData"
+        [resultData]="list"
+        [total]="total"
+      ></app-tickets-search>
+    </div>
+    <div class="col-6">
+      <app-action-buttons
+          #actionButtonsComponent
+          [recordId]="selectedTicketID"
+          [buttonsList]="actionButtonsList"
+          [emailAddress]="emailAddress"
+          [phoneNumber]="phoneNumber"
+          [moduleEnum]="moduleEnum.TicketsNewModule"
+        ></app-action-buttons>
+    </div>
+  </div>
+  <div class="row">
+    <app-tickets-table-new
+      [data]="list"
+      [total]="total"
+      [count]="count"
+      (onFormChanges)="loadData($event)"
+      (selectedTicketChange)="onSelectedTicket($event)"
+      tableColumns="TicketsNewColumns"
+      [loader]="loader"
+    >
+    </app-tickets-table-new>
+  </div>
+</div>

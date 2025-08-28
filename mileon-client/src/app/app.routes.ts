@@ -6,14 +6,14 @@ import { Roles } from './constants/role.const';
 import { ROUTE_PATH } from './constants/routerPath';
 import { RoleGuard } from './guards/role.guard';
 import { RoleEnum } from './types/enum/moduleEnum';
+import { TicketsNewComponent } from './components/tickets-new/tickets-new.component';
 
 export const childRoutes: Routes = [
   {
-    path: 'tickets',
+    path: ROUTE_PATH.TicketsNew.Home, // 'tickets-new'
     loadChildren: () =>
-      import('./components/tickets-new/tickets-routes').then(
-        (m) => m.ticketsRoutes
-      ),
+      import('./components/tickets-new/tickets-routes')
+        .then(m => m.ticketsRoutes),
   },
 ];
 export const routes: Routes = [
@@ -27,12 +27,13 @@ export const routes: Routes = [
     children: [
       {
         path: RoleEnum.ADMIN,
+     
         children: [
-          // {
-          //   path: '',
-          //   redirectTo: `${ROUTE_PATH.TicketsNew.Home}`,
-          //   pathMatch: 'full',
-          // },
+          {
+            path: '',
+            redirectTo: `tickets-new`, // or whatever your default should be
+            pathMatch: 'full',
+          },
           ...childRoutes,
         ],
         canActivate: [RoleGuard],

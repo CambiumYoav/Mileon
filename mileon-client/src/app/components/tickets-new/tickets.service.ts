@@ -1,18 +1,17 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
-import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
+import { lastValueFrom } from 'rxjs';
 import { HttpService } from '../../services/http.service';
 import { CallSummary } from '../../types/callSummary';
 import { OwnerFilter } from '../../types/filters/ticket/ownerFilter';
 import { ListCountResult } from '../../types/listCountResult';
 import { ReservedSummary } from '../../types/reservedSummary';
 import { Summary } from '../../types/summary.model';
-import { ConnectedTicketsPayload, TicketNew } from '../../types/ticket';
+import { TicketNew, ConnectedTicketsPayload } from '../../types/ticket';
 import { TicketHistory } from '../../types/ticketHistory';
 import {
-  FinanacialTransactions4Ticket,
   Tickets4FinanacialTransactions,
+  FinanacialTransactions4Ticket,
 } from '../../types/ticketPaymentDetails';
 import { TicketViolationDetails } from '../../types/ticketViolationDetails';
 import { TimeLineStage } from '../../types/timeLineStage';
@@ -182,26 +181,4 @@ export class TicketsService {
 
     return lastValueFrom(res);
   }
-
-  // exportDataToExcel(body = {}): Promise<any> {
-  //   const headers = new HttpHeaders({
-  //     'Content-Type': 'application/json', // Set the content type if necessary
-  //   });
-  //   const res = this.http.post<any>(
-  //     'https://localhost:7047/api/Tickets/excel',
-  //     body,
-  //     {
-  //       responseType: 'blob' as 'json', // Specify the response type as blob
-  //     }
-  //   );
-  //   return lastValueFrom(res);
-  //   // .pipe(
-  //   //   catchError((error) => {
-  //   //     console.error('Download error:', error);
-  //   //     return throwError(
-  //   //       () => new Error('Download failed, please try again.')
-  //   //     );
-  //   //   })
-  //   // );
-  // }
 }

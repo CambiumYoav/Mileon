@@ -1,15 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Directive } from '@angular/core';
 import { SharedImports } from '../../../shared/shared-modules';
 import { FormGroup, FormControl, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { Observable, distinctUntilChanged, takeUntil, debounceTime } from 'rxjs';
 import { BaseComponent } from '../base/base.component';
 
-@Component({
-  selector: 'app-base-form',
-  imports: [SharedImports],
-  templateUrl: './base-form.component.html',
-  styleUrl: './base-form.component.scss',
-})
+@Directive() 
 export class BaseFormComponent extends BaseComponent {
   constructor() {
     super();

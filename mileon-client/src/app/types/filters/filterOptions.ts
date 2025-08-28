@@ -16,6 +16,7 @@ export class FilterOptions {
     this.searchText = options?.searchText || '';
     this.order = options?.order || SortOrder.asc;
     this.currentPage = options?.currentPage || 1;
+    this.pageSize = options?.pageSize || 100;
     this.orderByField = options?.orderByField || '';
     this.startDate = options?.startDate || undefined;
     this.endDate = options?.endDate || undefined;

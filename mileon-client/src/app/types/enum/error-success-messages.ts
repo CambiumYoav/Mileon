@@ -5,6 +5,7 @@ export enum ErrorSuccessMessages {
   SUCCESS = 'נשמר בהצלחה',
   DELETE_SUCCESSFULLY = 'נמחק בהצלחה',
   SENT_SUCCESSFULLY = 'נשלח בהצלחה',
+  SEARCH_FAILED='לא ניתן לבצע את החיפוש, אנא נסה שנית מאוחר יותר',
   INVALID_DETAILS_TRY_AGAIN = 'אחד הפרטים או יותר אינו תקין, אנא נסה שנית',
   PAYMENT_SUCCESS = 'התשלום בוצע בהצלחה',
   LIMITED_ACCOUNT = 'ישנן הגבלות על החשבון',

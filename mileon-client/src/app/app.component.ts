@@ -39,6 +39,7 @@ import { TicketsService } from './components/tickets-new/tickets.service';
 import { ActionButtonNames } from './constants/action_buttons';
 import { TicketTimelineBarComponent } from "./components/authority-management/timeline/ticket-timeline-bar/ticket-timeline-bar.component";
 import { TimelineItem } from './types/timeline-settings/timeline-settings-types';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -47,7 +48,8 @@ import { TimelineItem } from './types/timeline-settings/timeline-settings-types'
     imports: [
     BaseComponents,
     SharedImports,
-    TicketTimelineBarComponent
+    TicketTimelineBarComponent,
+    RouterOutlet
 ], 
 })
 export class AppComponent {

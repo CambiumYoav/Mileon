@@ -36,6 +36,7 @@ export const appConfig: ApplicationConfig = {
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     { provide: ROUTER_CONFIGURATION, useValue: routerConfig },
+    
     // { provide: 'Popper', useValue: Popper },
     JwtHelperService,
     UserService,
