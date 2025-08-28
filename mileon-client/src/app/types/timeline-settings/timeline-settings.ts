@@ -1,4 +1,4 @@
-import { ROUTE_PATH } from 'src/app/constants/routerPath';
+import { ROUTE_PATH } from '../../constants/routerPath';
 import { SubModuleNames } from '../enum/moduleEnum';
 import { TabAttributes } from '../filters/tabsGroup';
 import {

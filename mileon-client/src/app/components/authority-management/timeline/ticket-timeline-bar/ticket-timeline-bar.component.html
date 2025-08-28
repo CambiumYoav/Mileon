@@ -1,0 +1,64 @@
+<div class="time-line">
+  <ng-container *ngIf="steps.length > 0">
+    <ng-container *ngFor="let step of steps; let i = index; let last = last">
+      <div
+        class="step"
+        [ngClass]="{ selected: selectedStep?.text === step?.text }"
+      >
+        <div class="stage">
+          {{ step.text }}
+          <app-step-tooltip
+            [title]="step?.title"
+            [description]="step?.description"
+            [last]="last"
+          ></app-step-tooltip>
+        </div>
+        <div
+          class="circle"
+          [matTooltip]="step.text"
+          [matTooltipClass]="['custom-tooltip', 'time-line-gray']"
+          Tooltip
+          [ngClass]="{
+            updated: step.isUpdated && step.errors === 0,
+            'has-errors': step.errors > 0,
+            'has-updates': step.updatedCount > 0 && step.errors === 0,
+            'step-missed': formSubmitted && !step.seen && isFirstTime
+          }"
+          (click)="moveTo(step)"
+        >
+          <img [src]="'assets/icons/time-line/' + step.imgSrc" loading="lazy" />
+
+          <div class="errors-container" *ngIf="step.errors > 0">
+            <div class="errors">
+              <span>{{ step.errors }}</span>
+            </div>
+          </div>
+
+          <div
+            class="updated-container"
+            *ngIf="step.updatedCount > 0 && step.errors === 0"
+          >
+            <div class="updated">
+              <span>{{ step.updatedCount }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="change-order" *ngIf="step.isMoveable">
+          <button (click)="changeOrder(step)">
+            <img
+              *ngIf="step.order !== switchStep?.order"
+              [src]="'assets/icons/time-line/cross-arrows.svg'"
+              loading="lazy"
+            />
+            <img
+              *ngIf="step.order === switchStep?.order"
+              [src]="'assets/icons/time-line/cross-arrows-selected.svg'"
+              loading="lazy"
+            />
+          </button>
+        </div>
+      </div>
+      <div class="line" [ngStyle]="{ width: step.lineWidth }"></div>
+    </ng-container>
+  </ng-container>
+</div>

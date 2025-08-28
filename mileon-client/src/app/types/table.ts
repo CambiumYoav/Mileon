@@ -7,6 +7,14 @@ export class Table {
   }
 }
 
+export interface RadioButtonConfig {
+  options: { value: string; label: string; colorClass?: string; selected?: boolean }[];
+  type?: 'default' | 'colored';
+  direction?: 'horizontal' | 'vertical';
+  name?: string; // If not provided, will use column propertyName + row id
+  allowDeselect?: boolean; // Allow deselecting current option
+}
+
 export class Column {
   /** List of options */
   displayName!: string;
@@ -22,12 +30,14 @@ export class Column {
   textColor?: string;
   icon?: string;
   hasCheckbox?: boolean;
+  radioConfig?: RadioButtonConfig; // Configuration for radio buttons
   constructor(options: Partial<Column> = {}) {
     this.displayName = options.displayName || '';
     this.sortField = options.sortField || '';
     this.fieldId = options.fieldId || '';
     this.canSort = options.canSort || false;
     this.type = options.type || 'text';
+    this.radioConfig = options.radioConfig;
   }
 }
 

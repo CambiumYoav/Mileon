@@ -1,0 +1,22 @@
+<div class="container-lg p-4 mt-4">
+  <div class="row pb-4 align-items-center position-relative">
+    <div class="col d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center col-5">
+        <img class="back-icon" [src]="Icons.ARROW_LEFT" />
+        <span class="heading">{{ title }}</span>
+      </div>
+    </div>
+    <div class="mt-5">
+      <app-tabs-group
+        [tabs]="tabs"
+        (action)="changeTab($event)"
+        [currentActive]="currentActive"
+        [CustomWidth]="160"
+      ></app-tabs-group>
+    </div>
+  </div>
+
+  <div class="row">
+    <router-outlet></router-outlet>
+  </div>
+</div>

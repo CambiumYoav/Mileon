@@ -332,8 +332,8 @@ style="margin: 10px;"
   </div> -->
 
 
-  <!-- <div style="margin: 20px; display: flex; gap: 20px; flex-direction: column;"> 
-    small
+  <div style="margin: 20px; display: flex; gap: 20px; flex-direction: column;"> 
+    <!-- small
     <app-tag
         [tagName]="'בהסדר'"
         [tagId]="'7'"
@@ -369,9 +369,9 @@ style="margin: 10px;"
         [tagName]="'סגור'"
         [tagId]="'1'"
         [size]="'large'">
-    </app-tag>
+    </app-tag> -->
 
-    <div class="row">
+    <!-- <div class="row">
       <app-tickets-table-new
         [data]="list"
         [total]="total"
@@ -382,5 +382,17 @@ style="margin: 10px;"
         [loader]="loader"
       >
       </app-tickets-table-new>
+    </div> -->
+
+ 
+    <div style="margin: 20px; background-color: antiquewhite;">
+        <app-ticket-timeline-bar
+        *ngIf="steps.length > 0"
+        [formState]="form"
+        [steps]="steps"
+        [isFirstTime]="isFirstTime"
+      ></app-ticket-timeline-bar>
     </div>
-  </div> -->
+
+
+  </div>

@@ -52,21 +52,28 @@
     .mat-tab-label.mat-tab-disabled {
       border: none;
       background: transparent !important;
-      border-radius: 8px;
-      padding: 7px 30px;
-      font-size: 18px;
-      display: flex;
-      margin: 15px 1rem;
-      color: black;
-      text-decoration: underline;
-    
+      border-radius: 4px;
+      padding: 0px !important;
+      font-size: 16px;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin: 15px 0px 15px 15px;
+      color: #387EC4;
+      text-decoration: none;
+      min-width: auto !important;
+      height: 37px !important;
       
       span {
         &.mat-ripple {
           background: transparent !important;
         }
         font-family: $fontOpenSans;
-        font-size: 18px;
+        font-size: 16px;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
     }
 
@@ -113,12 +120,23 @@
       // Remove focus indicator
       .mat-focus-indicator {
         display: none !important;
+        display: flex !important;
+        justify-content: flex-end !important;
       }
 
       // Remove ripple effect
       .mat-ripple {
         display: none !important;
       }
+    }
+
+    .mat-mdc-tab.mat-mdc-tab-disabled{
+      padding: 20px !important;
+      margin: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      margin-right: auto !important;
     }
     
 
@@ -163,23 +181,19 @@
   }
 }
 
-// Floating reset button styles
-#reset-all-btn {
-  position: absolute;
-  top: 20px;  
-  left: 30px;
-  z-index: 1000;
-  padding: 7.5px 31px;
-  width:100px !important;
+.reset-all-tab {
   background: transparent !important;
   color: #387EC4 !important;
   border: none;
-  border-radius: 8px;
-  padding: 12px 20px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 400;
   transition: all 0.3s ease;
   cursor: pointer;
+  margin-left: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 57px !important;
 
   &:active {
     transform: translateY(0);
@@ -187,8 +201,6 @@
   
   // Responsive adjustments
   @media (max-width: 768px) {
-    top: 10px;
-    left: 10px;
     padding: 10px 16px;
     font-size: 14px;
   }

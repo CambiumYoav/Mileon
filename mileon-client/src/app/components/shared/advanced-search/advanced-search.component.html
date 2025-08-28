@@ -1,9 +1,4 @@
 <div *ngIf="advancedForm && form" [ngClass]="{ 'header-less-tabs': (advancedForm.tabs || []).length === 1 }">
-  
-    <!-- Floating reset button above tabs -->
-    <button mat-icon-button (click)="resetForm()" class="link-btn button-base" id="reset-all-btn">נקה הכל</button>
-  
-  
   <mat-tab-group 
     mat-stretch-tabs="false" 
     mat-align-tabs="start"
@@ -124,11 +119,16 @@
           </div>
         </div>
       </mat-tab>
-      <!-- <mat-tab disabled>
-        <ng-template mat-tab-label>
-          <button mat-icon-button (click)="resetForm()" class="link-btn button-base">נקה הכל</button>
+      <mat-tab disabled class="reset-all-tab">
+        <ng-template mat-tab-label class="reset-all-tab">
+          <button 
+            (click)="resetForm()" 
+            class="link-btn button-base"
+          >
+            נקה הכל
+          </button>
         </ng-template>
-      </mat-tab> -->
+      </mat-tab>
     </form>
   </mat-tab-group>
 </div>
