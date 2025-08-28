@@ -37,6 +37,7 @@ import { TicketFilterOptions } from './types/filters/ticket/ticketFilterOptions'
 import { TicketsService } from './components/tickets-new/tickets.service'; 
 // import { ActionButtonsComponent } from './components/shared/action-buttons/action-buttons.component';
 import { ActionButtonNames } from './constants/action_buttons';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -48,7 +49,8 @@ import { ActionButtonNames } from './constants/action_buttons';
     ConfirmationModalComponent,
     AppModalComponent,
     TagComponent,
-    TicketsTableNewComponent
+    TicketsTableNewComponent,
+    RouterOutlet
   ], 
 })
 export class AppComponent {

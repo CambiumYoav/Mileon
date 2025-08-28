@@ -1,61 +1,65 @@
-import { TicketTabs } from './../../../types/filters/ticket/ticketFilterOptionsNew';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  TicketFilterOptions,
+  TicketTabs,
+} from './../../../types/filters/ticket/ticketFilterOptionsNew';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { TicketFilterOptions } from 'src/app/types/filters/ticket/ticketFilterOptions';
+
+import { ROUTE_PATH } from '../../../constants/routerPath';
+import { BaseService } from '../../../services/base.service';
+import { RouterService } from '../../../services/router.service';
+import { AdvancedForm } from '../../../types/advanced-search/form-tab.model';
+import { TicketNew } from '../../../types/ticket';
 import { TicketsSearchFormService } from './tickets-search-form.service';
-import { AdvancedForm } from 'src/app/types/advanced-search/form-tab.model';
-import { TicketNew } from 'src/app/types/ticket';
-import { ROUTE_PATH } from 'src/app/constants/routerPath';
-import { RouterService } from '../../shared/router/router.service';
-import { SearchFormService } from '../../shared/search-bar/search-form.service';
-import { BaseService } from 'src/app/services/base.service';
+import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-tickets-search',
+  imports: [SearchBarComponent],
   templateUrl: './tickets-search.component.html',
   styleUrls: ['./tickets-search.component.scss'],
 })
 export class TicketsSearchComponent implements OnInit {
-  ticketsSearchForm: FormGroup = this.ticketsSearchFormService.form;
+  ticketsSearchForm!: FormGroup;
 
   advancedSearch: AdvancedForm = TicketTabs.TicketTabs;
 
   @Input()
-  resultData: TicketNew[];
+  resultData: TicketNew[] | any = null;
 
   @Input()
-  total: number;
+  total: number = 0;
 
   @Input()
   hasResultsDropdown: boolean = false;
 
   @Output() search = new EventEmitter();
   @Output() onSearch = new EventEmitter<TicketFilterOptions>();
-  @Input() searchData: TicketFilterOptions;
-  searchText: string;
+  @Input() searchData: TicketFilterOptions | null = null;
+  searchText: string = '';
 
   filterHasValue: boolean = true;
   filterAdvanceHasValue: boolean = false;
 
   @Output() resetTable = new EventEmitter();
 
-  constructor(
-    private ticketsSearchFormService: TicketsSearchFormService,
-    private searchFormService: SearchFormService,
-    private routerService: RouterService,
-    private _baseService: BaseService
-  ) {}
-
-  ngOnInit(): void {
-    // const searchForm = this.ticketsSearchFormService.searchForm;
-    // if (searchForm) {
-    //   this.searchText = searchForm.get(['searchText'])?.value;
-    //   this.sendFormValue(searchForm);
-    // }
+  private ticketsSearchFormService = inject(TicketsSearchFormService);
+  private routerService = inject(RouterService);
+  private _baseService = inject(BaseService);
+  constructor() {
+    this.ticketsSearchForm = this.ticketsSearchFormService.form;
   }
 
+  ngOnInit(): void {}
+
   async sendFormValue(searchForm: FormGroup) {
-    // NOTE 🤢 ugly due to lack of time
     this.ticketsSearchFormService.searchForm = searchForm;
     const formValue = searchForm.value;
     for (let key of Object.keys(formValue)) {

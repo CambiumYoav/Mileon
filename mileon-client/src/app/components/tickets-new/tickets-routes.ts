@@ -1,13 +1,22 @@
 import { Routes } from '@angular/router';
+import { TicketsNewComponent } from './tickets-new.component';
+import { ROUTE_PATH } from '../../constants/routerPath';
 
 export const ticketsRoutes: Routes = [
-  {
-    path: '',
-    loadComponent: () =>
-      import('./tickets-new.component').then((m) => m.TicketsNewComponent),
-  },
+  // { path: '', redirectTo: 'tickets', pathMatch: 'full' },
 
+  {
+    path: '', // Empty path loads immediately
+    loadComponent: () =>
+      import('./tickets-new.component').then(m => m.TicketsNewComponent),
+  },
+  {
+    path: 'main', // Empty path loads immediately
+    loadComponent: () =>
+      import('./tickets-new.component').then(m => m.TicketsNewComponent),
+  },
 ];
+
 ///
 // TODO: need to be like this
 // // tickets-routes.ts

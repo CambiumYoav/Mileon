@@ -9,13 +9,14 @@ import {
   ButtonTypes,
   ButtonTypesEnum,
 } from '../../../../types/enum/button.enum';
-import { SharedImports } from '../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { MaterialModule } from '../../../../shared/material-module';
 
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
-  imports: [SharedImports],
+  imports: [CommonModule, MaterialModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {

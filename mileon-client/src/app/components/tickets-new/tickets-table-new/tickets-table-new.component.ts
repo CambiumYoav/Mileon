@@ -1,5 +1,14 @@
 import { RouterService } from '../../../services/router.service';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  output,
+  Output,
+  signal,
+} from '@angular/core';
 import { FilterOptions } from '../../../types/filters/filterOptions';
 import { TicketFilterOptions } from '../../../types/filters/ticket/ticketFilterOptionsNew';
 import { Column } from '../../../types/table';
@@ -9,10 +18,9 @@ import { FormGroup } from '@angular/forms';
 import { ROUTE_PATH } from '../../../constants/routerPath';
 import { TicketIcons } from '../../../types/ticket/ticket-icons.model';
 import { Icon } from '../../../types/icon';
-import { Subject } from 'rxjs';
 import { TicketsSearchFormService } from '../tickets-search/tickets-search-form.service';
 import { TicketTable } from '../../../types/ticket/ticket-table.model';
-import { TableComponent } from "../../shared/table/table.component";
+import { TableComponent } from '../../shared/table/table.component';
 
 @Component({
   selector: 'app-tickets-table-new',
@@ -36,9 +44,6 @@ export class TicketsTableNewComponent implements OnInit {
 
   @Output() onFormChanges = new EventEmitter<TicketFilterOptions>();
 
-  @Input() selectedTicketData!: Subject<TicketNew>;
-  
-
   @Input() loader!: boolean;
   _columns: Column[] = [];
 
@@ -47,19 +52,22 @@ export class TicketsTableNewComponent implements OnInit {
   }
 
   @Input() set tableColumns(tableName: string) {
-    if (tableName) this._columns = this.ticketsTableService.table[tableName as keyof TicketTable];
+    if (tableName)
+      this._columns =
+        this.ticketsTableService.table[tableName as keyof TicketTable];
   }
 
   @Input()
   showPaginator: boolean = true;
 
   TicketStagesIcons: Icon[] = TicketIcons.TicketStagesIcons;
+  selectedTicket = signal<TicketNew | null>(null);
+  selectedTicketChange = output<TicketNew | null>();
 
-  constructor(
-    private ticketsTableService: TicketsTableService,
-    private ticketSearchForm: TicketsSearchFormService,
-    private routerService: RouterService
-  ) {
+  private ticketsTableService = inject(TicketsTableService);
+  private ticketSearchForm = inject(TicketsSearchFormService);
+  private routerService = inject(RouterService);
+  constructor() {
     this.ticketForm = this.ticketSearchForm.searchForm;
   }
 
@@ -78,5 +86,9 @@ export class TicketsTableNewComponent implements OnInit {
 
   emitServerSort(form: FormGroup) {
     this.onFormChanges.emit(form.value);
+  }
+  onRowSelected(ticket: TicketNew) {
+    this.selectedTicket.set(ticket);
+    this.selectedTicketChange.emit(ticket);
   }
 }

@@ -25,7 +25,7 @@ import { InputPhoneComponent } from '../components/shared/base/inputs/input-phon
 import { InputCheckboxComponent } from '../components/shared/base/inputs/input-checkbox/input-checkbox.component';
 import { BaseFormComponent } from '../components/shared/base-form/base-form.component';
 
-export const SharedModules = [CommonModule, RouterOutlet];
+export const SharedModules = [CommonModule];
 
 export const CORE_IMPORTS = [
   CommonModule,

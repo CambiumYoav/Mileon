@@ -4,19 +4,17 @@ import {
   effect,
   inject,
   OnInit,
+  signal,
   untracked,
   ViewChild,
 } from '@angular/core';
-import { BaseComponents, CORE_IMPORTS, SharedImports } from '../../shared/shared-modules';
-import { Subject, Subscription } from 'rxjs';
+import { CORE_IMPORTS } from '../../shared/shared-modules';
 import { ActionButtonNames } from '../../constants/action_buttons';
 import { ConstPath } from '../../constants/const_path';
-
 import { PermissionService } from '../../services/permission.service';
 import { RouterService } from '../../services/router.service';
 import { ModuleEnum, RoleEnum } from '../../types/enum/moduleEnum';
 import { TicketFilterOptions } from '../../types/filters/ticket/ticketFilterOptions';
-import { MyRef } from '../../types/myRef';
 import { TicketNew } from '../../types/ticket';
 import { TicketMenus } from '../../types/ticket/ticket-menus.model';
 import { SearchFormService } from '../shared/search-bar/search-form.service';
@@ -25,12 +23,18 @@ import { TicketsService } from './tickets.service';
 import { TitlesEnum } from '../../types/enum/titlesEnum';
 import { ErrorSuccessMessages } from '../../types/enum/error-success-messages';
 import { AuthorityService } from '../../services/authority.service ';
-import { BaseFormComponent } from '../shared/base-form/base-form.component';
+import { ButtonComponent } from '../shared/base/button/button.component';
+import { TicketsTableNewComponent } from './tickets-table-new/tickets-table-new.component';
+import { TicketsSearchComponent } from './tickets-search/tickets-search.component';
 
 @Component({
-  
   selector: 'app-tickets-new',
-  imports: [...CORE_IMPORTS],
+  imports: [
+    ...CORE_IMPORTS,
+    ButtonComponent,
+    TicketsTableNewComponent,
+    TicketsSearchComponent,
+  ],
   templateUrl: './tickets-new.component.html',
   styleUrls: ['./tickets-new.component.scss'],
 })
@@ -60,10 +64,11 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
 
   loader: boolean = true;
 
-  selectedTicketData$: Subject<TicketNew> = new Subject<TicketNew>();
-  subscriptions: Subscription[] = [];
-  emailAddress: MyRef<string> = { current: '' };
-  phoneNumber: MyRef<string> = { current: '' };
+  selectedTicket = signal<TicketNew | null>(null);
+
+  emailAddress: string = '';
+  phoneNumber: string = '';
+  selectedTicketID: string = '';
 
   actionButtonsList: ActionButtonNames[] = [
     'Payment',
@@ -77,7 +82,6 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
 
   countTickets: number = 0;
   isSearchMode: boolean = false;
-  selectedTicketID: string = '';
 
   Icons = ConstPath;
 
@@ -87,49 +91,46 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
 
   isBackOffice: boolean = false;
   currentAuthority: string | null = '';
-  // constructor() {
-  //   const ticketSub = this.selectedTicketData$.subscribe((updatedData) => {
-  //     this.emailAddress.current = updatedData['email'] ?? '';
-  //     this.phoneNumber.current = updatedData['mainPhone'] ?? '';
-  //     this.selectedTicketID = updatedData['ticketID'];
-  //   });
-  //   this.subscriptions.push(ticketSub);
+  constructor() {
+    effect(() => {
+      const authorityID = this.authorityService.authorityId();
+      if (!authorityID) return;
 
-  //   // עדיף ב-constructor – יש הקשר הזרקה יציב
-  //   effect(() => {
-  //     const authorityID = this.authorityService.authorityId();
-  //     if (!authorityID) return;
+      this.currentAuthority = authorityID;
 
-  //     this.currentAuthority = authorityID;
-
-  //     untracked(() => {
-  //       this.ticketsSearchFormService.form.patchValue(
-  //         { violationDetailsFilter: { authorityID: [authorityID] } },
-  //         { emitEvent: false }
-  //       );
-  //       this.loadData(this.ticketsSearchFormService.form.value);
-  //     });
-  //   });
-  // }
+      untracked(() => {
+        this.ticketsSearchFormService.form.patchValue(
+          { authorityID: authorityID },
+          // { violationDetailsFilter: { authorityID: [authorityID] } },
+          { emitEvent: false }
+        );
+        this.loadData(this.ticketsSearchFormService.form.value);
+      });
+    });
+  }
 
   ngOnInit(): void {
-    // this.currentAuthority = this.authorityService.authorityId();
-    // this.isBackOffice = this.permissionService.role() === RoleEnum.BACK_OFFICE;
-    // this.title = this.routerService.getCurrentState().name || this.title;
+    this.currentAuthority = this.authorityService.authorityId();
+    this.isBackOffice = this.permissionService.role() === RoleEnum.BACK_OFFICE;
+    this.title = this.routerService.getCurrentState().name || this.title;
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
+  ngOnDestroy() {}
   ngAfterViewInit(): void {
     // this.actionButtonsComponent?.toggleDisabled(this.actionButtonsList, true);
   }
 
-  // NOTE duplicated with tickets-main
   async loadData(filter: TicketFilterOptions) {
     this.loader = true;
     try {
-      const res = await this.ticketsService.getTickets(filter);
+      console.log(filter);
+      const newFilter = {
+        ...filter,
+
+        authorityID: this.currentAuthority,
+      };
+      console.log(newFilter);
+      const res = await this.ticketsService.getTickets(newFilter);
       if (res && res.list) {
         this.list = res.list.map((p) => new TicketNew(p));
         this.total = res.list.length ? res.total : 0;
@@ -155,5 +156,12 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
   clearAll() {
     this.title = TicketMenus.ticketDefaultTitle;
     this.ticketsSearchFormService.clearForm();
+  }
+  onSelectedTicket(t: TicketNew | any) {
+    console.log('selected ticket', t);
+    this.selectedTicket.set(t);
+    this.emailAddress = t?.email ?? '';
+    this.phoneNumber = t?.mainPhone ?? '';
+    this.selectedTicketID = t?.ticketID ?? '';
   }
 }

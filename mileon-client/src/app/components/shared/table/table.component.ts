@@ -6,6 +6,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  output,
   SimpleChanges,
 } from '@angular/core';
 import {
@@ -87,8 +88,7 @@ export class TableComponent
   @Input()
   icons: Icon[] = [];
 
-  @Input() selectedItemData?: Subject<any>;
-
+  rowSelected = output<any>();
   selectedPage: number = 1;
 
   @Input()
@@ -124,30 +124,8 @@ export class TableComponent
 
   ngOnInit(): void {
     this.listenToPageReset();
-
-    // this.cdRef.detectChanges(); // Force Angular to detect changes
   }
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes['data'].currentValue.length) {
-  //     this.setTableData();
-  //     this.errorMsg = '';
-  //   } else if (
-  //     !changes['data'].currentValue.length &&
-  //     !changes['data'].firstChange
-  //   ) {
-  //     this.total$ = this.tableService.total$;
-  //     this.resetTable();
-  //     this.errorMsg = TableErrors.NOT_FOUND;
-  //   }
-
-  //   if (changes['loader']) {
-  //     this.loader = changes['loader'].currentValue;
-  //   }
-  //   if (changes['isChecked']) {
-  //     this.cdRef.detectChanges();
-  //   }
-  // }
   ngOnChanges(changes: SimpleChanges): void {
     // Check if 'data' exists and has a valid value before accessing its properties
     if (changes['data']?.currentValue && changes['data'].currentValue.length) {
@@ -243,9 +221,8 @@ export class TableComponent
   }
 
   onSelectedRowIdChange(item: any) {
-    this.selectedItemData?.next(item);
+    this.rowSelected.emit(item);
   }
-
   resetTable() {
     this.tableService.dataSubject$.next([]);
     this.tableService.totalSubject$.next(0);
