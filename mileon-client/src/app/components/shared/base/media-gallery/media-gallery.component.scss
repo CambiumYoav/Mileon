@@ -1,0 +1,101 @@
+// :host {
+//   ::ng-deep {
+//     ng-image-slider {
+//       .main {
+//         display: flex;
+//         white-space: pre;
+//         overflow: auto !important;
+//         padding: 20px 0;
+//         // direction: ltr;
+//       }
+//       .ng-image-slider
+//         .ng-image-slider-container
+//         .main
+//         .main-inner
+//         .img-div
+//         img.ratio,
+//       .ng-image-slider
+//         .ng-image-slider-container
+//         .main
+//         .main-inner
+//         .img-div
+//         video.ratio {
+//         height: 100%;
+//       }
+//     }
+//     slider-lightbox {
+//     direction: ltr;
+//     //   .next-icon {
+//     //     left: 10px;
+//     //     right: auto !important;
+//     //     color: transparent;
+//     //   }
+//       .prev,
+//       .next {
+//         text-decoration: unset;
+//       }
+
+//       custom-img {
+//         .custom-image-main {
+//           width: 50% !important;
+//           height: 60% !important;
+//           position: absolute;
+//           top: 30%;
+//           left: 30%;
+//           margin: -50px 0 0 -50px;
+//         }
+//       }
+//     }
+//   }
+// }
+/* media-gallery.component.scss */
+
+/* container padding like your .main */
+// .g-gallery .g-slider {
+//   padding: 20px 0;
+//   white-space: pre;     /* if you still want it */
+//   overflow: auto;       /* usually not needed with sliders */
+// }
+
+// /* full-height media */
+// .g-item img,
+// .g-item video {
+//   width: 100%;
+//   height: 100%;
+//   object-fit: contain;
+// }
+
+// /* lightbox adjustments (depends on ng-gallery/lightbox structure) */
+// .g-lightbox .g-next,
+// .g-lightbox .g-prev {
+//   text-decoration: none;
+// }
+:host {
+  display: block;
+}
+
+/* container padding like your .main */
+:host swiper-container {
+  padding: 20px 0;
+  /* theme tweaks via CSS variables */
+  --swiper-theme-color: #333;        /* affects arrows & bullets */
+  --swiper-navigation-size: 24px;
+  --swiper-pagination-bullet-size: 8px;
+}
+
+/* your media inside slides */
+:host swiper-slide img,
+:host swiper-slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* or 'cover' if you don't want letterboxing */
+}
+
+/* optional scroll-like behavior when not looping */
+:host swiper-container[loop="false"] {
+  overflow: hidden; /* Swiper handles scrolling itself */
+}
+
+/* LTR/RTL – you already set [attr.dir] in the component */
+:host([dir="ltr"]) swiper-container { direction: ltr; }
+:host([dir="rtl"]) swiper-container { direction: rtl; }

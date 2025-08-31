@@ -1,0 +1,41 @@
+<div class="wrap-search">
+  <div class="title">
+    <div class="hello">שלום {{ userName }} ,</div>
+    <div>
+      <span> ביצעת היום</span>
+      <span class="bold"> {{ callSummaries }} </span>
+      <span> סיכומי שיחה </span>
+      <span class="bold">ו {{ userPaymentCount }} </span>
+      <span> סליקות עבור דוחות של לקוחות </span>
+    </div>
+  </div>
+
+  <div class="search" *ngIf="searchPermission">
+    <app-tickets-search
+      (onSearch)="loadData($event)"
+      [searchData]="searchData"
+      [resultData]="list"
+      [total]="total"
+      [hasResultsDropdown]="true"
+    ></app-tickets-search>
+  </div>
+
+  <div class="last-title">10 דוחות אחרונים שנצפו</div>
+
+  <div style="width: 93%">
+    <app-last-viewed> </app-last-viewed>
+    <!-- <app-tickets-table-new
+      [data]="data"
+      [filters]="filter"
+      [withMoreTicketsColumns]="true"
+      [showSort]="true"
+      [fromLast]="true"
+    ></app-tickets-table-new> -->
+    <div class="error" *ngIf="showErrorCard">
+      <app-tickets-error-new
+        [errorMessage]="errorMessage"
+        (closeError)="showErrorCard = false"
+      ></app-tickets-error-new>
+    </div>
+  </div>
+</div>

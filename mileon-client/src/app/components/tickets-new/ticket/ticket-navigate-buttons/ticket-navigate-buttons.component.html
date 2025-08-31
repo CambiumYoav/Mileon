@@ -1,0 +1,17 @@
+<div class="wrap-action-buttons">
+    <div class="container">
+        <app-ticket-action-buttons *ngIf="renderActionButtons" [ticketsChecked]="ticketsChecked" [sumFineAmount]="sumFineAmount"
+                                   [errorContent]="errorContent" [fromTable]="fromTable" [selectedTicketIdFromTable]="selectedTicketIdFromTable" (pay)="pay.emit()" ></app-ticket-action-buttons>
+    </div>
+
+    <div class="payment-tabs">
+        <button class="action-btn-ticket" *ngIf="showForTicket"
+            [ngClass]="selectedButton === systemEnum.FOR_TICKET? 'btn-active': ''"
+            (click)="selectBtn(systemEnum.FOR_TICKET)">{{systemEnum.FOR_TICKET}}</button>
+        <button class="action-btn-ticket" [ngClass]="selectedButton === systemEnum.OWNER_DETAILS? 'btn-active': ''"
+            (click)="selectBtn(systemEnum.OWNER_DETAILS)">{{systemEnum.OWNER_DETAILS}}</button>
+        <button class="action-btn-ticket" [ngClass]="selectedButton === systemEnum.VEHICLE_DETAILS? 'btn-active': ''"
+            *ngIf="ticketTypeID === ticketTypeEnum.PARKING"
+            (click)="selectBtn(systemEnum.VEHICLE_DETAILS)">{{systemEnum.VEHICLE_DETAILS}}</button>
+    </div>
+</div>

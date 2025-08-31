@@ -1,0 +1,12 @@
+<div class="wrap-error">
+    <div class="error-card">
+        <div class="header">
+            <mat-icon class="icon-close" (click)="closeError.emit()">close</mat-icon>
+        </div>
+        <div class="content">
+            <img [src]="errorSvg" />
+            <div class="message">{{errorMessage}}</div>
+        </div>
+
+    </div>
+</div>

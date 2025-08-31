@@ -1,0 +1,9 @@
+<app-table
+  [data]="tableData"
+  [columns]="columns"
+  [total]="total"
+  (onRowEvent)="goToDetails($event)"
+  [showPaginator]="false"
+  [icons]="TicketStagesIcons"
+  [loader]="loader"
+></app-table>

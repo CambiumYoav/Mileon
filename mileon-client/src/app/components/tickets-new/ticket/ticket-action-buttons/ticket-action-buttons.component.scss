@@ -1,0 +1,86 @@
+@import '../../../../../styles/elements.scss';
+
+:host {
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: baseline;
+
+        &.from-table {
+            padding-left: 0;
+
+        }
+
+
+        .wrap-btns {
+            margin-bottom: -1.2rem;
+            width: 100%;
+            margin-top: 1rem;
+
+            .error {
+                color: $colorError;
+                padding: 3px 14px;
+            }
+
+            .btns {
+                .constant-btns {
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-end;
+                    height: 38px;
+
+                    &.space{
+                        display: flex;
+                        align-items: baseline;
+                    }
+                }
+
+                display: flex;
+                justify-content: space-between;
+                margin-top: auto;
+                position: relative;
+
+                b {
+                    font-size: 15px;
+                }
+
+                .wrap-bubble {
+                    position: absolute;
+                    bottom: 3rem;
+               
+
+                    .bubble {
+                        position: relative;
+                        background: $colorLightPink;
+                        box-shadow: 0px 0px 12px -1px #B0BAC8;
+                        border-radius: 2.707px;
+                        border: none;
+                        font-family: $fontOpenSans;
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 14px;
+                        margin-bottom: 0.5rem !important;
+                        padding: 10px;
+
+                        .traingle {
+                            position: absolute;
+                            bottom: -2vh;
+                            height: 2vh;
+                            width: 2vh;
+                            right: calc(50% - 3vh);
+                            border-left: 2vh solid transparent;
+                            border-right: 2vh solid transparent;
+                            border-top: 2vh solid $colorLightPink;
+                        }
+                    }
+                }
+
+
+
+            }
+        }
+
+    }
+
+}

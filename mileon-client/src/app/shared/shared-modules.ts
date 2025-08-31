@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -25,6 +25,7 @@ import { InputPhoneComponent } from '../components/shared/base/inputs/input-phon
 import { InputCheckboxComponent } from '../components/shared/base/inputs/input-checkbox/input-checkbox.component';
 import { BaseFormComponent } from '../components/shared/base-form/base-form.component';
 import { ActionButtonsComponent } from '../components/shared/action-buttons/action-buttons.component';
+import { RenderIdentityPipe } from '../pipes/identity.pipe';
 
 export const SharedModules = [CommonModule];
 
@@ -70,5 +71,7 @@ export const BaseComponents = [
   InputDateComponent,
   InputPhoneComponent,
   InputCheckboxComponent,
-  ActionButtonsComponent
+  ActionButtonsComponent,
 ];
+
+export const Pipes = [DatePipe, CurrencyPipe, RenderIdentityPipe];

@@ -1,0 +1,86 @@
+<div class="call-summary">
+  <div class="header">
+    <mat-icon class="icon-close" (click)="closeCallSummary()">close</mat-icon>
+    <span>סיכום שיחה <span *ngIf="!isList">חדש</span></span>
+  </div>
+
+  <div class="flex-column">
+    <div class="row-details">
+      <div class="item big-width">
+        <div class="title">תאריך</div>
+        <div class="info">{{ date | date : "dd.MM.yy, hh:mm" }}</div>
+      </div>
+
+      <div class="item big-width">
+        <div class="title">מספר טלפון</div>
+        <div class="info edit">
+          <input
+            class="hide-border-input"
+            type="text"
+            [(ngModel)]="phone"
+            #phoneInput="ngModel"
+            placeholder="הוסף מספר"
+            (keyup)="validatePhone()"
+          />
+
+          <img [src]="editSvg" />
+        </div>
+      </div>
+    </div>
+    <span class="error phone-error" *ngIf="!isPhoneValid"
+      >מספר הטלפון אינו חוקי</span
+    >
+  </div>
+
+  <div class="wrap-cards">
+    <div class="card list-card">
+      <span class="dates" (click)="addNew()">הוסף חדש</span>
+      <span
+        class="dates"
+        [ngClass]="c === currentCallSummary ? 'current-date' : ''"
+        *ngFor="let c of callSummariesList"
+        (click)="isList = true; callSummaryDetails(c)"
+      >
+        {{ c.createdDate | date : "dd.MM.yy" }}
+      </span>
+    </div>
+    <div class="wrap-content-card">
+      <div
+        class="card content-card"
+        [ngClass]="showErrorText ? 'card-error' : ''"
+      >
+        <div class="wrap-add-call-summary">
+          <div class="wrap-reserved">
+            <span
+              class="reserved"
+              [ngClass]="r.isChoose ? 'choosed' : ''"
+              (click)="
+                !isList ? (r.isChoose = !r.isChoose) : ''; showErrorText = false
+              "
+              *ngFor="let r of reserverdesToShow"
+            >
+              {{ r.text }}
+            </span>
+          </div>
+          <textarea
+            class="content"
+            *ngIf="!isList"
+            placeholder="הוסף טקסט"
+            [(ngModel)]="text"
+            (input)="showErrorText = false"
+          ></textarea>
+          <div class="content" *ngIf="isList">{{ text }}</div>
+          <img [src]="loaderGif" *ngIf="isLoading" class="wrap-loader" />
+        </div>
+      </div>
+      <span class="error" *ngIf="showErrorText"
+        >*יש להזין מינימום 2 תווים או לבחור מהרשימה</span
+      >
+    </div>
+  </div>
+  <div class="wrap-btn" *ngIf="!isList">
+    <button class="save" [disabled]="!callSummarySaveButton" (click)="save()">
+      שמור
+    </button>
+  </div>
+</div>

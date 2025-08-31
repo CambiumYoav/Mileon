@@ -1,0 +1,51 @@
+@import '../../../../styles/elements.scss';
+
+:host {
+    font-family: $fontOpenSans;
+
+    .wrap-error {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 1rem;
+
+        .error-card {
+            background-color: $colorLightPink;
+            border-radius: 5.5px;
+            width: 24rem;
+            height: 12rem;
+            color: $colorError;
+
+            .header {
+                height: 15%;
+                padding: 10px 10px 0px 0px;
+
+                mat-icon {
+                    position: absolute;
+                    top: 2rem;
+                    right: 1rem;
+                }
+
+            }
+
+            .content {
+                height: 85%;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+
+                .message {
+                    font-weight: 300;
+                    font-size: 17px;
+                    line-height: 24px;
+                    text-align: center;
+                    width: 60%;
+                    margin-top: 1rem;
+                }
+            }
+
+
+        }
+    }
+}

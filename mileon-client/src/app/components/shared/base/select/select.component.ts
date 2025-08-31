@@ -17,6 +17,7 @@ import {
 import {
   AbstractControl,
   FormControl,
+  FormsModule,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
 } from '@angular/forms';
@@ -26,12 +27,14 @@ import { Observable, BehaviorSubject, takeUntil, debounceTime } from 'rxjs';
 import { SelectParams } from '../../../../types/advanced-search/select-option.model';
 import { ConstPath } from '../../../../constants/const_path';
 import { SharedImports } from '../../../../shared/shared-modules';
+import { MaterialModule } from '../../../../shared/material-module';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
-  imports: [SharedImports],
+  imports: [MaterialModule,FormsModule,CommonModule,ReactiveFormsModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

@@ -1,0 +1,229 @@
+@import './../../../../styles/elements.scss';
+
+:host {
+    .call-summary {
+        .error {
+            font-family: $fontAssistant;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 16px;
+            text-align: right;
+            color: $colorError;
+            opacity: 0.7;
+        }
+        // padding: 2rem;
+        .flex-column {
+            display: flex;
+            flex-direction: column;
+            align-content: flex-start;
+        }
+
+        @media only screen and (max-width: 1300px) {
+            padding: 1rem;
+        }
+
+        @media only screen and (min-width: 1300px) {
+            padding: 2rem;
+        }
+
+
+        .header {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+
+            mat-icon {
+                color: $colorDarkBlue;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+            }
+
+            span {
+                font-family: $fontOpenSans;
+                font-style: normal;
+                font-weight: 800;
+                font-size: 16px;
+                line-height: 22px;
+            }
+        }
+
+        .row-details {
+            margin-top: 5vh;
+        }
+        
+        .row-details {
+            display: flex;
+            justify-content: space-between;
+            
+            .item {
+                width: 28%;
+                
+                &.big-width {
+                    width: 45%;
+                }
+            }
+            
+            .title {
+                color: $colorTitle;
+                font-size: 15px;
+                font-weight: bold;
+            }
+        }
+
+        .phone-error {
+            align-self: flex-end;
+        }
+        
+        .wrap-content-card {
+            width: 77%;
+            
+            
+        }
+        
+        .wrap-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5vh;
+            
+            .card {
+                border: 1px solid $colorLightBlueBorder;
+                border-radius: 4px;
+                height: 50vh;
+
+                &.list-card {
+                    width: 20%;
+                    display: flex;
+                    align-items: center;
+                    overflow: auto;
+
+                    .dates {
+                        margin: 9px 0;
+                        cursor: pointer;
+                        font-family: $fontAssistant;
+                        font-weight: 600;
+                        font-size: 14px;
+                        line-height: 18px;
+                        text-align: right;
+                        text-decoration-line: underline;
+                        color: $colorDarkBlue;
+
+                        &.current-date {
+                            background: $colorLightBlue;
+                            border-radius: 3px;
+                            padding: 5px 10px;
+                        }
+
+                    }
+                }
+
+                &.content-card {
+                    padding: 1rem;
+
+                    .wrap-add-call-summary {
+                        position: relative;
+
+                        .wrap-reserved {
+                            display: flex;
+                            flex-wrap: wrap;
+                            max-height: 20vh;
+                            overflow: auto;
+
+                            .reserved {
+                                margin: 5px;
+                                font-family: $fontAssistant;
+                                font-weight: 400;
+                                font-size: 14px;
+                                line-height: 18px;
+                                text-align: right;
+                                color: $colorDarkBlue;
+                                padding: 5px 10px;
+                                border: 1px solid $colorDarkBlue;
+                                border-radius: 38px;
+                                cursor: pointer;
+
+                                &.choosed {
+                                    background-color: $colorLightBlue;
+                                }
+                            }
+                        }
+
+                        .content {
+                            outline: none;
+                            border: none;
+                            resize: none;
+                            height: 27vh;
+                            overflow: auto;
+                            width: 100%;
+                            margin-top: 2rem;
+                            font-family: $fontAssistant;
+                            font-weight: 400;
+                            font-size: 14px;
+                            line-height: 18px;
+                            text-align: right;
+                            color: $colorGray;
+                            height: 70%;
+
+
+                            &::placeholder {
+                                color: $colorGray;
+                            }
+                        }
+
+                        .wrap-loader {
+                            position: absolute;
+                            top: 50%;
+                            right: 50%;
+                            transform: translateX(50%);
+                            z-index: 100;
+                            width: 60%;
+
+                        }
+                    }
+                }
+
+                &.card-error {
+                    box-shadow: 0px 0px 8px rgba(255, 36, 36, 0.25);
+                }
+            }
+
+
+
+        }
+
+        .wrap-btn {
+            width: 100%;
+            // margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            @media only screen and (max-width: 1300px) {
+                margin-top: 0.5rem;
+            }
+
+            @media only screen and (min-width: 1300px) {
+                margin-top: 2rem;
+            }
+
+            button {
+                border: none;
+                padding: 10px;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 8px;
+                border-radius: 8px;
+                font-size: 18px;
+
+                &.save {
+                    background-color: $colorLightBlue;
+                    margin-left: 20px;
+                    width: 115px;
+                }
+
+            }
+        }
+
+    }
+}

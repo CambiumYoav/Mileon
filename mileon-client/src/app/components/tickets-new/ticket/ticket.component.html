@@ -1,0 +1,14 @@
+<div class="wrap-ticket">
+   <!-- <app-side-menu [menu]="menu"></app-side-menu> -->
+
+   <div class="wrap-component"> 
+    <div class="side-popup" *ngIf="isOpenNotes === true">
+      <!-- <app-add-note
+        (close)="isOpenNotes = false"
+        [ticketID]="ticketID"
+      ></app-add-note> -->
+    </div> 
+
+    <router-outlet></router-outlet>
+   </div> 
+</div>

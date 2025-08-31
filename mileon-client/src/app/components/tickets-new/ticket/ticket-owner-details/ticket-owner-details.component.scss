@@ -1,0 +1,126 @@
+@import '../../../../../styles/elements.scss';
+
+:host {
+  
+    direction: rtl;
+    font-family: $fontOpenSans;
+
+    .header {
+        height: 100px;
+    }
+
+    .action-btns {
+        margin-left: 50px;
+    }
+
+    .wrap-card {
+        height: calc(92vh - 120px);
+        padding-top: 2%;
+
+        form {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card {
+            width: 90%;
+            padding-top: 2%;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            
+            .main-title-row {
+                margin-bottom: 20px;
+                padding: 0 3%;
+            }
+
+            .main-title {
+                color: $colorTitle;
+                font-size: 15px;
+                font-weight: bold;
+            }
+
+            .row-details {
+                position: relative;
+                display: flex;
+                justify-content: start;
+                margin-bottom: 2.5%;
+                padding: 0 3%;
+                gap: 5%;
+
+                &.small-row {
+                    width: 90%;
+                }
+
+                .wrap-item {
+                    width: 10rem;
+                    height: 70px;
+
+                    &.medium-width {
+                        width: 18rem;
+                    }
+
+                    &.big-width {
+                        width: 40%;
+                    }
+
+                    .error-input {
+                        color: red;
+                    }
+
+                    .notice {
+                        color: $colorDarkBlue;
+                    }
+                }
+            }
+            
+            .wrap-btn {
+                display: flex;
+                justify-content: end;
+                margin-left: 15px;
+                margin-bottom: 15px;
+            }
+        }
+    }
+
+    @media (max-width: 1300px) {
+        .card {
+            height: 97% !important;
+            .row-details {
+                padding: 0 5% !important;
+                margin-bottom: 2% !important;
+
+                .wrap-item {
+                    height: 52px !important;
+
+                    .item {
+                        height: 49px !important;
+                        
+                        .title {
+                            font-size: 12px !important;
+                        }
+
+                        .info {
+                            font-size: 14px !important;
+                        }
+                    }
+                }
+            }
+            
+            .main-title {
+                font-size: 12px !important;
+            }
+
+            .main-title-row {
+                padding: 0 5% !important;
+            }
+        }
+    }
+}
+
+
+:host ::ng-deep {
+    ::-webkit-input-placeholder {
+        color: red
+    }
+}

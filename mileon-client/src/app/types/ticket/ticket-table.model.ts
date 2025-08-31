@@ -299,7 +299,7 @@ export class TicketTable {
       displayName: '',
       propertyName: 'ticketID',
       canSort: false,
-      type: ColumnTypeEnum.Radio,
+      type: ColumnTypeEnum.ActiveStatus,
       sortByServer: true,
     },
     {

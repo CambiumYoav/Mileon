@@ -1,0 +1,53 @@
+@import '../../../../styles/elements.scss';
+
+:host {
+    font-family: $fontOpenSans;
+
+    .wrap-ticket {
+        height: 92vh;
+        display: flex;
+        flex-direction: row;
+
+        .side-menu {
+            width: 50px;
+            height: 100%;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 8px;
+
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+
+            .wrap-icons {
+                .navigate-icon {
+                    margin-bottom: 30px;
+                    display: flex;
+                    justify-content: center;
+                    padding: 5px;
+                    position: relative;
+                    cursor: pointer;
+
+                    &:hover,
+                    &.selected {
+                        background-color: $colorLightBlue;
+                        border-radius: 50%;
+                    }
+
+
+                }
+            }
+        }
+
+
+        .wrap-component {
+            width: calc(100% - 50px);
+
+            .side-popup {
+                top: 8vh;
+                height: 92vh;
+                overflow: auto;
+            }
+
+        }
+    }
+
+}
