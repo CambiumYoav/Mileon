@@ -1,5 +1,5 @@
-import { TabsGroupComponent } from './../../components/shared/tabs-group/tabs-group.component';
-import { ROUTE_PATH } from 'src/app/constants/routerPath';
+// import { TabsGroupComponent } from './../../components/shared/tabs-group/tabs-group.component';
+import { ROUTE_PATH } from '../../constants/routerPath';
 import { SubModuleNames } from '../enum/moduleEnum';
 import { TabAttributes } from '../filters/tabsGroup';
 

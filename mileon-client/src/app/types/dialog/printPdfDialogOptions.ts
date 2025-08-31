@@ -1,4 +1,4 @@
-import { ticketFileTypes } from 'src/app/constants/ticketFileTypes';
+import { ticketFileTypes } from '../../constants/ticketFileTypes';
 import { FieldLengthEnum, FieldTypeEnum } from '../advanced-search/form-tab.model';
 import { ActionDialog } from './sendEmailDialogOptions';
 import {parkingPermitFileTypes} from "../../constants/parkingPermitFileTypes";

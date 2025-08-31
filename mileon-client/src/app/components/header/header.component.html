@@ -54,12 +54,16 @@
               <span class="name">{{ munucipal.name }}</span>
               <span class="task">{{ munucipal.tasks }} משימות לטיפול</span>
             </div>
-            <!-- need to be checkbox  -->
+            <!-- checkbox indicator for current municipal only -->
             <div
               class="ok"
               [ngClass]="munucipal === currentMunicipal ? 'current' : ''"
             >
-              <mat-icon *ngIf="munucipal === currentMunicipal">done</mat-icon>
+              <app-checkbox
+                *ngIf="munucipal === currentMunicipal"
+                [checked]="true"
+                [isDisabled]="false">
+              </app-checkbox>
             </div>
           </div>
         </div>

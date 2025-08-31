@@ -7,6 +7,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { BaseComponents, SharedImports } from '../../shared/shared-modules';
+import { CheckboxComponent } from '../shared/base/checkbox/checkbox.component';
 import { Router } from '@angular/router';
 import { ConstPath } from '../../constants/const_path';
 import { ROUTE_PATH } from '../../constants/routerPath';
@@ -17,15 +18,16 @@ import { RouterService } from '../../services/router.service';
 import { UserService } from '../../services/user.service';
 import { ModuleNames } from '../../types/enum/moduleEnum';
 import { Municipal } from '../../types/municipal';
+import { MainMenuComponent } from '../shared/base/menu/main-menu/main-menu.component';
 
 @Component({
   selector: 'app-header',
-  imports: [SharedImports, BaseComponents],
+  imports: [SharedImports, BaseComponents, CheckboxComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-  @Input() sideNav!: { toggle: () => void };
+  @Input() sideNav!: MainMenuComponent;
   @Input() email: string = 'michal@mileon.com';
 
   private routerService = inject(RouterService);

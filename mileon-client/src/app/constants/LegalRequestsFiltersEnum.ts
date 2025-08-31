@@ -5,7 +5,7 @@ export enum LegalRequestsFiltersEnum {
   AppealRequests = 'בקשות ערעור',
 }
 
-const headersByLegalRequestsTypes = {
+const headersByLegalRequestsTypes: { [key in LegalRequestsFiltersEnum]?: { header: string; id: number | null } } = {
   [LegalRequestsFiltersEnum.All]: { header: 'בקשות משפטיות לטיפול', id: null },
   [LegalRequestsFiltersEnum.ConversionRequests]: {
     header: 'בקשות הסבה לטיפול',
@@ -31,10 +31,10 @@ export const getTitleById = (id: number) => {
   return legalRequestsEnumObj[id] || LegalRequestsFiltersEnum.All;
 };
 
-export const getHeaderByCurrentLegalRequest = (currentLegalRequest: string) => {
-  return headersByLegalRequestsTypes[currentLegalRequest].header;
+export const getHeaderByCurrentLegalRequest = (currentLegalRequest: LegalRequestsFiltersEnum) => {
+  return headersByLegalRequestsTypes[currentLegalRequest]?.header || '';
 };
 
-export const getLegalRequestIdByHeader = (currentLegalRequest: string) => {
-  return headersByLegalRequestsTypes[currentLegalRequest].id;
+export const getLegalRequestIdByHeader = (currentLegalRequest: LegalRequestsFiltersEnum) => {
+  return headersByLegalRequestsTypes[currentLegalRequest]?.id;
 };

@@ -1,12 +1,12 @@
 import { inspectorEnforcementActionMap } from './../maps/userMaps';
-import { ROUTE_PATH } from 'src/app/constants/routerPath';
+import { ROUTE_PATH } from '../../constants/routerPath';  
 import { ModuleNames } from '../enum/moduleEnum';
-import { InfrastructuresFiltersEnum } from 'src/app/constants/InfrastructuresFiltersEnum';
-import { ExternalInterfacesFiltersEnum } from 'src/app/constants/ExternalInterfacesFiltersEnum';
-import { LegalRequestsFiltersEnum } from 'src/app/constants/LegalRequestsFiltersEnum';
-import { PermissionRoutes } from 'src/app/constants/permissions.enum';
+import { InfrastructuresFiltersEnum } from '../../constants/InfrastructuresFiltersEnum';
+import { ExternalInterfacesFiltersEnum } from '../../constants/ExternalInterfacesFiltersEnum';
+import { LegalRequestsFiltersEnum } from '../../constants/LegalRequestsFiltersEnum';
+import { PermissionRoutes } from '../../constants/permissions.enum';
 import { Menu } from '../base/menu.model';
-import { ConstPath } from 'src/app/constants/const_path';
+import { ConstPath } from '../../constants/const_path';
 
 export class Menus {
   public static AdminSideMenu: Menu = {

@@ -10,7 +10,7 @@ export enum InfrastructuresFiltersEnum {
   Violations = 'סעיפי עבירה',
   Tolls = 'מסך אגרות',
 }
-const headersByInfrastructuresTypes = {
+const headersByInfrastructuresTypes: { [key in InfrastructuresFiltersEnum]?: { header: string; id: number | null } } = {
   [InfrastructuresFiltersEnum.All]: { header: '  ', id: null },
   [InfrastructuresFiltersEnum.Vehicles]: {
     header: 'משרד התחבורה',
@@ -26,13 +26,13 @@ export const getTitleById = (id: number) => {
 };
 
 export const getHeaderByCurrentInfrastructures = (
-  currentInfrastructures: string
+  currentInfrastructures: InfrastructuresFiltersEnum
 ) => {
-  return headersByInfrastructuresTypes[currentInfrastructures].header;
+  return headersByInfrastructuresTypes[currentInfrastructures]?.header || '';
 };
 
 export const getExternalInterfaceIdByHeader = (
-  currentInfrastructures: string
+  currentInfrastructures: InfrastructuresFiltersEnum
 ) => {
-  return headersByInfrastructuresTypes[currentInfrastructures].id;
+  return headersByInfrastructuresTypes[currentInfrastructures]?.id;
 };

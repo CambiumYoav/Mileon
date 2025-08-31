@@ -1,0 +1,135 @@
+@import "../../../../../../styles/elements.scss";
+
+:host {
+  ::ng-deep ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+    overflow-y: scroll;
+    background: #E9E9E9 !important;
+    box-shadow: inset 0 0 7px #E9E9E9 !important;
+  }
+
+  .example-container {
+    width: 500px;
+    height: 300px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+  }
+
+  .example-sidenav-content {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-sidenav {
+    width: 320px;
+    padding: 25px 15px;
+    background: var(--back, #F7F9FC);
+    box-shadow: 0 0 12px -1px #D2DBE8;
+  }
+
+  .menu-button {
+    transition: 300ms ease-in-out;
+    transform: rotate(0deg);
+  }
+  .menu-button.rotated {
+    transform: rotate(180deg);
+  }
+  .submenu {
+      
+    overflow-y: hidden;-y: hidden;
+    //   opacity: 0;
+    //   transition: opacity 5s ease;
+    display: none;
+    margin-top: -100%;
+    // overflow: hidden;
+    // transition: max-height 0.3s ease-out;
+    transition: margin-top 300ms ease;
+    //   transition: transform 300ms ease;
+    //   transform: scaleY(0);
+    //   transform-origin: top;
+  }
+  .submenu.expanded {
+    margin-top: 0;
+    animation: fadeIn 200ms;
+    display: block;
+    padding-right: 34px;
+    //   transform: scaleY(1);
+  }
+
+
+
+  .icon {
+    display: block;
+    width: fit-content;
+    width: 24px;
+  }
+
+
+  #arrow-bottom {
+      width: 15px;
+      height: 15px;
+  }
+
+
+
+  .menu-item {
+    color: $colorDarkBlueOther;
+    padding: 10px 15px;
+    border-radius: 8px;
+    height: 40px;
+  }
+
+  // Background color for expanded main menu items
+  .parent .menu-item {
+    &.expanded-item {
+      background-color: #D3F0FF;
+    }
+  }
+
+  .disabled {
+    pointer-events: none !important;
+    opacity: 0.5;
+  }
+
+  .menu-item-title {
+    font-size: 18px;
+    font-weight: 400;
+    transition: font-weight 100ms ease-in;
+    &.bold {
+      font-weight: bold;
+    }
+  }
+
+  .sub-menu-item-title {
+    font-size: 15px;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  ::ng-deep .mat-list-item:hover {
+    background: $colorLightBlue !important;
+  }
+
+  ::ng-deep .mat-drawer-backdrop {
+    background: transparent;
+  }
+}
+
+
+::ng-deep .mdc-list-item {
+  padding: 0 !important;
+}
+
+::ng-deep .mdc-drawer-container {
+  overflow: hidden !important;
+  
+}

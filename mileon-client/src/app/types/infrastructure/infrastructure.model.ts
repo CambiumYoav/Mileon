@@ -1,7 +1,7 @@
-import { ConstPath as Icons } from 'src/app/constants/const_path';
+import { ConstPath as Icons } from '../../constants/const_path';
 import { ModuleNames, SubModuleNames } from '../enum/moduleEnum';
 import { TabAttributes } from '../filters/tabsGroup';
-import { ROUTE_PATH } from 'src/app/constants/routerPath';
+import { ROUTE_PATH } from '../../constants/routerPath';
 
 export class InfrastructureMain {
   public static Tabs: TabAttributes[] = [

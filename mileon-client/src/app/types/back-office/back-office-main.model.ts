@@ -1,8 +1,8 @@
-import { ConstPath as Icons } from 'src/app/constants/const_path';
+import { ConstPath as Icons } from '../../constants/const_path';
 import { ModuleNames } from '../enum/moduleEnum';
 import { TabAttributes } from '../filters/tabsGroup';
-import { ROUTE_PATH } from 'src/app/constants/routerPath';
-import { PermissionRoutes } from 'src/app/constants/permissions.enum';
+import { ROUTE_PATH } from '../../constants/routerPath';
+import { PermissionRoutes } from '../../constants/permissions.enum';
 
 export class BackOfficeMain {
   public static Tabs: TabAttributes[] = [

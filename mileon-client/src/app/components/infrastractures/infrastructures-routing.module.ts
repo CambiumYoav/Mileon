@@ -4,7 +4,7 @@ import { InfrastructuresMainComponent } from './infrastructures-main/infrastruct
 import { InfrastructuresTypeComponent } from './infrastructures-type/infrastructures-type.component';
 import { InfrastructuresColorsComponent } from './infrastructures-colors/infrastructures-colors.component';
 import { InfrastructuresManufactureComponent } from './infrastructures-manufacture/infrastructures-manufacture.component';
-import { ROUTE_PATH as RP } from 'src/app/constants/routerPath';
+import { ROUTE_PATH as RP } from '../../constants/routerPath';
 import { InfrastructuresSubStagesComponent } from './infrastructures-sub-stages/infrastructures-sub-stages.component';
 import { InfrastructuresViolationTypesComponent } from './infrastructures-violation-types/infrastructures-violation-types.component';
 import { InfrastructuresTicketsSourceComponent } from './infrastructures-tickets-source/infrastructures-tickets-source.component';

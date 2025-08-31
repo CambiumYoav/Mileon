@@ -1,18 +1,19 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../services/base.service';
-import { BaseComponents, SharedComponents, SharedImports } from '../../shared/shared-modules';
+import { SharedComponents } from '../../shared/shared-modules';
+import { SharedImports } from '../../shared/shared-modules';
 import { RouterOutlet } from '@angular/router';
+import { MainMenuComponent } from "../shared/base/menu/main-menu/main-menu.component";
 
 @Component({
   selector: 'app-main',
-  imports: [SharedImports, SharedComponents,RouterOutlet],
   templateUrl: './main.component.html',
-  styleUrl: './main.component.scss',
+  styleUrls: ['./main.component.scss'],
+  imports: [SharedImports, SharedComponents, RouterOutlet, MainMenuComponent],
 })
 export class MainComponent implements OnInit {
-  private baseService = inject(BaseService);
-  constructor() {
+  constructor(private baseService: BaseService) {
     this.baseService.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',

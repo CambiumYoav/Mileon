@@ -1,6 +1,6 @@
-import { ConstPath } from 'src/app/constants/const_path';
+import { ConstPath } from '../../constants/const_path';
 import { TabAttributes } from '../filters/tabsGroup';
-import { LegalRequestsFiltersEnum } from 'src/app/constants/LegalRequestsFiltersEnum';
+import { LegalRequestsFiltersEnum } from '../../constants/LegalRequestsFiltersEnum';
 import { Icon } from '../icon';
 
 export class LegalRequestsTypeFilters {

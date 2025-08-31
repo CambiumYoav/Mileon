@@ -41,18 +41,21 @@
 
       .user-details {
         position: absolute;
-        top: 106px;
+        top: 115px;
         right: 2vh;
-        box-shadow: 0px 0px 12px -1px $colorBoxShadow;
+        box-shadow: 0 0 12px -1px #D2DBE8;
         border-radius: 8px;
-        width: 20%;
-        z-index: 100;
+        width: 328px;
+        height: 262px;
+        padding: 20px 0;
+        z-index: 1000;
         display: flex;
         flex-direction: column;
         color: white;
+        background: #FFFFFF;
 
         .user {
-          padding: 10px;
+          padding: 0 0 20px 0;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -69,11 +72,15 @@
           }
 
           .username {
-            font-weight: 400;
+            color: #002741;
+            font-size: 13px;
+            font-weight: 700;
           }
 
           .email {
-            font-weight: 300;
+            color: #002741;
+            font-size: 13px;
+            font-weight: 400;
           }
         }
 
@@ -85,7 +92,8 @@
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          padding: 10px;
+          padding: 20px 0 20px 0;
+          gap: 10px;
           border-top: 1px solid $colorLightBlueBorder;
           .logout-btn {
             border: none;
@@ -97,8 +105,8 @@
           }
 
           .password {
-            font-weight: 300;
-            font-size: 15px;
+            font-size: 13px;
+            font-weight: 400;
             color: $colorGray;
           }
         }
@@ -145,25 +153,26 @@
     .wrap-municipals {
       position: absolute;
       right: 8vh;
-      top: 106px;
-      width: 15%;
+      top: 115px;
+      width: 328px;
       z-index: 100;
       display: flex;
       flex-direction: column;
       background: white;
-      box-shadow: 0px 0px 12px -1px $colorBoxShadow;
-      border-radius: 0px 0px 8px 8px;
+      box-shadow: 0 0 12px -1px #D2DBE8;
+      border-radius: 8px;
       scrollbar-width:thin;
       scrollbar-color: #B0B0B0 #E9E9E9;
       max-height: 500px;
       overflow-y: auto;
+
       .municipal-list {
         border-top: 1px solid #e3e7eb;
         width: 100%;
-        padding: 5px;
+        padding: 10px 10px 10px 18px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        gap: 10px;
         cursor: pointer;
 
         .wrap-name {
@@ -172,15 +181,16 @@
           font-family: $fontOpenSans;
           color: $colorDarkBlue2;
           line-height: 14px;
+          gap: 5px;
 
           .name {
             font-weight: 700;
-            font-size: 11px;
+            font-size: 16px;
           }
 
           .task {
             font-weight: 300;
-            font-size: 11px;
+            font-size: 13px;
           }
         }
 
@@ -189,9 +199,10 @@
           width: 1.2vw;
           height: 1.2vw;
           display: flex;
+          margin-right: auto;
 
           &.current {
-            background-color: $colorBlue;
+            background-color: transparent;
           }
 
           mat-icon {

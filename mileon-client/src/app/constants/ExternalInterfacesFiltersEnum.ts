@@ -3,7 +3,7 @@ export enum ExternalInterfacesFiltersEnum {
   MinistyOfTransport = 'משרד התחבורה',
   MinistryOfInterior = 'משרד הפנים',
 }
-const headersByExternalInterfacesTypes = {
+const headersByExternalInterfacesTypes: { [key in ExternalInterfacesFiltersEnum]?: { header: string; id: number | null } } = {
   [ExternalInterfacesFiltersEnum.All]: { header: '  ', id: null },
   [ExternalInterfacesFiltersEnum.MinistyOfTransport]: {
     header: 'משרד התחבורה',
@@ -24,13 +24,13 @@ export const getTitleById = (id: number) => {
 };
 
 export const getHeaderByCurrentExternalInterfaces = (
-  currentExternalInterfaces: string
+  currentExternalInterfaces: ExternalInterfacesFiltersEnum
 ) => {
-  return headersByExternalInterfacesTypes[currentExternalInterfaces].header;
+  return headersByExternalInterfacesTypes[currentExternalInterfaces]?.header || '';
 };
 
 export const getExternalInterfaceIdByHeader = (
-  currentExternalInterfaces: string
+  currentExternalInterfaces: ExternalInterfacesFiltersEnum
 ) => {
-  return headersByExternalInterfacesTypes[currentExternalInterfaces].id;
+  return headersByExternalInterfacesTypes[currentExternalInterfaces]?.id;
 };

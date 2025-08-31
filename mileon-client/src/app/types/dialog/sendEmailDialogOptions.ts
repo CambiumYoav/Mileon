@@ -1,9 +1,9 @@
-import { ticketFileTypes } from 'src/app/constants/ticketFileTypes';
+import { ticketFileTypes } from '../../constants/ticketFileTypes';
 import { Field, FieldLengthEnum, FieldTypeEnum } from '../advanced-search/form-tab.model';
 import {parkingPermitFileTypes} from "../../constants/parkingPermitFileTypes";
 import {ModuleEnum} from "../enum/moduleEnum";
 import { Validators } from '@angular/forms';
-import { arrayNotEmpty } from 'src/app/validators/baseTypesValidators';
+import { arrayNotEmpty } from '../../validators/baseTypesValidators';
 
 export class SendEmailDialogForm {
     emailAddress: string;
@@ -23,8 +23,8 @@ export class SendEmailDialogForm {
 }
 
 export class ActionDialog {
-    title: string;
-    fields: Field[];
+    title: string = '';
+    fields: Field[] = [];
 }
 
 export class SendEmailDialogFields {

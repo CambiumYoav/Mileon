@@ -1,6 +1,6 @@
-import { ROUTE_PATH } from 'src/app/constants/routerPath';
+import { ROUTE_PATH } from '../../constants/routerPath';
 import { SideMenu } from '../base/menu.model';
-import { PermissionRoutes } from 'src/app/constants/permissions.enum';
+import { PermissionRoutes } from '../../constants/permissions.enum';
 
 export class ParkingPermitMenus {
   public static parkingPermitDefaultTitle = 'חיפוש עבור תווי דייר';
