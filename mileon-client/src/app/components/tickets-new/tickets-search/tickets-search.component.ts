@@ -14,6 +14,7 @@ import { FormGroup } from '@angular/forms';
 
 import { ROUTE_PATH } from '../../../constants/routerPath';
 import { BaseService } from '../../../services/base.service';
+import { SearchNormalizerService } from '../../../services/search-normalizer.service';
 import { RouterService } from '../../../services/router.service';
 import { AdvancedForm } from '../../../types/advanced-search/form-tab.model';
 import { TicketNew } from '../../../types/ticket';
@@ -53,6 +54,7 @@ export class TicketsSearchComponent implements OnInit {
   private ticketsSearchFormService = inject(TicketsSearchFormService);
   private routerService = inject(RouterService);
   private _baseService = inject(BaseService);
+  private searchNormalizer = inject(SearchNormalizerService);
   constructor() {
     this.ticketsSearchForm = this.ticketsSearchFormService.form;
   }
@@ -61,23 +63,9 @@ export class TicketsSearchComponent implements OnInit {
 
   async sendFormValue(searchForm: FormGroup) {
     this.ticketsSearchFormService.searchForm = searchForm;
-    const formValue = searchForm.value;
-    for (let key of Object.keys(formValue)) {
-      if (formValue[key] && typeof formValue[key] === 'object') {
-        for (let k of Object.keys(formValue[key])) {
-          if (k.toLowerCase().includes('time') && formValue[key][k]) {
-            formValue[key][k] = this._baseService.convertTimeToDateTime(
-              formValue[key][k]
-            );
-          }
-        }
-      }
-      if (key.toLowerCase().includes('date') && formValue[key]) {
-        this._baseService.setTimeToMidday(formValue[key]);
-      }
-    }
+    const formValue = this.searchNormalizer.normalizeForSearch({ ...searchForm.value });
     if (searchForm.valid) {
-      this.onSearch.emit(searchForm.value);
+      this.onSearch.emit(formValue);
     }
   }
 

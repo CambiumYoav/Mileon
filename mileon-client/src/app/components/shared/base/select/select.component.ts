@@ -23,7 +23,7 @@ import {
 } from '@angular/forms';
 import { FormControlValueAccessorConnector } from '../../abstract/form-control-value-accessor-connector.component';
 import { of } from 'rxjs/internal/observable/of';
-import { Observable, BehaviorSubject, takeUntil, debounceTime } from 'rxjs';
+import { Observable, BehaviorSubject, takeUntil, debounceTime, take } from 'rxjs';
 import { SelectParams } from '../../../../types/advanced-search/select-option.model';
 import { ConstPath } from '../../../../constants/const_path';
 import { SharedImports } from '../../../../shared/shared-modules';
@@ -34,6 +34,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
+  standalone: true,
   imports: [MaterialModule,FormsModule,CommonModule,ReactiveFormsModule],
   providers: [
     {
@@ -134,7 +135,10 @@ export class SelectComponent
           (typeof item === 'object' && item !== null) ? item[this.bindValueKey] : item
         );
       } else {
-        this.selectParams.ids = [this.control.value];
+        const value = this.control.value;
+        this.selectParams.ids = [
+          (typeof value === 'object' && value !== null) ? value[this.bindValueKey] : value
+        ];
       }
     }
     this.setConnectedFieldValue();
@@ -174,6 +178,11 @@ export class SelectComponent
         this.items$ = of(res[this.formControlName as keyof typeof res]);
       }
     });
+
+    // Respect disabled input using ControlValueAccessor API to avoid template binding warnings
+    if (this.disabled) {
+      this.setDisabledState(true);
+    }
   }
 
   updateCurrentPage() {
@@ -270,7 +279,7 @@ export class SelectComponent
       this.endOfData = res?.isEndOfData ?? false;
       this.isServerSide = res?.isServerSide ?? false;
       if (!this.isServerSide) {
-        this.items$.subscribe((data) => {
+        this.items$.pipe(take(1)).subscribe((data) => {
           this.currentStaticItems = data;
         });
       }
@@ -345,6 +354,11 @@ export class SelectComponent
         this.selectParams.currentPage = 1;
         this.getDataList(this.selectParams);
       }
+    }
+
+    // Apply disabled state changes programmatically
+    if (changes['disabled']) {
+      this.setDisabledState(!!this.disabled);
     }
   }
 

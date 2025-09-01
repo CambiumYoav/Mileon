@@ -51,7 +51,7 @@ import { TruncatedTextTooltipDirective } from '../../../directives/truncated-tex
     TagComponent,
     CheckboxComponent,
     RadioButtonComponent,
-    IconComponent, TruncatedTextTooltipDirective,
+    IconComponent,
   ],
   providers: [TableService],
 })

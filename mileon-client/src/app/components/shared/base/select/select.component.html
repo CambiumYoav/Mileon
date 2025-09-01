@@ -56,15 +56,15 @@
       disableOptionCentering
       [multiple]="isMultiSelect"
       [placeholder]="placeholder"
-      aria-disabled="true"
       [compareWith]="compareValues"
       (openedChange)="onSelectOpened($event)"
+      [panelClass]="isMultiSelect ? 'mat-mdc-select-panel multiselect-panel' : 'mat-mdc-select-panel'"
       [attr.data-multiselect]="isMultiSelect"
     >
       <div *ngIf="items$ | async as retrievedItems; else waitingResponse">
         <mat-option
           *ngFor="let item of retrievedItems"
-          [value]="isMultiSelect ? item : item[bindValueKey]"
+          [value]="item[bindValueKey]"
         >
           <ng-container *ngIf="bindLabelKeys; else elseBlock">
             <span 

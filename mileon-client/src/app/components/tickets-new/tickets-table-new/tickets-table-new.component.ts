@@ -68,7 +68,7 @@ export class TicketsTableNewComponent implements OnInit {
   private ticketSearchForm = inject(TicketsSearchFormService);
   private routerService = inject(RouterService);
   constructor() {
-    this.ticketForm = this.ticketSearchForm.searchForm;
+    this.ticketForm = this.ticketSearchForm.form;
   }
 
   ngOnInit(): void {}

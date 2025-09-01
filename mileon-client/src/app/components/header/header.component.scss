@@ -27,8 +27,6 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        margin-right: 1rem;
-
         span {
           font-family: $fontOpenSans;
           font-style: normal;
@@ -66,10 +64,8 @@
           font-family: $fontOpenSans;
           font-size: 0.8vw;
           color: $colorDarkBlue2;
+          gap: 5px;
 
-          .user-logo {
-            margin-bottom: 1vh;
-          }
 
           .username {
             color: #002741;

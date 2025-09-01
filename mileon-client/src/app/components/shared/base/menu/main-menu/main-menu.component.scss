@@ -4,9 +4,15 @@
   ::ng-deep ::-webkit-scrollbar {
     width: 7px;
     height: 7px;
-    overflow-y: scroll;
-    background: #E9E9E9 !important;
+    // overflow-y: scroll;
+    background: transparent !important;
     box-shadow: inset 0 0 7px #E9E9E9 !important;
+
+  }
+
+  .cursor-pointer{
+    padding-left: 24px;
+    cursor: pointer;
   }
 
   .example-container {
@@ -32,6 +38,9 @@
   .menu-button {
     transition: 300ms ease-in-out;
     transform: rotate(0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .menu-button.rotated {
     transform: rotate(180deg);
@@ -60,10 +69,11 @@
 
 
 
-  .icon {
+  .icon.img {
     display: block;
     width: fit-content;
-    width: 24px;
+    width: 19px;
+    height: 19px;
   }
 
 
@@ -76,7 +86,7 @@
 
   .menu-item {
     color: $colorDarkBlueOther;
-    padding: 10px 15px;
+    padding: 10px 10px 10px 28px;
     border-radius: 8px;
     height: 40px;
   }
@@ -125,9 +135,16 @@
 }
 
 
+.mdc-list{
+  padding: 35px 0 !important;
+}
+
+
 ::ng-deep .mdc-list-item {
   padding: 0 !important;
 }
+
+
 
 ::ng-deep .mdc-drawer-container {
   overflow: hidden !important;

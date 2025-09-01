@@ -13,7 +13,7 @@ import { ActionButtonNames } from '../../constants/action_buttons';
 import { ConstPath } from '../../constants/const_path';
 import { PermissionService } from '../../services/permission.service';
 import { RouterService } from '../../services/router.service';
-import { ModuleEnum, RoleEnum } from '../../types/enum/moduleEnum';
+import { ModuleEnum, RoleEnum, ModuleEnumKeys } from '../../types/enum/moduleEnum';
 import { TicketFilterOptions } from '../../types/filters/ticket/ticketFilterOptions';
 import { TicketNew } from '../../types/ticket';
 import { TicketMenus } from '../../types/ticket/ticket-menus.model';
@@ -27,6 +27,7 @@ import { ButtonComponent } from '../shared/base/button/button.component';
 import { TicketsTableNewComponent } from './tickets-table-new/tickets-table-new.component';
 import { TicketsSearchComponent } from './tickets-search/tickets-search.component';
 import { ActionButtonsComponent } from '../shared/action-buttons/action-buttons.component';
+import { AppService } from '../../app.service';
 
 @Component({
   selector: 'app-tickets-new',
@@ -48,6 +49,7 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
   private permissionService = inject(PermissionService);
   private searchFormService = inject(SearchFormService);
   private authorityService = inject(AuthorityService);
+  private appService = inject(AppService);
 
   currentMunicipalSig = this.authorityService.currentMunicipal;
   list: TicketNew[] = [];
@@ -94,6 +96,8 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
   isBackOffice: boolean = false;
   currentAuthority: string | null = '';
   constructor() {
+    this.appService.currentModuleName = 'TicketsNewModule' as ModuleEnumKeys;
+    this.appService.id = ModuleEnum.TicketsNewModule;
     effect(() => {
       const authorityID = this.authorityService.authorityId();
       if (!authorityID) return;
