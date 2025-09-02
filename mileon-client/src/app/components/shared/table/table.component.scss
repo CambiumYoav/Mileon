@@ -10,6 +10,7 @@
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+  max-width: 100%;
   color: #d8e4f1;
 }
 
@@ -50,14 +51,6 @@ div.table-container {
   }
 }
 
-table {
-  border-spacing: 0;
-  width: 100%;
-  margin: 0;
-  table-layout: auto;
-  border-collapse: collapse;
-}
-
   td {
     padding: 4px 8px 4px 8px;
     border-bottom: 1px solid #B9C6D4;
@@ -71,8 +64,8 @@ table {
     height: 40px;
     vertical-align: middle;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
+    overflow: hidden;
 
 
   }

@@ -147,6 +147,10 @@
       .mat-ripple {
         display: none !important;
       }
+
+      &:last-child {
+        background: transparent !important;
+      }
     }
 
     .mat-mdc-tab.mat-mdc-tab-disabled{
@@ -240,6 +244,7 @@
 ::ng-deep .cdk-program-focused {
   display: none;
 }
+
 
 // Textarea styles
 .textarea-container {

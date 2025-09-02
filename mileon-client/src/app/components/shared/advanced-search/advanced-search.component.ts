@@ -113,6 +113,30 @@ export class AdvancedSearchComponent
     return '';
   }
 
+  hasAnyFilledFields(): boolean {
+    if (!this.form || !this.advancedForm) {
+      return false;
+    }
+
+    const tabs = this.advancedForm.tabs || [];
+    return tabs.some((tab) => {
+      const tabName = tab.name || '';
+      const formGroup = this.form?.controls[tabName] as FormGroup;
+      if (!formGroup) {
+        return false;
+      }
+
+      const filledFieldsCount = Object.values(formGroup.controls).filter((control) => {
+        return !!(
+          (!Array.isArray(control.value) && control.value) ||
+          (Array.isArray(control.value) && !!control.value.length)
+        );
+      }).length;
+
+      return filledFieldsCount > 0;
+    });
+  }
+
   // resetForm(tabName?: string) {
   //   // NOTE 🤢 ugly due to lack of dev time - needs refactor
   //   if (tabName) {

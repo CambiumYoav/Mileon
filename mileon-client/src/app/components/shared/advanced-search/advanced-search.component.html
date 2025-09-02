@@ -120,7 +120,7 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab disabled class="reset-all-tab">
+      <mat-tab [disabled]="!hasAnyFilledFields()" class="reset-all-tab">
         <ng-template mat-tab-label class="reset-all-tab">
           <button 
             (click)="resetForm()" 
