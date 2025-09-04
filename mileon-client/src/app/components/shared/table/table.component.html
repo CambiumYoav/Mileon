@@ -48,9 +48,7 @@
               <td
                 *ngIf="column.type !== ColumnTypeEnum.Hidden"
                 [ngClass]="{
-                  'radio-td': column.type === ColumnTypeEnum.Radio
-                }"
-                [ngClass]="{
+                  'radio-td': column.type === ColumnTypeEnum.Radio,
                   'checkbox-td': column.type === ColumnTypeEnum.Checkbox
                 }"
               >
@@ -125,6 +123,7 @@
                   <span
                     *ngIf="!column.hasIcon && column.propertyName !== 'nid'"
                     appTruncatedTextTooltip
+                    [tooltipText]="item[column.propertyName] + (column.additionalText ? item[column.additionalText] : '')"
                   >
                     {{ item[column.propertyName] }}
                     {{
@@ -135,6 +134,7 @@
                   <span
                     *ngIf="!column.hasIcon && column.propertyName === 'nid'"
                     appTruncatedTextTooltip
+                    [tooltipText]="item | renderIdentity"
                   >
                     {{ item | renderIdentity }}
                   </span>
@@ -158,6 +158,7 @@
                   <span
                     *ngIf="!column.hasIcon && column.propertyName !== 'nid'"
                     appTruncatedTextTooltip
+                    [tooltipText]="item[column.propertyName] + (column.additionalText ? item[column.additionalText] : '')"
                   >
                     {{ item[column.propertyName] }}
                     {{
@@ -167,6 +168,7 @@
                   <span
                     *ngIf="!column.hasIcon && column.propertyName === 'nid'"
                     appTruncatedTextTooltip
+                    [tooltipText]="item | renderIdentity"
                   >
                     {{ item | renderIdentity }}
                   </span>
@@ -187,6 +189,7 @@
                   *ngIf="column.type === ColumnTypeEnum.Currency"
                   [ngClass]="column.textColor ?? 'blue'"
                   appTruncatedTextTooltip
+                  [tooltipText]="(item[column.propertyName] | currency : '₪ ') || ''"
                 >
                   {{ item[column.propertyName] | currency : "₪ " }}
                 </span>
@@ -194,6 +197,7 @@
                 <span 
                   *ngIf="column.type === ColumnTypeEnum.Date"
                   appTruncatedTextTooltip
+                  [tooltipText]="(item[column.propertyName] | date : 'dd/MM/yyyy') || ''"
                 >
                   {{ item[column.propertyName] | date : "dd/MM/yyyy" }}
                 </span>
@@ -201,6 +205,7 @@
                 <span 
                   *ngIf="column.type === ColumnTypeEnum.DateTime"
                   appTruncatedTextTooltip
+                  [tooltipText]="(item[column.propertyName] | date : 'HH:mm | dd.MM.yyyy') || ''"
                 >
                   {{ item[column.propertyName] | date : "HH:mm | dd.MM.yyyy" }}
                 </span>
@@ -215,6 +220,8 @@
                   *ngIf="column.type === ColumnTypeEnum.Tag"
                   [tagName]="item[column.propertyName]"
                   [tagId]="item[column.fieldId]"
+                  appTruncatedTextTooltip
+                  [tooltipText]="item[column.propertyName]"
                 ></app-tag>
 
                 <div class="d-flex justify-content-center">

@@ -86,7 +86,26 @@ div.table-container {
     align-items: right;
   }
 
+  // Custom tooltip styles for the truncated text directive
+  .custom-select-tooltip {
+    position: fixed;
+    z-index: 9999;
+    background: #EDF9FF;
+    color: #181818;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    max-width: 300px;
+    word-wrap: break-word;
+    white-space: normal;
+    direction: rtl;
+    text-align: right;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #B9C6D4;
+  }
+
   
+
 // span{
 //   justify-content: flex-start;
 //   align-items: right;

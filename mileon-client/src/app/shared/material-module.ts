@@ -29,7 +29,6 @@ export const MaterialModule = [
   MatDateRangePicker,
   MatNativeDateModule,
   MatCheckboxModule,
-  MatIconModule,
   MatToolbarModule,
   MatSidenavModule,
   MatDividerModule,

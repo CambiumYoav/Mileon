@@ -1,13 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ConstPath } from './constants/const_path';
-import { NavigationEnd, Router } from '@angular/router';
-import { InfrastructuresRoutingModule } from "./components/infrastractures/infrastructures-routing.module";
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [InfrastructuresRoutingModule],
+  imports: [RouterOutlet],
 })
 export class AppComponent {
   @ViewChild('innerScrollContainer') innerScrollContainer!: ElementRef;

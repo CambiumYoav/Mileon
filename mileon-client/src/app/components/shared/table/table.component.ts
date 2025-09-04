@@ -37,7 +37,7 @@ import { CheckboxComponent } from '../base/checkbox/checkbox.component';
 import { RadioButtonComponent } from '../base/radio-button/radio-button.component';
 // import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
 import { IconComponent } from "../base/icon/icon.component";
-import { TruncatedTextTooltipDirective } from '../../../directives/truncated-text-tooltip.directive';  
+import { TruncatedTextTooltipDirective } from '../../../directives/truncated-text-tooltip.directive';
 
 @Component({
   selector: 'app-table',
@@ -53,6 +53,7 @@ import { TruncatedTextTooltipDirective } from '../../../directives/truncated-tex
     CheckboxComponent,
     RadioButtonComponent,
     IconComponent,
+    TruncatedTextTooltipDirective,
   ],
   providers: [TableService],
 })
@@ -113,6 +114,7 @@ export class TableComponent
   @Output() onRowSelect = new EventEmitter<any>();
 
   ColumnTypeEnum = ColumnTypeEnum;
+  $event: MouseEvent = new MouseEvent('hover');
 
   constructor(
     private tableService: TableService,
