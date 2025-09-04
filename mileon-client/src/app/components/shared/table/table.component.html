@@ -48,12 +48,10 @@
               <td
                 *ngIf="column.type !== ColumnTypeEnum.Hidden"
                 [ngClass]="{
-                  'radio-td': column.type === ColumnTypeEnum.Radio,
-                  'text-overflow-ellipsis': column.textOverflow
+                  'radio-td': column.type === ColumnTypeEnum.Radio
                 }"
                 [ngClass]="{
-                  'checkbox-td': column.type === ColumnTypeEnum.Checkbox,
-                  'text-overflow-ellipsis': column.textOverflow
+                  'checkbox-td': column.type === ColumnTypeEnum.Checkbox
                 }"
               >
                
@@ -126,6 +124,7 @@
 
                   <span
                     *ngIf="!column.hasIcon && column.propertyName !== 'nid'"
+                    appTruncatedTextTooltip
                   >
                     {{ item[column.propertyName] }}
                     {{
@@ -135,6 +134,7 @@
 
                   <span
                     *ngIf="!column.hasIcon && column.propertyName === 'nid'"
+                    appTruncatedTextTooltip
                   >
                     {{ item | renderIdentity }}
                   </span>
@@ -157,6 +157,7 @@
                   ></app-checkbox>
                   <span
                     *ngIf="!column.hasIcon && column.propertyName !== 'nid'"
+                    appTruncatedTextTooltip
                   >
                     {{ item[column.propertyName] }}
                     {{
@@ -165,6 +166,7 @@
                   </span>
                   <span
                     *ngIf="!column.hasIcon && column.propertyName === 'nid'"
+                    appTruncatedTextTooltip
                   >
                     {{ item | renderIdentity }}
                   </span>
@@ -184,15 +186,22 @@
                 <span
                   *ngIf="column.type === ColumnTypeEnum.Currency"
                   [ngClass]="column.textColor ?? 'blue'"
+                  appTruncatedTextTooltip
                 >
                   {{ item[column.propertyName] | currency : "₪ " }}
                 </span>
                 <!-- <span>₪</span> -->
-                <span *ngIf="column.type === ColumnTypeEnum.Date">
+                <span 
+                  *ngIf="column.type === ColumnTypeEnum.Date"
+                  appTruncatedTextTooltip
+                >
                   {{ item[column.propertyName] | date : "dd/MM/yyyy" }}
                 </span>
 
-                <span *ngIf="column.type === ColumnTypeEnum.DateTime">
+                <span 
+                  *ngIf="column.type === ColumnTypeEnum.DateTime"
+                  appTruncatedTextTooltip
+                >
                   {{ item[column.propertyName] | date : "HH:mm | dd.MM.yyyy" }}
                 </span>
 

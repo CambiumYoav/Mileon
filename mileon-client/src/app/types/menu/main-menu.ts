@@ -179,7 +179,7 @@ export class Menus {
         id: '8',
         path: '',
         displayName: ModuleNames.Modules,
-        icon: 'terminal-menu.svg',
+        icon: 'modules-menu.svg',
         route: '',
         permissionRoute: [],
         menuItems: [],

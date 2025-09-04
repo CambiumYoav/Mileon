@@ -27,8 +27,7 @@ export class TicketIcons {
     },
     {
       id: 5,
-      src: this.Icons.STAGE4,
-      // src: this.Icons.STAGE5,
+      src: this.Icons.STAGE5,
       displayName: 'הלבשה משרד הפנים',
     },
     {
@@ -53,12 +52,14 @@ export class TicketIcons {
     },
     {
       id: 10,
-      src: this.Icons.BANK,
+      // src: this.Icons.BANK,
+      src: this.Icons.STAGE10,
       displayName: 'עיקול מטלטלין ברישום',
     },
     {
       id: 11,
-      src: this.Icons.BANK,
+      src: this.Icons.STAGE11,
+      // src: this.Icons.BANK,
       displayName: 'עיקול מטלטלין בפועל',
     },
   ];

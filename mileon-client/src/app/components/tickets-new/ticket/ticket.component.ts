@@ -9,13 +9,14 @@ import { TicketMenus } from '../../../types/ticket/ticket-menus.model';
 import { TicketDetails } from '../../../types/ticketDetails';
 import { User } from '../../../types/user';
 import { TicketActionButtonsComponent } from './ticket-action-buttons/ticket-action-buttons.component';
+import { SideMenuComponent } from "../../shared/base/menu/side-menu/side-menu.component";
 
 
 @Component({
   selector: 'app-ticket',
   templateUrl: './ticket.component.html',
   styleUrls: ['./ticket.component.scss'],
-  imports:[RouterModule]
+  imports: [RouterModule, SideMenuComponent]
 })
 export class TicketComponent implements OnInit, OnDestroy {
   @ViewChild('ticketAction') TicketActionButtons!: TicketActionButtonsComponent;

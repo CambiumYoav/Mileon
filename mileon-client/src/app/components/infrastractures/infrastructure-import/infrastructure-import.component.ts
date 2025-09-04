@@ -19,19 +19,16 @@ import { FileUploadNewComponent } from "../../shared/base/upload-files/upload-fi
   imports: [SharedImports, ButtonComponent, FileUploadNewComponent],
 })
 export class InfrastructureImportComponent implements OnInit {
-  // Constants and Enums
   readonly Icons = ConstPath;
   readonly FileUploadComponenetType = FileUploadComponenetType;
   readonly FileType = FileType;
-  // Inputs/Outputs
-  dataSubject = new Subject<any>(); // Observable to emit data
+  dataSubject = new Subject<any>();
 
-  // Component State
   title: string = 'יבוא מבנה קובץ';
   description: string;
   selectedFiles: File | null = null;
   fileTypes: IdValuePair[] = [];
-  filesToUpload: UploadedFile[] = []; // Tracks files for upload
+  filesToUpload: UploadedFile[] = [];
   isSignsImport: boolean = false;
   isSpecialImport: boolean = false;
   constructor(
@@ -41,7 +38,7 @@ export class InfrastructureImportComponent implements OnInit {
       description: string;
       isSignsImport?: boolean;
       isSpecialImport?: boolean;
-    } // Injected data
+    }
   ) {
     this.description =
       data?.description ||
@@ -52,17 +49,14 @@ export class InfrastructureImportComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  // Emits selected files and closes the dialog
   onSubmit(): void {
     this.dialogRef.close({ uploadedFiles: this.selectedFiles });
   }
 
-  // Closes the dialog without submitting
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  // Handles file upload from child component
   getUploadedFile(file: File): void {
     this.selectedFiles = file;
     // Add logic to process or validate the file if needed

@@ -48,15 +48,12 @@ FieldTypeEnum = FieldTypeEnum;
   }
 
   ngOnInit(): void {
-    // Initialize the form
     this.initializeForm();
   }
 
   private initializeForm(): void {
-    // Create the form structure
     this.createSectionsForms();
 
-    // Run change detection
     this.cdr.detectChanges();
   }
 
@@ -86,7 +83,6 @@ FieldTypeEnum = FieldTypeEnum;
             validations.push(Validators.max(field.validations.max));
         }
 
-        // Handle fromTo field type
         if (field.type === 'fromTo' && field.fields && field.fields.length > 0) {
           const fromToGroup = this.fb.group({
             from: [field.fields[0]?.value || '', validations],
@@ -126,14 +122,12 @@ FieldTypeEnum = FieldTypeEnum;
     this._skipFormValidation = false;
     this.isSubmitted = true;
 
-    // Mark all fields in all form groups as touched
     Object.values(this.sectionsFormGroup.controls).forEach((control) => {
       if (control instanceof FormGroup) {
         this.markFormGroupTouched(control);
       }
     });
 
-    // Run change detection
     this.cdr.detectChanges();
 
     if (this.sectionsFormGroup.valid) {
@@ -152,11 +146,11 @@ FieldTypeEnum = FieldTypeEnum;
     return Object.keys(this.sectionsFormGroup.controls).reduce((acc: any, key) => {
       const sectionValue = (
         this.sectionsFormGroup.get(key) as FormGroup
-      )?.getRawValue(); // Include disabled fields
+      )?.getRawValue();
 
       if (sectionValue) {
         Object.entries(sectionValue).forEach(([fieldKey, fieldValue]) => {
-          acc[fieldKey] = fieldValue; // Add to the accumulated object
+          acc[fieldKey] = fieldValue;
         });
       }
       return acc;
@@ -183,14 +177,12 @@ FieldTypeEnum = FieldTypeEnum;
       `פרטי בעל חיים.${fieldName}`
     );
 
-    // Check if the date control exists and has a value
     if (!dateControl || !dateControl.value) {
       return this.isFieldValid(`פרטי בעל חיים.${fieldName}`);
     }
 
     const dateValue = new Date(dateControl.value);
 
-    // Check if the date is in the future
     const today = new Date();
     if (dateValue > today) {
       return false;

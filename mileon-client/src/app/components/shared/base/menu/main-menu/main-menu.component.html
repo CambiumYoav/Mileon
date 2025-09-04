@@ -32,16 +32,11 @@
           >
             <div class="d-flex w-100 menu-item" [ngClass]="{ 'expanded-item': item.expanded }">
               <div *ngIf="item.icon" class="d-flex ps-3 w-15">
-                <!-- <img
+                <img
                   class="icon"
                   [src]="'../assets/icons/main-page/' + item.icon"
                   [alt]="item.displayName"
-                /> -->
-                <img
-                class="icon"
-                [src]="'../assets/icons/main-page/example.svg'"
-                [alt]="item.displayName"
-              />
+                />
               </div>
 
               <div

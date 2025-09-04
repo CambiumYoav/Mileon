@@ -34,13 +34,13 @@ import { FieldTypeEnum } from '../../../types/advanced-search/form-tab.model';
   imports: [SharedImports,BaseComponents],
 })
 export class InfrastructureFormComponent implements OnInit {
-  readonly Icons = ConstPath; // Path to icons
+  readonly Icons = ConstPath;
   readonly FileUploadComponenetType = FileUploadComponenetType;
-  title: string = ''; // Title of the form
-  rows: DynamicRow[] = []; // Rows of fields in the form
-  dynamicForm!: FormGroup; // FormGroup for reactive forms
-  isSubmitted = false; // Tracks if the form is submitted
-  dataSubject = new Subject<any>(); // Observable to emit form data
+  title: string = '';
+  rows: DynamicRow[] = [];
+  dynamicForm!: FormGroup;
+  isSubmitted = false;
+  dataSubject = new Subject<any>();
   isSigns: boolean = false;
   selectedFiles: File | null = null;
   base64File: any;
@@ -64,24 +64,21 @@ export class InfrastructureFormComponent implements OnInit {
     private dialog: MatDialog,
     private toaster: ToastrService
   ) {
-    this.rows = data.form; // Initialize rows from injected data
+    this.rows = data.form; 
     this.title = data.title;
-    this.isSigns = data.isSigns; // Initialize title from injected data
+    this.isSigns = data.isSigns; 
     this.isEdit = data.isEdit;
   }
   optionsApps: CheckboxOption[] = [
     { value: true, label: 'פעיל', checked: true },
   ];
   ngOnInit(): void {
-    this.createForm(); // Initialize the form on component load
+    this.createForm();
   }
 
-  /** Closes the dialog */
   onNoClick(): void {
     this.dialog.closeAll();
   }
-
-  /** Creates the reactive form dynamically based on rows and fields */
 
   private createForm(): void {
     const formGroup = this.rows.reduce((group, dynamicRow) => {
@@ -144,11 +141,11 @@ export class InfrastructureFormComponent implements OnInit {
         form: this.dynamicForm.value,
         isEdit: this.data.isEdit,
         uploadedFiles: this.base64File,
-      }); // Emit form data if valid
+      });
     } else {
       this.toaster.error(ErrorSuccessMessages.INVALID_DETAILS_TRY_AGAIN);
       console.error('Form is invalid', this.dynamicForm);
-      this.isSubmitted = true; // Mark form as submitted to show validation errors
+      this.isSubmitted = true; 
     }
   }
 
@@ -160,8 +157,7 @@ export class InfrastructureFormComponent implements OnInit {
 
     Utils.convertFileToBase64(file)
       .then((base64: string) => {
-        // console.log('Base64 String:', base64);
-        this.base64File = base64; // Store Base64
+        this.base64File = base64; 
       })
       .catch((error) => {
         console.error('Error converting file to Base64:', error);

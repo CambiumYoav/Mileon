@@ -2,9 +2,8 @@
 
 .table {
   background: #F7F9FC;
-  border-bottom: 1px solid #B9C6D4;
   background: #F7F9FC;
-    // border-collapse: collapse;
+    border-collapse: collapse;
   border-radius: 4px;
   table-layout: auto;
   margin-left: auto;
@@ -12,15 +11,17 @@
   width: 100%;
   max-width: 100%;
   color: #d8e4f1;
+  margin: 0 !important;
 }
 
 tbody {
   display: block; /* Make tbody a block element */
-  height: 565px; /* Height for 14 rows (14 × 40px) */
-  max-height: 565px;
+  height: 572px; /* Height for 14 rows (14 × 40px) */
+  max-height: 572px;
   overflow-y: auto; /* Enable vertical scrolling */
   scrollbar-width:thin;
   scrollbar-color: #B0B0B0 #E9E9E9;
+  
 }
 
 tbody tr {
@@ -28,12 +29,15 @@ tbody tr {
   display: table; 
   width: 100%; 
   table-layout: fixed; 
+  gap: 10px;
+  
 }
 
 thead tr {
   display: table;
   width: 100%;
   table-layout: fixed;
+  
 }
 
 tbody tr:last-child {
@@ -42,10 +46,10 @@ tbody tr:last-child {
 
 div.table-container {
   border: 1px solid #d8e4f1;
-  border-radius: 14px;
+  border-radius: 8px;
   transform: rotate(0deg);
-  // height: 652px; 
   overflow: auto; 
+    
   &::-webkit-scrollbar {
     display: none; 
   }
@@ -63,17 +67,37 @@ div.table-container {
     line-height: normal;
     height: 40px;
     vertical-align: middle;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    
     overflow: hidden;
-
-
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+    
   }
 
-.fixedwidth {
-  width: auto !important;
-  min-width: 2rem;
-}
+  // Ensure spans inside td also have truncation properties
+  td span {
+    display: flex;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+    justify-content: flex-start;
+    align-items: right;
+  }
+
+  
+// span{
+//   justify-content: flex-start;
+//   align-items: right;
+//   display: flex;
+// }
+
+
+// .fixedwidth {
+//   width: auto !important;
+//   min-width: 2rem;
+// }
 
 
 th .title {

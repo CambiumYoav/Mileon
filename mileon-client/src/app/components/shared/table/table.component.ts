@@ -6,6 +6,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   output,
   SimpleChanges,
 } from '@angular/core';
@@ -57,7 +58,7 @@ import { TruncatedTextTooltipDirective } from '../../../directives/truncated-tex
 })
 export class TableComponent
   extends BaseFormComponent
-  implements OnInit, OnChanges
+  implements OnInit, OnChanges, OnDestroy
 {
   Icons = ConstPath;
   errorMsg: string = '';
@@ -174,6 +175,11 @@ export class TableComponent
     this.tableService.page = this.selectedPage;
     this.tableService.dataSubject$.next(this.data || []);
     this.tableService.totalSubject$.next(this.total);
+    
+    // Calculate column widths after data is set
+    setTimeout(() => {
+      this.calculateColumnWidths();
+    }, 100);
   }
 
   onSort({ column, direction, sortByServer }: SortEvent) {
@@ -414,4 +420,133 @@ export class TableComponent
   getAllowDeselect(column: Column): boolean {
     return column.radioConfig?.allowDeselect || false;
   }
+
+  /**
+   * Calculate optimal column widths based on content and column type
+   */
+  calculateColumnWidths(): void {
+    if (!this.columns || !this.data || this.data.length === 0) {
+      return;
+    }
+
+    const tableContainer = document.querySelector('.table-container');
+    if (!tableContainer) return;
+
+    const availableWidth = tableContainer.clientWidth - 20; // Account for padding and scrollbar
+    const columnWidths: { [key: string]: number } = {};
+
+    // Calculate base widths for each column
+    this.columns.forEach(column => {
+      if (column.type === ColumnTypeEnum.Hidden) return;
+
+      let baseWidth = this.getBaseWidthForColumnType(column);
+      
+      // Adjust based on content length
+      const contentWidth = this.calculateContentWidth(column);
+      baseWidth = Math.max(baseWidth, contentWidth);
+
+      columnWidths[column.propertyName] = baseWidth;
+    });
+
+    // Normalize widths to fit available space
+    const totalCalculatedWidth = Object.values(columnWidths).reduce((sum, width) => sum + width, 0);
+    const scaleFactor = availableWidth / totalCalculatedWidth;
+
+    // Apply calculated widths
+    Object.keys(columnWidths).forEach(propertyName => {
+      const finalWidth = Math.max(columnWidths[propertyName] * scaleFactor, 80); // Minimum 80px
+      columnWidths[propertyName] = finalWidth;
+    });
+
+    // Store widths for CSS application
+    this.columnWidths = columnWidths;
+  }
+
+  /**
+   * Get base width for different column types
+   */
+  private getBaseWidthForColumnType(column: Column): number {
+    switch (column.type) {
+      case ColumnTypeEnum.Checkbox:
+      case ColumnTypeEnum.Radio:
+      case ColumnTypeEnum.ActiveStatus:
+        return 60;
+      case ColumnTypeEnum.Icon:
+        return 50;
+      case ColumnTypeEnum.Currency:
+        return 120;
+      case ColumnTypeEnum.Date:
+      case ColumnTypeEnum.DateTime:
+        return 140;
+      case ColumnTypeEnum.Tag:
+        return 100;
+      case ColumnTypeEnum.Text:
+        // For text columns, check if it's likely to be long content
+        if (column.propertyName === 'name' || column.propertyName === 'fullName') {
+          return 200;
+        }
+        if (column.propertyName === 'ticketNumber' || column.propertyName === 'reportNumber') {
+          return 150;
+        }
+        if (column.propertyName === 'nid' || column.propertyName === 'identity') {
+          return 120;
+        }
+        return 100;
+      default:
+        return 100;
+    }
+  }
+
+  /**
+   * Calculate content width based on actual data
+   */
+  private calculateContentWidth(column: Column): number {
+    if (!this.data || this.data.length === 0) return 0;
+
+    let maxContentLength = column.displayName.length * 8; // Base on header text
+
+    // Sample first 10 rows to calculate max content length
+    const sampleSize = Math.min(10, this.data.length);
+    for (let i = 0; i < sampleSize; i++) {
+      const item = this.data[i];
+      const content = this.getDisplayValue(item, column);
+      if (content) {
+        const contentLength = content.toString().length;
+        maxContentLength = Math.max(maxContentLength, contentLength);
+      }
+    }
+
+    // Convert character count to approximate pixel width
+    // Hebrew characters are typically wider, so we use 10px per character
+    return Math.min(maxContentLength * 10, 300); // Cap at 300px
+  }
+
+  /**
+   * Get display value for a column
+   */
+  private getDisplayValue(item: any, column: Column): any {
+    switch (column.type) {
+      case ColumnTypeEnum.Currency:
+        return item[column.propertyName] ? `₪ ${item[column.propertyName]}` : '';
+      case ColumnTypeEnum.Date:
+        return item[column.propertyName] ? new Date(item[column.propertyName]).toLocaleDateString('he-IL') : '';
+      case ColumnTypeEnum.DateTime:
+        return item[column.propertyName] ? new Date(item[column.propertyName]).toLocaleString('he-IL') : '';
+      default:
+        return item[column.propertyName] || '';
+    }
+  }
+
+  /**
+   * Get CSS width for a column
+   */
+  getColumnWidth(column: Column): string {
+    if (!this.columnWidths || !this.columnWidths[column.propertyName]) {
+      return 'auto';
+    }
+    return `${this.columnWidths[column.propertyName]}px`;
+  }
+
+  // Add property to store column widths
+  private columnWidths: { [key: string]: number } = {};
 }

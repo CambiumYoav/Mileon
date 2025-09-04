@@ -64,7 +64,6 @@ export class TimelineSettingsFormService {
     this.fields = fields;
     const formGroups: Record<string, FormGroup> = {};
 
-    // Build form structure dynamically
     fields.forEach((field) => {
       const category = field.settingsCategory;
       formGroups[category] ??= this.fb.group({});
