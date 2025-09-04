@@ -20,7 +20,6 @@ import { RouterService } from '../../../services/router.service';
 import { ModuleEnum } from '../../../types/enum/moduleEnum';
 import { MyRef } from '../../../types/myRef';
 import { TicketPaymentBalance } from '../../../types/payments/payment';
-import { ModalButton } from '../generic-modal/generic-modal.component';
 import {
   Buttons as ActionButtonsEnum,
   Buttons,
@@ -45,7 +44,6 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
 
   isNewLegalRequestModalOpen: boolean = false;
 
-  legalRequestModalButtons: ModalButton[] = [];
 
   legalRequestType: string = '';
 
@@ -79,7 +77,6 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
 
   activeTicketAction: string = ''; // change to enum
 
-  modalButtons: ModalButton[] = [];
   ModuleEnum = ModuleEnum;
 
   microphoneSvg: string = '';
@@ -291,7 +288,6 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
     ).map(([id, value]) => {
       return { id, value };
     });
-    this.legalRequestModalButtons = [];
     this.isNewLegalRequestModalOpen = true;
   }
 
@@ -321,9 +317,6 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
       });
   }
 
-  handleModalButtonsChange(newButtons: ModalButton[]) {
-    this.modalButtons = newButtons;
-  }
 
   handleAmountChange(newAmountData: TicketPaymentBalance) {
     this.amountData = newAmountData;

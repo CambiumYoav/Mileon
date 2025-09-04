@@ -18,7 +18,6 @@ import { InputTextComponent } from '../components/shared/base/inputs/input-text/
 import { SearchBarComponent } from '../components/shared/search-bar/search-bar.component';
 import { SelectComponent } from '../components/shared/base/select/select.component';
 import { AdvancedSearchComponent } from '../components/shared/advanced-search/advanced-search.component';
-import { GenericModalComponent } from '../components/shared/generic-modal/generic-modal.component';
 import { InputCheckboxOptionGroupComponent } from '../components/shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
 import { InputDateComponent } from '../components/shared/base/inputs/input-date/input-date.component';
 import { InputPhoneComponent } from '../components/shared/base/inputs/input-phone/input-phone.component';
@@ -66,7 +65,6 @@ export const BaseComponents = [
   SearchBarComponent,
   SelectComponent,
   AdvancedSearchComponent,
-  GenericModalComponent,
   InputCheckboxOptionGroupComponent,
   InputDateComponent,
   InputPhoneComponent,
