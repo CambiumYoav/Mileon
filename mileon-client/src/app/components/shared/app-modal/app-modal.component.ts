@@ -32,7 +32,6 @@ interface ModalButton {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppModalComponent {
-  // Signal-based inputs
   title = input<string>('');
   message = input<string>('');
   buttons = input<ModalButton[]>([]);
@@ -41,13 +40,10 @@ export class AppModalComponent {
   amountData = input<TicketPaymentBalance | undefined>(undefined);
   hideExitIcon = input<boolean>(false);
 
-  // Signal-based output
   isModalClosed = output<void>();
 
-  // ViewChild as signal
   content = viewChild<ElementRef>('content');
 
-  // Computed signals
   icons = signal(ConstPath);
   modalOptions = computed(() => ({
     ariaLabelledBy: 'modal-basic-title',
@@ -58,18 +54,14 @@ export class AppModalComponent {
   }));
 
   constructor(private modalService: NgbModal) {
-    // Effect to watch for modal open state changes
     effect(() => {
       if (this.isModalOpen()) {
-        // Use setTimeout to ensure the view is rendered
         setTimeout(() => this.open(), 0);
       }
     });
   }
 
   onButtonsChange(buttonsData: ModalButton[]) {
-    // This method can be removed if buttons are managed via signals
-    // For now, keeping it for backward compatibility
   }
 
   open() {

@@ -11,13 +11,13 @@ import { SharedImports } from '../../../../../shared/shared-modules';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepTooltipComponent implements OnInit {
-  // Angular 19 signals for reactive state management
+ 
   private readonly _title = signal<string | undefined>(undefined);
   private readonly _description = signal<string | undefined>(undefined);
   private readonly _last = signal<boolean>(false);
   private readonly _show = signal<boolean>(false);
 
-  // Getters for template access
+ 
   get title(): string | undefined {
     return this._title();
   }
@@ -34,7 +34,11 @@ export class StepTooltipComponent implements OnInit {
     return this._show();
   }
 
-  // Inputs with setters
+  set show(value: boolean) {
+    this._show.set(value);
+  }
+
+ 
   @Input() set title(value: string | undefined) {
     this._title.set(value);
   }
@@ -50,6 +54,6 @@ export class StepTooltipComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // Signals handle reactivity automatically, no manual initialization needed
+   
   }
 }

@@ -12,13 +12,11 @@ import { SharedImports } from '../../../../../shared/shared-modules';
   imports: [SharedImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SideMenuComponent implements OnInit, OnDestroy {
-  // Angular 19 signals for reactive state management
+export class SideMenuComponent implements OnInit, OnDestroy { 
   private readonly _menu = signal<SideMenu | null>(null);
   private readonly _selected = signal<number>(0);
   private readonly _hovered = signal<number | null>(null);
 
-  // Getters for template access
   get menu(): SideMenu | null {
     return this._menu();
   }
@@ -31,15 +29,12 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     return this._hovered();
   }
 
-  // Constants
   readonly ROUTE_PATH = ROUTE_PATH;
 
-  // Injected services using Angular 19 inject() function
   private readonly routerService = inject(RouterService);
   private readonly permissionsService = inject(PermissionService);
   private readonly router = inject(Router);
 
-  // Inputs with setters
   @Input({ required: true })
   set menu(value: SideMenu | null) {
     this._menu.set(value);
@@ -47,11 +42,9 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   }
 
   constructor() {
-    // Use effect to handle router events reactively
     effect(() => {
       const menu = this._menu();
       if (menu) {
-        // Listen to router events for navigation changes
         this.router.events.subscribe((event) => {
           if (event instanceof NavigationEnd) {
             this.initRoute(menu);
@@ -62,11 +55,9 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Signals handle reactivity automatically, no manual initialization needed
   }
 
   ngOnDestroy(): void {
-    // No subscription cleanup needed as we're using effects
   }
 
   initRoute(menu: SideMenu) {
@@ -83,7 +74,6 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       }
     });
 
-    // if navigated url doesn't contain a menu item, redirect to first one
     if (
       !menu.menuItems.some((item) =>
         this.routerService.getCurrentUrl().includes(item.path)
@@ -92,7 +82,6 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       this.routerService.navigateTo(menu.menuItems[this._selected()].route);
   }
 
-  // Methods for template event handling
   onItemClick(index: number): void {
     this._selected.set(index);
   }

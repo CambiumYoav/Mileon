@@ -26,12 +26,10 @@ export class TextareaCommentsComponent
   extends FormControlValueAccessorConnector
   implements OnInit, ControlValueAccessor {
 
-  // Angular 19 signals for reactive state management
   private readonly _newComment = signal<Comment | null>(null);
   private readonly _actionModule = signal<ActionModuleEnum | null>(null);
   private readonly _reservedComments = signal<ReservedComment[]>([]);
 
-  // Getters for template access
   get newComment(): Comment | null {
     return this._newComment();
   }
@@ -44,10 +42,8 @@ export class TextareaCommentsComponent
     return this._reservedComments();
   }
 
-  // Injected services using Angular 19 inject() function
   private readonly lookupNewService = inject(LookupNewService);
 
-  // Inputs with setters
   @Input() set newComment(value: Comment) {
     this._newComment.set(value);
   }

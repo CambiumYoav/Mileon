@@ -85,7 +85,6 @@ function sort(tableData: any[], column: string, direction: string): any[] {  //g
   providedIn: 'root',
 })
 export class TableService {
-  // Angular 19 signals for reactive state management
   private readonly _data = signal<any[]>([]);
   private readonly _total = signal<number>(0);
   private readonly _loading = signal<boolean>(false);
@@ -94,7 +93,6 @@ export class TableService {
   private readonly _sortColumn = signal<string>('');
   private readonly _sortDirection = signal<SortDirection>('');
 
-  // Computed signals for derived values
   readonly data = this._data.asReadonly();
   readonly total = this._total.asReadonly();
   readonly loading = this._loading.asReadonly();
@@ -103,7 +101,6 @@ export class TableService {
   readonly sortColumn = this._sortColumn.asReadonly();
   readonly sortDirection = this._sortDirection.asReadonly();
 
-  // Computed signal for sorted data
   readonly sortedData = computed(() => {
     const data = this._data();
     const sortColumn = this._sortColumn();
@@ -116,12 +113,10 @@ export class TableService {
     return sort([...data], sortColumn, sortDirection);
   });
 
-  // Injected services using Angular 19 inject() function
   private readonly pipe = inject(DecimalPipe);
 
   columns!: Column[];
 
-  // Setters for state updates
   setData(data: any[]): void {
     this._data.set(data);
   }
@@ -150,7 +145,6 @@ export class TableService {
     this._sortDirection.set(sortDirection);
   }
 
-  // Helper method to get current state
   getCurrentState(): State {
     return {
       page: this._page(),
@@ -160,7 +154,6 @@ export class TableService {
     };
   }
 
-  // Method to reset all state
   reset(): void {
     this._data.set([]);
     this._total.set(0);

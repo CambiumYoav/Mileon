@@ -40,31 +40,26 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
 
   @Output() deleteEvent = new EventEmitter<number>();
 
-  // Angular 19 signals for reactive state management
   private readonly _baseImagePath = signal<string>('');
   private readonly _safeUrl = signal<SafeUrl | null>(null);
   private readonly _finalFileUrl = signal<string>('');
 
-  // Computed signals for reactive properties
   readonly baseImagePath = this._baseImagePath.asReadonly();
   readonly safeUrl = this._safeUrl.asReadonly();
   readonly finalFileUrl = this._finalFileUrl.asReadonly();
 
-  // Icon signals
   private readonly _attachCircleIcon = signal<string>('');
   private readonly _closeCircleIcon = signal<string>('');
   private readonly _documentTextIcon = signal<string>('');
   private readonly _exportIcon = signal<string>('');
   private readonly _errorUploadIcon = signal<string>('');
 
-  // Computed icon signals
   readonly attachCircleIcon = this._attachCircleIcon.asReadonly();
   readonly closeCircleIcon = this._closeCircleIcon.asReadonly();
   readonly documentTextIcon = this._documentTextIcon.asReadonly();
   readonly exportIcon = this._exportIcon.asReadonly();
   readonly errorUploadIcon = this._errorUploadIcon.asReadonly();
 
-  // Injected services using Angular 19 inject() function
   private readonly sanitizer = inject(DomSanitizer);
   private readonly baseService = inject(BaseService);
   private readonly http = inject(HttpClient);

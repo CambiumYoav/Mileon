@@ -74,12 +74,10 @@ export class SelectComponent
   @Input() disabled: boolean = false;
   @Input() options: any[] = []; // Add support for static options
 
-  // Modern Angular 19 signals for better performance
   private readonly _endOfData = signal(false);
   private readonly _isSearchVisible = signal(false);
   private readonly _isLoading = signal(false);
 
-  // Computed properties
   readonly endOfData = this._endOfData.asReadonly();
   readonly isSearchVisible = this._isSearchVisible.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();

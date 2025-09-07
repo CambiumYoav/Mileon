@@ -34,7 +34,6 @@ import { StepTooltipComponent } from "./step-tooltip/step-tooltip.component";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TicketTimelineBarComponent implements OnInit, OnChanges {
-  // Angular 19 signals for reactive state management
   private readonly _timeLinePath = signal<string>('');
   private readonly _selectedStep = signal<TimelineItem>({} as TimelineItem);
   private readonly _steps = signal<TimelineItem[]>([]);
@@ -43,7 +42,6 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
   private readonly _switchStep = signal<TimelineItem | undefined>(undefined);
   private readonly _formSubmitted = signal<boolean>(false);
 
-  // Getters for template access
   get timeLinePath(): string {
     return this._timeLinePath();
   }
@@ -72,7 +70,6 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
     return this._formSubmitted();
   }
 
-  // Constants
   readonly srcIcons = [
     'car',
     'bus',
@@ -89,12 +86,10 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
     '',
   ];
 
-  // Injected services using Angular 19 inject() function
   private readonly routerService = inject(RouterService);
   private readonly fbService = inject(TimelineSettingsFormService);
   private readonly timelineService = inject(TimelineService);
 
-  // Inputs with setters
   @Input() set steps(value: TimelineItem[]) {
     this._steps.set(value);
   }
@@ -108,7 +103,6 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
   }
 
   constructor() {
-    // Use effect to handle form submission reactively
     effect(() => {
       this.fbService.submitForm.subscribe(() => {
         this._formSubmitted.set(true);

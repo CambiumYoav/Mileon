@@ -27,7 +27,6 @@ export class InputPhoneComponent
   extends FormControlValueAccessorConnector
   implements OnInit, ControlValueAccessor
 {
-  // Angular 19 signals for reactive state management
   private readonly _placeholderCountryCode = signal<string>('050');
   private readonly _placeholderPhoneNumber = signal<string>('0000000');
   private readonly _isValid = signal<boolean | undefined>(true);
@@ -36,7 +35,6 @@ export class InputPhoneComponent
   private readonly _isRequired = signal<boolean | undefined>(false);
   private readonly _disabled = signal<boolean>(false);
 
-  // Getters for template access
   get placeholderCountryCode(): string {
     return this._placeholderCountryCode();
   }
@@ -65,13 +63,10 @@ export class InputPhoneComponent
     return this._disabled();
   }
 
-  // Constants
   readonly Icons = ConstPath;
 
-  // Single combined control for the entire phone number
   combinedPhoneControl = new FormControl('');
 
-  // Inputs with setters
   @Input() set placeholderCountryCode(value: string) {
     this._placeholderCountryCode.set(value);
   }
@@ -103,7 +98,6 @@ export class InputPhoneComponent
   constructor() {
     super(inject(Injector));
     
-    // Use effect to handle phone input changes reactively
     effect(() => {
       const value = this.combinedPhoneControl.value;
       if (value) {

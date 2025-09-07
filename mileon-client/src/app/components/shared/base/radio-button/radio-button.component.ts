@@ -11,22 +11,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
-/**
- * RadioButtonComponent with Boolean State Management - Angular 19 Signals Version
- * 
- * Features:
- * - Boolean state tracking for each option (selected: true/false)
- * - Optional deselection capability with allowDeselect
- * - Visual indicators showing selection state
- * - Events: valueChange (string) and selectionState (boolean map)
- * - Signal-based reactivity for optimal performance
- */
-
 export interface RadioOption {
   value: string;
   label: string;
   colorClass?: string;
-  selected?: boolean; // Boolean state for option selection
+  selected?: boolean;
 }
 
 @Component({
@@ -45,7 +34,6 @@ export interface RadioOption {
   ]
 })
 export class RadioButtonComponent implements ControlValueAccessor {
-  // Signal-based inputs
   options = input<RadioOption[]>([]);
   name = input<string>('');
   value = input<string>('');
@@ -54,16 +42,13 @@ export class RadioButtonComponent implements ControlValueAccessor {
   direction = input<'horizontal' | 'vertical'>('horizontal');
   allowDeselect = input<boolean>(false); // Allow deselecting current option
   
-  // Signal-based outputs
   valueChange = output<string>();
-  selectionState = output<{[key: string]: boolean}>(); // Boolean state for each option
+  selectionState = output<{[key: string]: boolean}>();
 
-  // Internal state signal
   private internalValue = signal<string>('');
   private onChange = (value: string) => {};
   private onTouched = () => {};
 
-  // Computed signals
   currentValue = computed(() => this.internalValue());
   
   selectionStateMap = computed(() => {
@@ -77,7 +62,6 @@ export class RadioButtonComponent implements ControlValueAccessor {
   containerClass = computed(() => `radio-options-container ${this.direction()}`);
 
   constructor() {
-    // Effect to emit selection state when value changes
     effect(() => {
       this.selectionState.emit(this.selectionStateMap());
     });
@@ -96,8 +80,6 @@ export class RadioButtonComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Note: In signal-based approach, we can't directly set input signals
-    // This would need to be handled by the parent component
   }
 
   onRadioChange(value: string): void {

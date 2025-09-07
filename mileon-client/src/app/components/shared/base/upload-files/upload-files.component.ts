@@ -49,17 +49,16 @@ export class FileUploadNewComponent
   implements OnInit, ControlValueAccessor
 {
   @Input() override title: string = '';  
-  @Input() documentTypes: IdValuePair[] = []; // Used for potential type categorization
-  @Input() isDownoladable: boolean = false; // Allow download by default
+  @Input() documentTypes: IdValuePair[] = [];
+  @Input() isDownoladable: boolean = false;
   @Input() selectedFiles: UploadedFile[] = [];
-  @Input() maxFileSizeMB?: number; // Default max file size is 10MB
+  @Input() maxFileSizeMB?: number;
   @Input() allowedFileTypes: FileType[] = [];
   @Input() containerSize: 'sm' | 'md' | 'lg' | string = 'md';
   @Input() disabled: boolean = false;
-  @Output() fileSelected = new EventEmitter<File>(); // Emit selected files
+  @Output() fileSelected = new EventEmitter<File>();
   @ViewChild('fileUpload') fileUpload!: ElementRef<HTMLInputElement>;
 
-  // Angular 19 signals for reactive state management
   private readonly _file = signal<File | null | undefined>(null);
   private readonly _previewFiles = signal<PreviewFileType[]>([]);
   private readonly _fileID = signal<number>(1);
@@ -67,7 +66,6 @@ export class FileUploadNewComponent
   private readonly _currentUploadStatus = signal<UploadStatus>(UploadStatus.IDLE);
   private readonly _currentErrorType = signal<'size' | 'type' | null>(null);
 
-  // Computed signals for reactive properties
   readonly file = this._file.asReadonly();
   readonly previewFiles = this._previewFiles.asReadonly();
   readonly fileID = this._fileID.asReadonly();
@@ -75,11 +73,9 @@ export class FileUploadNewComponent
   readonly currentUploadStatus = this._currentUploadStatus.asReadonly();
   readonly currentErrorType = this._currentErrorType.asReadonly();
 
-  // Constants
   readonly uploadDocumentSvg = ConstPath.UPLOAD_DOCUMENT2;
   readonly Icons = ConstPath;
 
-  // Computed signals for reactive properties
   readonly getCurrentIcon = computed(() => {
     switch (this.currentUploadStatus()) {
       case UploadStatus.UPLOADING:
@@ -106,7 +102,6 @@ export class FileUploadNewComponent
     }
   });
 
-  // Injected services using Angular 19 inject() function
   private readonly fileUploadService = inject(FileUploadService);
   private readonly toaster = inject(ToastrService);
   private readonly userService = inject(UserService);
@@ -142,7 +137,6 @@ export class FileUploadNewComponent
     const file = this.fileUpload?.nativeElement?.files?.item(0);
     this._file.set(file);
     if (file) {
-      // Set status to uploading
       this._currentUploadStatus.set(UploadStatus.UPLOADING);
       
       // Validate file type

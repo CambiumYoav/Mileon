@@ -16,7 +16,6 @@ export interface CheckboxOption {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputCheckboxOptionGroupComponent implements OnInit {
-  // Angular 19 signals for reactive state management
   private readonly _options = signal<CheckboxOption[]>([]);
   private readonly _cssWrapperClass = signal<string>('');
   private readonly _isDisabled = signal<boolean>(false);
@@ -25,10 +24,8 @@ export class InputCheckboxOptionGroupComponent implements OnInit {
   private readonly _isRequired = signal<boolean | undefined>(false);
   private readonly _selectedValues = signal<number[]>([]);
 
-  // Computed signals for derived values
   readonly selectedValues = computed(() => this._selectedValues());
 
-  // Getters for template access
   get options(): CheckboxOption[] {
     return this._options();
   }
@@ -53,13 +50,10 @@ export class InputCheckboxOptionGroupComponent implements OnInit {
     return this._isRequired();
   }
 
-  // Constants
   readonly Icons = ConstPath;
 
-  // Outputs
   @Output() selectionChange: EventEmitter<number[]> = new EventEmitter();
 
-  // Inputs with setters
   @Input() set options(value: CheckboxOption[]) {
     this._options.set(value);
     this.initializeSelectedValues();
@@ -91,14 +85,12 @@ export class InputCheckboxOptionGroupComponent implements OnInit {
 
   private initializeSelectedValues(): void {
     const options = this._options();
-    // initialize selectedValues from checked options
     const selectedValues = options
       .filter((option) => option.checked)
       .map((option) => Number(option.value));
 
     this._selectedValues.set(selectedValues);
 
-    // sync option.checked
     options.forEach((option) => {
       option.checked = selectedValues.includes(Number(option.value));
     });

@@ -14,12 +14,10 @@ import { SharedImports } from '../../../shared/shared-modules';
   imports: [RouterOutlet, SharedImports],
 })
 export class TimelineComponent implements OnInit {
-  // Angular 19 signals for reactive state management
   private readonly _tabs = signal<TabAttributes[]>(TimelineSettings.Tabs);
   private readonly _currentActive = signal<string>(TimelineSettings.Tabs[0].text);
   private readonly _title = signal<string>('ניהול סרגל אכיפה');
 
-  // Getters for template access
   get tabs(): TabAttributes[] {
     return this._tabs();
   }
@@ -32,10 +30,7 @@ export class TimelineComponent implements OnInit {
     return this._title();
   }
 
-  // Constants
   readonly Icons = ConstPath;
-
-  // Injected services using Angular 19 inject() function
   private readonly routerService = inject(RouterService);
 
   ngOnInit(): void {

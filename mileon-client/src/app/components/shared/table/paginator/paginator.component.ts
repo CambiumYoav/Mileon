@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaginatorComponent implements OnInit {
-  // Angular 19 signals for reactive state management
   private readonly _page = signal<number>(1);
   private readonly _selectedPage = signal<number>(1);
   private readonly _pageSize = signal<number>(10);
@@ -18,7 +17,6 @@ export class PaginatorComponent implements OnInit {
   private readonly _showPaginator = signal<boolean>(true);
   private readonly _isDropdownOpen = signal<boolean>(false);
 
-  // Computed signals for derived values
   readonly totalPages = computed(() => {
     const total = this._total();
     const pageSize = this._pageSize();
@@ -48,7 +46,7 @@ export class PaginatorComponent implements OnInit {
     return Math.min(end, total);
   });
 
-  // Getters for template access
+
   get page(): number {
     return this._page();
   }
@@ -73,7 +71,7 @@ export class PaginatorComponent implements OnInit {
     return this._isDropdownOpen();
   }
 
-  // Inputs with setters
+
   @Input() set page(value: number) {
     this._page.set(value);
   }

@@ -10,14 +10,12 @@ import { TagColorDirective } from '../../../../directives/tag-color.directive';
   imports: [TagColorDirective]
 })
 export class TagComponent implements OnInit {
-  // Angular 19 signals for reactive state management
   private readonly _tagId = signal<string>('');
   private readonly _tagName = signal<string>('');
   private readonly _pattern = signal<string | RegExp>('');
   private readonly _fontSize = signal<string | undefined>('16px');
   private readonly _size = signal<'small' | 'large'>('small');
 
-  // Getters for template access
   get tagId(): string {
     return this._tagId();
   }
@@ -38,12 +36,10 @@ export class TagComponent implements OnInit {
     return this._size();
   }
 
-  // Computed signal for derived value
   readonly dynamicFontSize = computed(() => {
     return this._size() === 'large' ? '24px' : '16px';
   });
 
-  // Inputs with setters
   @Input() set tagId(value: string) {
     this._tagId.set(value);
   }
@@ -67,6 +63,5 @@ export class TagComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // Signals handle reactivity automatically, no manual initialization needed
   }
 }

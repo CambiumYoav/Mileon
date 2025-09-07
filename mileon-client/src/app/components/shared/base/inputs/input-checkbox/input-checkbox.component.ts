@@ -21,15 +21,12 @@ export class InputCheckboxComponent
   extends FormControlValueAccessorConnector
   implements OnInit, ControlValueAccessor
 {
-  // Angular 19 signals for reactive state management
   private readonly _className = signal<string>('');
 
-  // Getters for template access
   get className(): string {
     return this._className();
   }
 
-  // Inputs with setters
   @Input() set className(value: string) {
     this._className.set(value);
   }
@@ -43,6 +40,5 @@ export class InputCheckboxComponent
   }
 
   ngOnInit(): void {
-    // Signals handle reactivity automatically, no manual initialization needed
   }
 }

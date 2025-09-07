@@ -64,7 +64,7 @@ export class TableComponent
   extends BaseFormComponent
   implements OnInit, OnChanges, OnDestroy
 {
-  // Angular 19 signals for reactive state management
+  
   private readonly _columns = signal<Column[]>([]);
   private readonly _icon = signal<Icon | string | undefined>(undefined);
   private readonly _data = signal<any[]>([]);
@@ -79,7 +79,6 @@ export class TableComponent
   private readonly _isCheckboxsSelected = signal<boolean>(true);
   private readonly _errorMsg = signal<string>('');
 
-  // Getters for template access
   get data(): any[] {
     return this.tableService.sortedData();
   }
@@ -137,7 +136,6 @@ export class TableComponent
   readonly ColumnTypeEnum = ColumnTypeEnum;
   readonly $event: MouseEvent = new MouseEvent('hover');
 
-  // ViewChildren and Outputs
   @ViewChildren(NgbdSortableHeader) headers?: QueryList<NgbdSortableHeader>;
 
   @Output() onRowEvent = new EventEmitter<any>();
@@ -145,12 +143,10 @@ export class TableComponent
   @Output() onRowSelect = new EventEmitter<any>();
   rowSelected = output<any>();
 
-  // Injected services using Angular 19 inject() function
   private readonly tableService = inject(TableService);
   private readonly searchFormService = inject(SearchFormService);
   private readonly cdRef = inject(ChangeDetectorRef);
 
-  // Inputs with setters
   @Input() set columns(value: Column[] | undefined) {
     this._columns.set(value || []);
   }
@@ -205,7 +201,6 @@ export class TableComponent
   }
 
   ngOnInit(): void {
-    // Signals handle reactivity automatically, no manual initialization needed
   }
 
   ngOnChanges(changes: SimpleChanges): void {

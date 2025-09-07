@@ -288,12 +288,9 @@ export class SearchBarComponent
   @Output()
   searchButtonClicked: MyRef<boolean> = { current: false };
 
-  // Other properties
   picker: any;
-  // Set startAt to current date to ensure proper Hebrew calendar rendering
   startAt = new Date();
 
-  // Injected services using Angular 19 inject() function
   private readonly searchFormService = inject(SearchFormService);
   private readonly elementRef = inject(ElementRef);
 

@@ -17,13 +17,11 @@ import { SharedImports } from '../../../../../shared/shared-modules';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainMenuComponent implements OnInit {
-  // Angular 19 signals for reactive state management
   private readonly _isExpanded = signal<boolean>(false);
   private readonly _showSubmenu = signal<boolean>(false);
   private readonly _showSubSubMenu = signal<boolean>(false);
   private readonly _menu = signal<Menu | null>(null);
 
-  // Getters for template access
   get isExpanded(): boolean {
     return this._isExpanded();
   }
@@ -40,15 +38,12 @@ export class MainMenuComponent implements OnInit {
     return this._menu();
   }
 
-  // ViewChild
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
-  // Injected services using Angular 19 inject() function
   private readonly appService = inject(AppService);
   private readonly routerService = inject(RouterService);
   private readonly permissionService = inject(PermissionService);
 
-  // Inputs with setters
   @Input() set menu(value: Menu | null) {
     this._menu.set(value);
   }

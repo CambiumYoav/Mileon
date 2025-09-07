@@ -45,7 +45,6 @@ export class HeaderComponent implements OnInit {
   firstLetter = '';
   userAuthorityId = '';
 
-  // signals → read with ()
   municipalsSig = this.authority.municipals;
   currentMunicipalSig = this.authority.currentMunicipal;
 

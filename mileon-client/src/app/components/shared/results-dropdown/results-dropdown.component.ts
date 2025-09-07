@@ -17,13 +17,11 @@ import { SharedImports } from '../../../shared/shared-modules';
   imports: [SharedImports],
 })
 export class ResultsDropdownComponent implements OnInit {
-  // Angular 19 signals for reactive state management
   private readonly _resultData = signal<any[]>([]);
   private readonly _loader = signal<boolean>(false);
   private readonly _form = signal<any>(null);
   private readonly _originalData = signal<any[]>([]);
 
-  // Getters for template access
   get resultData(): any[] {
     return this._resultData();
   }
@@ -40,17 +38,13 @@ export class ResultsDropdownComponent implements OnInit {
     return this._originalData();
   }
 
-  // Constants
   readonly parentComponentName = 'ResultsDropdownComponent';
   readonly TicketStagesIcons: Icon[] = TicketIcons.TicketStagesIcons;
 
-  // Injected services using Angular 19 inject() function
   private readonly routerService = inject(RouterService);
 
-  // Outputs
   @Output() optionSelected = new EventEmitter<any>();
 
-  // Inputs with setters
   @Input() set resultData(value: any[]) {
     this._resultData.set(value);
   }
@@ -67,7 +61,6 @@ export class ResultsDropdownComponent implements OnInit {
     this._originalData.set(value);
   }
 
-  // Computed signal for unique options
   readonly uniqueOptions = computed(() => {
     const resultData = this._resultData();
     const form = this._form();
@@ -111,7 +104,6 @@ export class ResultsDropdownComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Signals handle reactivity automatically, no manual initialization needed
   }
 
 

@@ -25,24 +25,19 @@ import { HebrewDateService } from '../../../../../services/hebrew-date.service';
 export class InputDateComponent
   extends FormControlValueAccessorConnector
   implements OnInit, ControlValueAccessor
-{
-  // Angular 19 signals for reactive state management
+{ 
   private readonly _isValid = signal<boolean | undefined>(true);
 
-  // Getters for template access
   get isValid(): boolean | undefined {
     return this._isValid();
   }
 
-  // Constants
   readonly calendarImg = ConstPath.CELANDER;
   // Set startAt to current date to ensure proper calendar rendering
   readonly startAt = new Date();
 
-  // Injected services using Angular 19 inject() function
   private readonly toastr = inject(ToastrService);
 
-  // Inputs with setters
   @Input() set isValid(value: boolean | undefined) {
     this._isValid.set(value);
   }
@@ -52,7 +47,6 @@ export class InputDateComponent
   }
 
   ngOnInit(): void {
-    // Signals handle reactivity automatically, no manual initialization needed
   }
 
   get isInvalid(): boolean {

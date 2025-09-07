@@ -24,7 +24,6 @@ export class InputTextComponent
   extends FormControlValueAccessorConnector
   implements OnInit, OnChanges, ControlValueAccessor
 {
-  // Angular 19 signals for reactive state management
   private readonly _disabled = signal<boolean>(false);
   private readonly _size = signal<InputSizeEnum>(InputSizeEnum.Base);
   private readonly _className = signal<string>('');
@@ -34,10 +33,8 @@ export class InputTextComponent
   private readonly _isTooltip = signal<boolean>(false);
   private readonly _isRequired = signal<boolean | undefined>(false);
 
-  // Computed signal for size class
   readonly sizeClass = computed(() => `input-text-${this._size()}`);
 
-  // Constants
   readonly InputSizeEnum = InputSizeEnum;
   readonly Icons = ConstPath;
 
@@ -131,7 +128,6 @@ export class InputTextComponent
     try {
       this.checkConnectedField();
     } catch (error) {
-      // If ControlContainer is not available, create a local FormControl
       if (!this.formControl) {
         this.formControl = new FormControl('');
       }

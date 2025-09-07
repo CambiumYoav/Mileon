@@ -57,14 +57,12 @@ export class AdvancedSearchComponent
   extends BaseFormComponent
   implements OnInit, OnDestroy
 {
-  // Angular 19 signals for reactive state management
   private readonly _form = signal<FormGroup | null>(null);
   private readonly _advancedForm = signal<AdvancedForm | null>(null);
   private readonly _isSearching = signal(false);
   private readonly _hasAnyFilledFieldsSignal = signal(false);
   private readonly _renderTabs = signal<boolean>(false);
 
-  // Getters for template access
   get form(): FormGroup | null {
     return this._form();
   }
@@ -77,18 +75,14 @@ export class AdvancedSearchComponent
     return this._renderTabs();
   }
 
-  // Computed signals for derived values
   readonly isSearching = this._isSearching.asReadonly();
   readonly hasAnyFilledFieldsSignal = this._hasAnyFilledFieldsSignal.asReadonly();
 
-  // Constants
   readonly FieldTypeEnum = FieldTypeEnum;
   readonly InputSizeEnum = InputSizeEnum;
 
-  // Outputs
   @Output() onSearch: EventEmitter<void> = new EventEmitter();
 
-  // Inputs with setters
   @Input() set form(value: FormGroup | null) {
     this._form.set(value);
     if (value) {
@@ -106,7 +100,6 @@ export class AdvancedSearchComponent
   constructor() {
     super();
     
-    // Use effect to reactively update hasAnyFilledFields when form changes
     effect(() => {
       const form = this._form();
       if (form) {
@@ -116,7 +109,6 @@ export class AdvancedSearchComponent
   }
 
   ngOnInit(): void {
-    // Ensure required inputs are provided
     if (!this._advancedForm()) {
       console.warn('AdvancedSearchComponent: advancedForm input is required but not provided');
     }
@@ -124,12 +116,9 @@ export class AdvancedSearchComponent
       console.warn('AdvancedSearchComponent: form input is required but not provided');
     }
 
-    // Signals handle reactivity automatically, no manual subscription needed
   }
 
   private setupFormReactivity(): void {
-    // This method can be used for any form-specific setup if needed
-    // The effect in constructor handles the reactive updates
   }
 
   search() {
