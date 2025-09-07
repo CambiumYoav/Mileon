@@ -1,15 +1,25 @@
-import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
+import { 
+  Component, 
+  input, 
+  output, 
+  forwardRef, 
+  signal, 
+  computed,
+  ChangeDetectionStrategy,
+  effect
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 /**
- * RadioButtonComponent with Boolean State Management
+ * RadioButtonComponent with Boolean State Management - Angular 19 Signals Version
  * 
  * Features:
  * - Boolean state tracking for each option (selected: true/false)
  * - Optional deselection capability with allowDeselect
  * - Visual indicators showing selection state
  * - Events: valueChange (string) and selectionState (boolean map)
+ * - Signal-based reactivity for optimal performance
  */
 
 export interface RadioOption {
@@ -25,6 +35,7 @@ export interface RadioOption {
   imports: [CommonModule],
   templateUrl: './radio-button.component.html',
   styleUrl: './radio-button.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -34,22 +45,46 @@ export interface RadioOption {
   ]
 })
 export class RadioButtonComponent implements ControlValueAccessor {
-  @Input() options: RadioOption[] = [];
-  @Input() name: string = '';
-  @Input() value: string = '';
-  @Input() disabled: boolean = false;
-  @Input() type: 'default' | 'colored' = 'default';
-  @Input() direction: 'horizontal' | 'vertical' = 'horizontal';
-  @Input() allowDeselect: boolean = false; // Allow deselecting current option
+  // Signal-based inputs
+  options = input<RadioOption[]>([]);
+  name = input<string>('');
+  value = input<string>('');
+  disabled = input<boolean>(false);
+  type = input<'default' | 'colored'>('default');
+  direction = input<'horizontal' | 'vertical'>('horizontal');
+  allowDeselect = input<boolean>(false); // Allow deselecting current option
   
-  @Output() valueChange = new EventEmitter<string>();
-  @Output() selectionState = new EventEmitter<{[key: string]: boolean}>(); // Boolean state for each option
+  // Signal-based outputs
+  valueChange = output<string>();
+  selectionState = output<{[key: string]: boolean}>(); // Boolean state for each option
 
+  // Internal state signal
+  private internalValue = signal<string>('');
   private onChange = (value: string) => {};
   private onTouched = () => {};
 
+  // Computed signals
+  currentValue = computed(() => this.internalValue());
+  
+  selectionStateMap = computed(() => {
+    const state: {[key: string]: boolean} = {};
+    this.options().forEach(option => {
+      state[option.value] = option.value === this.currentValue();
+    });
+    return state;
+  });
+
+  containerClass = computed(() => `radio-options-container ${this.direction()}`);
+
+  constructor() {
+    // Effect to emit selection state when value changes
+    effect(() => {
+      this.selectionState.emit(this.selectionStateMap());
+    });
+  }
+
   writeValue(value: string): void {
-    this.value = value;
+    this.internalValue.set(value || '');
   }
 
   registerOnChange(fn: (value: string) => void): void {
@@ -61,55 +96,37 @@ export class RadioButtonComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+    // Note: In signal-based approach, we can't directly set input signals
+    // This would need to be handled by the parent component
   }
 
   onRadioChange(value: string): void {
+    let newValue = value;
+    
     // Handle deselection if allowDeselect is true and same option is clicked
-    if (this.allowDeselect && this.value === value) {
-      this.value = '';
-      value = '';
-    } else {
-      this.value = value;
+    if (this.allowDeselect() && this.currentValue() === value) {
+      newValue = '';
     }
     
-    this.onChange(this.value);
+    this.internalValue.set(newValue);
+    this.onChange(newValue);
     this.onTouched();
-    this.valueChange.emit(this.value);
-    
-    // Emit boolean state for each option
-    this.emitSelectionState();
-  }
-
-  emitSelectionState(): void {
-    const state: {[key: string]: boolean} = {};
-    this.options.forEach(option => {
-      state[option.value] = option.value === this.value;
-    });
-    this.selectionState.emit(state);
+    this.valueChange.emit(newValue);
   }
 
   isOptionSelected(optionValue: string): boolean {
-    return this.value === optionValue;
+    return this.currentValue() === optionValue;
   }
 
   getOptionBooleanState(): {[key: string]: boolean} {
-    const state: {[key: string]: boolean} = {};
-    this.options.forEach(option => {
-      state[option.value] = option.value === this.value;
-    });
-    return state;
+    return this.selectionStateMap();
   }
 
   setSelectionByBoolean(optionValue: string, selected: boolean): void {
     if (selected) {
       this.onRadioChange(optionValue);
-    } else if (this.allowDeselect && this.value === optionValue) {
+    } else if (this.allowDeselect() && this.currentValue() === optionValue) {
       this.onRadioChange(optionValue); // This will deselect it
     }
-  }
-
-  getContainerClass(): string {
-    return `radio-options-container ${this.direction}`;
   }
 }

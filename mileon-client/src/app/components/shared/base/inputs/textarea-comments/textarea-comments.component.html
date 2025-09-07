@@ -3,12 +3,16 @@
         <div class="content-card">
             <div class="wrap-content">
                 <div class="wrap-reserved">
-                    <span class="reserved" [ngClass]="{'chosen': isChosen(r.id)}"
-                        (click)="addOrRemoveComment(r.id)" *ngFor="let r of reservedComments">
-                        {{r.content}}
-                    </span>
+                    @for (r of reservedComments; track r.id) {
+                        <span class="reserved" [ngClass]="{'chosen': isChosen(r.id)}"
+                            (click)="addOrRemoveComment(r.id)">
+                            {{r.content}}
+                        </span>
+                    }
                 </div>
-                <textarea class="content" placeholder="הוסף טקסט" [(ngModel)]="newComment.text"></textarea>  
+                @if (newComment) {
+                    <textarea class="content" placeholder="הוסף טקסט" [(ngModel)]="newComment.text"></textarea>
+                }
             </div>
         </div>
     </div>

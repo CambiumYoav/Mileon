@@ -6,6 +6,10 @@
   height: 92vh;
   display: flex;
   flex-direction: row;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .side-menu {
     width: 50px;
@@ -49,6 +53,11 @@
       top: 8vh;
       height: 92vh;
       overflow: auto;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
+
 }

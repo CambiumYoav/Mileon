@@ -1,5 +1,5 @@
 import { SortEvent } from '../../../directives/sortable.directive';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { SortOrder } from '../../../types/enum/sort-order.enum';
 import { BaseFormComponent } from '../base-form/base-form.component';
@@ -8,7 +8,9 @@ import { BaseFormComponent } from '../base-form/base-form.component';
   providedIn: 'root',
 })
 export class SearchFormService extends BaseFormComponent {
-  constructor(private fb: FormBuilder) {
+  private readonly fb = inject(FormBuilder);
+
+  constructor() {
     super();
     this.initializeForm();
   }

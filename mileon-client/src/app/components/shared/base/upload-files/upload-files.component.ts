@@ -8,6 +8,10 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+  inject,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ConstPath } from '../../../../constants/const_path';
@@ -30,6 +34,8 @@ import { DocumentPreviewNewComponent } from "../document-preview-new/document-pr
   templateUrl: './upload-files.component.html',
   styleUrls: ['./upload-files.component.scss'],
   imports: [SharedImports, DocumentPreviewNewComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -45,25 +51,37 @@ export class FileUploadNewComponent
   @Input() override title: string = '';  
   @Input() documentTypes: IdValuePair[] = []; // Used for potential type categorization
   @Input() isDownoladable: boolean = false; // Allow download by default
-  file: File | null | undefined;
   @Input() selectedFiles: UploadedFile[] = [];
   @Input() maxFileSizeMB?: number; // Default max file size is 10MB
-  uploadDocumentSvg = ConstPath.UPLOAD_DOCUMENT2;
-  previewFiles: PreviewFileType[] = [];
-  fileID: number = 1; // Incremental ID for tracking uploaded files
-  Icons = ConstPath;
   @Input() allowedFileTypes: FileType[] = [];
-  isDragging = false;
-  @Output() fileSelected = new EventEmitter<File>(); // Emit selected files
-  @ViewChild('fileUpload') fileUpload!: ElementRef<HTMLInputElement>;
   @Input() containerSize: 'sm' | 'md' | 'lg' | string = 'md';
   @Input() disabled: boolean = false;
-  currentUploadStatus: UploadStatus = UploadStatus.IDLE;
-  currentErrorType: 'size' | 'type' | null = null;
+  @Output() fileSelected = new EventEmitter<File>(); // Emit selected files
+  @ViewChild('fileUpload') fileUpload!: ElementRef<HTMLInputElement>;
 
-  // Computed property to get the current icon based on upload status
-  get getCurrentIcon(): string {
-    switch (this.currentUploadStatus) {
+  // Angular 19 signals for reactive state management
+  private readonly _file = signal<File | null | undefined>(null);
+  private readonly _previewFiles = signal<PreviewFileType[]>([]);
+  private readonly _fileID = signal<number>(1);
+  private readonly _isDragging = signal<boolean>(false);
+  private readonly _currentUploadStatus = signal<UploadStatus>(UploadStatus.IDLE);
+  private readonly _currentErrorType = signal<'size' | 'type' | null>(null);
+
+  // Computed signals for reactive properties
+  readonly file = this._file.asReadonly();
+  readonly previewFiles = this._previewFiles.asReadonly();
+  readonly fileID = this._fileID.asReadonly();
+  readonly isDragging = this._isDragging.asReadonly();
+  readonly currentUploadStatus = this._currentUploadStatus.asReadonly();
+  readonly currentErrorType = this._currentErrorType.asReadonly();
+
+  // Constants
+  readonly uploadDocumentSvg = ConstPath.UPLOAD_DOCUMENT2;
+  readonly Icons = ConstPath;
+
+  // Computed signals for reactive properties
+  readonly getCurrentIcon = computed(() => {
+    switch (this.currentUploadStatus()) {
       case UploadStatus.UPLOADING:
         return this.Icons.TIMER;
       case UploadStatus.SUCCESS:
@@ -73,11 +91,10 @@ export class FileUploadNewComponent
       default:
         return this.Icons.UPLOAD_DOCUMENT2;
     }
-  }
+  });
 
-  // Computed property to get the current title text based on upload status
-  get getCurrentTitleText(): string {
-    switch (this.currentUploadStatus) {
+  readonly getCurrentTitleText = computed(() => {
+    switch (this.currentUploadStatus()) {
       case UploadStatus.UPLOADING:
         return 'טוען קבצים...';
       case UploadStatus.SUCCESS:
@@ -87,21 +104,21 @@ export class FileUploadNewComponent
       default:
         return 'עיין בקבצים להעלאה';
     }
-  }
+  });
 
-  constructor(
-    injector: Injector,
-    private fileUploadService: FileUploadService,
-    private toaster: ToastrService,
-    private userService: UserService,
-    private sessionService: SessionService
-  ) {
+  // Injected services using Angular 19 inject() function
+  private readonly fileUploadService = inject(FileUploadService);
+  private readonly toaster = inject(ToastrService);
+  private readonly userService = inject(UserService);
+  private readonly sessionService = inject(SessionService);
+
+  constructor(injector: Injector) {
     super(injector);
   }
 
   ngOnInit(): void {
     if (this.selectedFiles && this.selectedFiles.length > 0) {
-      this.previewFiles = this.selectedFiles.map((uploaded, index) => {
+      const previewFiles = this.selectedFiles.map((uploaded, index) => {
         const fileTypeTitle =
           uploaded.file.name.split('.').pop()?.toLowerCase() || 'unknown';
         const url = URL.createObjectURL(uploaded.file);
@@ -113,6 +130,7 @@ export class FileUploadNewComponent
           file: uploaded.file,
         };
       });
+      this._previewFiles.set(previewFiles);
     }
   }
 
@@ -121,20 +139,21 @@ export class FileUploadNewComponent
   }
 
   handleFileInput() {
-    this.file = this.fileUpload?.nativeElement?.files?.item(0);
-    if (this.file) {
+    const file = this.fileUpload?.nativeElement?.files?.item(0);
+    this._file.set(file);
+    if (file) {
       // Set status to uploading
-      this.currentUploadStatus = UploadStatus.UPLOADING;
+      this._currentUploadStatus.set(UploadStatus.UPLOADING);
       
       // Validate file type
-      const fileType = this.file.type;
+      const fileType = file.type;
       if (
         this.allowedFileTypes.length > 0 &&
         !this.allowedFileTypes.includes(fileType as FileType)
       ) {
-        this.currentErrorType = 'type';
-        this.addFileToPreview(this.file, UploadStatus.FAILED);
-        this.currentUploadStatus = UploadStatus.FAILED;
+        this._currentErrorType.set('type');
+        this.addFileToPreview(file, UploadStatus.FAILED);
+        this._currentUploadStatus.set(UploadStatus.FAILED);
         this.toaster.error(ErrorSuccessMessages.FILE_TYPES_NOT_ALLOWED);
         return;
       }
@@ -143,56 +162,67 @@ export class FileUploadNewComponent
       const maxBytes = this.maxFileSizeMB
         ? this.maxFileSizeMB * 1024 * 1024
         : Infinity;
-      if (this.file.size > maxBytes) {
-        this.currentErrorType = 'size';
-        this.addFileToPreview(this.file, UploadStatus.FAILED);
-        this.currentUploadStatus = UploadStatus.FAILED;
+      if (file.size > maxBytes) {
+        this._currentErrorType.set('size');
+        this.addFileToPreview(file, UploadStatus.FAILED);
+        this._currentUploadStatus.set(UploadStatus.FAILED);
         this.toaster.error(ErrorSuccessMessages.FILE_SIZE_NOT_ALLOWED);
         return;
       }
       
-      this.addFileToPreview(this.file, UploadStatus.SUCCESS);
+      this.addFileToPreview(file, UploadStatus.SUCCESS);
     }
   }
 
   addFileToPreview(file: File, status: UploadStatus = UploadStatus.SUCCESS): void {
     // Clear previous file
-    this.previewFiles = [];
+    this._previewFiles.set([]);
 
     const fileTypeTitle =
       file.name.split('.').pop()?.toLowerCase() || 'unknown';
     const url = URL.createObjectURL(file);
 
-    this.previewFiles.push({
+    const newPreviewFile = {
       path: url,
       fileTypeTitle,
       fileID: 1, // Only one file, ID can remain constant
       file,
-    });
+    };
+    
+    this._previewFiles.set([newPreviewFile]);
     
     // Set status based on parameter
-    this.currentUploadStatus = status;
+    this._currentUploadStatus.set(status);
     
     this.fileSelected.emit(file); // Emit file event if needed
   }
 
   clearFileFromMemory(): void {
-    this.file = null;
+    this._file.set(null);
     if (this.fileUpload) {
       this.fileUpload.nativeElement.value = '';
     }
     // Reset status to idle when clearing file
-    this.currentUploadStatus = UploadStatus.IDLE;
-    this.currentErrorType = null;
+    this._currentUploadStatus.set(UploadStatus.IDLE);
+    this._currentErrorType.set(null);
   }
 
   deleteFile(fileID: number): void {
-    this.previewFiles = this.previewFiles.filter(
+    const currentFiles = this.previewFiles();
+    const filteredFiles = currentFiles.filter(
       (file) => file.fileID !== fileID
     );
+    this._previewFiles.set(filteredFiles);
     
     // Reset status to idle when file is deleted
-    this.currentUploadStatus = UploadStatus.IDLE;
-    this.currentErrorType = null;
+    this._currentUploadStatus.set(UploadStatus.IDLE);
+    this._currentErrorType.set(null);
+  }
+
+  /**
+   * TrackBy function for preview files - creates unique identifier
+   */
+  trackByFileId(index: number, file: PreviewFileType): any {
+    return file.fileID || index;
   }
 }

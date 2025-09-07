@@ -1,25 +1,27 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
   HostListener,
-  OnInit,
-  Output,
-  Input,
+  input,
+  output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
 @Component({
   selector: 'app-dropdown-window',
   templateUrl: './dropdown-window.component.html',
   styleUrls: ['./dropdown-window.component.scss'],
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DropdownWindowComponent implements OnInit {
-  @Output() closeDropdownEvent: EventEmitter<void> = new EventEmitter();
-  @Input() searchBarWidth: string = 'auto';
+export class DropdownWindowComponent {
+  // Signal-based inputs
+  searchBarWidth = input<string>('auto');
+
+  // Signal-based outputs
+  closeDropdownEvent = output<void>();
 
   constructor(private elementRef: ElementRef) {}
-
-  ngOnInit(): void {}
 
   @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {

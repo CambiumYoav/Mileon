@@ -28,7 +28,7 @@ export class TicketsSearchFormService {
   }
 
   clearForm() {
-    this.form.reset;
+    this.form.reset();
     if (this.searchForm) {
       this.searchForm.reset();
       this.searchForm.get('searchText')?.setValue('');

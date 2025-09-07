@@ -2,7 +2,7 @@ import { MenuItem } from './../../../../../types/base/menu.model';
 import { PermissionService } from './../../../../../services/permission.service';
 import { RouterService } from '../../../../../services/router.service'; 
 import { Menus } from '../../../../../types/menu/main-menu';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Menu } from '../../../../../types/base/menu.model'; 
 import { AppService } from '../../../../../app.service'; 
@@ -14,28 +14,51 @@ import { SharedImports } from '../../../../../shared/shared-modules';
   templateUrl: './main-menu.component.html',
   styleUrls: ['./main-menu.component.scss'],
   imports: [SharedImports],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainMenuComponent implements OnInit {
+  // Angular 19 signals for reactive state management
+  private readonly _isExpanded = signal<boolean>(false);
+  private readonly _showSubmenu = signal<boolean>(false);
+  private readonly _showSubSubMenu = signal<boolean>(false);
+  private readonly _menu = signal<Menu | null>(null);
+
+  // Getters for template access
+  get isExpanded(): boolean {
+    return this._isExpanded();
+  }
+
+  get showSubmenu(): boolean {
+    return this._showSubmenu();
+  }
+
+  get showSubSubMenu(): boolean {
+    return this._showSubSubMenu();
+  }
+
+  get menu(): Menu | null {
+    return this._menu();
+  }
+
+  // ViewChild
   @ViewChild('sidenav') sidenav!: MatSidenav;
-  isExpanded = false;
-  showSubmenu: boolean = false;
-  showSubSubMenu: boolean = false;
 
-  constructor(
-    private appService: AppService,
-    private routerService: RouterService,
-    private permissionService: PermissionService
-  ) {}
+  // Injected services using Angular 19 inject() function
+  private readonly appService = inject(AppService);
+  private readonly routerService = inject(RouterService);
+  private readonly permissionService = inject(PermissionService);
 
-  @Input()
-  menu: Menu | null = null;
+  // Inputs with setters
+  @Input() set menu(value: Menu | null) {
+    this._menu.set(value);
+  }
 
   ngOnInit(): void {
     this.setMenu();
   }
 
   toggle() {
-    this.isExpanded = !this.isExpanded;
+    this._isExpanded.set(!this._isExpanded());
   }
 
   async goTo(
@@ -49,10 +72,10 @@ export class MainMenuComponent implements OnInit {
 
   setMenu() {
     if (this.permissionService.isAdmin()) {
-      this.menu = Menus.AdminSideMenu;
+      this._menu.set(Menus.AdminSideMenu);
     } else {
-      this.menu = Menus.SideMenu;
-      this.menu.menuItems.forEach((tab) => {
+      const sideMenu = Menus.SideMenu;
+      sideMenu.menuItems.forEach((tab) => {
         tab.showItem = true;
         if (tab.permissionRoute) {
           const result = this.permissionService.checkUserPagePermission(
@@ -67,6 +90,7 @@ export class MainMenuComponent implements OnInit {
           }
         }
       });
+      this._menu.set(sideMenu);
     }
   }
 }

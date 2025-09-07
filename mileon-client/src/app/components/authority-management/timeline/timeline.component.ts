@@ -1,20 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { TabAttributes } from '../../../types/filters/tabsGroup';  
 import { TimelineSettings } from '../../../types/timeline-settings/timeline-settings';
 import { RouterService } from '../../../services/router.service';
 import { ConstPath } from '../../../constants/const_path';
+import { RouterOutlet } from '@angular/router';
+import { SharedImports } from '../../../shared/shared-modules';
 
 @Component({
   selector: 'app-timeline',
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterOutlet, SharedImports],
 })
 export class TimelineComponent implements OnInit {
-  tabs: TabAttributes[] = TimelineSettings.Tabs;
-  currentActive: string = this.tabs[0].text;
-  title: string = 'ניהול סרגל אכיפה';
-  Icons = ConstPath;
-  constructor(private routerService: RouterService) {}
+  // Angular 19 signals for reactive state management
+  private readonly _tabs = signal<TabAttributes[]>(TimelineSettings.Tabs);
+  private readonly _currentActive = signal<string>(TimelineSettings.Tabs[0].text);
+  private readonly _title = signal<string>('ניהול סרגל אכיפה');
+
+  // Getters for template access
+  get tabs(): TabAttributes[] {
+    return this._tabs();
+  }
+
+  get currentActive(): string {
+    return this._currentActive();
+  }
+
+  get title(): string {
+    return this._title();
+  }
+
+  // Constants
+  readonly Icons = ConstPath;
+
+  // Injected services using Angular 19 inject() function
+  private readonly routerService = inject(RouterService);
 
   ngOnInit(): void {
     this.initTabs();
@@ -31,7 +53,7 @@ export class TimelineComponent implements OnInit {
   }
 
   changeTab(tab: TabAttributes) {
-    this.currentActive = tab.text;
+    this._currentActive.set(tab.text);
   }
 
   async initTabs() {
@@ -39,6 +61,6 @@ export class TimelineComponent implements OnInit {
   }
 
   private setCurrentActiveModule() {
-    this.currentActive = this.tabs[0].text;
+    this._currentActive.set(this._tabs()[0].text);
   }
 }

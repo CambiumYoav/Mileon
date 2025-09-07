@@ -1,25 +1,25 @@
-<div [class]="getContainerClass()">
+<div [class]="containerClass()">
   <div 
     class="radio-option" 
-    *ngFor="let option of options"
-    [ngClass]="{ 'disabled': disabled }"
+    *ngFor="let option of options()"
+    [ngClass]="{ 'disabled': disabled() }"
   >
     <input
       type="radio"
-      [id]="name + '-' + option.value"
-      [name]="name"
+      [id]="name() + '-' + option.value"
+      [name]="name()"
       [value]="option.value"
-      [checked]="value === option.value"
-      [disabled]="disabled"
+      [checked]="currentValue() === option.value"
+      [disabled]="disabled()"
       (change)="onRadioChange(option.value)"
-      [ngClass]="type === 'colored' && option.colorClass ? option.colorClass : ''"
+      [ngClass]="type() === 'colored' && option.colorClass ? option.colorClass : ''"
       class="custom-radio"
     />
     <label 
-      [for]="name + '-' + option.value"
+      [for]="name() + '-' + option.value"
       class="radio-label"
       [ngClass]="{ 
-        'disabled': disabled,
+        'disabled': disabled(),
         'selected': isOptionSelected(option.value)
       }"
     >

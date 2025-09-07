@@ -4,6 +4,10 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
+  ChangeDetectionStrategy,
+  signal,
+  inject,
+  effect,
 } from '@angular/core';
 import { RouterService } from '../../../../services/router.service';
 import { ConstPath } from '../../../../constants/const_path';
@@ -27,16 +31,49 @@ import { StepTooltipComponent } from "./step-tooltip/step-tooltip.component";
     SharedImports,
     StepTooltipComponent
 ], 
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TicketTimelineBarComponent implements OnInit, OnChanges {
-  timeLinePath: string = '';
-  selectedStep: TimelineItem = {} as TimelineItem;
-  @Input() steps: TimelineItem[] = [];
-  @Input() formState: FormGroup = new FormGroup({});
-  @Input() isFirstTime: boolean = true;
-  switchStep: TimelineItem | undefined;
-  formSubmitted: boolean = false;
-  srcIcons = [
+  // Angular 19 signals for reactive state management
+  private readonly _timeLinePath = signal<string>('');
+  private readonly _selectedStep = signal<TimelineItem>({} as TimelineItem);
+  private readonly _steps = signal<TimelineItem[]>([]);
+  private readonly _formState = signal<FormGroup>(new FormGroup({}));
+  private readonly _isFirstTime = signal<boolean>(true);
+  private readonly _switchStep = signal<TimelineItem | undefined>(undefined);
+  private readonly _formSubmitted = signal<boolean>(false);
+
+  // Getters for template access
+  get timeLinePath(): string {
+    return this._timeLinePath();
+  }
+
+  get selectedStep(): TimelineItem {
+    return this._selectedStep();
+  }
+
+  get steps(): TimelineItem[] {
+    return this._steps();
+  }
+
+  get formState(): FormGroup {
+    return this._formState();
+  }
+
+  get isFirstTime(): boolean {
+    return this._isFirstTime();
+  }
+
+  get switchStep(): TimelineItem | undefined {
+    return this._switchStep();
+  }
+
+  get formSubmitted(): boolean {
+    return this._formSubmitted();
+  }
+
+  // Constants
+  readonly srcIcons = [
     'car',
     'bus',
     'building',
@@ -51,73 +88,95 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
     '',
     '',
   ];
-  constructor(
-    private routerService: RouterService,
-    private fbService: TimelineSettingsFormService,
-    private timelineService: TimelineService
-  ) {}
+
+  // Injected services using Angular 19 inject() function
+  private readonly routerService = inject(RouterService);
+  private readonly fbService = inject(TimelineSettingsFormService);
+  private readonly timelineService = inject(TimelineService);
+
+  // Inputs with setters
+  @Input() set steps(value: TimelineItem[]) {
+    this._steps.set(value);
+  }
+
+  @Input() set formState(value: FormGroup) {
+    this._formState.set(value);
+  }
+
+  @Input() set isFirstTime(value: boolean) {
+    this._isFirstTime.set(value);
+  }
+
+  constructor() {
+    // Use effect to handle form submission reactively
+    effect(() => {
+      this.fbService.submitForm.subscribe(() => {
+        this._formSubmitted.set(true);
+      });
+    });
+  }
 
   moveTo(step: TimelineItem) {
-    if (this.isFirstTime) {
-      this.steps = this.steps.map((stepData: TimelineItem) => {
+    if (this._isFirstTime()) {
+      const updatedSteps = this._steps().map((stepData: TimelineItem) => {
         if (stepData.order === step.order) {
           stepData.seen = true;
         }
         return stepData;
       });
+      this._steps.set(updatedSteps);
     }
 
     if (step.path) {
       this.routerService.navigateToUrl([step.path], true);
-      this.selectedStep = step;
+      this._selectedStep.set(step);
     }
   }
 
   ngOnInit(): void {
     this.sortSteps();
-    this.timeLinePath = ConstPath.TIME_LINE_PATH;
+    this._timeLinePath.set(ConstPath.TIME_LINE_PATH);
     const path = window.location.pathname.split('/');
     const currentTab = path[path.length - 1];
-    this.steps.find((step) => {
+    this._steps().find((step) => {
       if (step?.path?.includes(currentTab)) {
-        this.selectedStep = step;
+        this._selectedStep.set(step);
         step.seen = true;
       }
-    });
-
-    this.fbService.submitForm.subscribe(() => {
-      this.formSubmitted = true;
     });
   }
 
   sortSteps() {
-    this.steps = this.steps.sort((a, b) => a.order - b.order);
+    const sortedSteps = this._steps().sort((a, b) => a.order - b.order);
+    this._steps.set(sortedSteps);
   }
 
   changeOrder(step: TimelineItem) {
-    if (!this.switchStep) {
-      this.switchStep = step;
+    const currentSwitchStep = this._switchStep();
+    if (!currentSwitchStep) {
+      this._switchStep.set(step);
     } else {
-      const previousOrder = this.switchStep.order;
+      const previousOrder = currentSwitchStep.order;
       const newOrder = step.order;
       // Swap the order values
-      this.switchStep.order = newOrder;
+      currentSwitchStep.order = newOrder;
       step.order = previousOrder;
 
       // Update steps array correctly
-      this.steps = this.steps.map((stepData: TimelineItem) => ({
+      const updatedSteps = this._steps().map((stepData: TimelineItem) => ({
         ...stepData,
         order:
-          stepData === this.switchStep
+          stepData === currentSwitchStep
             ? newOrder
             : stepData === step
             ? previousOrder
             : stepData.order,
       }));
+      this._steps.set(updatedSteps);
 
       const updatedStepData: UpdatedStepData = {
-        iconId: this.selectedStep.iconId,
-        isEnabled: this.switchStep.isMoveable,
+        iconId: this._selectedStep().iconId,
+        isEnabled: currentSwitchStep.isMoveable,
         order: newOrder,
       };
       const path = window.location.pathname.split('/');
@@ -127,7 +186,7 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
         ? TimelineStepsType.Enforcement
         : TimelineStepsType.TicketLifetime;
       this.timelineService.updateStepOrder(typeOfSettings, updatedStepData);
-      this.switchStep = undefined;
+      this._switchStep.set(undefined);
       this.sortSteps();
     }
   }
@@ -140,7 +199,7 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
       changes['formState'].currentValue &&
       form?.controls
     ) {
-      this.steps.forEach((step: TimelineItem) => {
+      const updatedSteps = this._steps().map((step: TimelineItem) => {
         let isUpdated = false;
         let updatedRequiredCount = 0; // Counter for updated required fields
 
@@ -172,7 +231,11 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
           step.isUpdated = true;
           step.updatedCount = updatedRequiredCount; // Update the counter
         }
+
+        return step;
       });
+      
+      this._steps.set(updatedSteps);
     }
   }
 

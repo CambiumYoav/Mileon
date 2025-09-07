@@ -9,6 +9,10 @@ import {
   OnDestroy,
   output,
   SimpleChanges,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+  inject,
 } from '@angular/core';
 import {
   Component,
@@ -17,7 +21,6 @@ import {
   ViewChildren,
   Output,
 } from '@angular/core';
-import { Observable } from 'rxjs';
 import {
   NgbdSortableHeader,
   SortEvent,
@@ -26,7 +29,6 @@ import { FormGroup } from '@angular/forms';
 import { Icon } from '../../../types/icon';
 import { BaseFormComponent } from '../base-form/base-form.component';
 import { TableErrors } from '../../../constants/errors';
-import { Subject } from 'rxjs';
 import { SortOrder } from '../../../types/enum/sort-order.enum';
 import { ConstPath } from '../../../constants/const_path';
 import { SharedImports } from '../../../shared/shared-modules';
@@ -44,6 +46,7 @@ import { TruncatedTextTooltipDirective } from '../../../directives/truncated-tex
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     SharedImports,
     NgbdSortableHeader,
@@ -61,93 +64,167 @@ export class TableComponent
   extends BaseFormComponent
   implements OnInit, OnChanges, OnDestroy
 {
-  Icons = ConstPath;
-  errorMsg: string = '';
+  // Angular 19 signals for reactive state management
+  private readonly _columns = signal<Column[]>([]);
+  private readonly _icon = signal<Icon | string | undefined>(undefined);
+  private readonly _data = signal<any[]>([]);
+  private readonly _total = signal<number>(0);
+  private readonly _count = signal<number | undefined>(undefined);
+  private readonly _pageSize = signal<number>(100);
+  private readonly _showPaginator = signal<boolean>(true);
+  private readonly _icons = signal<Icon[]>([]);
+  private readonly _selectedPage = signal<number>(1);
+  private readonly _parentComponentName = signal<string>('');
+  private readonly _loader = signal<boolean>(true);
+  private readonly _isCheckboxsSelected = signal<boolean>(true);
+  private readonly _errorMsg = signal<string>('');
 
-  @Input()
-  columns?: Column[];
+  // Getters for template access
+  get data(): any[] {
+    return this.tableService.sortedData();
+  }
 
-  @Input()
-  icon?: Icon | string;
+  get total(): number {
+    return this.tableService.total();
+  }
 
-  @Input()
-  data?: any[];
+  get columns(): Column[] {
+    return this._columns();
+  }
 
-  @Input()
-  total: number = 0;
+  get icon(): Icon | string | undefined {
+    return this._icon();
+  }
 
-  @Input()
-  form?: FormGroup;
+  get count(): number | undefined {
+    return this._count();
+  }
 
-  @Input()
-  count?: number;
+  get pageSize(): number {
+    return this._pageSize();
+  }
 
-  @Input()
-  pageSize: number = 100;
+  get showPaginator(): boolean {
+    return this._showPaginator();
+  }
 
-  @Input()
-  showPaginator: boolean = true;
+  get icons(): Icon[] {
+    return this._icons();
+  }
 
-  @Input()
-  icons: Icon[] = [];
+  get selectedPage(): number {
+    return this._selectedPage();
+  }
 
-  rowSelected = output<any>();
-  selectedPage: number = 1;
+  get parentComponentName(): string {
+    return this._parentComponentName();
+  }
 
-  @Input()
-  parentComponentName!: string;
+  get loader(): boolean {
+    return this._loader();
+  }
 
-  @Input() loader: boolean = true;
+  get isCheckboxsSelected(): boolean {
+    return this._isCheckboxsSelected();
+  }
 
-  @Input() isCheckboxsSelected: boolean = true;
+  get errorMsg(): string {
+    return this._errorMsg();
+  }
 
-  data$: Observable<any[]>;
+  // Constants
+  readonly Icons = ConstPath;
+  readonly ColumnTypeEnum = ColumnTypeEnum;
+  readonly $event: MouseEvent = new MouseEvent('hover');
 
-  total$: Observable<number>;
-
+  // ViewChildren and Outputs
   @ViewChildren(NgbdSortableHeader) headers?: QueryList<NgbdSortableHeader>;
 
   @Output() onRowEvent = new EventEmitter<any>();
-
   @Output() onFormChanges = new EventEmitter<FormGroup>();
-
   @Output() onRowSelect = new EventEmitter<any>();
+  rowSelected = output<any>();
 
-  ColumnTypeEnum = ColumnTypeEnum;
-  $event: MouseEvent = new MouseEvent('hover');
+  // Injected services using Angular 19 inject() function
+  private readonly tableService = inject(TableService);
+  private readonly searchFormService = inject(SearchFormService);
+  private readonly cdRef = inject(ChangeDetectorRef);
 
-  constructor(
-    private tableService: TableService,
-    private searchFormService: SearchFormService,
-    private cdRef: ChangeDetectorRef
-  ) {
+  // Inputs with setters
+  @Input() set columns(value: Column[] | undefined) {
+    this._columns.set(value || []);
+  }
+
+  @Input() set icon(value: Icon | string | undefined) {
+    this._icon.set(value);
+  }
+
+  @Input() set data(value: any[] | undefined) {
+    this._data.set(value || []);
+    this.tableService.setData(value || []);
+  }
+
+  @Input() set total(value: number) {
+    this._total.set(value);
+    this.tableService.setTotal(value);
+  }
+
+  @Input() form?: FormGroup;
+
+  @Input() set count(value: number | undefined) {
+    this._count.set(value);
+  }
+
+  @Input() set pageSize(value: number) {
+    this._pageSize.set(value);
+    this.tableService.setPageSize(value);
+  }
+
+  @Input() set showPaginator(value: boolean) {
+    this._showPaginator.set(value);
+  }
+
+  @Input() set icons(value: Icon[]) {
+    this._icons.set(value);
+  }
+
+  @Input() set parentComponentName(value: string) {
+    this._parentComponentName.set(value);
+  }
+
+  @Input() set loader(value: boolean) {
+    this._loader.set(value);
+  }
+
+  @Input() set isCheckboxsSelected(value: boolean) {
+    this._isCheckboxsSelected.set(value);
+  }
+
+  constructor() {
     super();
-    this.data$ = tableService.data$;
-    this.total$ = tableService.total$;
   }
 
   ngOnInit(): void {
-    this.listenToPageReset();
+    // Signals handle reactivity automatically, no manual initialization needed
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     // Check if 'data' exists and has a valid value before accessing its properties
     if (changes['data']?.currentValue && changes['data'].currentValue.length) {
       this.setTableData();
-      this.errorMsg = '';
+      this._errorMsg.set('');
     } else if (
       changes['data']?.previousValue &&
       !changes['data'].currentValue?.length &&
       !changes['data'].firstChange
     ) {
-      this.total$ = this.tableService.total$;
       this.resetTable();
-      this.errorMsg = TableErrors.NOT_FOUND;
+      this._errorMsg.set(TableErrors.NOT_FOUND);
     }
 
     // Check if 'loader' exists before accessing it
     if (changes['loader']?.currentValue !== undefined) {
-      this.loader = changes['loader'].currentValue;
+      this._loader.set(changes['loader'].currentValue);
     }
 
     // Check if 'isChecked' exists before triggering change detection
@@ -156,32 +233,27 @@ export class TableComponent
     }
 
     // Always set table data when data changes
-    if (changes['data'] && this.data && this.data.length > 0) {
+    if (changes['data'] && this._data() && this._data().length > 0) {
       this.setTableData();
     }
   }
 
   pageChanges(currentPage: number) {
-    this.selectedPage = currentPage;
+    this._selectedPage.set(currentPage);
     this.form?.get('currentPage')?.setValue(currentPage);
     this.onFormChanges.emit(this.form);
 
     // Update table service and refresh data
-    this.tableService.page = currentPage;
+    this.tableService.setPage(currentPage);
     this.setTableData();
   }
 
   setTableData() {
-    this.tableService.columns = this.columns || [];
-    this.tableService.pageSize = this.pageSize as number;
-    this.tableService.page = this.selectedPage;
-    this.tableService.dataSubject$.next(this.data || []);
-    this.tableService.totalSubject$.next(this.total);
-    
-    // Calculate column widths after data is set
-    setTimeout(() => {
-      this.calculateColumnWidths();
-    }, 100);
+    this.tableService.columns = this._columns();
+    this.tableService.setPageSize(this._pageSize());
+    this.tableService.setPage(this._selectedPage());
+    this.tableService.setData(this._data());
+    this.tableService.setTotal(this._total());
   }
 
   onSort({ column, direction, sortByServer }: SortEvent) {
@@ -202,8 +274,8 @@ export class TableComponent
       this.onFormChanges.emit(this.form);
       return;
     }
-    this.tableService.sortColumn = column;
-    this.tableService.sortDirection = direction;
+    this.tableService.setSortColumn(column);
+    this.tableService.setSortDirection(direction);
   }
 
   onRowClick(item: any, e: MouseEvent) {
@@ -231,15 +303,16 @@ export class TableComponent
     this.rowSelected.emit(item);
   }
   resetTable() {
-    this.tableService.dataSubject$.next([]);
-    this.tableService.totalSubject$.next(0);
+    this.tableService.setData([]);
+    this.tableService.setTotal(0);
   }
 
   getIconById(id: number): Icon | undefined {
-    if (!this.icons || !Array.isArray(this.icons) || !id) {
+    const icons = this._icons();
+    if (!icons || !Array.isArray(icons) || !id) {
       return undefined;
     }
-    return this.icons.find((icon) => icon.id === id);
+    return icons.find((icon) => icon.id === id);
   }
 
   getIconPath(iconName: string | Icon | undefined): string {
@@ -261,32 +334,8 @@ export class TableComponent
     return (this.Icons as any)[iconName] || this.Icons.EDIT;
   }
 
-  // listenToPageReset() {
-  //   const currentPage = this.searchFormService.form.get('currentPage');
-  //   if (currentPage)
-  //     this.onValueChanges(currentPage).subscribe((res) => {
-  //       this.selectedPage = res;
-  //     });
-  // }
-  listenToPageReset() {
-    // Use searchFormService form instead of local form reference
-    const currentPage = this.searchFormService.form.get('currentPage');
-    if (currentPage) {
-      this.onValueChanges(currentPage).subscribe((res: any) => {
-        this.selectedPage = res || 1; // Default to 1 if null/undefined
-      });
-    }
-
-    // Also listen to the form directly if it's passed as input
-    if (this.form) {
-      const formCurrentPage = this.form.get('currentPage');
-      if (formCurrentPage) {
-        this.onValueChanges(formCurrentPage).subscribe((res: any) => {
-          this.selectedPage = res || 1;
-        });
-      }
-    }
-  }
+  // Removed subscription-based listenToPageReset method
+  // Signals handle reactivity automatically
 
   getRadioColorClassByLastTicketTime(timeStr: string | null): string {
     if (!timeStr) return 'gray';
@@ -312,7 +361,7 @@ export class TableComponent
     item[propertyName] = value;
     
     // Update boolean state for each option
-    const column = this.columns?.find(col => col.propertyName === propertyName);
+    const column = this._columns().find(col => col.propertyName === propertyName);
     if (column?.radioConfig?.options) {
       // Store boolean state for each option
       const booleanStateProperty = `${propertyName}_booleanState`;
@@ -327,8 +376,9 @@ export class TableComponent
     this.onSelectedRowIdChange(item);
 
     // Update the table service data to reflect the change
-    if (this.data) {
-      this.tableService.dataSubject$.next([...this.data]);
+    const currentData = this._data();
+    if (currentData) {
+      this.tableService.setData([...currentData]);
     }
   }
 
@@ -349,8 +399,9 @@ export class TableComponent
     this.onSelectedRowIdChange(item);
 
     // Update the table service data to reflect the change
-    if (this.data) {
-      this.tableService.dataSubject$.next([...this.data]);
+    const currentData = this._data();
+    if (currentData) {
+      this.tableService.setData([...currentData]);
     }
   }
 
@@ -423,94 +474,20 @@ export class TableComponent
     return column.radioConfig?.allowDeselect || false;
   }
 
-  /**
-   * Calculate optimal column widths based on content and column type
-   */
-  calculateColumnWidths(): void {
-    if (!this.columns || !this.data || this.data.length === 0) {
-      return;
-    }
-
-    const tableContainer = document.querySelector('.table-container');
-    if (!tableContainer) return;
-
-    const availableWidth = tableContainer.clientWidth - 20; // Account for padding and scrollbar
-    const columnWidths: { [key: string]: number } = {};
-
-    // Calculate base widths for each column
-    this.columns.forEach(column => {
-      if (column.type === ColumnTypeEnum.Hidden) return;
-
-      let baseWidth = this.getBaseWidthForColumnType(column);
-      
-      // Adjust based on content length
-      const contentWidth = this.calculateContentWidth(column);
-      baseWidth = Math.max(baseWidth, contentWidth);
-
-      columnWidths[column.propertyName] = baseWidth;
-    });
-
-    // Normalize widths to fit available space
-    const totalCalculatedWidth = Object.values(columnWidths).reduce((sum, width) => sum + width, 0);
-    const scaleFactor = availableWidth / totalCalculatedWidth;
-
-    // Apply calculated widths
-    Object.keys(columnWidths).forEach(propertyName => {
-      const finalWidth = Math.max(columnWidths[propertyName] * scaleFactor, 80); // Minimum 80px
-      columnWidths[propertyName] = finalWidth;
-    });
-
-    // Store widths for CSS application
-    this.columnWidths = columnWidths;
-  }
-
-  /**
-   * Get base width for different column types
-   */
-  private getBaseWidthForColumnType(column: Column): number {
-    switch (column.type) {
-      case ColumnTypeEnum.Checkbox:
-      case ColumnTypeEnum.Radio:
-      case ColumnTypeEnum.ActiveStatus:
-        return 60;
-      case ColumnTypeEnum.Icon:
-        return 50;
-      case ColumnTypeEnum.Currency:
-        return 120;
-      case ColumnTypeEnum.Date:
-      case ColumnTypeEnum.DateTime:
-        return 140;
-      case ColumnTypeEnum.Tag:
-        return 100;
-      case ColumnTypeEnum.Text:
-        // For text columns, check if it's likely to be long content
-        if (column.propertyName === 'name' || column.propertyName === 'fullName') {
-          return 200;
-        }
-        if (column.propertyName === 'ticketNumber' || column.propertyName === 'reportNumber') {
-          return 150;
-        }
-        if (column.propertyName === 'nid' || column.propertyName === 'identity') {
-          return 120;
-        }
-        return 100;
-      default:
-        return 100;
-    }
-  }
 
   /**
    * Calculate content width based on actual data
    */
   private calculateContentWidth(column: Column): number {
-    if (!this.data || this.data.length === 0) return 0;
+    const data = this._data();
+    if (!data || data.length === 0) return 0;
 
     let maxContentLength = column.displayName.length * 8; // Base on header text
 
     // Sample first 10 rows to calculate max content length
-    const sampleSize = Math.min(10, this.data.length);
+    const sampleSize = Math.min(10, data.length);
     for (let i = 0; i < sampleSize; i++) {
-      const item = this.data[i];
+      const item = data[i];
       const content = this.getDisplayValue(item, column);
       if (content) {
         const contentLength = content.toString().length;
@@ -539,9 +516,7 @@ export class TableComponent
     }
   }
 
-  /**
-   * Get CSS width for a column
-   */
+
   getColumnWidth(column: Column): string {
     if (!this.columnWidths || !this.columnWidths[column.propertyName]) {
       return 'auto';
@@ -551,4 +526,12 @@ export class TableComponent
 
   // Add property to store column widths
   private columnWidths: { [key: string]: number } = {};
+
+  /**
+   * TrackBy function for better performance with *ngFor
+   * Uses item.id if available, otherwise falls back to index
+   */
+  trackByItemId(index: number, item: any): any {
+    return item?.id ?? item?.ticketNumber ?? item?.reportNumber ?? index;
+  }
 }

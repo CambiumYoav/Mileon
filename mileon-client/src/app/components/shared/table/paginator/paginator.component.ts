@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy, signal, computed, inject, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -6,43 +6,99 @@ import { CommonModule } from '@angular/common';
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.scss'],
   imports: [CommonModule],
-  standalone: true
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaginatorComponent implements OnInit {
-  @Input() page!: number;
+  // Angular 19 signals for reactive state management
+  private readonly _page = signal<number>(1);
+  private readonly _selectedPage = signal<number>(1);
+  private readonly _pageSize = signal<number>(10);
+  private readonly _total = signal<number>(0);
+  private readonly _showPaginator = signal<boolean>(true);
+  private readonly _isDropdownOpen = signal<boolean>(false);
 
-  @Output() pageChanger: EventEmitter<number> = new EventEmitter<number>();
+  // Computed signals for derived values
+  readonly totalPages = computed(() => {
+    const total = this._total();
+    const pageSize = this._pageSize();
+    return pageSize > 0 ? Math.ceil(total / pageSize) : 0;
+  });
 
-  @Input() selectedPage: number = 1;
+  readonly pages = computed(() => {
+    const totalPages = this.totalPages();
+    return totalPages > 0 ? this.getVisiblePages(totalPages) : [];
+  });
 
-  @Input() pageSize!: number; 
+  readonly allPages = computed(() => {
+    const totalPages = this.totalPages();
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  });
 
-  pages: number[] = [];
+  readonly startItem = computed(() => {
+    const total = this._total();
+    if (total === 0) return 0;
+    return (this._selectedPage() - 1) * this._pageSize() + 1;
+  });
 
-  private _totalPages: number = 0;
-  private _total: number = 0;
+  readonly endItem = computed(() => {
+    const total = this._total();
+    if (total === 0) return 0;
+    const end = this._selectedPage() * this._pageSize();
+    return Math.min(end, total);
+  });
 
-  get totalPages(): number {
-    return this._totalPages;
+  // Getters for template access
+  get page(): number {
+    return this._page();
+  }
+
+  get selectedPage(): number {
+    return this._selectedPage();
+  }
+
+  get pageSize(): number {
+    return this._pageSize();
+  }
+
+  get total(): number {
+    return this._total();
+  }
+
+  get showPaginator(): boolean {
+    return this._showPaginator();
+  }
+
+  get isDropdownOpen(): boolean {
+    return this._isDropdownOpen();
+  }
+
+  // Inputs with setters
+  @Input() set page(value: number) {
+    this._page.set(value);
+  }
+
+  @Input() set selectedPage(value: number) {
+    this._selectedPage.set(value);
+  }
+
+  @Input() set pageSize(value: number) {
+    this._pageSize.set(value);
   }
 
   @Input() set total(value: number | null) {
     if (value !== null && value !== undefined) {
-      this._total = value;
-      if (this.pageSize) {
-        this._totalPages = Math.ceil(value / this.pageSize);
-        this.pages = this.getVisiblePages(this._totalPages);
-      }
+      this._total.set(value);
     } else {
-      this._total = 0;
-      this._totalPages = 0;
-      this.pages = [];
+      this._total.set(0);
     }
   }
 
-  get total(): number {
-    return this._total;
+  @Input() set showPaginator(value: boolean) {
+    this._showPaginator.set(value);
   }
+
+  @Output() pageChanger: EventEmitter<number> = new EventEmitter<number>();
 
   getVisiblePages(totalPages: number): number[] {
     const maxVisiblePages = 6;
@@ -52,7 +108,7 @@ export class PaginatorComponent implements OnInit {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    const current = this.selectedPage;
+    const current = this._selectedPage();
     const half = Math.floor(maxVisiblePages / 2);
     let start = current - half;
     let end = current + half;
@@ -74,49 +130,51 @@ export class PaginatorComponent implements OnInit {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   }
 
-  @Input() showPaginator!: boolean;
-
-  constructor() {}
+  constructor(private elementRef: ElementRef) {}
 
   ngOnInit(): void {
-    if (this._total > 0 && this.pageSize > 0) {
-      this._totalPages = Math.ceil(this._total / this.pageSize);
-      this.pages = this.getVisiblePages(this._totalPages);
-    }
+    // Signals handle reactivity automatically, no manual initialization needed
   }
 
   setSelectedPage(page: number) {
-    if (page >= 1 && page <= this._totalPages) {
-      this.selectedPage = page;
-      this.pages = this.getVisiblePages(this._totalPages);
+    const totalPages = this.totalPages();
+    if (page >= 1 && page <= totalPages) {
+      this._selectedPage.set(page);
       this.changePage();
     }
   }
 
   changePage() {
-    this.pageChanger.emit(this.selectedPage);
-  }
-
-  getStartItem(): number {
-    if (this._total === 0) return 0;
-    return (this.selectedPage - 1) * this.pageSize + 1;
-  }
-
-  getEndItem(): number {
-    if (this._total === 0) return 0;
-    const end = this.selectedPage * this.pageSize;
-    return Math.min(end, this._total);
-  }
-
-  getAllPages(): number[] {
-    return Array.from({ length: this._totalPages }, (_, i) => i + 1);
+    this.pageChanger.emit(this._selectedPage());
   }
 
   onPageDropdownChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const selectedPage = parseInt(target.value);
-    if (selectedPage && selectedPage !== this.selectedPage) {
+    if (selectedPage && selectedPage !== this._selectedPage()) {
       this.setSelectedPage(selectedPage);
+    }
+  }
+
+  toggleDropdown(): void {
+    if (this.totalPages() > 1) {
+      this._isDropdownOpen.set(!this._isDropdownOpen());
+    }
+  }
+
+  closeDropdown(): void {
+    this._isDropdownOpen.set(false);
+  }
+
+  selectPage(page: number): void {
+    this.setSelectedPage(page);
+    this.closeDropdown();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.closeDropdown();
     }
   }
 }

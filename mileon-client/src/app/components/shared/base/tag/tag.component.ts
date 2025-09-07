@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy, signal, computed } from '@angular/core';
 import { TagColorDirective } from '../../../../directives/tag-color.directive';
 
 @Component({
@@ -6,29 +6,67 @@ import { TagColorDirective } from '../../../../directives/tag-color.directive';
   templateUrl: './tag.component.html',
   styleUrls: ['./tag.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TagColorDirective]
 })
 export class TagComponent implements OnInit {
-  @Input()
-  public tagId: string = '';
+  // Angular 19 signals for reactive state management
+  private readonly _tagId = signal<string>('');
+  private readonly _tagName = signal<string>('');
+  private readonly _pattern = signal<string | RegExp>('');
+  private readonly _fontSize = signal<string | undefined>('16px');
+  private readonly _size = signal<'small' | 'large'>('small');
 
-  @Input()
-  public tagName: string = '';
+  // Getters for template access
+  get tagId(): string {
+    return this._tagId();
+  }
 
-  @Input()
-  public pattern: string | RegExp = '';
+  get tagName(): string {
+    return this._tagName();
+  }
 
-  @Input()
-  public fontSize?: string = '16px';
+  get pattern(): string | RegExp {
+    return this._pattern();
+  }
 
-  @Input()
-  public size: 'small' | 'large' = 'small';
+  get fontSize(): string | undefined {
+    return this._fontSize();
+  }
 
-  get dynamicFontSize(): string {
-    return this.size === 'large' ? '24px' : '16px';
+  get size(): 'small' | 'large' {
+    return this._size();
+  }
+
+  // Computed signal for derived value
+  readonly dynamicFontSize = computed(() => {
+    return this._size() === 'large' ? '24px' : '16px';
+  });
+
+  // Inputs with setters
+  @Input() set tagId(value: string) {
+    this._tagId.set(value);
+  }
+
+  @Input() set tagName(value: string) {
+    this._tagName.set(value);
+  }
+
+  @Input() set pattern(value: string | RegExp) {
+    this._pattern.set(value);
+  }
+
+  @Input() set fontSize(value: string | undefined) {
+    this._fontSize.set(value);
+  }
+
+  @Input() set size(value: 'small' | 'large') {
+    this._size.set(value);
   }
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Signals handle reactivity automatically, no manual initialization needed
+  }
 }

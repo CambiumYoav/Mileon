@@ -1,55 +1,78 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy, signal, inject, effect } from '@angular/core';
 import { SideMenu } from '../../../../../types/base/menu.model';
 import { RouterService } from '../../../../../services/router.service';
 import { ROUTE_PATH } from '../../../../../constants/routerPath';
 import { PermissionService } from '../../../../../services/permission.service';
 import { NavigationEnd, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { SharedImports } from '../../../../../shared/shared-modules';
 @Component({
   selector: 'app-side-menu',
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.scss'],
   imports: [SharedImports],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideMenuComponent implements OnInit, OnDestroy {
-  private _menu: SideMenu | null = null;
+  // Angular 19 signals for reactive state management
+  private readonly _menu = signal<SideMenu | null>(null);
+  private readonly _selected = signal<number>(0);
+  private readonly _hovered = signal<number | null>(null);
 
+  // Getters for template access
   get menu(): SideMenu | null {
-    return this._menu;
+    return this._menu();
   }
 
+  get selected(): number {
+    return this._selected();
+  }
+
+  get hovered(): number | null {
+    return this._hovered();
+  }
+
+  // Constants
+  readonly ROUTE_PATH = ROUTE_PATH;
+
+  // Injected services using Angular 19 inject() function
+  private readonly routerService = inject(RouterService);
+  private readonly permissionsService = inject(PermissionService);
+  private readonly router = inject(Router);
+
+  // Inputs with setters
   @Input({ required: true })
   set menu(value: SideMenu | null) {
-    this._menu = value;
+    this._menu.set(value);
     if (value) this.initRoute(value);
   }
 
-  selected: number = 0;
-  hovered: number | null = null;
-  subscribe: Subscription;
-  constructor(
-    private routerService: RouterService,
-    private permissionsService: PermissionService,
-    private router: Router
-  ) {
-    this.subscribe = this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd && this._menu) {
-        this.initRoute(this._menu);
+  constructor() {
+    // Use effect to handle router events reactively
+    effect(() => {
+      const menu = this._menu();
+      if (menu) {
+        // Listen to router events for navigation changes
+        this.router.events.subscribe((event) => {
+          if (event instanceof NavigationEnd) {
+            this.initRoute(menu);
+          }
+        });
       }
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Signals handle reactivity automatically, no manual initialization needed
+  }
 
   ngOnDestroy(): void {
-    this.subscribe.unsubscribe();
+    // No subscription cleanup needed as we're using effects
   }
 
   initRoute(menu: SideMenu) {
     menu.menuItems.forEach((item, index) => {
       if (this.routerService.getCurrentUrl().includes(item.path)) {
-        this.selected = index;
+        this._selected.set(index);
       }
       if (
         !this.permissionsService.checkUserPagePermission(
@@ -66,8 +89,19 @@ export class SideMenuComponent implements OnInit, OnDestroy {
         this.routerService.getCurrentUrl().includes(item.path)
       )
     )
-      this.routerService.navigateTo(menu.menuItems[this.selected].route);
+      this.routerService.navigateTo(menu.menuItems[this._selected()].route);
   }
 
-  public readonly ROUTE_PATH = ROUTE_PATH;
+  // Methods for template event handling
+  onItemClick(index: number): void {
+    this._selected.set(index);
+  }
+
+  onItemMouseEnter(index: number): void {
+    this._hovered.set(index);
+  }
+
+  onItemMouseLeave(): void {
+    this._hovered.set(null);
+  }
 }

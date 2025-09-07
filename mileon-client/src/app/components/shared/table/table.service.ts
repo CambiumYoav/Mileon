@@ -1,12 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
-import { debounceTime } from 'rxjs/internal/operators/debounceTime';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
-import { tap } from 'rxjs/internal/operators/tap';
-import { Subject } from 'rxjs/internal/Subject';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { SortDirection } from '../../../directives/sortable.directive';
 import { Column } from '../../../types/table';
 
@@ -92,125 +85,89 @@ function sort(tableData: any[], column: string, direction: string): any[] {  //g
   providedIn: 'root',
 })
 export class TableService {
-  private _loading$ = new BehaviorSubject<boolean>(true);
-  private _search$ = new Subject<void>();
-  public dataSubject$ = new BehaviorSubject<any[]>([]);
-  public totalSubject$ = new BehaviorSubject<number>(0);
+  // Angular 19 signals for reactive state management
+  private readonly _data = signal<any[]>([]);
+  private readonly _total = signal<number>(0);
+  private readonly _loading = signal<boolean>(false);
+  private readonly _page = signal<number>(1);
+  private readonly _pageSize = signal<number>(10);
+  private readonly _sortColumn = signal<string>('');
+  private readonly _sortDirection = signal<SortDirection>('');
 
-  private _state: State = {
-    page: 1,
-    pageSize: 10,
-    sortColumn: '',
-    sortDirection: '',
-  };
+  // Computed signals for derived values
+  readonly data = this._data.asReadonly();
+  readonly total = this._total.asReadonly();
+  readonly loading = this._loading.asReadonly();
+  readonly page = this._page.asReadonly();
+  readonly pageSize = this._pageSize.asReadonly();
+  readonly sortColumn = this._sortColumn.asReadonly();
+  readonly sortDirection = this._sortDirection.asReadonly();
 
-  constructor(private pipe: DecimalPipe) {  //hard to know what this method is doing specifically, a comment may help
-    this._search$
-      .pipe(
-        tap(() => this._loading$.next(true)),
-        debounceTime(200),
-        switchMap(() => this._search()),
-        tap(() => this._loading$.next(false))
-      )
-      .subscribe((result: any) => {
-        this.dataSubject$.next(result.data);
-        this.totalSubject$.next(result.total);
-      });
+  // Computed signal for sorted data
+  readonly sortedData = computed(() => {
+    const data = this._data();
+    const sortColumn = this._sortColumn();
+    const sortDirection = this._sortDirection();
+    
+    if (!sortColumn || !sortDirection || data.length === 0) {
+      return data;
+    }
+    
+    return sort([...data], sortColumn, sortDirection);
+  });
 
-    this._search$.next();
-  }
-
-  get data$() {
-    return this.dataSubject$.asObservable();
-  }
-  get total$() {
-    return this.totalSubject$.asObservable();
-  }
-  get loading$() {
-    return this._loading$.asObservable();
-  }
-  get page() {
-    return this._state.page;
-  }
-  get pageSize() {
-    return this._state.pageSize;
-  }
-
-  set page(page: number) {
-    this._set({ page });
-  }
-  set pageSize(pageSize: number) {
-    this._set({ pageSize });
-  }
-  set sortColumn(sortColumn: string) {
-    this._set({ sortColumn });
-  }
-  set sortDirection(sortDirection: SortDirection) {
-    this._set({ sortDirection });
-  }
-
-  private _set(patch: Partial<State>) {
-    Object.assign(this._state, patch);
-    this._search$.next();
-  }
+  // Injected services using Angular 19 inject() function
+  private readonly pipe = inject(DecimalPipe);
 
   columns!: Column[];
 
-  private _search(): Observable<any> {  //good use of advanced Angular mechanics
-    const { sortColumn, sortDirection, pageSize, page } =
-      this._state;
-    // 1. sort
-    // let tableData;
-    // Get the current data from the subject (synchronously)
-    const currentData = this.dataSubject$.value;
-    let tableData: any[] = [];
-    
-    if (currentData?.length && this.columns) {
-      tableData = [...currentData];
-        
-        if (sortColumn && sortDirection) {
-          tableData = sort(tableData, sortColumn, sortDirection);
-        }
+  // Setters for state updates
+  setData(data: any[]): void {
+    this._data.set(data);
+  }
 
-        // tableData = [];
-        // const columnKeys = this.columns.map((a) => a.propertyName);
+  setTotal(total: number): void {
+    this._total.set(total);
+  }
 
-        // for (let item of res) {
-        //   let temp: any = {};
-        //   Object.keys(item).map((field) => {
-        //     if (columnKeys.includes(field)) {
-        //       temp[field] = item[column.fieldId];
-        //     }
-        //   });
-          
-        //   // Preserve fieldId data needed by tag components
-        //   this.columns.forEach(column => {
-        //     if (column.fieldId && item[column.fieldId] !== undefined) {
-        //       temp[column.fieldId] = item[column.fieldId];
-        //     }
-        //   });
-          
-        //   tableData.push(temp);
-        // }
+  setLoading(loading: boolean): void {
+    this._loading.set(loading);
+  }
 
-        // // tableData = res;
+  setPage(page: number): void {
+    this._page.set(page);
+  }
 
-        // tableData = sort(tableData, sortColumn, sortDirection);
-        
+  setPageSize(pageSize: number): void {
+    this._pageSize.set(pageSize);
+  }
 
+  setSortColumn(sortColumn: string): void {
+    this._sortColumn.set(sortColumn);
+  }
 
-        // 2. filter
-        // tableData = tableData?.filter((item) =>
-        //   matches(item, searchTerm, this.pipe)
-        // );
+  setSortDirection(sortDirection: SortDirection): void {
+    this._sortDirection.set(sortDirection);
+  }
 
-      // Note: Client-side pagination is disabled here because the data
-      // is already paginated on the server side. The table receives
-      // only the current page's data from the API.
-    }
-    
-    // Get the current total (synchronously)
-    const total = this.totalSubject$.value;
-    return of({ data: tableData, total });
+  // Helper method to get current state
+  getCurrentState(): State {
+    return {
+      page: this._page(),
+      pageSize: this._pageSize(),
+      sortColumn: this._sortColumn(),
+      sortDirection: this._sortDirection(),
+    };
+  }
+
+  // Method to reset all state
+  reset(): void {
+    this._data.set([]);
+    this._total.set(0);
+    this._loading.set(false);
+    this._page.set(1);
+    this._pageSize.set(10);
+    this._sortColumn.set('');
+    this._sortDirection.set('');
   }
 }

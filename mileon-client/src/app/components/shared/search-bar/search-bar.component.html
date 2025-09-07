@@ -3,42 +3,47 @@
     <!-- [ngClass]="{ 'not-found': !foundResult || !filterHasValue }" -->
     <div class="start">
       <img [src]="icons.SEARCH" [alt]="icons.SEARCH" class="search-icon" />
-      <span *ngIf="showPlaceholder && !form.get('searchText')?.value" class="text">{{ searchTitle }}</span>
+      @if (showPlaceholder && !form.get('searchText')?.value) {
+        <span class="text">{{ searchTitle }}</span>
+      }
       <input
         #searchText
         type="text"
         class="input"
-        placeholder="{{ searchBy }}"
+        [placeholder]="searchBy"
         formControlName="searchText"
              />
      </div>
      <div class="end">
-      <img
-        *ngIf="form.get('searchText')?.value"
-        [src]="icons.EXIT"
-        class="clear-icon"
-        (click)="resetSearch()"
-        [alt]="icons.EXIT"
-      />
-      <mat-datepicker-toggle
-        [disableRipple]="true"
-        matSuffix
-        [for]="picker"
-        (click)="onDatePickerToggle(); $event.stopPropagation()"
-        *ngIf="showDatePicker && !form.get('searchText')?.value"
-      >
-        <mat-icon matDatepickerToggleIcon>
-          <img [src]="icons.CELANDER" [alt]="icons.CELANDER" />
-        </mat-icon>
-      </mat-datepicker-toggle>
+      @if (form.get('searchText')?.value) {
+        <img
+          [src]="icons.EXIT"
+          class="clear-icon"
+          (click)="resetSearch()"
+          [alt]="icons.EXIT"
+        />
+      }
+      @if (showDatePicker && !form.get('searchText')?.value) {
+        <mat-datepicker-toggle
+          [disableRipple]="true"
+          matSuffix
+          [for]="picker"
+          (click)="onDatePickerToggle(); $event.stopPropagation()"
+        >
+          <mat-icon matDatepickerToggleIcon>
+            <img [src]="icons.CELANDER" [alt]="icons.CELANDER" />
+          </mat-icon>
+        </mat-datepicker-toggle>
+      }
       <mat-date-range-picker #picker [startAt]="startAt" class="hebrew-date-picker"></mat-date-range-picker>
-      <img
-        *ngIf="showFilters && !form.get('searchText')?.value"
-        id="filter-icon"
-        [src]="icons.SEARCH_END"
-        [alt]="icons.SEARCH_END"
-        (click)="openAdvancedSearch()"
-      />
+      @if (showFilters && !form.get('searchText')?.value) {
+        <img
+          id="filter-icon"
+          [src]="icons.SEARCH_END"
+          [alt]="icons.SEARCH_END"
+          (click)="openAdvancedSearch()"
+        />
+      }
     </div>
   </div>
   <mat-date-range-input
@@ -49,41 +54,39 @@
     <input readonly="true" matStartDate formControlName="startDate" placeholder="תאריך התחלה" />
     <input readonly="true" matEndDate formControlName="endDate" placeholder="תאריך סיום" />
   </mat-date-range-input>
-  <div
-    class="selected-date-range"
-    *ngIf="
-      form.get('startDate')?.value &&
-      form.get('endDate')?.value &&
-      !picker.opened
-    "
-  >
-    <span>
-      {{ form.get("startDate")?.value | date : "dd/MM/yy" }} -
-      {{ form.get("endDate")?.value | date : "dd/MM/yy" }}
-    </span>
-  </div>
-  <app-dropdown-window
-    *ngIf="dropdownWindowOpened"
-    [searchBarWidth]="searchBarWidth"
-    (closeDropdownEvent)="closeDropdownWindow()"
-  >
-    <app-advanced-search
-      *ngIf="advancedSearchOpened"
-      [form]="form"
-      [advancedForm]="advancedSearch"
-      (onSearch)="onSearch()"
-      [searchButtonClicked]="searchButtonClicked"
-    ></app-advanced-search>
-    <app-results-dropdown
-      *ngIf="resultData.length && !advancedSearchOpened"
-      [resultData]="resultData"
-      [loader]="loader"
-      [form]="form"
-      [originalData]="resultData"
-      (optionSelected)="onOptionSelected($event)"
+  @if (form.get('startDate')?.value && form.get('endDate')?.value && !picker.opened) {
+    <div class="selected-date-range">
+      <span>
+        {{ form.get("startDate")?.value | date : "dd/MM/yy" }} -
+        {{ form.get("endDate")?.value | date : "dd/MM/yy" }}
+      </span>
+    </div>
+  }
+  @if (dropdownWindowOpened) {
+    <app-dropdown-window
+      [searchBarWidth]="searchBarWidth()"
+      (closeDropdownEvent)="closeDropdownWindow()"
     >
-    </app-results-dropdown>
-  </app-dropdown-window>
+      @if (advancedSearchOpened) {
+        <app-advanced-search
+          [form]="form"
+          [advancedForm]="advancedSearch"
+          (onSearch)="onSearch()"
+          [searchButtonClicked]="searchButtonClicked"
+        ></app-advanced-search>
+      }
+      @if (resultData.length && !advancedSearchOpened) {
+        <app-results-dropdown
+          [resultData]="resultData"
+          [loader]="loader"
+          [form]="form"
+          [originalData]="resultData"
+          (optionSelected)="onOptionSelected($event)"
+        >
+        </app-results-dropdown>
+      }
+    </app-dropdown-window>
+  }
   <div class="under-search">
     <!-- <div>
       <ng-container *ngIf="!filterHasValue; else results">
@@ -100,13 +103,15 @@
       resultCountMessage
     }}</span> -->
 
-    <span *ngIf="total && !hasResultsDropdown" class="result-count-msg">{{
-      total +
-        " " +
-        resultCountMessage +
-        " " +
-        (searchTextValue ? " " + searchTextValue : "")
-    }}</span>
+    @if (total && !hasResultsDropdown) {
+      <span class="result-count-msg">{{
+        total +
+          " " +
+          resultCountMessage +
+          " " +
+          (searchTextValue ? " " + searchTextValue : "")
+      }}</span>
+    }
   </div>
 </form>
 

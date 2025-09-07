@@ -1,62 +1,77 @@
-<div
-  class="paginator align-items-center d-flex flex-row-reverse justify-content-center"
-  *ngIf="showPaginator && pages && pages.length > 1"
->
-  <!-- Page Selection Dropdown -->
-  <div class="page-dropdown-container">
-    <select 
-      class="page-dropdown" 
-      [value]="selectedPage"
-      (change)="onPageDropdownChange($event)"
-      [disabled]="totalPages <= 1"
-    >
-      <option *ngFor="let page of getAllPages()" [value]="page">
-        {{ page }}
-      </option>
-    </select>
+@if (showPaginator && pages().length > 1) {
+  <div class="paginator align-items-center d-flex flex-row-reverse justify-content-center">
+    <!-- Page Selection Dropdown -->
+    <div class="page-dropdown-container">
+      <div 
+        class="page-dropdown" 
+        [class.disabled]="totalPages() <= 1"
+        (click)="toggleDropdown()"
+        tabindex="0"
+        (keydown.enter)="toggleDropdown()"
+        (keydown.escape)="closeDropdown()"
+      >
+        <span class="dropdown-value">{{ selectedPage }}</span>
+        <i class="dropdown-arrow fa fa-angle-down" [class.rotated]="isDropdownOpen"></i>
+      </div>
+      
+      @if (isDropdownOpen && totalPages() > 1) {
+        <div class="dropdown-options">
+          @for (page of allPages(); track page) {
+            <div 
+              class="dropdown-option"
+              [class.selected]="page === selectedPage"
+              (click)="selectPage(page)"
+            >
+              {{ page }}
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Last page button (swapped from first) -->
+    <i
+      (click)="setSelectedPage(totalPages())"
+      class="angle double-angle fa fa-angle-double-left"
+      [class.disabled]="selectedPage === totalPages()"
+    ></i>
+
+    <!-- Next page button (swapped from previous) -->
+    <i
+      (click)="setSelectedPage(selectedPage + 1)"
+      class="angle fa fa-angle-left"
+      [class.disabled]="selectedPage === totalPages()"
+    ></i>
+
+    @for (page of pages().slice().reverse(); track page; let i = $index) {
+      <span
+        class="page"
+        [class.current]="page === selectedPage"
+        (click)="setSelectedPage(page)"
+        >{{ page }}</span
+      >
+    }
+
+    <!-- Previous page button (swapped from next) -->
+    <i
+      (click)="setSelectedPage(selectedPage - 1)"
+      class="angle fa fa-angle-right"
+      [class.disabled]="selectedPage === 1"
+    ></i>
+
+    <!-- First page button (swapped from last) -->
+    <i
+      (click)="setSelectedPage(1)"
+      class="angle double-angle fa fa-angle-double-right"
+      [class.disabled]="selectedPage === 1"
+    ></i>
+
+    <!-- Display showing current range of items -->
+    <div class="items-display">
+      <span class="items-text">מציג</span>
+      <span class="items-range">{{ endItem() }}-{{ startItem() }}</span>
+      <span class="items-text">מתוך</span>
+      <span class="total-items">{{ total }}</span>
+    </div>
   </div>
-
-  <!-- Last page button (swapped from first) -->
-  <i
-    (click)="setSelectedPage(totalPages)"
-    class="angle double-angle fa fa-angle-double-left"
-    [class.disabled]="selectedPage === totalPages"
-  ></i>
-
-  <!-- Next page button (swapped from previous) -->
-  <i
-    (click)="setSelectedPage(selectedPage + 1)"
-    class="angle fa fa-angle-left"
-    [class.disabled]="selectedPage === totalPages"
-  ></i>
-
-  <span
-    class="page"
-    *ngFor="let page of pages.slice().reverse(); index as i"
-    [class.current]="page === selectedPage"
-    (click)="setSelectedPage(page)"
-    >{{ page }}</span
-  >
-
-  <!-- Previous page button (swapped from next) -->
-  <i
-    (click)="setSelectedPage(selectedPage - 1)"
-    class="angle fa fa-angle-right"
-    [class.disabled]="selectedPage === 1"
-  ></i>
-
-  <!-- First page button (swapped from last) -->
-  <i
-    (click)="setSelectedPage(1)"
-    class="angle double-angle fa fa-angle-double-right"
-    [class.disabled]="selectedPage === 1"
-  ></i>
-
-  <!-- Display showing current range of items -->
-  <div class="items-display">
-    <span class="items-text">מציג</span>
-    <span class="items-range">{{ getEndItem() }}-{{ getStartItem() }}</span>
-    <span class="items-text">מתוך</span>
-    <span class="total-items">{{ total }}</span>
-  </div>
-</div>
+}

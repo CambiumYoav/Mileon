@@ -3,52 +3,56 @@
     <div class="file-name" [ngClass]="{ 'failed': uploadStatus === 'failed' }">
       <!-- Dynamic icon based on status -->
       <img 
-        [src]="uploadStatus === 'failed' ? errorUploadIcon : documentTextIcon" 
+        [src]="uploadStatus === 'failed' ? errorUploadIcon() : documentTextIcon()" 
         [alt]="uploadStatus === 'failed' ? 'error-icon' : 'document-icon'"
         [ngClass]="{ 'error-icon': uploadStatus === 'failed' }"
       />
       
       <!-- Attach icon only for successful uploads -->
-      <img
-        *ngIf="isDownoladable && uploadStatus !== 'failed'"
-        [src]="attachCircleIcon"
-        alt="attach-icon"
-        (click)="openFileForPrint()"
-        class="attach-icon"
-      />
+      @if (isDownoladable && uploadStatus !== 'failed') {
+        <img
+          [src]="attachCircleIcon()"
+          alt="attach-icon"
+          (click)="openFileForPrint()"
+          class="attach-icon"
+        />
+      }
       
       <div class="file-name-details">
         <!-- Dynamic content based on status -->
-        <ng-container *ngIf="uploadStatus !== 'failed'; else errorContent">
+        @if (uploadStatus !== 'failed') {
           <div class="file-name-text">
             {{ previewFile?.file?.name || "Unnamed File" }}
           </div>
           <div class="file-size-text">
             {{ (previewFile?.file?.size! / 1024)?.toFixed(2) || "0" }} KB
           </div>
-        </ng-container>
-        
-        <ng-template #errorContent>
+        } @else {
           <div class="file-error-message-container-text">
             <div class="primary-error">לא הצלחנו לעלות קובץ זה</div>
-            <div class="secondary-error" *ngIf="errorType === 'type'">סוג המסמך לא תקין.</div>
-            <div class="secondary-error" *ngIf="errorType === 'size'">גודל הקובץ חורג מהמותר.</div>
+            @if (errorType === 'type') {
+              <div class="secondary-error">סוג המסמך לא תקין.</div>
+            }
+            @if (errorType === 'size') {
+              <div class="secondary-error">גודל הקובץ חורג מהמותר.</div>
+            }
           </div>
-        </ng-template>
+        }
       </div>
     </div>
     
     <div class="file-actions">
-      <img
-        *ngIf="isDownoladable"
-        style="cursor: pointer; margin-top: 3px"
-        [src]="exportIcon"
-        (click)="onDownloadFileClicked()"
-        alt="document-icon"
-      />
+      @if (isDownoladable) {
+        <img
+          style="cursor: pointer; margin-top: 3px"
+          [src]="exportIcon()"
+          (click)="onDownloadFileClicked()"
+          alt="document-icon"
+        />
+      }
       <img
         style="cursor: pointer"
-        [src]="closeCircleIcon"  
+        [src]="closeCircleIcon()"  
         (click)="onDeleteIconClicked()"
         alt="delete-icon"
       />

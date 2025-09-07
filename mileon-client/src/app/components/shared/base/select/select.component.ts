@@ -13,6 +13,9 @@ import {
   Injector,
   Output,
   OnChanges,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -36,6 +39,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./select.component.scss'],
   standalone: true,
   imports: [MaterialModule,FormsModule,CommonModule,ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -50,7 +54,7 @@ export class SelectComponent
 {
   Icons = ConstPath;
   @Input() appearance: 'legacy' | 'standard' | 'fill' | 'outline' = 'legacy';
-  @Input() listObj$: Observable<Array<any>> = of([]);
+  @Input() listObj$: Observable<any> = of({});
   @Input() items$: Observable<Array<any>> = of([]);
   @Input() dataFunction: DataFunction | undefined;
   @Input() override title: string = '';
@@ -70,8 +74,15 @@ export class SelectComponent
   @Input() disabled: boolean = false;
   @Input() options: any[] = []; // Add support for static options
 
-  endOfData: boolean = false;
-  isSearchVisible: boolean = false;
+  // Modern Angular 19 signals for better performance
+  private readonly _endOfData = signal(false);
+  private readonly _isSearchVisible = signal(false);
+  private readonly _isLoading = signal(false);
+
+  // Computed properties
+  readonly endOfData = this._endOfData.asReadonly();
+  readonly isSearchVisible = this._isSearchVisible.asReadonly();
+  readonly isLoading = this._isLoading.asReadonly();
 
   filterFormControl: FormControl = new FormControl('');
 
@@ -80,6 +91,7 @@ export class SelectComponent
   selectParams: SelectParams & { [key: string]: any } = {
     pageSize: 10,
     currentPage: 1,
+    ids: [],
   };
 
   private isServerSide: boolean = true;
@@ -172,10 +184,10 @@ export class SelectComponent
           res[this.dataFunction.name as keyof typeof res][this.formControlName] &&
           res[this.dataFunction.name as keyof typeof res][this.formControlName]?.length
         ) {
-          this.items$ = of(res[this.dataFunction.name as keyof typeof res][this.formControlName]);
+          this.items$ = of(res[this.dataFunction.name as keyof typeof res][this.formControlName] as any[]);
         }
       } else {
-        this.items$ = of(res[this.formControlName as keyof typeof res]);
+        this.items$ = of((res[this.formControlName as keyof typeof res] as any[]) || []);
       }
     });
 
@@ -186,7 +198,7 @@ export class SelectComponent
   }
 
   updateCurrentPage() {
-    if (this.endOfData) {
+    if (this._endOfData()) {
       return;
     }
     this.selectParams.currentPage++;
@@ -270,18 +282,23 @@ export class SelectComponent
 
   async getDataList(paramObj: SelectParams) {
     if (this.dataFunction) {
-      let res = await this.selectService.getDataList(
-        this.formControlName,
-        this.dataFunction,
-        paramObj,
-        this.dataFunction.name
-      );
-      this.endOfData = res?.isEndOfData ?? false;
-      this.isServerSide = res?.isServerSide ?? false;
-      if (!this.isServerSide) {
-        this.items$.pipe(take(1)).subscribe((data) => {
-          this.currentStaticItems = data;
-        });
+      this._isLoading.set(true);
+      try {
+        let res = await this.selectService.getDataList(
+          this.formControlName,
+          this.dataFunction,
+          paramObj,
+          this.dataFunction.name
+        );
+        this._endOfData.set(res?.isEndOfData ?? false);
+        this.isServerSide = res?.isServerSide ?? false;
+        if (!this.isServerSide) {
+          this.items$.pipe(take(1)).subscribe((data) => {
+            this.currentStaticItems = data;
+          });
+        }
+      } finally {
+        this._isLoading.set(false);
       }
     }
   }
@@ -343,7 +360,7 @@ export class SelectComponent
 
     if (changes['ids']) {
       this.items$ = of([]);
-      this.endOfData = false;
+      this._endOfData.set(false);
       this.selectParams.ids = Array.isArray(this.ids) ? this.ids : [this.ids];
       // if this is a field that is connected to another field we don't want to
       // send a request to server because the function listen to connected fields make it.
@@ -437,7 +454,7 @@ export class SelectComponent
 
   onSelectOpened(isOpened: boolean): void {
     if (isOpened && this.displaySearch) {
-      this.isSearchVisible = true;
+      this._isSearchVisible.set(true);
       // Clear any previous search
       this.filterFormControl.setValue('');
       // Focus the search input after a short delay to ensure it's rendered
@@ -448,7 +465,7 @@ export class SelectComponent
         }
       }, 100);
     } else {
-      this.isSearchVisible = false;
+      this._isSearchVisible.set(false);
       // Clear search when select closes
       this.filterFormControl.setValue('');
     }
@@ -456,25 +473,44 @@ export class SelectComponent
 
   onSearchFocus(): void {
     // Keep search visible when focused
-    this.isSearchVisible = true;
+    this._isSearchVisible.set(true);
   }
 
   onSearchBlur(): void {
     // Hide search when blurred (unless select is still open)
     setTimeout(() => {
       if (!this.control.disabled && !this.control.value) {
-        this.isSearchVisible = false;
+        this._isSearchVisible.set(false);
       }
     }, 150);
   }
 
   hideSearch(): void {
-    this.isSearchVisible = false;
+    this._isSearchVisible.set(false);
     this.filterFormControl.setValue('');
     // Focus back to the select
     const selectElement = document.querySelector('.mat-mdc-select-trigger') as HTMLElement;
     if (selectElement) {
       selectElement.focus();
     }
+  }
+
+  /**
+   * TrackBy function for better performance with @for loops
+   * Uses item.id if available, otherwise falls back to index
+   */
+  trackByItemId(index: number, item: any): any {
+    return item?.id ?? item?.value ?? item?.[this.bindValueKey] ?? index;
+  }
+
+  /**
+   * TrackBy function for selected items in multi-select
+   * Uses item.id or bindValueKey if available, otherwise falls back to index
+   */
+  trackBySelectedItem(index: number, item: any): any {
+    if (typeof item === 'object' && item !== null) {
+      return item[this.bindValueKey] ?? item.id ?? item.value ?? index;
+    }
+    return item ?? index;
   }
 }

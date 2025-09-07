@@ -1,10 +1,12 @@
 <div [class.disabled]="disabled" [ngClass]="sizeClass">
   <div class="title-container">
     <div class="inline-header">
-      <img *ngIf="isRequired" class="exit-icon" [src]="Icons.ASTERISK_RED" />
+      @if (isRequired) {
+        <img class="exit-icon" [src]="Icons.ASTERISK_RED" />
+      }
       <div class="title-placeholder">{{ title }}</div>
     </div>
-    <ng-container *ngIf="isTooltip">
+    @if (isTooltip) {
       <img
         [src]="Icons.TOOL_TIP"
         class="tooltip-icon"
@@ -14,7 +16,7 @@
         aria-label="Info"
         alt="Info"
       />
-    </ng-container>
+    }
   </div>
 
   <div
@@ -27,9 +29,13 @@
       [formControl]="control"
       class="hide-border-input input-text"
     />
-    <div class="icon" *ngIf="icon">
-      <img [src]="icon" alt="icon" />
-    </div>
+    @if (icon) {
+      <div class="icon">
+        <img [src]="icon" alt="icon" />
+      </div>
+    }
   </div>
-  <span *ngIf="!isValid" class="error">{{ errorMessage }}</span>
+  @if (!isValid) {
+    <span class="error">{{ errorMessage }}</span>
+  }
 </div>

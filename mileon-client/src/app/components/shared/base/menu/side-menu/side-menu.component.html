@@ -1,28 +1,30 @@
-<div class="side-menu" *ngIf="menu">
-  <div class="wrap-icons">
-    <ng-container *ngFor="let item of menu.menuItems; index as i">
-      <div
-      *ngIf="!item.disabled"
-        class="navigate-icon"
-        [ngClass]="{
-          'navigate-icon': true,
-          selected: selected === i,
-          'payment-history': item.route === ROUTE_PATH.TicketsNew.PaymentHistory
-        }"
-        [matTooltip]="item.displayName"
-        [matTooltipClass]="['custom-tooltip', 'side-menu-tooltip']"
-
-        (click)="selected = i"
-        (mouseenter)="hovered = i"
-        (mouseleave)="hovered = null"
-      >
-        <!-- <app-svg-icon
-          *ngIf="item.icon"
-          [src]="item.icon"
-          [selected]="selected === i || hovered === i"
-          [strokeColor]="item.color"
-        ></app-svg-icon> -->
-      </div>
-    </ng-container>
+@if (menu) {
+  <div class="side-menu">
+    <div class="wrap-icons">
+      @for (item of menu.menuItems; track item.route; let i = $index) {
+        @if (!item.disabled) {
+          <div
+            class="navigate-icon"
+            [ngClass]="{
+              'navigate-icon': true,
+              selected: selected === i,
+              'payment-history': item.route === ROUTE_PATH.TicketsNew.PaymentHistory
+            }"
+            [matTooltip]="item.displayName"
+            [matTooltipClass]="['custom-tooltip', 'side-menu-tooltip']"
+            (click)="onItemClick(i)"
+            (mouseenter)="onItemMouseEnter(i)"
+            (mouseleave)="onItemMouseLeave()"
+          >
+            <!-- <app-svg-icon
+              *ngIf="item.icon"
+              [src]="item.icon"
+              [selected]="selected === i || hovered === i"
+              [strokeColor]="item.color"
+            ></app-svg-icon> -->
+          </div>
+        }
+      }
+    </div>
   </div>
-</div>
+}

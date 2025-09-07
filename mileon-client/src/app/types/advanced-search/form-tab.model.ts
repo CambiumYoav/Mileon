@@ -1,50 +1,50 @@
-// import { display } from 'ngx-bootstrap-icons';
+// Modern TypeScript interfaces with better type safety
 export interface AdvancedForm {
-  tabs: Tab[];
+  readonly tabs: readonly Tab[];
 }
 
 export interface Tab {
-  name: string;
-  displayName: string;
-  rows: TabRow[];
+  readonly name: string;
+  readonly displayName: string;
+  readonly rows: readonly TabRow[];
 }
 
 export interface TabRow {
-  name?: string;
-  group: Field[];
+  readonly name?: string;
+  readonly group: readonly Field[];
 }
 
 export interface Field {
-  name: string;
-  displayName: string;
-  type: FieldType;
-  length: FieldLength;
-  size?: FieldSize;
-  dataFunction?: DataFunction;
-  connectedField?: string;
-  multipleSelect?: boolean; // only for type select
-  options?: IdValue[];
-  validationPattern?: string;
-  bindLabelKeys?: string[];
-  disabled?: boolean;
-  isRequired?: boolean;
+  readonly name: string;
+  readonly displayName: string;
+  readonly type: FieldType;
+  readonly length: FieldLength;
+  readonly size?: FieldSize;
+  readonly dataFunction?: DataFunction;
+  readonly connectedField?: string;
+  readonly multipleSelect?: boolean; // only for type select
+  readonly options?: readonly IdValue[];
+  readonly validationPattern?: string;
+  readonly bindLabelKeys?: readonly string[];
+  readonly disabled?: boolean;
+  readonly isRequired?: boolean;
 }
 
 export interface IdValue {
-  id: number;
-  value: string;
+  readonly id: number;
+  readonly value: string;
 }
 
 export interface DataFunction {
-  name: string;
-  extraParams?: ExtraParam[];
-  objName?: string;
-  function?: () => any[];
+  readonly name: string;
+  readonly extraParams?: readonly ExtraParam[];
+  readonly objName?: string;
+  readonly function?: () => readonly any[];
 }
 
 export interface ExtraParam {
-  connectedField: string;
-  paramName: string;
+  readonly connectedField: string;
+  readonly paramName: string;
 }
 
 type FieldType = `${FieldTypeEnum}`; // turn enum values into type

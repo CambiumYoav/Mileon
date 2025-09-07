@@ -2,42 +2,42 @@
 
 <ng-template #content let-modal>
   <div class="app-modal modal-header">
-    <h4 class="app-modal modal-title" id="modal-basic-title">{{ title }}</h4>
+    <h4 class="app-modal modal-title" id="modal-basic-title">{{ title() }}</h4>
     <img
-      *ngIf="!hideExitIcon"
+      *ngIf="!hideExitIcon()"
       class="exit-icon"
-      [src]="Icons.EXIT"
+      [src]="icons().EXIT"
       (click)="modal.dismiss('Cross click')"
     />
   </div>
   <div class="app-modal modal-message-container">
-    <p class="app-modal modal-message" *ngIf="message">{{ message }}</p> 
+    <p class="app-modal modal-message" *ngIf="message()">{{ message() }}</p> 
   </div>
   <div class="app-modal modal-body">
     <ng-content class="content-scroll"></ng-content>
   </div>
   <div
     class="app-modal modal-footer"
-    [ngClass]="{ 'no-amount-data': !amountData }"
+    [ngClass]="{ 'no-amount-data': !amountData() }"
   >
      
-    <div *ngIf="amountData" class="amount-data-label">
+    <div *ngIf="amountData()" class="amount-data-label">
       <div class="data-item">
         <span class="data-label">סה"כ לתשלום: </span>
         <span class="data-value sum-payment-balance">{{
-          amountData?.sumPaymentBalance || 0
+          amountData()?.sumPaymentBalance || 0
         }}</span>
       </div>
       <div class="data-item">
         <span class="data-label">סה"כ פריטים שנבחרו: </span>
         <span class="data-value num-of-items">{{
-          amountData?.numOfItems || 0
+          amountData()?.numOfItems || 0
         }}</span>
       </div>
     </div>
     <div class="button-container">
       <app-button
-        *ngFor="let button of buttons"
+        *ngFor="let button of buttons()"
         [buttonText]="button.label"
         (clickFunction)="buttonClicked(button)"
         [buttonClass]="button.buttonClass || 'primary-btn'"

@@ -9,8 +9,14 @@ import {
   forwardRef,
   Input,
   OnInit,
+  OnDestroy,
   Output,
   Renderer2,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+  inject,
+  effect,
 } from '@angular/core';
 import { BaseFormComponent } from '../base-form/base-form.component';
 import { MyRef } from '../../../types/myRef';
@@ -37,6 +43,7 @@ import { FieldSize } from '../../../types/advanced-search/form-tab.model';
   templateUrl: './advanced-search.component.html',
   styleUrls: ['./advanced-search.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SelectComponent, InputTextComponent, InputCheckboxComponent, InputDateComponent, DateTimeComponent, InputPhoneComponent, MatTabsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatDatepickerModule, MatIconModule, MatButtonModule, CommonModule, ReactiveFormsModule],
   providers: [
     {
@@ -48,41 +55,97 @@ import { FieldSize } from '../../../types/advanced-search/form-tab.model';
 })
 export class AdvancedSearchComponent
   extends BaseFormComponent
-  implements OnInit
+  implements OnInit, OnDestroy
 {
-  @Input() form: FormGroup | null = null;
+  // Angular 19 signals for reactive state management
+  private readonly _form = signal<FormGroup | null>(null);
+  private readonly _advancedForm = signal<AdvancedForm | null>(null);
+  private readonly _isSearching = signal(false);
+  private readonly _hasAnyFilledFieldsSignal = signal(false);
+  private readonly _renderTabs = signal<boolean>(false);
 
-  @Input() advancedForm: AdvancedForm | null = null;
+  // Getters for template access
+  get form(): FormGroup | null {
+    return this._form();
+  }
 
-  FieldTypeEnum = FieldTypeEnum;
-  InputSizeEnum = InputSizeEnum;
+  get advancedForm(): AdvancedForm | null {
+    return this._advancedForm();
+  }
 
+  get renderTabs(): boolean {
+    return this._renderTabs();
+  }
+
+  // Computed signals for derived values
+  readonly isSearching = this._isSearching.asReadonly();
+  readonly hasAnyFilledFieldsSignal = this._hasAnyFilledFieldsSignal.asReadonly();
+
+  // Constants
+  readonly FieldTypeEnum = FieldTypeEnum;
+  readonly InputSizeEnum = InputSizeEnum;
+
+  // Outputs
   @Output() onSearch: EventEmitter<void> = new EventEmitter();
 
+  // Inputs with setters
+  @Input() set form(value: FormGroup | null) {
+    this._form.set(value);
+    if (value) {
+      this.setupFormReactivity();
+    }
+  }
+
+  @Input() set advancedForm(value: AdvancedForm | null) {
+    this._advancedForm.set(value);
+    this._renderTabs.set(!!value);
+  }
+
   @Input() searchButtonClicked: MyRef<boolean> = { current: false };
-  renderTabs!: boolean;
 
   constructor() {
     super();
+    
+    // Use effect to reactively update hasAnyFilledFields when form changes
+    effect(() => {
+      const form = this._form();
+      if (form) {
+        this.updateHasAnyFilledFieldsSignal();
+      }
+    });
   }
 
   ngOnInit(): void {
     // Ensure required inputs are provided
-    if (!this.advancedForm) {
+    if (!this._advancedForm()) {
       console.warn('AdvancedSearchComponent: advancedForm input is required but not provided');
     }
-    if (!this.form) {
+    if (!this._form()) {
       console.warn('AdvancedSearchComponent: form input is required but not provided');
     }
+
+    // Signals handle reactivity automatically, no manual subscription needed
+  }
+
+  private setupFormReactivity(): void {
+    // This method can be used for any form-specific setup if needed
+    // The effect in constructor handles the reactive updates
   }
 
   search() {
-    if (!this.form) {
+    const form = this._form();
+    if (!form) {
       console.warn('Cannot search: form is not initialized');
       return;
     }
+    this._isSearching.set(true);
     this.searchButtonClicked.current = true;
     this.onSearch.emit();
+    
+    // Reset searching state after a short delay
+    setTimeout(() => {
+      this._isSearching.set(false);
+    }, 1000);
   }
 
   waitForFilterResponse(value: string) {
@@ -91,9 +154,11 @@ export class AdvancedSearchComponent
 
   getSum(tabName: string) {
     // NOTE 🤢 ugly due to lack of dev time - needs refactor
-    if (this.form && this.advancedForm) {
-
-      const formGroup = this.form.controls[tabName] as FormGroup;
+    const form = this._form();
+    const advancedForm = this._advancedForm();
+    
+    if (form && advancedForm) {
+      const formGroup = form.controls[tabName] as FormGroup;
       if (!formGroup) {
         return '';
       }
@@ -114,14 +179,17 @@ export class AdvancedSearchComponent
   }
 
   hasAnyFilledFields(): boolean {
-    if (!this.form || !this.advancedForm) {
+    const form = this._form();
+    const advancedForm = this._advancedForm();
+    
+    if (!form || !advancedForm) {
       return false;
     }
 
-    const tabs = this.advancedForm.tabs || [];
+    const tabs = advancedForm.tabs || [];
     return tabs.some((tab) => {
       const tabName = tab.name || '';
-      const formGroup = this.form?.controls[tabName] as FormGroup;
+      const formGroup = form?.controls[tabName] as FormGroup;
       if (!formGroup) {
         return false;
       }
@@ -137,6 +205,14 @@ export class AdvancedSearchComponent
     });
   }
 
+  /**
+   * Update the signal for hasAnyFilledFields - call this when form changes
+   */
+  updateHasAnyFilledFieldsSignal(): void {
+    const hasFilled = this.hasAnyFilledFields();
+    this._hasAnyFilledFieldsSignal.set(hasFilled);
+  }
+
   // resetForm(tabName?: string) {
   //   // NOTE 🤢 ugly due to lack of dev time - needs refactor
   //   if (tabName) {
@@ -146,23 +222,29 @@ export class AdvancedSearchComponent
   //   }
   // }
   resetForm(tabName?: string) {
+    const form = this._form();
+    if (!form) return;
+
     // get values if they exist
-    const currentOrder = this.form?.get('order')?.value ?? 0;
-    const currentPage = this.form?.get('currentPage')?.value ?? 1;
+    const currentOrder = form.get('order')?.value ?? 0;
+    const currentPage = form.get('currentPage')?.value ?? 1;
 
     if (tabName) {
-      this.form?.controls[tabName].reset();
+      form.controls[tabName].reset();
     } else {
-      this.form?.reset();
+      form.reset();
 
       // Restore preserved values if controls exist
-      if (this.form?.get('order')) {
-        this.form?.get('order')?.setValue(currentOrder);
+      if (form.get('order')) {
+        form.get('order')?.setValue(currentOrder);
       }
-      if (this.form?.get('currentPage')) {
-        this.form?.get('currentPage')?.setValue(currentPage);
+      if (form.get('currentPage')) {
+        form.get('currentPage')?.setValue(currentPage);
       }
     }
+
+    // Update the signal after form reset
+    this.updateHasAnyFilledFieldsSignal();
   }
 
   getInputSize(fieldSize: FieldSize | undefined): InputSizeEnum {
@@ -180,5 +262,38 @@ export class AdvancedSearchComponent
       default:
         return InputSizeEnum.Base;
     }
+  }
+
+  /**
+   * TrackBy function for tab rows - creates unique identifier combining multiple properties
+   */
+  trackByRow(index: number, row: any): any {
+    // Always include index to ensure uniqueness, even if other properties are the same
+    const rowName = row.name || '';
+    const groupLength = row.group?.length || 0;
+    return `row_${index}_${rowName}_${groupLength}`;
+  }
+
+  /**
+   * TrackBy function for fields - creates unique identifier combining multiple properties
+   */
+  trackByField(index: number, field: any): any {
+    // Always include index to ensure uniqueness, even if other properties are the same
+    const fieldName = field.name || '';
+    const fieldType = field.type || '';
+    const fieldLength = field.length || '';
+    return `field_${index}_${fieldName}_${fieldType}_${fieldLength}`;
+  }
+
+  /**
+   * Helper method to convert readonly array to mutable array for template binding
+   */
+  getBindLabelKeys(bindLabelKeys: readonly string[] | undefined): string[] | undefined {
+    return bindLabelKeys ? [...bindLabelKeys] : undefined;
+  }
+
+  override ngOnDestroy(): void {
+    // BaseFormComponent handles the cleanup via componentDestroyed$
+    super.ngOnDestroy();
   }
 }

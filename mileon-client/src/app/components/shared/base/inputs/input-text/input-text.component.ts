@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, forwardRef, Injector, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component'; 
 import { ConstPath } from '../../../../../constants/const_path';
@@ -10,6 +10,8 @@ import { SharedImports } from '../../../../../shared/shared-modules';
   templateUrl: './input-text.component.html',
   styleUrls: ['./input-text.component.scss'],
   imports: [SharedImports],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -22,49 +24,98 @@ export class InputTextComponent
   extends FormControlValueAccessorConnector
   implements OnInit, OnChanges, ControlValueAccessor
 {
-  inputSize: any;
-  private _disabled: boolean = false;
-  
-  constructor(injector: Injector) {
-    super(injector);
+  // Angular 19 signals for reactive state management
+  private readonly _disabled = signal<boolean>(false);
+  private readonly _size = signal<InputSizeEnum>(InputSizeEnum.Base);
+  private readonly _className = signal<string>('');
+  private readonly _icon = signal<string | undefined>(undefined);
+  private readonly _isValid = signal<boolean | undefined>(true);
+  private readonly _errorMessage = signal<string>('');
+  private readonly _isTooltip = signal<boolean>(false);
+  private readonly _isRequired = signal<boolean | undefined>(false);
+
+  // Computed signal for size class
+  readonly sizeClass = computed(() => `input-text-${this._size()}`);
+
+  // Constants
+  readonly InputSizeEnum = InputSizeEnum;
+  readonly Icons = ConstPath;
+
+  constructor() {
+    super(inject(Injector));
   }
   
-  InputSizeEnum = InputSizeEnum;
-  Icons = ConstPath;
+  @Input()
+  set size(value: InputSizeEnum) {
+    this._size.set(value);
+  }
   
   @Input()
-  size: InputSizeEnum = InputSizeEnum.Base;
+  set className(value: string) {
+    this._className.set(value);
+  }
+
+  @Input()
+  set icon(value: string | undefined) {
+    this._icon.set(value);
+  }
+
+  @Input()
+  set isValid(value: boolean | undefined) {
+    this._isValid.set(value);
+  }
+
+  @Input()
+  set errorMessage(value: string) {
+    this._errorMessage.set(value);
+  }
+
+  @Input()
+  set isTooltip(value: boolean) {
+    this._isTooltip.set(value);
+  }
   
   @Input()
-  className: string = '';
-
-  @Input()
-  icon?: string;
-
-  @Input()
-  isValid: boolean | undefined = true;
-
-  @Input()
-  errorMessage: string = '';
-
-  @Input()
-  isTooltip: boolean = false;
-  
-  @Input()
-  isRequired: boolean | undefined = false;
+  set isRequired(value: boolean | undefined) {
+    this._isRequired.set(value);
+  }
   
   @Input()
   set disabled(value: boolean) {
-    this._disabled = value;
+    this._disabled.set(value);
     this.updateDisabledState();
   }
-  
+
   get disabled(): boolean {
-    return this._disabled;
+    return this._disabled();
   }
 
-  get sizeClass(): string {
-    return `input-text-${this.size}`;
+  get size(): InputSizeEnum {
+    return this._size();
+  }
+
+  get className(): string {
+    return this._className();
+  }
+
+  get icon(): string | undefined {
+    return this._icon();
+  }
+
+  get isValid(): boolean | undefined {
+    return this._isValid();
+  }
+
+  get errorMessage(): string {
+    return this._errorMessage();
+  }
+
+  get isTooltip(): boolean {
+    return this._isTooltip();
+  }
+
+  get isRequired(): boolean | undefined {
+    return this._isRequired();
   }
 
   getTooltipContent(): string {
@@ -96,7 +147,7 @@ export class InputTextComponent
 
   private updateDisabledState(): void {
     if (this.formControl) {
-      if (this._disabled) {
+      if (this.disabled) {
         this.formControl.disable();
       } else {
         this.formControl.enable();

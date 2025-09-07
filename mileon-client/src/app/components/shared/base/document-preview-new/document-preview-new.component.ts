@@ -7,6 +7,10 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+  inject,
 } from '@angular/core';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { ConstPath } from '../../../../constants/const_path';
@@ -21,6 +25,8 @@ import { SharedImports } from '../../../../shared/shared-modules';
   templateUrl: './document-preview-new.component.html',
   styleUrls: ['./document-preview-new.component.scss'],
   imports: [SharedImports],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class DocumentPreviewNewComponent implements OnInit, OnChanges {
   @Input()
@@ -34,21 +40,36 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
 
   @Output() deleteEvent = new EventEmitter<number>();
 
-  baseImagePath!: string;
-  safeUrl!: SafeUrl;
-  finalFileUrl!: string;
+  // Angular 19 signals for reactive state management
+  private readonly _baseImagePath = signal<string>('');
+  private readonly _safeUrl = signal<SafeUrl | null>(null);
+  private readonly _finalFileUrl = signal<string>('');
 
-  attachCircleIcon!: string;
-  closeCircleIcon!: string;
-  documentTextIcon!: string;
-  exportIcon!: string;
-  errorUploadIcon!: string;
+  // Computed signals for reactive properties
+  readonly baseImagePath = this._baseImagePath.asReadonly();
+  readonly safeUrl = this._safeUrl.asReadonly();
+  readonly finalFileUrl = this._finalFileUrl.asReadonly();
+
+  // Icon signals
+  private readonly _attachCircleIcon = signal<string>('');
+  private readonly _closeCircleIcon = signal<string>('');
+  private readonly _documentTextIcon = signal<string>('');
+  private readonly _exportIcon = signal<string>('');
+  private readonly _errorUploadIcon = signal<string>('');
+
+  // Computed icon signals
+  readonly attachCircleIcon = this._attachCircleIcon.asReadonly();
+  readonly closeCircleIcon = this._closeCircleIcon.asReadonly();
+  readonly documentTextIcon = this._documentTextIcon.asReadonly();
+  readonly exportIcon = this._exportIcon.asReadonly();
+  readonly errorUploadIcon = this._errorUploadIcon.asReadonly();
+
+  // Injected services using Angular 19 inject() function
+  private readonly sanitizer = inject(DomSanitizer);
+  private readonly baseService = inject(BaseService);
+  private readonly http = inject(HttpClient);
   
-  constructor(
-    private sanitizer: DomSanitizer,
-    private baseService: BaseService,
-    private http: HttpClient
-  ) {
+  constructor() {
     this.initializeFileUrl();
   }
 
@@ -58,31 +79,31 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
 
   onDeleteIconClicked() {
     if (this.previewFile?.fileID) {
-      this.deleteEvent.emit(this.previewFile.fileID); // emit the fileId
+      this.deleteEvent.emit(this.previewFile.fileID);
     }
   }
 
   private initializeFileUrl() {
     if (!this.isFullPath) {
-      this.baseImagePath = this.baseService?.mediaUrl;
-      const pathUrl = this.previewFile?.path?.replace('media/', '');
-      this.finalFileUrl = `${this.baseImagePath}${pathUrl}`;
-      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-        this.finalFileUrl
-      );
+      const basePath = this.baseService?.mediaUrl || '';
+      this._baseImagePath.set(basePath);
+      const pathUrl = this.previewFile?.path?.replace('media/', '') || '';
+      const finalUrl = `${basePath}${pathUrl}`;
+      this._finalFileUrl.set(finalUrl);
+      this._safeUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(finalUrl));
     } else {
-      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      this._safeUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(
         this.previewFile?.path ?? ''
-      );
+      ));
     }
   }
 
   initIcons() {
-    this.attachCircleIcon = ConstPath.ATTACH_CIRCLE;
-    this.closeCircleIcon = ConstPath.CLOSE_CIRCLE;
-    this.documentTextIcon = ConstPath.DOCUMENT_TEXT_ICON;
-    this.exportIcon = ConstPath.EXPORT_DOCUMENT;
-    this.errorUploadIcon = ConstPath.ERROR_UPLOAD;
+    this._attachCircleIcon.set(ConstPath.ATTACH_CIRCLE);
+    this._closeCircleIcon.set(ConstPath.CLOSE_CIRCLE);
+    this._documentTextIcon.set(ConstPath.DOCUMENT_TEXT_ICON);
+    this._exportIcon.set(ConstPath.EXPORT_DOCUMENT);
+    this._errorUploadIcon.set(ConstPath.ERROR_UPLOAD);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -94,7 +115,7 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
   onDownloadFileClicked() {
     if (!this.isFullPath) {
       this.http
-        .get(this.finalFileUrl, { responseType: 'blob' as 'json' })
+        .get(this.finalFileUrl(), { responseType: 'blob' as 'json' })
         .subscribe((res: any) => {
           saveAs(res, this.previewFile?.fileTypeTitle ?? '');
         });

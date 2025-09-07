@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, forwardRef } from '@angular/core';
+import { Component, Injector, Input, OnInit, forwardRef, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component';
 import { Comment } from '../../../../../types/comment';
@@ -12,6 +12,7 @@ import { SharedImports } from '../../../../../shared/shared-modules';
   templateUrl: './textarea-comments.component.html',
   styleUrls: ['./textarea-comments.component.scss'],
   imports: [SharedImports],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -25,39 +26,74 @@ export class TextareaCommentsComponent
   extends FormControlValueAccessorConnector
   implements OnInit, ControlValueAccessor {
 
-  @Input() newComment!: Comment;
-  @Input() actionModule!: ActionModuleEnum;
-  reservedComments: ReservedComment[] = [];
+  // Angular 19 signals for reactive state management
+  private readonly _newComment = signal<Comment | null>(null);
+  private readonly _actionModule = signal<ActionModuleEnum | null>(null);
+  private readonly _reservedComments = signal<ReservedComment[]>([]);
 
-
-  constructor(injector: Injector,  private lookupNewService: LookupNewService) {
-    super(injector);
+  // Getters for template access
+  get newComment(): Comment | null {
+    return this._newComment();
   }
 
-  ngOnInit(): void {
-    if(this.actionModule) {
+  get actionModule(): ActionModuleEnum | null {
+    return this._actionModule();
+  }
+
+  get reservedComments(): ReservedComment[] {
+    return this._reservedComments();
+  }
+
+  // Injected services using Angular 19 inject() function
+  private readonly lookupNewService = inject(LookupNewService);
+
+  // Inputs with setters
+  @Input() set newComment(value: Comment) {
+    this._newComment.set(value);
+  }
+
+  @Input() set actionModule(value: ActionModuleEnum) {
+    this._actionModule.set(value);
+    if (value) {
       this.getReserves();
     }
   }
 
-
-  isChosen(commentID: number) {
-    return this.newComment.reservedCommentsIDs.includes(commentID);
+  constructor() {
+    super(inject(Injector));
   }
 
-  addOrRemoveComment(commentID: number) {
-    if(this.isChosen(commentID)) {
-       this.newComment.reservedCommentsIDs = this.newComment.reservedCommentsIDs.filter(id => id != commentID);
-    }else {
-      this.newComment.reservedCommentsIDs.push(commentID);
+  ngOnInit(): void {
+    const actionModule = this._actionModule();
+    if (actionModule) {
+      this.getReserves();
     }
   }
 
-  getReserves() {
-    this.lookupNewService.getReservedActions(this.actionModule).subscribe({
+  isChosen(commentID: number): boolean {
+    const newComment = this._newComment();
+    return newComment ? newComment.reservedCommentsIDs.includes(commentID) : false;
+  }
+
+  addOrRemoveComment(commentID: number): void {
+    const newComment = this._newComment();
+    if (!newComment) return;
+
+    if (this.isChosen(commentID)) {
+      newComment.reservedCommentsIDs = newComment.reservedCommentsIDs.filter(id => id !== commentID);
+    } else {
+      newComment.reservedCommentsIDs.push(commentID);
+    }
+  }
+
+  private getReserves(): void {
+    const actionModule = this._actionModule();
+    if (!actionModule) return;
+
+    this.lookupNewService.getReservedActions(actionModule).subscribe({
       next: (res) => {
-        this.reservedComments.push(...res);
+        this._reservedComments.set(res);
       }
-    })
+    });
   }
 }

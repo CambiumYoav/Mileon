@@ -18,90 +18,99 @@
           alt=""
         />
       </div>
-      <mat-nav-list *ngIf="menu">
-        <ng-container *ngFor="let item of menu.menuItems">
-          <mat-list-item
-            class="parent cursor-pointer"
-            [ngClass]="{ disabled: !item.active }"
-            *ngIf="item.showItem"
-            (click)="
-              !item.menuItems?.length
-                ? goTo(item.route, item.state || {}, item.queryParams)
-                : (item.expanded = !item.expanded)
-            "
-          >
-            <div class="d-flex w-100 menu-item" [ngClass]="{ 'expanded-item': item.expanded }">
-              <div *ngIf="item.icon" class="d-flex ps-3 w-15">
-                <img
-                  class="icon"
-                  [src]="'../assets/icons/main-page/' + item.icon"
-                  [alt]="item.displayName"
-                />
-              </div>
-
-              <div
-                class="d-flex align-items-center justify-content-between w-85"
-              >
-                <span
-                  class="full-width menu-item-title"
-                  *ngIf="isExpanded"
-                  [ngClass]="{ bold: item.expanded }"
-                >
-                  {{ item.displayName }} {{ item.subDisplayName }}
-                </span>
-                <div
-                  class="menu-button"
-                  (click)="
-                    item.expanded = !item.expanded; $event.stopPropagation()
-                  "
-                  [ngClass]="{ rotated: item.expanded }"
-                  *ngIf="item.menuItems?.length && isExpanded"
-                >
-                  <img
-                    class="icon"
-                    id="arrow-bottom"
-                    src="../../../../../../assets/icons/arrow-bottom.svg"
-                    alt="arrow-bottom"
-                  />
-                </div>
-              </div>
-            </div>
-          </mat-list-item>
-
-          <div
-            class="submenu"
-            [ngClass]="{ expanded: item.expanded }"
-            *ngIf="item.menuItems?.length"
-          >
-            <ng-container *ngFor="let subItem of item.menuItems">
+      @if (menu) {
+        <mat-nav-list>
+          @for (item of menu.menuItems; track item.route) {
+            @if (item.showItem) {
               <mat-list-item
+                class="parent cursor-pointer"
+                [ngClass]="{ disabled: !item.active }"
                 (click)="
-                  goTo(subItem.route, subItem.state || {}, subItem.queryParams)
+                  !item.menuItems?.length
+                    ? goTo(item.route, item.state || {}, item.queryParams)
+                    : (item.expanded = !item.expanded)
                 "
               >
-                <div class="w-15"></div>
-                <div
-                  class="w-85 menu-item sub-menu-item-title"
-                  [ngClass]="{ bold: item.expanded }"
-                >
-                  <div>
-                    {{ subItem.displayName }}
+                <div class="d-flex w-100 menu-item" [ngClass]="{ 'expanded-item': item.expanded }">
+                  @if (item.icon) {
+                    <div class="d-flex ps-3 w-15">
+                      <img
+                        class="icon"
+                        [src]="'../assets/icons/main-page/' + item.icon"
+                        [alt]="item.displayName"
+                      />
+                    </div>
+                  }
+
+                  <div
+                    class="d-flex align-items-center justify-content-between w-85"
+                  >
+                    @if (isExpanded) {
+                      <span
+                        class="full-width menu-item-title"
+                        [ngClass]="{ bold: item.expanded }"
+                      >
+                        {{ item.displayName }} {{ item.subDisplayName }}
+                      </span>
+                    }
+                    @if (item.menuItems?.length && isExpanded) {
+                      <div
+                        class="menu-button"
+                        (click)="
+                          item.expanded = !item.expanded; $event.stopPropagation()
+                        "
+                        [ngClass]="{ rotated: item.expanded }"
+                      >
+                        <img
+                          class="icon"
+                          id="arrow-bottom"
+                          src="../../../../../../assets/icons/arrow-bottom.svg"
+                          alt="arrow-bottom"
+                        />
+                      </div>
+                    }
                   </div>
                 </div>
               </mat-list-item>
+            }
+
+            @if (item.menuItems?.length) {
               <div
                 class="submenu"
-                [ngClass]="{ expanded: subItem.expanded }"
-                *ngIf="subItem.menuItems?.length && isExpanded"
+                [ngClass]="{ expanded: item.expanded }"
               >
-                <ng-container *ngFor="let subSubItem of subItem.menuItems">
-                  <mat-list-item>{{ subSubItem.displayName }}</mat-list-item>
-                </ng-container>
+                @for (subItem of item.menuItems; track subItem.route) {
+                  <mat-list-item
+                    (click)="
+                      goTo(subItem.route, subItem.state || {}, subItem.queryParams)
+                    "
+                  >
+                    <div class="w-15"></div>
+                    <div
+                      class="w-85 menu-item sub-menu-item-title"
+                      [ngClass]="{ bold: item.expanded }"
+                    >
+                      <div>
+                        {{ subItem.displayName }}
+                      </div>
+                    </div>
+                  </mat-list-item>
+                  @if (subItem.menuItems?.length && isExpanded) {
+                    <div
+                      class="submenu"
+                      [ngClass]="{ expanded: subItem.expanded }"
+                    >
+                      @for (subSubItem of subItem.menuItems; track subSubItem.route) {
+                        <mat-list-item>{{ subSubItem.displayName }}</mat-list-item>
+                      }
+                    </div>
+                  }
+                }
               </div>
-            </ng-container>
-          </div>
-        </ng-container>
-      </mat-nav-list>
+            }
+          }
+        </mat-nav-list>
+      }
     </mat-sidenav>
 
     <div class="example-sidenav-content">

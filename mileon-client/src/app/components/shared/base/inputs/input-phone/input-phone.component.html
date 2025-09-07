@@ -1,6 +1,8 @@
 <div [class.disabled]="disabled">
   <div class="inline-header">
-    <img *ngIf="isRequired" class="exit-icon" [src]="Icons.ASTERISK_RED" />
+    @if (isRequired) {
+      <img class="exit-icon" [src]="Icons.ASTERISK_RED" />
+    }
     <div class="title-placeholder">{{ title }}</div>
   </div>
   <div class="phone-group" [ngClass]="!isValid ? 'invalidInput' : ''">
@@ -16,5 +18,7 @@
       />
     </div>
   </div>
-  <span *ngIf="!isValid" class="error">{{ errorMessage }}</span>
+  @if (!isValid) {
+    <span class="error">{{ errorMessage }}</span>
+  }
 </div>

@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, forwardRef } from '@angular/core';
+import { Component, Injector, Input, OnInit, forwardRef, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ConstPath } from '../../../../../constants/const_path'; 
@@ -12,7 +12,7 @@ import { HebrewDateService } from '../../../../../services/hebrew-date.service';
   templateUrl: './input-date.component.html',
   styleUrls: ['./input-date.component.scss'],
   imports: [SharedImports],
-
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -26,18 +26,34 @@ export class InputDateComponent
   extends FormControlValueAccessorConnector
   implements OnInit, ControlValueAccessor
 {
-  calendarImg = ConstPath.CELANDER;
-  @Input()
-  isValid: boolean | undefined = true;
+  // Angular 19 signals for reactive state management
+  private readonly _isValid = signal<boolean | undefined>(true);
 
-  // Set startAt to current date to ensure proper calendar rendering
-  startAt = new Date();
-
-  constructor(injector: Injector, private toastr: ToastrService) {
-    super(injector);
+  // Getters for template access
+  get isValid(): boolean | undefined {
+    return this._isValid();
   }
 
-  ngOnInit(): void {}
+  // Constants
+  readonly calendarImg = ConstPath.CELANDER;
+  // Set startAt to current date to ensure proper calendar rendering
+  readonly startAt = new Date();
+
+  // Injected services using Angular 19 inject() function
+  private readonly toastr = inject(ToastrService);
+
+  // Inputs with setters
+  @Input() set isValid(value: boolean | undefined) {
+    this._isValid.set(value);
+  }
+
+  constructor() {
+    super(inject(Injector));
+  }
+
+  ngOnInit(): void {
+    // Signals handle reactivity automatically, no manual initialization needed
+  }
 
   get isInvalid(): boolean {
     return (

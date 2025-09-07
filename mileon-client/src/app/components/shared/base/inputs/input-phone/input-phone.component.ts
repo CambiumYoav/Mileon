@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Injector, Input, OnInit, ChangeDetectionStrategy, signal, inject, effect } from '@angular/core';
 import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component';
 import {
   ControlValueAccessor,
@@ -14,6 +14,7 @@ import { SharedImports } from '../../../../../shared/shared-modules';
   templateUrl: './input-phone.component.html',
   styleUrls: ['./input-phone.component.scss'],
   imports: [SharedImports],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -26,28 +27,85 @@ export class InputPhoneComponent
   extends FormControlValueAccessorConnector
   implements OnInit, ControlValueAccessor
 {
-  Icons = ConstPath;
+  // Angular 19 signals for reactive state management
+  private readonly _placeholderCountryCode = signal<string>('050');
+  private readonly _placeholderPhoneNumber = signal<string>('0000000');
+  private readonly _isValid = signal<boolean | undefined>(true);
+  private readonly _errorMessage = signal<string>('');
+  private readonly _className = signal<string>('');
+  private readonly _isRequired = signal<boolean | undefined>(false);
+  private readonly _disabled = signal<boolean>(false);
 
-  @Input() placeholderCountryCode: string = '050';
-  @Input() placeholderPhoneNumber: string = '0000000';
-  @Input() isValid: boolean | undefined = true;
-  @Input() errorMessage: string = '';
-  @Input() className: string = '';
-  @Input() isRequired: boolean | undefined = false;
-  @Input() disabled: boolean = false;
+  // Getters for template access
+  get placeholderCountryCode(): string {
+    return this._placeholderCountryCode();
+  }
+
+  get placeholderPhoneNumber(): string {
+    return this._placeholderPhoneNumber();
+  }
+
+  get isValid(): boolean | undefined {
+    return this._isValid();
+  }
+
+  get errorMessage(): string {
+    return this._errorMessage();
+  }
+
+  get className(): string {
+    return this._className();
+  }
+
+  get isRequired(): boolean | undefined {
+    return this._isRequired();
+  }
+
+  get disabled(): boolean {
+    return this._disabled();
+  }
+
+  // Constants
+  readonly Icons = ConstPath;
 
   // Single combined control for the entire phone number
   combinedPhoneControl = new FormControl('');
 
-  constructor(injector: Injector) {
-    super(injector);
+  // Inputs with setters
+  @Input() set placeholderCountryCode(value: string) {
+    this._placeholderCountryCode.set(value);
   }
 
-  ngOnInit(): void {
-    this.checkConnectedField();
+  @Input() set placeholderPhoneNumber(value: string) {
+    this._placeholderPhoneNumber.set(value);
+  }
 
-    // Subscribe to combined phone input changes
-    this.combinedPhoneControl.valueChanges.subscribe((value) => {
+  @Input() set isValid(value: boolean | undefined) {
+    this._isValid.set(value);
+  }
+
+  @Input() set errorMessage(value: string) {
+    this._errorMessage.set(value);
+  }
+
+  @Input() set className(value: string) {
+    this._className.set(value);
+  }
+
+  @Input() set isRequired(value: boolean | undefined) {
+    this._isRequired.set(value);
+  }
+
+  @Input() set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+
+  constructor() {
+    super(inject(Injector));
+    
+    // Use effect to handle phone input changes reactively
+    effect(() => {
+      const value = this.combinedPhoneControl.value;
       if (value) {
         // Format the input to ensure proper structure
         const formattedValue = this.formatPhoneNumber(value);
@@ -59,6 +117,10 @@ export class InputPhoneComponent
         this.control.setValue('');
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.checkConnectedField();
   }
 
   private formatPhoneNumber(value: string): string {

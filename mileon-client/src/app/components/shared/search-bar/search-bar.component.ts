@@ -10,6 +10,10 @@ import {
   ElementRef,
   ViewChild,
   HostListener,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+  inject,
 } from '@angular/core';
 import { ConstPath } from '../../../constants/const_path';
 import { SearchFormService } from './search-form.service';
@@ -30,6 +34,7 @@ import { HebrewDateService } from '../../../services/hebrew-date.service';
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SharedImports, DropdownWindowComponent, AdvancedSearchComponent, ResultsDropdownComponent],
   providers: [
     SearchFormService,
@@ -40,94 +45,104 @@ export class SearchBarComponent
   extends BaseFormComponent
   implements OnInit, AfterViewInit
 {
-  InputSizeEnum = InputSizeEnum;
-  icons = ConstPath;
+  private readonly _searchTitle = signal<string>('');
+  private readonly _searchBy = signal<string>('');
+  private readonly _isSearchMode = signal<boolean>(true);
+  private readonly _advancedSearch = signal<AdvancedForm | null>(null);
+  private readonly _showPlaceholder = signal<boolean>(false);
+  private readonly _resultCountMessage = signal<string>('תוצאות חיפוש');
+  private readonly _timeForDebounce = signal<number>(750);
+  private readonly _submitOnKey = signal<boolean>(false);
+  private readonly _hasResultsDropdown = signal<boolean>(false);
+  private readonly _showDatePicker = signal<boolean>(true);
+  private readonly _total = signal<number>(0);
+  private readonly _showFilters = signal<boolean>(true);
+  private readonly _size = signal<InputSizeEnum>(InputSizeEnum.Base);
+  private readonly _disabled = signal<boolean>(false);
+  private readonly _searchTextValue = signal<string>('');
+  private readonly _resultData = signal<any[]>([]);
+  private readonly _loader = signal<boolean>(true);
+  private readonly _advancedSearchOpened = signal<boolean>(false);
+  private readonly _dropdownWindowOpened = signal<boolean>(false);
 
-  // searchForm: FormGroup = this.searchFormService.form;
+  get searchTitle(): string {
+    return this._searchTitle();
+  }
 
-  @ViewChild('searchText', { static: true }) textInput!: ElementRef;
+  get searchBy(): string {
+    return this._searchBy();
+  }
 
-  @Output() search = new EventEmitter<any>();
+  get isSearchMode(): boolean {
+    return this._isSearchMode();
+  }
 
-  @Output() executeAction = new EventEmitter<any>();
+  get advancedSearch(): AdvancedForm | null {
+    return this._advancedSearch();
+  }
 
-  @Input()
-  searchTitle!: string;  
+  get showPlaceholder(): boolean {
+    return this._showPlaceholder();
+  }
 
-  @Input()
-  searchBy!: string;
+  get resultCountMessage(): string {
+    return this._resultCountMessage();
+  }
 
-  @Input()
-  form!: FormGroup;
+  get timeForDebounce(): number {
+    return this._timeForDebounce();
+  }
 
-  @Input()
-  isSearchMode: boolean = true;
+  get submitOnKey(): boolean {
+    return this._submitOnKey();
+  }
 
-  @Input()
-  advancedSearch!: AdvancedForm;
+  get hasResultsDropdown(): boolean {
+    return this._hasResultsDropdown();
+  }
 
-  @Input()
-  showPlaceholder: boolean = false;
+  get showDatePicker(): boolean {
+    return this._showDatePicker();
+  }
 
-  @Input()
-  resultCountMessage: string = 'תוצאות חיפוש';
+  get total(): number {
+    return this._total();
+  }
 
-  @Input()
-  timeForDebounce: number = 750;
+  get showFilters(): boolean {
+    return this._showFilters();
+  }
 
-  @Input()
-  submitOnKey: boolean = false;
+  get size(): InputSizeEnum {
+    return this._size();
+  }
 
-  @Input()
-  hasResultsDropdown: boolean = false;
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
-  @Input()
-  showDatePicker: boolean = true;
-
-  @Input()
-  total: number = 0;
-
-  @Output()
-  searchButtonClicked: MyRef<boolean> = { current: false };
-
-  @Output() optionSelected = new EventEmitter<any>();
-
-  @Input() showFilters: boolean = true;
-  
-  @Input() size: InputSizeEnum = InputSizeEnum.Base;
-  
-  @Input() disabled: boolean = false;
-  
-
-  private _resultData: any[] = [];
-  picker: any;
-
-  // Set startAt to current date to ensure proper Hebrew calendar rendering
-  startAt = new Date();
-
-
-  @Input()
-  set resultData(value: any[]) {
-    // Update childProperty and perform other actions if needed
-    if (
-      value?.length &&
-      this.form.get('searchText')?.value &&
-      this.hasResultsDropdown
-    ) {
-      this.openDropdownWindow();
-      this.advancedSearchOpened = false;
-    } else {
-      this.closeDropdownWindow();
-    }
-    this._resultData = value;
+  get searchTextValue(): string {
+    return this._searchTextValue();
   }
 
   get resultData(): any[] {
-    return this._resultData;
+    return this._resultData();
   }
 
-  get sizeClass(): string {
-    switch (this.size) {
+  get loader(): boolean {
+    return this._loader();
+  }
+
+  get advancedSearchOpened(): boolean {
+    return this._advancedSearchOpened();
+  }
+
+  get dropdownWindowOpened(): boolean {
+    return this._dropdownWindowOpened();
+  }
+
+  readonly sizeClass = computed(() => {
+    switch (this._size()) {
       case InputSizeEnum.Sm:
         return 'search-bar-sm';
       case InputSizeEnum.Md:
@@ -141,10 +156,10 @@ export class SearchBarComponent
       default:
         return 'search-bar-base';
     }
-  }
+  });
 
-  get searchBarWidth(): string {
-    switch (this.size) {
+  readonly searchBarWidth = computed(() => {
+    switch (this._size()) {
       case InputSizeEnum.Sm:
         return '500px';
       case InputSizeEnum.Md:
@@ -158,17 +173,94 @@ export class SearchBarComponent
       default:
         return '100%';
     }
+  });
+
+  readonly InputSizeEnum = InputSizeEnum;
+  readonly icons = ConstPath;
+
+  @ViewChild('searchText', { static: true }) textInput!: ElementRef;
+
+  @Output() search = new EventEmitter<any>();
+  @Output() executeAction = new EventEmitter<any>();
+  @Output() optionSelected = new EventEmitter<any>();
+  @Output() resetTable = new EventEmitter<void>();
+
+  @Input()
+  set searchTitle(value: string) {
+    this._searchTitle.set(value);
   }
 
-  _searchTextValue: string = '';
+  @Input()
+  set searchBy(value: string) {
+    this._searchBy.set(value);
+  }
+
+  @Input()
+  form!: FormGroup;
+
+  @Input()
+  set isSearchMode(value: boolean) {
+    this._isSearchMode.set(value);
+  }
+
+  @Input()
+  set advancedSearch(value: AdvancedForm) {
+    this._advancedSearch.set(value);
+  }
+
+  @Input()
+  set showPlaceholder(value: boolean) {
+    this._showPlaceholder.set(value);
+  }
+
+  @Input()
+  set resultCountMessage(value: string) {
+    this._resultCountMessage.set(value);
+  }
+
+  @Input()
+  set timeForDebounce(value: number) {
+    this._timeForDebounce.set(value);
+  }
+
+  @Input()
+  set submitOnKey(value: boolean) {
+    this._submitOnKey.set(value);
+  }
+
+  @Input()
+  set hasResultsDropdown(value: boolean) {
+    this._hasResultsDropdown.set(value);
+  }
+
+  @Input()
+  set showDatePicker(value: boolean) {
+    this._showDatePicker.set(value);
+  }
+
+  @Input()
+  set total(value: number) {
+    this._total.set(value);
+  }
+
+  @Input()
+  set showFilters(value: boolean) {
+    this._showFilters.set(value);
+  }
   
-
-  get searchTextValue(): string {
-    return this._searchTextValue;
+  @Input()
+  set size(value: InputSizeEnum) {
+    this._size.set(value);
+  }
+  
+  @Input()
+  set disabled(value: boolean) {
+    this._disabled.set(value);
   }
 
-  @Input() set searchTextValue(value: string) {
-    this._searchTextValue = value;
+  @Input()
+  set searchTextValue(value: string) {
+    this._searchTextValue.set(value);
     if (value) {
       // NOTE ugly due to lack of dev time
       setTimeout(() => {
@@ -177,18 +269,35 @@ export class SearchBarComponent
     }
   }
 
-  @Output() resetTable = new EventEmitter<void>();
+  @Input()
+  set resultData(value: any[]) {
+    // Update childProperty and perform other actions if needed
+    if (
+      value?.length &&
+      this.form.get('searchText')?.value &&
+      this.hasResultsDropdown
+    ) {
+      this.openDropdownWindow();
+      this._advancedSearchOpened.set(false);
+    } else {
+      this.closeDropdownWindow();
+    }
+    this._resultData.set(value);
+  }
 
-  loader: boolean = true;
+  @Output()
+  searchButtonClicked: MyRef<boolean> = { current: false };
 
-  advancedSearchOpened: boolean = false;
+  // Other properties
+  picker: any;
+  // Set startAt to current date to ensure proper Hebrew calendar rendering
+  startAt = new Date();
 
-  dropdownWindowOpened: boolean = false;
+  // Injected services using Angular 19 inject() function
+  private readonly searchFormService = inject(SearchFormService);
+  private readonly elementRef = inject(ElementRef);
 
-  constructor(
-    private searchFormService: SearchFormService,
-    private elementRef: ElementRef
-  ) {
+  constructor() {
     super();
   }
 
@@ -234,8 +343,9 @@ export class SearchBarComponent
   }
 
   onSearch() {
-    this.loader = true;
-    this._searchTextValue = this.form.get('searchText')?.value;
+    this._loader.set(true);
+    const searchTextValue = this.form.get('searchText')?.value;
+    this._searchTextValue.set(searchTextValue);
     // for (let name of Object.keys(this.form.controls)) {
     //   const formGroup = this.form.controls[name] as FormGroup;
     //   if (this.checkIfExistsAndValid(formGroup.controls))
@@ -249,31 +359,31 @@ export class SearchBarComponent
       if (this.resultData?.length) this.openDropdownWindow();
       else this.closeDropdownWindow();
     } else {
-      this.advancedSearchOpened = false;
+      this._advancedSearchOpened.set(false);
     }
-    if (this._searchTextValue !== '') {
-      this.resultCountMessage = 'תוצאות חיפוש עבור';
+    if (searchTextValue !== '') {
+      this._resultCountMessage.set('תוצאות חיפוש עבור');
     }
-    this.loader = false;
+    this._loader.set(false);
   }
 
   // NOTE It's ugly due to lack of time - needs refactor:
 
   openAdvancedSearch() {
     this.toggleDropdownWindow();
-    this.advancedSearchOpened = this.dropdownWindowOpened;
+    this._advancedSearchOpened.set(this.dropdownWindowOpened);
   }
 
   toggleDropdownWindow() {
-    this.dropdownWindowOpened = !this.dropdownWindowOpened;
+    this._dropdownWindowOpened.set(!this.dropdownWindowOpened);
   }
 
   closeDropdownWindow() {
-    this.dropdownWindowOpened = false;
+    this._dropdownWindowOpened.set(false);
   }
 
   openDropdownWindow() {
-    this.dropdownWindowOpened = true;
+    this._dropdownWindowOpened.set(true);
   }
 
   triggerAction() {
@@ -290,7 +400,7 @@ export class SearchBarComponent
   onDatePickerToggle() {
     // Close the advanced search window if it's open when date picker is toggled
     if (this.advancedSearchOpened) {
-      this.advancedSearchOpened = false;
+      this._advancedSearchOpened.set(false);
       this.closeDropdownWindow();
     }
   }
