@@ -102,7 +102,7 @@ modalButtons: ModalButton[] = [
       let dialogData = this.dialogData;
       if (!isEdit) {
         const form = new InfrastructureForms();
-        dialogData = form.InfrastructureTypeForm;
+        dialogData = form.InfrastructureViolationProcessTypeForm;
         // dialogData = form.InfrastructureBusinessForm;
       }
       const dialogRef = this.dialog.open(dialogComponent, {
