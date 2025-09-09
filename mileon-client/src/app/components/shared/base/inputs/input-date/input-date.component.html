@@ -38,12 +38,14 @@
 <div class="input-fill" [ngClass]="!isValid ? 'invalidInput' : ''">
   <input
     (blur)="onBlur()"
+    (input)="onInput($event)"
+    (keydown)="onKeyDown($event)"
     class="hide-border-input input-text"
     [formControl]="control"
     matInput
     [matDatepicker]="picker"
     style="border: none; max-width: 115px;"
-    [placeholder]="placeholder"
+    [placeholder]="placeholder || 'dd/mm/yyyy, ddmmyy, dd.mm.yy'"
   />
   <div>
     <mat-datepicker-toggle [disableRipple]="true" matSuffix [for]="picker">

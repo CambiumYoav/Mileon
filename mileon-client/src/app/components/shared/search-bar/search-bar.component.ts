@@ -14,6 +14,8 @@ import {
   signal,
   computed,
   inject,
+  effect,
+  DestroyRef,
 } from '@angular/core';
 import { ConstPath } from '../../../constants/const_path';
 import { SearchFormService } from './search-form.service';
@@ -27,6 +29,7 @@ import { DropdownWindowComponent } from "../dropdown-window/dropdown-window.comp
 import { AdvancedSearchComponent } from "../advanced-search/advanced-search.component";
 import { ResultsDropdownComponent } from "../results-dropdown/results-dropdown.component";
 import { HebrewDateService } from '../../../services/hebrew-date.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -293,9 +296,34 @@ export class SearchBarComponent
 
   private readonly searchFormService = inject(SearchFormService);
   private readonly elementRef = inject(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
+
+  // Signals for keyboard events and form control changes
+  private readonly _keyboardEvent = signal<KeyboardEvent | null>(null);
+  private readonly _formControlValue = signal<string | null>(null);
 
   constructor() {
     super();
+    
+    // Effect to handle keyboard events
+    effect(() => {
+      const keyboardEvent = this._keyboardEvent();
+      if (keyboardEvent) {
+        if (keyboardEvent.key === Keys.SPACE || keyboardEvent.key === Keys.ENTER) {
+          if (this.submitOnKey) this.onSearch();
+          if (this.hasResultsDropdown) this.triggerAction();
+        }
+      }
+    });
+
+    // Effect to handle form control changes
+    effect(() => {
+      const formValue = this._formControlValue();
+      if (formValue !== null) {
+        if (formValue) this.onSearch();
+        else this.closeDropdownWindow();
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -307,25 +335,26 @@ export class SearchBarComponent
   }
 
   init() {
-    fromEvent<KeyboardEvent>(this.textInput.nativeElement, 'keyup').subscribe(
-      (e: KeyboardEvent) => {
-        if (e.key === Keys.SPACE || e.key === Keys.ENTER) {
-          if (this.submitOnKey) this.onSearch();
-          if (this.hasResultsDropdown) this.triggerAction();
-          return;
-        }
-      }
-    );
+    // Set up keyboard event listener using signals
+    fromEvent<KeyboardEvent>(this.textInput.nativeElement, 'keyup')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((e: KeyboardEvent) => {
+        this._keyboardEvent.set(e);
+      });
+
+    // Set up form control changes using signals
     if (this.hasResultsDropdown) {
       let searchControl = this.form.get('searchText');
-      if (searchControl)
+      if (searchControl) {
         this.formChangeWithDebounce(
           searchControl,
           this.timeForDebounce
-        ).subscribe((value) => {
-          if (value) this.onSearch();
-          else this.closeDropdownWindow();
+        )
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((value) => {
+          this._formControlValue.set(value);
         });
+      }
     }
   }
 

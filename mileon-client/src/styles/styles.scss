@@ -235,7 +235,8 @@ padding: 10px 16px;
 }
 
 
-.mat-drawer-inner-container {
+.mat-drawer-inner-container,
+.mat-drawer-content {
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
