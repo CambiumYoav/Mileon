@@ -1,0 +1,20 @@
+
+
+input[type="time"] {
+    padding: 10px 11px !important;
+    color: #000;
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    &:focus {
+        border: 1px solid var(--black, #000);
+    }
+}
+
+::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
+

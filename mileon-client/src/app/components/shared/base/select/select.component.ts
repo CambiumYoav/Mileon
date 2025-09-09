@@ -176,6 +176,16 @@ export class SelectComponent
     }
 
     this.listObj$.pipe(takeUntil(this.componentDestroyed$)).subscribe((res) => {
+      // Don't override static options if they are provided
+      if (this.options && this.options.length > 0) {
+        return;
+      }
+      
+      // Don't override static dataFunction results if they are provided
+      if (this.dataFunction && this.dataFunction.function && !this.isServerSide) {
+        return;
+      }
+      
       if (this.dataFunction && this.dataFunction.name !== undefined) {
         if (
           res[this.dataFunction.name as keyof typeof res] &&

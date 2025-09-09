@@ -31,7 +31,13 @@
     align-items: center !important;
     padding: 0 !important;
     margin: 0 !important;
+    height: 36px !important;
+    width: 36px !important;
   }
+
+
+
+
 
   .mat-calendar-body-cell-content {
     position: absolute !important;
@@ -194,8 +200,8 @@
   .mat-calendar-body-cell,
   .mat-calendar-body-cell::after,
   .mat-calendar-body-cell::before{
-    // width: 32px !important;
-    height: 32px !important;
+    // width: 36px !important;
+    height: 36px !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
@@ -203,6 +209,9 @@
     gap: 21px !important;
     direction: rtl !important;
   }
+
+
+  
 
 // Date buttons
 .mat-calendar-body-cell-content {
@@ -213,6 +222,8 @@
   font-size: 16px !important;
   font-weight: 400 !important;
   line-height: 20px !important;
+  width: 32px !important;
+  height: 32px !important;
   cursor: pointer !important;
   display: flex !important;
   justify-content: center !important;
@@ -228,10 +239,11 @@
   }
   
   &.mat-calendar-body-selected {
-    width: 75%!important;
     border-radius: 4px !important;
     background: var(--meilon-light-blue, #86D0F7) !important;
   }
+
+
   
   &.mat-calendar-body-today {
     border: 2px solid #007bff !important;
@@ -422,6 +434,8 @@ input.mat-input-element {
   z-index: 100 !important;
   padding: 0 !important;
   margin: 0 !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #B0B0B0 #E9E9E9 !important;
 }
 
 // Also target the older class for backward compatibility
@@ -481,7 +495,6 @@ input.mat-input-element {
     content: none !important;
     display: none !important;
     background: #D3F0FF !important;
-    border: none !important;
   }
 
   

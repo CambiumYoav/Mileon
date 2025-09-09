@@ -259,7 +259,7 @@
 
 
 
-<!-- <div style="margin: 20px;">
+<div style="margin: 20px;">
 
   <app-button
   [buttonText]="'הודעה'"
@@ -282,12 +282,12 @@
     style="margin: 10px;"
   ></app-button>
 
-  <app-button
+  <!-- <app-button
 [buttonText]="'בחירה'"
 (clickFunction)="openDialogExport()"
 [buttonClass]="'outline-secondary-btn button-base'"
 style="margin: 10px;"
-></app-button>
+></app-button> -->
 
   <app-button
   [buttonText]="'עריכה'"
@@ -296,12 +296,21 @@ style="margin: 10px;"
   style="margin: 10px;"
 ></app-button>
 
-<app-button
+<!-- <app-button
 [buttonText]="'כפול'"
 (clickFunction)="openDoubleDialogForm(false)"
 [buttonClass]="'outline-secondary-btn button-base'"
 style="margin: 10px;"
-></app-button>
+></app-button> -->
+
+<br>
+<br>
+
+<app-tabs-group
+[tabs]="tabs"
+[currentActive]="currentActive"
+(action)="changeTab($event)"
+></app-tabs-group>
 
 <app-modal
 [isModalOpen]="isSaveModalOpen"
@@ -326,7 +335,7 @@ style="margin: 10px;"
   ></app-confirmation-modal>
 
 
-  </div> -->
+  </div>
 
 
   <div style="margin: 20px; display: flex; gap: 20px; flex-direction: column;"> 

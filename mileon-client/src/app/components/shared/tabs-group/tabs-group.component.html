@@ -1,0 +1,21 @@
+<div class="d-flex align-items-center justify-content-between">
+  <div class="btn-group">
+    @for (tab of filteredTabs(); track tab.id || tab.text) {
+      <button
+        type="button"
+        [class]="'tab-button ' + (tab.cssClass || '')"
+        [ngClass]="tab.text === currentActive() ? 'active' : ''"
+        (click)="performAction(tab)"
+        [routerLink]="tab.url ? [tab.url] : []"
+      >
+        @if (tab.imgSrc?.length) {
+          <img [src]="tab.imgSrc" [alt]="tab.text" />
+        }
+        <span class="tab-text">{{ tab.text }}</span>
+        @if (tab.total !== undefined) {
+          <span class="total">({{ tab.total }})</span>
+        }
+      </button>
+    }
+  </div>
+</div>

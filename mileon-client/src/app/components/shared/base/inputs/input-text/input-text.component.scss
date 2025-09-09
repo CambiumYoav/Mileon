@@ -22,8 +22,8 @@
 
   &:has(input:disabled) {
     border-radius: 4px;
-    border: 1px solid var(--strok_color, #B9C6D4);
-    background: var(--light-grey, #E3E7EB);
+    border: 1px solid var(--strok_color, #606060);
+    background: #E3E7EB !important;
   }
 
   &.invalidInput {
@@ -40,10 +40,6 @@
   align-items: center;
 }
 
-.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
 
 .tooltip-icon {
   font-size: 16px;
@@ -85,7 +81,7 @@
 
 .input-text {
   display: flex;
-  height: 40.644px;
+  height: 40px;
   padding: 10px 11px;
   flex-direction: column;
   justify-content: center;
@@ -98,11 +94,45 @@
   outline: none;
   width: 100%;
 
-  &:disabled {
+  &:disabled,
+  &.disabled {
     border-radius: 4px;
     border: 1px solid #C5C6C7;
-    background: var(--light-grey, #E3E7EB);
+    background: #E3E7EB !important;
   }
+}
+
+/* Override global input[disabled] styles with higher specificity */
+.input-fill input[disabled],
+input.hide-border-input.input-text[disabled],
+.disabled input[disabled],
+.disabled .input-fill input {
+  background: #E3E7EB !important;
+  border: 1px solid #C5C6C7 !important;
+}
+
+/* Ensure disabled wrapper also gets the background */
+.disabled .input-fill {
+  background: #E3E7EB !important;
+  border: 1px solid #C5C6C7 !important;
+}
+
+/* Nuclear option - override everything for disabled state */
+div[class*="disabled"] .input-fill,
+div[class*="disabled"] input,
+input[disabled].hide-border-input,
+input[disabled].input-text,
+.hide-border-input[disabled],
+.hide-border-input.input-text[disabled] {
+  background: #E3E7EB !important;
+  background-color: #E3E7EB !important;
+}
+
+/* Override the global hide-border-input transparent background for disabled state */
+.disabled .hide-border-input,
+input.hide-border-input:disabled {
+  background: #E3E7EB !important;
+  background-color: #E3E7EB !important;
 }
 
 .title-placeholder{

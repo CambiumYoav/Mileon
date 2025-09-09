@@ -178,27 +178,70 @@ span {
   color: black !important;
   font-weight: 700;
   font-family: $fontOpenSans;
-  line-height: 38px;
   font-size: 16px;
   background-image: url("/assets/icons/tickcircle.svg") !important;
+  background-size: 34px 34px !important;
+  background-position: right 16px center !important;
+  background-repeat: no-repeat !important;
+  padding: 16px 60px 16px 40px !important;
+  position: relative !important;
+  border-radius: 8px !important;
+  min-height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 .toast-close-button {
   right: auto;
   left: 0.5rem;
+  top: 0.5rem;
+  position: absolute;
+  z-index: 10;
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .toast-error {
   font-family: $fontOpenSans;
   background-color: #ffe0e3 !important;
-  color: #f00 !important;
-  background-image: url("/assets/icons/error.svg") !important;
-  background-size: 16.393px 16.393px !important;
+  color: rgb(0, 0, 0) !important;
+  background-image: url("/assets/icons/toaster-error.svg") !important;
+  background-size: 34px 34px !important;
+  background-position: right 16px center !important;
+  background-repeat: no-repeat !important;
+  padding: 16px 60px 16px 40px !important;
+  position: relative !important;
+  border-radius: 8px !important;
+  min-height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  text-align: right !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 .toast-info,
 .toast-warning {
   color: black !important;
+  padding: 16px 60px 16px 40px !important;
+  position: relative !important;
+  border-radius: 8px !important;
+  min-height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  font-family: $fontOpenSans;
+  font-size: 16px;
 }
 
 .loader {
@@ -229,10 +272,12 @@ background: var(--white, #FFF);
 height: 40px;
 padding: 10px 16px;
 
-&:focus{
-  border-color: var(--primary_color, #387EC4);
-}
-}
+
+
+  &:focus{
+    border-color: var(--primary_color, #387EC4);
+  }
+  }
 
 
 .mat-drawer-inner-container,
