@@ -18,7 +18,7 @@ export const childRoutes: Routes = [
   {
     path: ROUTE_PATH.Terminal.Home, // 'msofon'
     loadChildren: () =>
-      import('./components/terminal/terminal-routing.module')
+      import('./components/terminal/terminal-routing')
         .then(m => m.terminalRoutes),
   },
 ];

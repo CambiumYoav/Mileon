@@ -1,0 +1,92 @@
+<div class="container-lg p-4">
+  <!-- Header Section -->
+  <div class="row pb-4 align-items-center position-relative">
+    <div class="col d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center col-5">
+        <span class="heading">{{ title() }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Cards -->
+  <div class="cards-container">
+    <app-summary-card
+      [title]="'סהכ דוחות'"
+      [value]="dashboardReports()"
+    ></app-summary-card>
+    <app-summary-card
+      [title]="'סהכ אזהרות'"
+      [value]="dashboardAlerts()"
+    ></app-summary-card>
+    <app-summary-card
+      [title]="'סכום'"
+      [value]="dashboardSum()"
+      [showCurrency]="true"
+    ></app-summary-card>
+    <app-summary-card
+      [title]="'סהכ מושהים'"
+      [value]="dashboardSuspended()"
+    ></app-summary-card>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="title-container mb-3">
+    <span class="secondery-title">{{ seconderyTitle() }}</span>
+    <div class="inspectors-form">
+      @if (inspectorForm) {
+        <form [formGroup]="inspectorForm">
+          <div class="inspectors-form">
+            @for (field of fields(); track trackByFieldName($index, field)) {
+              @if (field.isRequired !== false) {
+                <div class="wrap-field field-{{ field.length }}">
+                  @switch (field.type) {
+                    @case (FieldTypeEnum.Select) {
+                      <app-select
+                        [dataFunction]="field.dataFunction"
+                        bindLabelKey="value"
+                        bindValueKey="id"
+                        [placeholder]="field.displayName"
+                        [formControlName]="field.name"
+                        [isMultiSelect]="field.multipleSelect"
+                      ></app-select>
+                    }
+                    @case (FieldTypeEnum.SelectWithNoLookup) {
+                      <app-select
+                        [options]="field.options"
+                        bindLabelKey="value"
+                        bindValueKey="id"
+                        [placeholder]="field.displayName"
+                        [formControlName]="field.name"
+                        [isMultiSelect]="field.multipleSelect"
+                      ></app-select>
+                    }
+                  }
+                </div>
+              }
+            }
+          </div>
+        </form>
+      }
+
+      <div class="button-container">
+        <app-button
+          [buttonText]="'נקה הכל'"
+          (click)="clearForm()"
+          [buttonClass]="'link-btn btn-fill '"
+        ></app-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <app-terminal-table
+    [data]="data()"
+    [total]="total()"
+    [count]="count()"
+    (onFormChanges)="loadData($event)"
+    tableColumns="InspectorsColumns"
+    [loader]="loader()"
+    (onRowClick)="goToInspectorDetails($event)"
+    [terminalForm]="terminalForm"
+  ></app-terminal-table>
+</div>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, effect, OnDestroy } from '@angular/core';
 import { Router, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { RoleEnum } from '../types/enum/moduleEnum';
@@ -7,8 +7,14 @@ import { PermissionService } from './permission.service';
 @Injectable({
   providedIn: 'root',
 })
-export class RouterService {
+export class RouterService implements OnDestroy {
   role: RoleEnum = RoleEnum.DISPATCHER;
+  private navigationUrl = signal<string>('');
+  private isNavigating = signal<boolean>(false);
+  private debounceTimer: any = null;
+  private lastNavigationTime = 0;
+  private lastNavigatedUrl = '';
+  private readonly NAVIGATION_THROTTLE_MS = 300; // Increased throttle time
 
   get queryParams() {
     return this.router.routerState.root.queryParams;
@@ -26,10 +32,47 @@ export class RouterService {
     private router: Router,
     private location: Location,
     public permissionService: PermissionService
-  ) {}
+  ) {
+    // Set up navigation throttling using signals with improved debounce
+    effect(() => {
+      const url = this.navigationUrl();
+      const navigating = this.isNavigating();
+      
+      if (url && !navigating && url !== this.lastNavigatedUrl) {
+        const now = Date.now();
+        const timeSinceLastNavigation = now - this.lastNavigationTime;
+        
+        // If enough time has passed since last navigation, navigate immediately
+        if (timeSinceLastNavigation >= this.NAVIGATION_THROTTLE_MS) {
+          this.performNavigation(url);
+        } else {
+          // Clear existing timer
+          if (this.debounceTimer) {
+            clearTimeout(this.debounceTimer);
+          }
+          
+          // Set new debounced navigation
+          const remainingTime = this.NAVIGATION_THROTTLE_MS - timeSinceLastNavigation;
+          this.debounceTimer = setTimeout(() => {
+            this.performNavigation(url);
+          }, remainingTime);
+        }
+      }
+    });
+  }
 
   getCurrentUrl(): string {
     return this.router.routerState.snapshot.url;
+  }
+
+  private performNavigation(url: string): void {
+    this.isNavigating.set(true);
+    this.lastNavigationTime = Date.now();
+    this.lastNavigatedUrl = url;
+    
+    this.router.navigateByUrl(url).finally(() => {
+      this.isNavigating.set(false);
+    });
   }
 
   navigateTo(
@@ -38,17 +81,19 @@ export class RouterService {
     queryParams?: {}
   ): Promise<boolean> | undefined | void {
     const currentUrl = this.snapshot.url;
-    const fullUrl = currentUrl + '/' + url;
-    if (queryParams) {
-      return this.router.navigate([fullUrl, id], {
-        queryParams: queryParams,
-        // replaceUrl: true,
-      });
-    } else if (id) {
-      return this.router.navigate([fullUrl, id]);
-    } else {
-      this.router.navigate([fullUrl]);
+    let fullUrl = currentUrl + '/' + url;
+    
+    if (id) {
+      fullUrl = fullUrl + '/' + id;
     }
+    
+    if (queryParams) {
+      const queryString = new URLSearchParams(queryParams as any).toString();
+      fullUrl = fullUrl + '?' + queryString;
+    }
+    
+    this.navigationUrl.set(fullUrl);
+    return Promise.resolve(true);
   }
 
   getRole() {
@@ -56,7 +101,7 @@ export class RouterService {
   }
 
   navigateToSetUrl(url: string) {
-    this.router.navigate([`/${url}`]);
+    this.navigationUrl.set(`/${url}`);
   }
 
   navigateToUrl(
@@ -78,7 +123,9 @@ export class RouterService {
       fullUrl = fullUrl + this.buildQueryParams(queryParams);
     }
     
-    return this.router.navigateByUrl(fullUrl, { state });
+    // Use throttled navigation to prevent rapid navigation requests
+    this.navigationUrl.set(fullUrl);
+    return Promise.resolve(true);
   }
 
   back(): void {
@@ -89,7 +136,7 @@ export class RouterService {
     const role = this.getRole();
     if (role) {
       const fullPath = `/main/${role}/${pageRoute}`;
-      this.router.navigate([fullPath]);
+      this.navigationUrl.set(fullPath);
     }
   }
 
@@ -98,19 +145,25 @@ export class RouterService {
     if (role) {
       const fullPath = `/main/${role}`;
       // navigate to another Role environment
-      return this.router.navigateByUrl(fullPath, {
-        replaceUrl: true,
-        // skipLocationChange: true,
-      });
+      this.navigationUrl.set(fullPath);
+      return Promise.resolve(true);
     }
     return;
   }
   navigateToLogin(url: string, id?: string, queryParams?: {}) {
-    const navigation = id ? [url, id] : [url];
-
-    return this.router.navigate(navigation, {
-      queryParams,
-    });
+    let fullUrl = url;
+    
+    if (id) {
+      fullUrl = fullUrl + '/' + id;
+    }
+    
+    if (queryParams) {
+      const queryString = new URLSearchParams(queryParams as any).toString();
+      fullUrl = fullUrl + '?' + queryString;
+    }
+    
+    this.navigationUrl.set(fullUrl);
+    return Promise.resolve(true);
   }
 
   getCurrentState(): any {
@@ -139,5 +192,22 @@ export class RouterService {
     });
 
     return '?' + queryParams.toString();
+  }
+
+  ngOnDestroy(): void {
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+    }
+  }
+
+  // Method to reset navigation state if needed
+  resetNavigationState(): void {
+    this.isNavigating.set(false);
+    this.lastNavigationTime = 0;
+    this.lastNavigatedUrl = '';
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
   }
 }

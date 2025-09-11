@@ -24,6 +24,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
+import { SharedImports } from '../../../shared/shared-modules';  
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InputTextComponent } from '../../shared/base/inputs/input-text/input-text.component';
 import { InputDateComponent } from '../../shared/base/inputs/input-date/input-date.component';
@@ -36,6 +37,7 @@ import { TerminalErrorsMessages } from '../../../types/enum/terminalEnum';
   styleUrls: ['./terminal-ticket-books-form.component.scss'],
   standalone: true,
   imports: [
+    SharedImports,
     SelectComponent, 
     MatSelectModule,
     ReactiveFormsModule,

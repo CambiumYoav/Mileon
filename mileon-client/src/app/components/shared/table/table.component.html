@@ -1,10 +1,10 @@
 <div>
-  <!-- <app-red-line-error [errorMsg]="errorMsg"></app-red-line-error> -->
+  <app-red-line-error [errorMsg]="errorMsg"></app-red-line-error>
   <div class="table-container">
     <table class="table table-hover shadow-table">
       <thead>
         <tr>
-          @for (column of columns; track column.propertyName) {
+          @for (column of columns; track $index) {
             @if (column.type !== ColumnTypeEnum.Hidden) {
               <th
                 sortable
@@ -45,7 +45,7 @@
               (click)="onRowClick(item, $event)"
               [ngClass]="{ 'inactive-row': item.isActive === false }"
             >
-              @for (column of columns; track column.propertyName) {
+              @for (column of columns; track $index) {
                 @if (column.type !== ColumnTypeEnum.Hidden) {
                   <td
                     appTruncatedTextTooltip
@@ -83,7 +83,7 @@
                     (valueChange)="onSelectedRowIdChange(item)"
                     type="colored"
                     direction="horizontal"
-                  ></app-radio-button>
+                  ></app-radio-button> 
                 }
                 @if (column.type === ColumnTypeEnum.Text && column.hasCheckbox) {
                   <span class="d-flex align-items-center">

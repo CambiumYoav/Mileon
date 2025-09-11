@@ -59,11 +59,11 @@ export const chartsValidation = {
   ticketTypeId: [Validators.required],
 };
 export class InspectorsForm {
-  inspectorsIds: string;
+  inspectorsIds: number[];
   ticketTypes: number[];
   authorityId: string;
   constructor(data?: Partial<InspectorsForm>) {
-    this.inspectorsIds = data?.inspectorsIds ?? '';
+    this.inspectorsIds = data?.inspectorsIds ?? [];
     this.authorityId = '';
     this.ticketTypes = data?.ticketTypes ?? [0];
   }

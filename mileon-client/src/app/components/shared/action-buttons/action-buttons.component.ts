@@ -6,6 +6,8 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -33,7 +35,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './action-buttons.component.html',
   styleUrls: ['./action-buttons.component.scss'],
 })
-export class ActionButtonsComponent implements OnInit, OnChanges {
+export class ActionButtonsComponent implements OnInit, OnChanges, AfterViewInit {
   icons = ConstPath;
 
   allowedButtons: ActionAttributes[] = [];
@@ -87,7 +89,8 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
     public dialog: MatDialog,
     private _router: Router,
     private routerService: RouterService,
-    private permissionsService: PermissionService
+    private permissionsService: PermissionService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ActionButtonsEnum = ActionButtonsEnum;
@@ -98,9 +101,16 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
     // this.setPaymentBtn();
   }
 
+  ngAfterViewInit(): void {
+    // Ensure change detection runs after view initialization
+    this.cdr.detectChanges();
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['recordId'] && !changes['recordId'].firstChange) {
       this.recordId = changes['recordId'].currentValue;
+      // Trigger change detection after updating recordId
+      this.cdr.detectChanges();
     }
   }
 
@@ -308,13 +318,7 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
       };
     }
 
-    _router
-      .navigate([`main/${this.role}/payment`], {
-        state: { data },
-      })
-      .catch((error) => {
-        console.error('Navigation error:', error);
-      });
+    this.routerService.navigateToPageURL(`payment`);
   }
 
 

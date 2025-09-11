@@ -65,6 +65,7 @@
     display: block;
     padding-right: 34px;
     //   transform: scaleY(1);
+
   }
 
 
@@ -114,6 +115,14 @@
 
   .sub-menu-item-title {
     font-size: 15px;
+
+    &:hover{
+      background-color: #D3F0FF;
+    }
+
+    &.selected{
+      background-color: #D3F0FF;
+    }
   }
 
   @keyframes fadeIn {

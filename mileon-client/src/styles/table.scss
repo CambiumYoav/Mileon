@@ -169,7 +169,7 @@ thead {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.2; }
 }
-input[type='radio'].custom-colored-radio {
+::ng-deep input[type='radio'].custom-radio {
   appearance: none;
   width: 16px;
   height: 16px;
@@ -179,28 +179,29 @@ input[type='radio'].custom-colored-radio {
   cursor: pointer;
   position: relative;
 }
-input.custom-colored-radio.green-blink {
+::ng-deep  input.custom-radio.green-blink {
   background-color: #B3F1B2;
   animation: blink 1.2s infinite;
 }
 
-input.custom-colored-radio.yellow-blink {
+::ng-deep input.custom-radio.yellow-blink {
   background-color: #FFF9C6;
   animation: blink 1.2s infinite;
 }
 
-input.custom-colored-radio.orange-blink {
+::ng-deep input.custom-radio.orange-blink {
   background-color: #ff9800;
   animation: blink 1.2s infinite;
 }
 
-input.custom-colored-radio.red-blink {
+::ng-deep input.custom-radio.red-blink {
   background-color: #FFE0E3;
   animation: blink 1.2s infinite;
 }
 
-input.custom-colored-radio.gray {
+::ng-deep input.custom-radio.gray {
   background-color: #9e9e9e;
+  border: none;
 }
 
 
@@ -221,7 +222,7 @@ input.custom-colored-radio.gray {
 
 
 
-input.custom-colored-radio:checked::after {
+::ng-deep input.custom-radio:checked::after {
   content: '';
   display: block;
   width: 6px;

@@ -1,0 +1,8 @@
+
+<div class="card">
+  <div class="title">{{ title }}</div>
+  <div class="value">
+    <span *ngIf="showCurrency">₪</span>
+    <span class="amount">{{ value | number : "1.0-0" }}</span>
+  </div>
+</div>

@@ -40,6 +40,7 @@ import { RadioButtonComponent } from '../base/radio-button/radio-button.componen
 // import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
 import { IconComponent } from "../base/icon/icon.component";
 import { TruncatedTextTooltipDirective } from '../../../directives/truncated-text-tooltip.directive';
+import { RedLineErrorComponent } from "../errors/red-line-error/red-line-error.component";
 
 @Component({
   selector: 'app-table',
@@ -57,7 +58,8 @@ import { TruncatedTextTooltipDirective } from '../../../directives/truncated-tex
     RadioButtonComponent,
     IconComponent,
     TruncatedTextTooltipDirective,
-  ],
+    RedLineErrorComponent
+],
   providers: [TableService],
 })
 export class TableComponent

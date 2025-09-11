@@ -1,7 +1,7 @@
 @if (menu) {
   <div class="side-menu">
     <div class="wrap-icons">
-      @for (item of menu.menuItems; track item.route; let i = $index) {
+      @for (item of menu.menuItems; track $index; let i = $index) {
         @if (!item.disabled) {
           <div
             class="navigate-icon"
@@ -16,12 +16,12 @@
             (mouseenter)="onItemMouseEnter(i)"
             (mouseleave)="onItemMouseLeave()"
           >
-            <!-- <app-svg-icon
+            <app-svg-icon
               *ngIf="item.icon"
               [src]="item.icon"
               [selected]="selected === i || hovered === i"
               [strokeColor]="item.color"
-            ></app-svg-icon> -->
+            ></app-svg-icon>
           </div>
         }
       }

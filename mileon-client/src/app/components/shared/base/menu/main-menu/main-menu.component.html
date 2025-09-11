@@ -20,7 +20,7 @@
       </div>
       @if (menu) {
         <mat-nav-list>
-          @for (item of menu.menuItems; track item.route) {
+          @for (item of menu.menuItems; track item.id) {
             @if (item.showItem) {
               <mat-list-item
                 class="parent cursor-pointer"
@@ -79,7 +79,7 @@
                 class="submenu"
                 [ngClass]="{ expanded: item.expanded }"
               >
-                @for (subItem of item.menuItems; track subItem.route) {
+                @for (subItem of item.menuItems; track subItem.id) {
                   <mat-list-item
                     (click)="
                       goTo(subItem.route, subItem.state || {}, subItem.queryParams)
@@ -100,7 +100,7 @@
                       class="submenu"
                       [ngClass]="{ expanded: subItem.expanded }"
                     >
-                      @for (subSubItem of subItem.menuItems; track subSubItem.route) {
+                      @for (subSubItem of subItem.menuItems; track subSubItem.id) {
                         <mat-list-item>{{ subSubItem.displayName }}</mat-list-item>
                       }
                     </div>

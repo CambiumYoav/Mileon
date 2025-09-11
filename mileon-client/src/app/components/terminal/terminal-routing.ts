@@ -18,20 +18,20 @@ export const terminalRoutes: Routes = [
   },
 
   // Terminal inspectors
-  // {
-  //   path: RP.Terminal.Inspectors,
-  //   loadComponent: () =>
-  //     import('./terminal-inspectors/terminal-inspectors.component')
-  //       .then(m => m.TerminalInspectorsComponent),
-  // },
+  {
+    path: RP.Terminal.Inspectors,
+    loadComponent: () =>
+      import('./terminal-inspectors/terminal-inspectors.component')
+        .then(m => m.TerminalInspectorsComponent),
+  },
 
   // Terminal inspector daily view
-  // {
-  //   path: `${RP.Terminal.Inspectors}/:inspectorId/:inspectorName`,
-  //   loadComponent: () =>
-  //     import('./terminal-inspector-daily/terminal-inspector-daily.component')
-  //       .then(m => m.TerminalInspectorDailyComponent),
-  // },
+  {
+    path: `${RP.Terminal.Inspectors}/:inspectorId/:inspectorName`,
+    loadComponent: () =>
+      import('./terminal-inspector-daily/terminal-inspector-daily.component')
+        .then(m => m.TerminalInspectorDailyComponent),
+  },
 
   // Terminal messages
   // {

@@ -5,11 +5,12 @@ import { ROUTE_PATH } from '../../../../../constants/routerPath';
 import { PermissionService } from '../../../../../services/permission.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { SharedImports } from '../../../../../shared/shared-modules';
+import { SvgIconComponent } from "../../../svg-icon/svg-icon.component";
 @Component({
   selector: 'app-side-menu',
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.scss'],
-  imports: [SharedImports],
+  imports: [SharedImports, SvgIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideMenuComponent implements OnInit, OnDestroy { 
