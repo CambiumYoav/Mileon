@@ -80,7 +80,7 @@ export class InputTextComponent
   @Input()
   set disabled(value: boolean) {
     this._disabled.set(value);
-    this.updateDisabledState();
+    this.setDisabledState(value);
   }
 
   get disabled(): boolean {
@@ -132,22 +132,12 @@ export class InputTextComponent
         this.formControl = new FormControl('');
       }
     }
-    this.updateDisabledState();
+    this.setDisabledState(this.disabled);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['disabled']) {
-      this.updateDisabledState();
-    }
-  }
-
-  private updateDisabledState(): void {
-    if (this.formControl) {
-      if (this.disabled) {
-        this.formControl.disable();
-      } else {
-        this.formControl.enable();
-      }
+      this.setDisabledState(this.disabled);
     }
   }
 }

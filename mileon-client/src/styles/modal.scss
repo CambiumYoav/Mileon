@@ -1,0 +1,507 @@
+@import "./elements.scss";
+
+// ===========================================
+// COMMON COMPONENT STYLES
+// ===========================================
+
+// Container Styles
+%container-base {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  direction: rtl;
+}
+
+%infrastructure-container {
+  @extend %container-base;
+  height: 100%;
+  width: auto;
+  min-width: 680px;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+// Header Styles
+%inline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+
+  .title {
+    color: black;
+    font-weight: 800;
+    font-family: $fontOpenSans;
+    direction: rtl;
+    font-size: 18px;
+    line-height: 25px;
+    margin: 0;
+    font-style: normal;
+  }
+
+  .exit-icon {
+    cursor: pointer;
+  }
+}
+
+%header-large {
+  .title {
+    font-size: 24px;
+  }
+}
+
+%header-medium {
+  .title {
+    font-size: 22px;
+  }
+}
+
+%header-small {
+  .title {
+    font-size: 18px;
+  }
+}
+
+// Content Container Styles
+%content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  direction: rtl;
+  height: 80%;
+  margin-top: 15px;
+
+  .text {
+    font-family: $fontOpenSans;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: right;
+  }
+}
+
+// Button Container Styles
+%button-container {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: end;
+  gap: 20px;
+  width: 100%;
+
+  ::ng-deep app-button {
+    margin: 2px;
+    button {
+      margin: 0 !important;
+    }
+  }
+}
+
+%button-container-centered {
+  @extend %button-container;
+  align-items: center;
+}
+
+%button-container-spaced {
+  @extend %button-container;
+  margin-right: auto;
+  margin-top: 20px;
+}
+
+// Form Styles
+%form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px 0;
+
+  .form-row {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+  }
+}
+
+%form-base {
+  display: flex;
+  flex-direction: column;
+  direction: rtl;
+  justify-content: center;
+  align-items: flex-start;
+
+  label {
+    display: none;
+  }
+
+  .fromTo-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+%form-field-styles {
+  ::ng-deep mat-form-field {
+    .mat-form-field-underline {
+      display: none;
+    }
+
+    .mat-select-value {
+      text-align: right;
+      padding: 10px;
+    }
+
+    .mat-select-arrow-wrapper {
+      transform: none;
+      margin-left: 5px;
+    }
+
+    .mat-form-field-infix {
+      margin-top: -3px;
+    }
+
+    .mat-form-field-wrapper {
+      padding: 0;
+
+      .mat-form-field-flex {
+        height: 40px;
+        padding: 0;
+        background-color: #f7f9fc;
+        border-radius: 4px;
+        border: 1px solid #e3e7eb;
+      }
+    }
+  }
+}
+
+// Table Styles
+%table-container {
+  scrollbar-width: thin;
+  scrollbar-color: #B0B0B0 #E9E9E9;
+  scrollbar-arrow-color: white;
+  border: 1px solid #d8e4f1;
+  overflow-y: auto;
+  border-radius: 14px;
+  height: 395px;
+
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+}
+
+%table-base {
+  background: white;
+  border: 0px solid #d8e4f1;
+  border-radius: 4px;
+  table-layout: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  color: #d8e4f1;
+  border-spacing: 0;
+  height: 100%;
+  margin: 0;
+  color: $colorDarkBlue;
+  direction: rtl;
+  max-height: 395px;
+
+  thead {
+    background-color: $colorDarkBlue;
+    position: sticky;
+    top: 0;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+
+    span {
+      color: white !important;
+    }
+  }
+
+  tbody {
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 20px;
+    border-top: none;
+
+    tr {
+      cursor: pointer;
+      color: #606060;
+
+      &:hover {
+        background-color: $colorLightBlue;
+      }
+
+      &:last-child {
+        border-bottom-style: hidden;
+      }
+    }
+  }
+
+  td {
+    padding: 1rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 35px;
+  }
+
+  th {
+    padding: 1.5rem 0;
+    line-height: 25px;
+
+    &:hover {
+      cursor: pointer;
+
+      .sort {
+        color: black;
+      }
+    }
+
+    .title {
+      color: $colorGray;
+    }
+  }
+
+  .checkbox {
+    padding: 1rem 0.5rem;
+  }
+
+  .checkbox-td {
+    padding: 0.5rem 2.5rem 0.5rem 0.5rem !important;
+  }
+
+  .fixedwidth {
+    width: 2rem !important;
+  }
+
+  input[type="checkbox"]:before {
+    font-size: 11px;
+    width: 18px;
+    height: 18px;
+    border: 1px solid $colorDarkBlue;
+  }
+}
+
+// Text Styles
+%text-bold-modal {
+  font-size: 15px;
+  line-height: 20px;
+  font-family: $fontOpenSans;
+  font-weight: 600;
+  font-style: normal;
+}
+
+%text-modal {
+  font-size: 15px;
+  line-height: 20px;
+  font-family: $fontOpenSans;
+  font-weight: 300;
+}
+
+%text-bolder-modal {
+  font-family: $fontOpenSans;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 25px;
+  text-align: right;
+}
+
+%text-small-bold {
+  font-size: 13px;
+  line-height: 18px;
+  font-family: $fontOpenSans;
+  font-weight: 700;
+  font-style: normal;
+  margin: 0px !important;
+}
+
+// Dialog/Modal Styles
+%dialog-base {
+  padding: 20px !important;
+  height: auto !important;
+  width: fit-content !important;
+  max-width: 93vw !important;
+  min-width: 600px !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 1000 !important;
+  background-color: white !important;
+  border-radius: 4px !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  animation: dropDown 0.3s ease-out !important;
+  scrollbar-width: thin;
+  scrollbar-color: #B0B0B0 #E9E9E9;
+}
+
+// Animation Keyframes
+@keyframes dropDown {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+// Utility Classes
+%row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+%d-flex-align-center {
+  display: flex;
+  align-items: center;
+}
+
+%disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+%required-icon {
+  margin-bottom: 2px;
+}
+
+%input-error {
+  input,
+  select,
+  ::ng-deep mat-form-field .mat-form-field-flex {
+    border-color: crimson !important;
+    border: 1px solid;
+    border-radius: 4px;
+  }
+}
+
+%checkbox-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 50px;
+  padding: 20px;
+  gap: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--grey, #B9C6D4);
+  background: var(--back, #F7F9FC);
+}
+
+%file-upload-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+%mb-2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin: 0px !important;
+}
+
+// Paginator Styles
+%paginator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row-reverse;
+  position: absolute;
+  right: 50%;
+  transform: translateX(50%);
+  bottom: 0;
+  height: 3rem;
+
+  .page {
+    font-family: $fontOpenSans;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 22px;
+    padding: 5px;
+    cursor: pointer;
+
+    &.current {
+      font-weight: 700;
+    }
+  }
+
+  .angle {
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 1rem;
+  }
+}
+
+// Status Classes
+%inactive-row {
+  background-color: #e3e7eb;
+  border-bottom: 1px solid #b9c6d4;
+}
+
+%blue-text {
+  color: $colorDarkBlue;
+}
+
+// Checkbox Styles
+%checkbox-inline {
+  :host ::ng-deep app-checkbox .inline {
+    width: 200px;
+  }
+}
+
+%checkbox-inline-small {
+  :host ::ng-deep app-checkbox .inline {
+    width: 160px !important;
+  }
+}
+
+// Responsive Styles
+%responsive-table {
+  @media (max-width: 1300px) {
+    th {
+      padding: 0.5rem 0 !important;
+      font-size: 14px !important;
+    }
+
+    .paginator {
+      height: 2.5rem !important;
+    }
+  }
+}
+
+// Global Deep Styles
+%global-table-header {
+  ::ng-deep app-table thead {
+    background-color: $colorDarkBlue;
+    position: sticky;
+  }
+  
+  ::ng-deep app-table thead th .title {
+    color: white !important;
+  }
+}
+
+%global-file-upload {
+  :host ::ng-deep app-file-upload-new {
+    width: 100%;
+    .button-container {
+      background-color: $colorLightGray !important;
+    }
+  }
+}

@@ -61,7 +61,8 @@ export class MainMenuComponent implements OnInit {
     state: Object,
     queryParams?: Params[]
   ): Promise<void> {
-    this.routerService.navigateToUrl([route], true, state, queryParams);
+    const routeSections = route.split('/').filter(section => section.length > 0);
+    this.routerService.navigateToUrl(routeSections, true, state, queryParams);
     this.toggle();
   }
 

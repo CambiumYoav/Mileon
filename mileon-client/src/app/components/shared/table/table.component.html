@@ -58,15 +58,15 @@
                
                 @if (column.type === ColumnTypeEnum.Radio) {
                   <app-radio-button
-                    [options]="[
+                    [options]="column.radioConfig?.options || [
                       { value: 'כן', label: 'כן' },
                       { value: 'לא', label: 'לא' }
                     ]"
-                    [name]="'yesNoRadio-' + item.id"
+                    [name]="column.radioConfig?.name || 'radio-' + item.id"
                     [value]="item[column.propertyName]"
                     (valueChange)="onRadioChange(item, column.propertyName, $event)"
-                    type="default"
-                    direction="horizontal"
+                    [type]="column.radioConfig?.type || 'default'"
+                    [direction]="column.radioConfig?.direction || 'horizontal'"
                   ></app-radio-button>
                 }
                 @if (column.type === ColumnTypeEnum.ActiveStatus) {

@@ -390,28 +390,24 @@ input.mat-input-element {
   position: relative !important;
   z-index: 100 !important;
   
-  // Position scrollbar under the input
   &::-webkit-scrollbar {
-    width: 100% !important;
-    height: 6px !important;
-    position: absolute !important;
-    bottom: -6px !important;
-    left: 0 !important;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1 !important;
-    border-radius: 3px !important;
-    margin: 0 14px !important;
+    width: 7px !important;
+    height: 7px !important;
+    overflow-y: scroll !important;
+    background: #e9e9e9 !important;
+    box-shadow: inset 0 0 7px #e9e9e9 !important;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: #c1c1c1 !important;
-    border-radius: 3px !important;
-    
-    &:hover {
-      background: #a8a8a8 !important;
-    }
+    background: #b0b0b0 !important;
+    border-radius: 30px !important;
+  
+  }
+  
+  &::-webkit-scrollbar-button {
+    display: none !important; 
+    height: 0 !important;  
+    width: 0 !important;   
   }
 }
 
@@ -458,28 +454,24 @@ input.mat-input-element {
   margin-left: -14px !important;
   position: relative !important;
   
-  // Position scrollbar under the input
   &::-webkit-scrollbar {
-    width: 100% !important;
-    height: 6px !important;
-    position: absolute !important;
-    bottom: -6px !important;
-    left: 0 !important;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1 !important;
-    border-radius: 3px !important;
-    margin: 0 14px !important;
+    width: 7px !important;
+    height: 7px !important;
+    overflow-y: scroll !important;
+    background: #e9e9e9 !important;
+    box-shadow: inset 0 0 7px #e9e9e9 !important;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: #c1c1c1 !important;
-    border-radius: 3px !important;
-    
-    &:hover {
-      background: #a8a8a8 !important;
-    }
+    background: #b0b0b0 !important;
+    border-radius: 30px !important;
+  
+  }
+  
+  &::-webkit-scrollbar-button {
+    display: none !important; 
+    height: 0 !important;  
+    width: 0 !important;   
   }
 }
 

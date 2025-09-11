@@ -1,0 +1,86 @@
+<div class="container-lg p-4">
+  <div class="row pb-4 align-items-center position-relative">
+    <div class="col d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center col-5">
+        <span class="heading">{{ title }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row pb-4">
+    <app-terminal-search
+      (onSearch)="loadData($event)"
+      [searchData]="searchData"
+      [resultData]="list()"
+      [total]="total()"
+    ></app-terminal-search>
+
+    <div class="header col d-flex align-items-center justify-content-between">
+     
+      <div class="d-flex align-items-center">
+        <!-- <app-button
+          [buttonText]="' לוג שינויים'"
+          [isDisabled]="true"
+          (clickFunction)="openDialogExport()"
+        ></app-button> -->
+        <app-button
+          [buttonText]="'יצוא לאקסל'"
+          [imgSrc]="Icons.EXCEL_UP"
+          (clickFunction)="openDialogExport()"
+        ></app-button>
+      </div>
+      <div class="constant-btns d-flex align-items-center">
+        <app-button
+          [buttonText]="'פנקס חדש'"
+          (clickFunction)="openDialog(TicketBookAction.ADD)"
+        ></app-button>
+        <app-button
+          [buttonText]="'העברה לפקח אחר'"
+          (clickFunction)="openDialog(TicketBookAction.TRANSFER)"
+          [isDisabled]="!isTicketBookSelected()"
+        ></app-button>
+        <app-button
+          [buttonText]="'סגירת פנקס '"
+          [isDisabled]="!isTicketBookSelected()"
+          (clickFunction)="openModal()"
+        >
+        </app-button>
+      </div>
+    </div>
+  </div>
+
+  <app-terminal-table
+    [data]="data()"
+    [total]="total()"
+    [count]="count()"
+    (onFormChanges)="loadData($event)"
+    tableColumns="TicketBookColumns"
+    [loader]="loader()"
+    [selectedTicketData]="selectedTicketBook()"
+    (onRowClick)="getAssignedTickets($event)"
+    [terminalForm]="terminalForm()"
+    [pageSize]="100"
+  ></app-terminal-table>
+</div>
+<app-modal
+  [title]="modalTitle"
+  [isModalOpen]="isModalOpen()"
+  [modalSize]="'full'"
+  [buttons]="modalButtons()"
+  (isModalClosed)="closeModal()"
+>
+  <div>
+    <div class="mb-2">
+      <img [src]="Icons.DANGER" />
+      <p class="text-bold-modal">
+        האם אתה בטוח שאתה רוצה לסגור את הפנקס?
+        <br />
+        שים לב!  <br />
+        סגירת פנקס  תהפוך את הפנקס ללא פעיל,תבטל את הקצאת הדוחות המשוייכים ותמשוך את הפנקס מההקצאה
+        למסופון של העובד.
+        <br />
+        <br />
+      </p>
+    </div>
+  </div>
+</app-modal>

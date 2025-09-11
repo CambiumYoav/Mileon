@@ -15,6 +15,12 @@ export const childRoutes: Routes = [
       import('./components/tickets-new/tickets-routes')
         .then(m => m.ticketsRoutes),
   },
+  {
+    path: ROUTE_PATH.Terminal.Home, // 'msofon'
+    loadChildren: () =>
+      import('./components/terminal/terminal-routing.module')
+        .then(m => m.terminalRoutes),
+  },
 ];
 export const routes: Routes = [
   { path: ``, redirectTo: 'login', pathMatch: 'full' },

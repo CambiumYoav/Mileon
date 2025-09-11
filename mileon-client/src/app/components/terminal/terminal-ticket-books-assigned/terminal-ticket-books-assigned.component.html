@@ -1,0 +1,53 @@
+<div class="infrastructure-container p-4">
+  <!-- Exit Icon -->
+  <div class="inline-header">
+    <h5 class="title">פנקס: {{ bookNumber }}</h5>
+    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+    
+  </div>
+  @if (assignedTickets) {
+    <div class="mb-3" style="direction: ltr;">
+      <app-button
+        style="direction: rtl"
+        [buttonText]="'יצוא לאקסל'"
+        [imgSrc]="Icons.EXCEL_UP"
+        (clickFunction)="onExportClick()"
+      ></app-button>
+    </div>
+    <div class="table-container">
+      <table class="table table-hover shadow-table">
+        <thead>
+          <tr>
+            <th><span> מספר דוח</span></th>
+            <th><span>קוד פקח</span></th>
+            <th><span>שם פקח</span></th>
+            <th><span>סטטוס דוח</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of assignedTickets; track row.ticketNumber) {
+            <tr
+              style="line-height: 8px; height: 8px"
+            >
+              <td>
+                <span>{{ row.ticketNumber }}</span>
+              </td>
+              <td>
+                <span>{{ row.inspectorCode }}</span>
+              </td>
+              <td>
+                <span>
+                  {{ row.inspectorName }}
+                </span>
+              </td>
+              <td>
+                <span>{{ row.ticketStatus }}</span>
+              </td>
+            </tr>
+          }
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

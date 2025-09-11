@@ -1,0 +1,16 @@
+<app-table
+  [data]="data"
+  [columns]="columns"
+  [total]="total"
+  [form]="getTerminalForm()"
+  (onRowEvent)="emitRowData($event)"
+  (rowSelected)="onRowSelection($event)"
+  [showPaginator]="showPaginator"
+  (onFormChanges)="emitServerSort($event)"
+  [icons]="TicketStagesIcons"
+  [loader]="loader"
+  [isCheckboxsSelected]="isChecked"
+  [pageSize]="pageSize"
+>
+</app-table>
+

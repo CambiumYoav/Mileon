@@ -4,10 +4,19 @@ export class MsofonTable {
   public TicketBookColumns: Column[] = [
     {
       displayName: '',
-      propertyName: 'bookID',
+      propertyName: 'isSelected',
       canSort: true,
       type: ColumnTypeEnum.Radio,
       sortByServer: false,
+      radioConfig: {
+        options: [
+          { value: 'selected', label: '', selected: false }
+        ],
+        type: 'default',
+        direction: 'horizontal',
+        allowDeselect: false,
+        name: 'ticketBookSelection'
+      }
     },
     {
       displayName: 'סדרת פנקס',

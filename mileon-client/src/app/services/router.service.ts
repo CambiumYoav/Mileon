@@ -52,7 +52,7 @@ export class RouterService {
   }
 
   getRole() {
-    return this.permissionService.role;
+    return this.permissionService.role();
   }
 
   navigateToSetUrl(url: string) {
@@ -67,14 +67,18 @@ export class RouterService {
   ): Promise<boolean> | undefined | void {
     const role = this.getRole();
     if (!role) return this.navigateTo('/login');
-    const currentUrl = fromHome ? `/main/${role}` : this.snapshot.url;
+    
+    // Build the full URL with role prefix
+    let fullUrl = `/main/${role}`;
     if (urlSections?.length) {
-      let fullUrl = this.removeTrailingSlash(
-        currentUrl + '/' + urlSections.join('/')
-      );
-      if (queryParams) fullUrl = fullUrl + this.buildQueryParams(queryParams);
-      return this.router.navigateByUrl(fullUrl, { state });
+      fullUrl = this.removeTrailingSlash(fullUrl + '/' + urlSections.join('/'));
     }
+    
+    if (queryParams) {
+      fullUrl = fullUrl + this.buildQueryParams(queryParams);
+    }
+    
+    return this.router.navigateByUrl(fullUrl, { state });
   }
 
   back(): void {

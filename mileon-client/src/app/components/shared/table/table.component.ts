@@ -165,7 +165,7 @@ export class TableComponent
     this.tableService.setTotal(value);
   }
 
-  @Input() form?: FormGroup;
+  @Input() form!: FormGroup;
 
   @Input() set count(value: number | undefined) {
     this._count.set(value);
