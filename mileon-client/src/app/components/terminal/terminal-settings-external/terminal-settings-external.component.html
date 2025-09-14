@@ -1,0 +1,31 @@
+@for (subTable of subTablesData(); track subTable.key) {
+  <app-sub-table
+    [data]="subTable"
+    (fieldUpdate)="onFieldUpdate($event)"
+  />
+}
+
+<!-- Save Button -->
+<div class="save-container">
+  <app-button [buttonText]="'שמור שינויים'" (clickFunction)="openModal()" />
+</div>
+
+@if (isModalOpen()) {
+  <app-modal
+    [isModalOpen]="true"
+    [modalSize]="'md'"
+    [buttons]="modalButtons()"
+    (isModalClosed)="closeModal()"
+    [title]="modalTitle"
+  >
+    <div>
+      <div class="mb-2">
+        <img [src]="Icons.DANGER" alt="Warning icon" />
+        <p class="text-bolder-modal">
+          האם אתה בטוח שברצונך לעדכן את ההגדרות?
+          <br />
+        </p>
+      </div>
+    </div>
+  </app-modal>
+}

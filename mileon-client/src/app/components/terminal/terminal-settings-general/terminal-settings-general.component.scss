@@ -1,0 +1,57 @@
+@import "../../../../styles/elements.scss";
+.columns-container {
+  display: flex;
+  width: 100%;
+  border-radius: 8px;
+
+  .column-title {
+    height: 61.66px;
+    background-color: #387ec4;
+    color: white;
+    font-size: 16px;
+    padding-right: 30px;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .field-row {
+    border-bottom: 1px solid #b9c6d4;
+    background-color: #b9c6d44a;
+    height: 50px;
+    padding-right: 30px;
+    display: flex;
+    align-items: center;
+    &.indexes {
+      border-right: 1px solid #b9c6d4;
+    }
+    h5 {
+      font-size: 15px;
+      margin: 0;
+    }
+  }
+
+  app-prosecutor-case-settings-column {
+    flex: 1;
+  }
+}
+
+.save-container {
+  margin-top: 15px;
+  margin-bottom: 70px;
+  display: flex;
+  justify-content: end;
+  ::ng-deep app-button button {
+    margin: 0;
+    padding: 3px 22px;
+  }
+}
+.text-bolder-modal {
+  font-family: $fontOpenSans;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 25px;
+  text-align: right;
+}

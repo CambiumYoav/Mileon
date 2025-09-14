@@ -14,11 +14,11 @@ import { TerminalTicketBooksComponent } from '../components/terminal/terminal-ti
 import { TerminalSearchComponent } from '../components/terminal/terminal-search/terminal-search.component';
 import { TerminalExportComponent } from '../components/terminal/terminal-export/terminal-export.component';
 import { TerminalInspectorsComponent } from '../components/terminal/terminal-inspectors/terminal-inspectors.component';
-// import { TerminalInspectorDailyComponent } from '../components/terminal/terminal-inspector-daily/terminal-inspector-daily.component';
-// import { TerminalInsperctorsMessagesComponent } from '../components/terminal/terminal-insperctors-messages/terminal-insperctors-messages.component';
-// import { TerminalFormComponent } from '../components/terminal/terminal-form/terminal-form.component';
-// import { TerminalSettingsComponent } from '../components/terminal/terminal-settings/terminal-settings.component';
-// import { TerminalSettingsTabsComponent } from '../components/terminal/terminal-settings-tabs/terminal-settings-tabs.component';
+import { TerminalInspectorDailyComponent } from '../components/terminal/terminal-inspector-daily/terminal-inspector-daily.component';
+import { TerminalInsperctorsMessagesComponent } from '../components/terminal/terminal-insperctors-messages/terminal-insperctors-messages.component';
+import { TerminalFormComponent } from '../components/terminal/terminal-form/terminal-form.component';
+import { TerminalSettingsComponent } from '../components/terminal/terminal-settings/terminal-settings.component';
+import { TerminalSettingsTabsComponent } from '../components/terminal/terminal-settings-tabs/terminal-settings-tabs.component';
 // import { TerminalSettingsGeneralComponent } from '../components/terminal/terminal-settings-general/terminal-settings-general.component';
 // import { TerminalSettingsColumnComponent } from '../components/terminal/terminal-settings-column/terminal-settings-column.component';
 // import { TerminalSettingsExternalComponent } from '../components/terminal/terminal-settings-external/terminal-settings-external.component';
@@ -62,11 +62,11 @@ export const TERMINAL_COMPONENTS = [
   TerminalSearchComponent,
   TerminalExportComponent,
   TerminalInspectorsComponent,
-  // TerminalInspectorDailyComponent,
-  // TerminalInsperctorsMessagesComponent,
-  // TerminalFormComponent,
-  // TerminalSettingsComponent,
-  // TerminalSettingsTabsComponent,
+  TerminalInspectorDailyComponent,
+  TerminalInsperctorsMessagesComponent,
+  TerminalFormComponent,
+  TerminalSettingsComponent,
+  TerminalSettingsTabsComponent,
   // TerminalSettingsGeneralComponent,
   // TerminalSettingsColumnComponent,
   // TerminalSettingsExternalComponent,

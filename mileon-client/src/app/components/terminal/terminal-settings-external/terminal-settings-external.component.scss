@@ -1,0 +1,19 @@
+@import "../../../../styles/elements.scss";
+.save-container {
+  margin-top: 15px;
+  margin-bottom: 70px;
+  display: flex;
+  justify-content: end;
+  ::ng-deep app-button button {
+    margin: 0;
+    padding: 3px 22px;
+  }
+}
+.text-bolder-modal {
+  font-family: $fontOpenSans;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 25px;
+  text-align: right;
+}

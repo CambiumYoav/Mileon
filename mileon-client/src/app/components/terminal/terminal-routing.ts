@@ -42,43 +42,43 @@ export const terminalRoutes: Routes = [
   },
 
   // Terminal settings with children
-  // {
-  //   path: RP.Terminal.Settings,
-  //   loadComponent: () =>
-  //     import('./terminal-settings/terminal-settings.component')
-  //       .then(m => m.TerminalSettingsComponent),
-  //   children: [
-  //     {
-  //       path: '',
-  //       redirectTo: RP.Terminal.GeneralSetings,
-  //       pathMatch: 'full',
-  //     },
-  //     {
-  //       path: RP.Terminal.GeneralSetings,
-  //       loadComponent: () =>
-  //         import('./terminal-settings-general/terminal-settings-general.component')
-  //           .then(m => m.TerminalSettingsGeneralComponent),
-  //     },
-  //     {
-  //       path: RP.Terminal.ExternalInterfaceSettings,
-  //       loadComponent: () =>
-  //         import('./terminal-settings-external/terminal-settings-external.component')
-  //           .then(m => m.TerminalSettingsExternalComponent),
-  //     },
+  {
+    path: RP.Terminal.Settings,
+    loadComponent: () =>
+      import('./terminal-settings/terminal-settings.component')
+        .then(m => m.TerminalSettingsComponent),
+    children: [
+      {
+        path: '',
+        redirectTo: RP.Terminal.GeneralSetings,
+        pathMatch: 'full',
+      },
+      {
+        path: RP.Terminal.GeneralSetings,
+        loadComponent: () =>
+          import('./terminal-settings-general/terminal-settings-general.component')
+            .then(m => m.TerminalSettingsGeneralComponent),
+      },
+      {
+        path: RP.Terminal.ExternalInterfaceSettings,
+        loadComponent: () =>
+          import('./terminal-settings-external/terminal-settings-external.component')
+            .then(m => m.TerminalSettingsExternalComponent),
+      },
   //     {
   //       path: RP.Terminal.LegalityByTypeOfOffenseSettings,
   //       loadComponent: () =>
   //         import('./terminal-settings-legality/terminal-settings-legality.component')
   //           .then(m => m.TerminalSettingsLegalityComponent),
   //     },
-  //     {
-  //       path: RP.Terminal.IconsSettings,
-  //       loadComponent: () =>
-  //         import('./terminal-settings-icons/terminal-settings-icons.component')
-  //           .then(m => m.TerminalSettingsIconsComponent),
-  //     },
-  //   ],
-  // },
+      {
+        path: RP.Terminal.IconsSettings,
+        loadComponent: () =>
+          import('./terminal-settings-icons/terminal-settings-icons.component')
+            .then(m => m.TerminalSettingsIconsComponent),
+      },
+    ],
+  },
 
   // Terminal statistics with children
   // {

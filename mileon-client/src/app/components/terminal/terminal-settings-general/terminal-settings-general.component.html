@@ -1,0 +1,64 @@
+@if (settingsData && objectKeys(settingsData).length > 0) {
+  <div class="columns-container">
+    <div class="column" style="width: 10%;">
+      <h4 class="column-title" style="border-radius: 0 8px 0 0;">
+        שלב בתרשים זרימה
+      </h4>
+      @for (title of labelColumn; track $index; let i = $index) {
+        <div class="field-row indexes">
+          <h5>{{ i + 1 }}</h5>
+        </div>
+      }
+    </div>
+    <div class="column" style="width: 30%;">
+      <h4 class="column-title">שם ההגדרה</h4>
+      @for (title of labelColumn; track $index) {
+        <div class="field-row">
+          <h5>{{ title }}</h5>
+        </div>
+      }
+    </div>
+
+    <div class="d-flex" style="width: 60%;">
+      <div class="d-flex flex-column w-100">
+        <h4 class="column-title"  style="border-radius: 8px 0 0 0;"></h4>
+        <app-terminal-settings-column
+          [fields]="dynamicFields"
+          [columnTitle]="getColumnTitle(objectKeys(dynamicFields)[0])"
+          (fieldUpdate)="onFieldUpdate($event)"
+          [last]="true"
+          [form]="form"
+        ></app-terminal-settings-column>
+      </div>
+    </div>
+  </div>
+}
+<!-- Save Button -->
+@if (objectKeys(settingsData).length > 0) {
+  <div class="save-container">
+    <app-button [buttonText]="'שמור שינויים'" (clickFunction)="openModal()">
+    </app-button>
+  </div>
+}
+
+<app-modal
+  [isModalOpen]="isModalOpen"
+  [modalSize]="'md'"
+  [buttons]="modalButtons"
+  (isModalClosed)="closeModal()"
+  [title]="modalTitle"
+>
+  <div>
+    <div class="mb-2">
+      <img [src]="Icons.DANGER" />
+      <p class="text-bolder-modal">
+        האם אתה בטוח שברצונך לעדכן את ההגדרות?
+        <!-- שים לב! הפיכת עובד ללא פעיל תחסום <br />
+        את המשתמש מגישה למערכת.
+        <br /> -->
+        <br />
+        <!-- האם להמשיך? -->
+      </p>
+    </div>
+  </div>
+</app-modal>

@@ -45,6 +45,11 @@
   height: 16px !important;
 }
 
+::ng-deep .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after{
+  width: 10px !important;
+  height: 6px !important;
+}
+
 
 // Show checkboxes only for multiselect
 ::ng-deep .mat-mdc-select-panel[data-multiselect="true"] .mat-mdc-option .mat-pseudo-checkbox {

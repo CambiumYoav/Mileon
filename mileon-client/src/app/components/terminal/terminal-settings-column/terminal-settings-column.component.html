@@ -1,0 +1,84 @@
+@if (form()) {
+  <form [formGroup]="form()">
+    <div class="column" [class.last]="last()">
+      @for (field of fields(); track field?.name ?? $index) {
+        <div class="field-row">
+          @switch (field.type) {
+            @case (ColumnTypeEnum.Number) {
+              <!-- Number Input -->
+              <input
+                type="number"
+                [value]="field.value"
+                (input)="onFieldChange(field, onInputChange($event))"
+                pattern="^[0-9]{1,3}$"
+                [placeholder]="field.label"
+                [formControlName]="field.name"
+                [required]="field.isRequired"
+                [min]="field.validations?.min ?? null"
+                [max]="field.validations?.max ?? null"
+                [class.invalid-input]="
+                  form().get(field.name)?.touched &&
+                  (form().get(field.name)?.hasError('required') ||
+                    form().get(field.name)?.hasError('min') ||
+                    form().get(field.name)?.hasError('max') ||
+                    form().get(field.name)?.hasError('pattern'))
+                "
+              />
+            }
+
+            @case (ColumnTypeEnum.Text) {
+              <!-- Text Input -->
+              <input
+                type="text"
+                required="true"
+                [value]="field.value"
+                (input)="onFieldChange(field, onInputChange($event))"
+                [formControlName]="field.name"
+                [placeholder]="field.label"
+                [class.invalid-input]="
+                  form().get(field.name)?.touched &&
+                  form().get(field.name)?.invalid &&
+                  form().get(field.name)?.hasError('required')
+                "
+              />
+            }
+
+            @case (ColumnTypeEnum.Radio) {
+              <app-radio-button
+                [name]="field.name"
+                [options]="[
+                  { value: '0', label: 'כן' },
+                  { value: '1', label: 'לא' }
+                ]"
+                [formControlName]="field.name"
+                direction="horizontal"
+                type="default"
+                (valueChange)="onFieldChange(field, $event)"
+                [class.invalid-input]="
+                  form().get(field.name)?.touched &&
+                  form().get(field.name)?.invalid &&
+                  form().get(field.name)?.hasError('required')
+                "
+              ></app-radio-button>
+            }
+
+            @case (ColumnTypeEnum.Select) {
+              <app-select
+                appearance="fill"
+                [formControlName]="field.name"
+                [options]="field.options"
+                [placeholder]="field.label"
+                [isRequired]="field.isRequired"
+                [title]="field.label"
+                bindValueKey="value"
+                bindLabelKey="display"
+                [isValid]="!(form().get(field.name)?.touched && form().get(field.name)?.invalid)"
+                (ngModelChange)="onFieldChange(field, $event)"
+              ></app-select>
+            }
+          }
+        </div>
+      }
+    </div>
+  </form>
+}
