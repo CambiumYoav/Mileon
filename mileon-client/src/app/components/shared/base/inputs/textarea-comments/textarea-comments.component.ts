@@ -29,6 +29,8 @@ export class TextareaCommentsComponent
   private readonly _newComment = signal<Comment | null>(null);
   private readonly _actionModule = signal<ActionModuleEnum | null>(null);
   private readonly _reservedComments = signal<ReservedComment[]>([]);
+  private readonly _maxLength = signal<number | null>(null);
+  private readonly _rows = signal<number>(5);
 
   get newComment(): Comment | null {
     return this._newComment();
@@ -40,6 +42,14 @@ export class TextareaCommentsComponent
 
   get reservedComments(): ReservedComment[] {
     return this._reservedComments();
+  }
+
+  get maxLength(): number | null {
+    return this._maxLength();
+  }
+
+  get rows(): number {
+    return this._rows();
   }
 
   private readonly lookupNewService = inject(LookupNewService);
@@ -55,6 +65,14 @@ export class TextareaCommentsComponent
     }
   }
 
+  @Input() set maxlength(value: number | null) {
+    this._maxLength.set(value ?? null);
+  }
+
+  @Input() set rows(value: number | null) {
+    this._rows.set((value ?? 5) as number);
+  }
+
   constructor() {
     super(inject(Injector));
   }
@@ -64,6 +82,10 @@ export class TextareaCommentsComponent
     if (actionModule) {
       this.getReserves();
     }
+    // Ensure we are connected to parent control
+    try {
+      this.checkConnectedField();
+    } catch {}
   }
 
   isChosen(commentID: number): boolean {

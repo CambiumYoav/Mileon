@@ -1,0 +1,34 @@
+<div class="task-card mb-3">
+  <!-- Always visible -->
+  <div class="title-span" (click)="toggleAccordion()">
+    <span class="title-text">{{ task().taskTitle }} </span>
+
+    <button
+      class="btn btn-sm btn-link icon"
+      (click.stop)="toggleAccordion()"
+    >
+      <img [src]="isExpanded() ? Icons.COLLAPSE : Icons.EXPAND" alt="Toggle" />
+    </button>
+  </div>
+
+  @if (isExpanded()) {
+    <div class="task-card-body">
+      <div class="details">
+        <span class="details-text">
+          <span class="label">שם פקח:</span>
+          <span class="value">{{ task().inspectorName }} </span>
+        </span>
+        <span class="details-text">
+          <span class="label">יצירת הודעה:</span>
+          <span class="value">{{ time() }} | {{ date() }}</span>
+        </span>
+      </div>
+      <div class="mt-2">
+        <span class="text">תיאור:</span>
+        <div class="task">
+          <span class="text p-1">{{ task().taskDescription }} </span>
+        </div>
+      </div>
+    </div>
+  }
+</div>

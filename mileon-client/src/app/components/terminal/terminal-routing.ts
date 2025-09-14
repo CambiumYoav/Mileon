@@ -34,12 +34,12 @@ export const terminalRoutes: Routes = [
   },
 
   // Terminal messages
-  // {
-  //   path: RP.Terminal.Messages,
-  //   loadComponent: () =>
-  //     import('./terminal-insperctors-messages/terminal-insperctors-messages.component')
-  //       .then(m => m.TerminalInsperctorsMessagesComponent),
-  // },
+  {
+    path: RP.Terminal.Messages,
+    loadComponent: () =>
+      import('./terminal-insperctors-messages/terminal-insperctors-messages.component')
+        .then(m => m.TerminalInsperctorsMessagesComponent),
+  },
 
   // Terminal settings with children
   // {

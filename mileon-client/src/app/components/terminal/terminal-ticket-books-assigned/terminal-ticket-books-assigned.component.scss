@@ -26,16 +26,6 @@
     }
   }
 
-  .table-container{
-    scrollbar-width: thin;
-    scrollbar-color: #B0B0B0 #E9E9E9;
-    scrollbar-arrow-color:white;
-  }
-
-  ::-webkit-scrollbar-button {
-    display: none;
-}
-
   .table {
     background: white;
     border: 0px solid #d8e4f1;
@@ -91,7 +81,6 @@
     tbody {
       display: block;
       overflow-y: auto;
-      scrollbar-width: thin;
       flex: 1;
       max-height: calc(395px - 35px); // Subtract header height
     }

@@ -23,6 +23,7 @@
 @import "./../../node_modules/font-awesome/scss/font-awesome.scss";
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 
+/* Global scrollbar styles */
 ::-webkit-scrollbar {
   width: 7px !important;
   height: 7px !important;
@@ -41,6 +42,28 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   display: none !important; 
   height: 0 !important;  
   width: 0 !important;   
+}
+
+/* Reusable scrollbar class for specific elements */
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 7px !important;
+    height: 7px !important;
+    overflow-y: scroll !important;
+    background: #e9e9e9 !important;
+    box-shadow: inset 0 0 7px #e9e9e9 !important;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #b0b0b0 !important;
+    border-radius: 30px !important;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none !important; 
+    height: 0 !important;  
+    width: 0 !important;   
+  }
 }
 
 body {

@@ -38,16 +38,52 @@
 }
 
 // ============================================================================
-// MIXINS
+// MIXINS - Following button pattern for consistency
 // ============================================================================
-@mixin input-base {
-  border-radius: var(--input-border-radius);
-  border: 1px solid var(--strok_color);
-  background: var(--white);
-  height: var(--input-height);
+@mixin input-base($bg: var(--white), $color: var(--black), $border: 1px solid var(--strok_color), $shadow: none) {
   display: flex;
   align-items: center;
+  border: $border;
+  background-color: $bg;
+  color: $color;
+  box-shadow: $shadow;
+  cursor: text;
   transition: var(--input-transition);
+  border-radius: var(--input-border-radius);
+  height: var(--input-height);
+  padding: var(--input-padding);
+
+  &:focus-within {
+    border: 1px solid var(--black) !important;
+    outline: 2px solid var(--black);
+    outline-offset: 2px;
+  }
+
+  &:has(input:disabled) {
+    background-color: var(--light-grey);
+    color: var(--dark-grey);
+    cursor: not-allowed;
+    border: 1px solid var(--strok_color);
+  }
+
+  &.invalidInput {
+    border: 1px solid var(--red);
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+  }
+}
+
+@mixin input-text-base($color: var(--black), $font-size: var(--input-font-size), $font-weight: var(--input-font-weight)) {
+  direction: rtl !important;
+  color: $color !important;
+  text-align: right !important;
+  font-size: $font-size !important;
+  font-style: normal !important;
+  font-weight: $font-weight !important;
+  line-height: normal !important;
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
 }
 
 @mixin input-focus {
@@ -79,16 +115,6 @@
   margin: 0 0 6px 0 !important;
 }
 
-@mixin input-text-base {
-  direction: rtl !important;
-  color: var(--black) !important;
-  text-align: right !important;
-  font-size: var(--input-font-size) !important;
-  font-style: normal !important;
-  font-weight: var(--input-font-weight) !important;
-  line-height: normal !important;
-}
-
 // ============================================================================
 // BASE INPUT STYLES
 // ============================================================================
@@ -99,13 +125,6 @@
   justify-content: space-between;
   gap: var(--input-gap);
   flex-shrink: 0;
-
-  @include input-focus;
-  @include input-disabled;
-
-  &.invalidInput {
-    @include input-invalid;
-  }
 }
 
 // ============================================================================
@@ -122,10 +141,6 @@
   gap: var(--input-gap);
   flex-shrink: 0;
   border-radius: var(--input-border-radius);
-  border: none;
-  background: transparent;
-  outline: none;
-  width: 100%;
 }
 
 // ============================================================================
@@ -156,34 +171,121 @@
 }
 
 // ============================================================================
-// INPUT SIZES
+// INPUT SIZES - Following button pattern with classes
 // ============================================================================
-.input-text-sm {
+
+%input-size-sm {
+  height: 32px !important;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  width: var(--small-input-width) !important;
+}
+
+%input-size-default {
+  height: 40px !important;
+  font-size: 16px;
+  padding: 10px 11px;
+  border-radius: 4px;
+  width: var(--medium-input-width) !important;
+}
+
+%input-size-lg {
+  height: 48px !important;
+  font-size: 18px;
+  padding: 12px 14px;
+  border-radius: 5px;
+  width: var(--large-input-width) !important;
+}
+
+%input-size-xl {
+  height: 56px !important;
+  font-size: 20px;
+  padding: 14px 16px;
+  border-radius: 6px;
+  width: var(--xlarge-input-width) !important;
+}
+
+// Input size classes
+.input-sm {
   .input-fill,
   .input-text {
-    width: var(--small-input-width) !important;
-    text-align: center;
+    @extend %input-size-sm;
   }
+}
+
+.input-md {
+  .input-fill,
+  .input-text {
+    @extend %input-size-default;
+  }
+}
+
+.input-lg {
+  .input-fill,
+  .input-text {
+    @extend %input-size-lg;
+  }
+}
+
+.input-xl {
+  .input-fill,
+  .input-text {
+    @extend %input-size-xl;
+  }
+}
+
+// Default input size (backward compatibility)
+.input-base {
+  .input-fill,
+  .input-text {
+    @extend %input-size-default;
+  }
+}
+
+// Legacy classes for backward compatibility
+.input-text-sm {
+  @extend .input-sm;
 }
 
 .input-text-md {
-  .input-fill,
-  .input-text {
-    width: var(--medium-input-width) !important;
-  }
+  @extend .input-md;
 }
 
 .input-text-lg {
-  .input-fill,
-  .input-text {
-    width: var(--large-input-width) !important;
-  }
+  @extend .input-lg;
 }
 
 .input-text-xl {
-  .input-fill,
-  .input-text {
-    width: var(--xlarge-input-width) !important;
+  @extend .input-xl;
+}
+
+// ============================================================================
+// INPUT VARIANTS - Similar to button variants
+// ============================================================================
+.primary-input {
+  .input-fill {
+    @include input-base(var(--white), var(--black), 1px solid var(--strok_color));
+  }
+}
+
+.secondary-input {
+  .input-fill {
+    @include input-base(var(--light-grey), var(--black), 1px solid var(--dark-grey));
+  }
+}
+
+.outline-input {
+  .input-fill {
+    @include input-base(var(--white), var(--black), 2px solid var(--black));
+  }
+}
+
+.disabled-input {
+  .input-fill {
+    @include input-base(var(--light-grey), var(--dark-grey), 1px solid var(--strok_color));
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 }
 
@@ -399,16 +501,22 @@
 // RESPONSIVE DESIGN
 // ============================================================================
 @media (max-width: 768px) {
+  .input-md .input-fill,
+  .input-md .input-text,
   .input-text-md .input-fill,
   .input-text-md .input-text {
     width: 100% !important;
   }
 
+  .input-lg .input-fill,
+  .input-lg .input-text,
   .input-text-lg .input-fill,
   .input-text-lg .input-text {
     width: 100% !important;
   }
 
+  .input-xl .input-fill,
+  .input-xl .input-text,
   .input-text-xl .input-fill,
   .input-text-xl .input-text {
     width: 100% !important;

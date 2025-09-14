@@ -41,6 +41,7 @@ export interface DynamicField {
     | 'texts'
     | 'file'
     | 'time'
+    | 'phone'
     | 'checkboxOptions'
     | 'password'
     | 'url'

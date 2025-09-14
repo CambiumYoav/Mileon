@@ -1,0 +1,144 @@
+@import "../../../../styles/buttons.scss";
+@import "../../../../styles/elements.scss";
+.infrastructure-container {
+  // width: 837px;
+  // height: 265px;
+  max-height: 715px;
+  .inline-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+      color: var(--text, #000);
+      text-align: right;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      margin: 0;
+    }
+
+    .exit-icon {
+      cursor: pointer;
+    }
+  }
+  .form-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0;
+
+    .form-row {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+
+
+
+  .Large-size {
+    width: 512px !important;
+    height: 163px !important;
+
+    input,
+    textarea, 
+    select {
+      width: inherit !important;
+      height: 163px !important;
+    }
+
+    ::ng-deep mat-form-field .mat-form-field-infix {
+      width: inherit !important;
+      height: 163px !important;
+
+      mat-select {
+        width: inherit !important;
+      }
+    }
+  }
+
+  .Square-size {
+    width: 403px !important;
+    height: 142px !important;
+    box-sizing: border-box;
+    display: flex;
+    input,
+    select {
+      width: 100%;
+      height: 100%;
+    }
+
+    ::ng-deep mat-form-field .mat-form-field-infix {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  .inputError {
+    input,
+    select,
+    ::ng-deep mat-form-field .mat-form-field-flex {
+      border-color: crimson !important;
+      border: 1px solid;
+      border-radius: 4px;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    justify-content: space-between;
+
+
+
+    .fromTo-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+
+      input {
+        width: 87.45px !important;
+      }
+    }
+
+  }
+
+  // .form-field {
+  //   position: relative;
+  //   margin-top: 30px;
+  //   margin-left: 15px;
+  //   display: flex;
+  //   flex-direction: column;
+  //   align-items: start;
+  // }
+
+  .form-title {
+    font-size: 18px;
+    text-align: right;
+    font-family: "Open Sans";
+  }
+
+  .button-container {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+
+  }
+
+  ::ng-deep app-button button {
+    margin: 0;
+  }
+
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .required-icon {
+    margin-bottom: 2px;
+  }
+}

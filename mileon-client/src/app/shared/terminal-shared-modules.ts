@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MaterialModule } from './material-module';
-import { SharedModule } from './shared.module';   
+import { SharedModules } from './shared-modules';   
 import { RouterOutlet } from '@angular/router';
 
 // Terminal Components
@@ -50,7 +50,7 @@ export const TERMINAL_SHARED_IMPORTS = [
   DragDropModule,
   NgbNavModule,
   MaterialModule,
-  SharedModule,
+  SharedModules,
 ];
 
 // All terminal components

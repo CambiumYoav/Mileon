@@ -1,17 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ConstPath } from './constants/const_path';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { ButtonComponent } from "./components/shared/base/button/button.component";
 import { InfrastructureImportComponent } from './components/infrastractures/infrastructure-import/infrastructure-import.component';
 import { InfrastructureFormComponent } from './components/infrastractures/infrastructure-form/infrastructure-form.component';
 import { InfrastructureForms } from './types/infrastructure/infrastructure-table.model'; 
 import { InfrastructureTableAction } from './types/enum/infrastructureTablesEnum'; 
 import { MatDialog } from '@angular/material/dialog';
 import { UploadedFile } from './types/uploadedFile';
-import { AppModalComponent } from "./components/shared/app-modal/app-modal.component";
-import { ConfirmationModalComponent } from "./components/shared/confirmation-modal/confirmation-modal.component";
 import { ModalButton } from './constants/modalButtons';
-import { TabsGroupComponent } from "./components/shared/tabs-group/tabs-group.component";
 import { TabAttributes } from './types/filters/tabsGroup';
 import { ManagementMain } from './types/management/management.model';
 
@@ -19,7 +14,7 @@ import { ManagementMain } from './types/management/management.model';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet, ButtonComponent, AppModalComponent, ConfirmationModalComponent, TabsGroupComponent],
+  imports: [RouterOutlet],
 })
 export class AppComponent {
   @ViewChild('innerScrollContainer') innerScrollContainer!: ElementRef;

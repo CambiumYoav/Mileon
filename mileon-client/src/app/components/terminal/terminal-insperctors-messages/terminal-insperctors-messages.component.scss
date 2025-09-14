@@ -1,0 +1,84 @@
+@import "./../../../../styles/elements.scss";
+
+:host {
+  .constant-btns {
+    display: flex;
+    justify-content: end;
+    ::ng-deep app-button {
+      button {
+        margin: 0;
+        margin-right: 10px;
+      }
+    }
+  }
+  .back-icon {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  .header {
+    border-top-style: solid;
+    border-color: transparent;
+  }
+  .heading {
+    font-weight: 800;
+    font-family: $fontOpenSans;
+    font-size: 24px;
+  }
+  .send-btn {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.d-flex.align-items-center {
+  display: flex;
+  align-items: center;
+}
+
+.text-bold-modal {
+  font-size: 15px;
+  line-height: 20px;
+  font-family: $fontOpenSans;
+  font-weight: 600;
+  font-style: normal;
+}
+.text-modal {
+  font-size: 15px;
+  line-height: 20px;
+  font-family: $fontOpenSans;
+  font-weight: 300;
+}
+
+.text-bolder-modal {
+  font-family: $fontOpenSans;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 25px;
+  text-align: right;
+}
+:host ::ng-deep app-checkbox .inline {
+  width: 200px;
+}
+
+:host::ng-deep app-button {
+  button {
+    margin: 0;
+    margin-right: 10px;
+  }
+}
+
+.task-scroll-area {
+  max-height: 55vh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}

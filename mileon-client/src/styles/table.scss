@@ -1,15 +1,9 @@
 @import "./elements.scss";
 
-::ng-deep ::-webkit-scrollbar-button {
-  display: none !important; 
-  height: 0 !important;  
-  width: 0 !important;   
-}
-
 .table {
   background: #F7F9FC;
   background: #F7F9FC;
-    border-collapse: collapse;
+  border-collapse: collapse;
   border-radius: 4px;
   table-layout: auto;
   margin-left: auto;
@@ -25,9 +19,6 @@ tbody {
   height: 572px; /* Height for 14 rows (14 × 40px) */
   max-height: 572px;
   overflow-y: auto; /* Enable vertical scrolling */
-  scrollbar-width: thin;
-  scrollbar-color: #B0B0B0 #E9E9E9;
-
 }
 
 
@@ -56,15 +47,6 @@ div.table-container {
   border-radius: 8px;
   transform: rotate(0deg);
   overflow: auto; 
-  scrollbar-width: thin;
-  scrollbar-color: #B0B0B0 #E9E9E9;
-    
-  /* Remove scrollbar arrows */
-  &::-webkit-scrollbar-button {
-    display: none; // Hides the scrollbar arrows
-    height: 0;     // Ensures no space is taken by the arrows
-    width: 0;      // Ensures no space is taken by the arrows
-  }
 }
 
   td {
@@ -258,5 +240,13 @@ thead {
   &:invalid {
     border-color: #dc3545;
   }
+
+  &:disabled {
+    background: #E3E7EB;
+      border-color: #606060;
+      cursor: not-allowed;
+      opacity: 0.6;
+      color: #606060;
+    }
 }
 

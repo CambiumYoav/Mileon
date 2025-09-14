@@ -10,9 +10,13 @@
                         </span>
                     }
                 </div>
-                @if (newComment) {
-                    <textarea class="content" placeholder="הוסף טקסט" [(ngModel)]="newComment.text"></textarea>
-                }
+                <textarea
+                    class="content"
+                    [placeholder]="placeholder || 'הוסף טקסט'"
+                    [formControl]="control"
+                    [attr.maxlength]="maxLength || null"
+                    [rows]="rows || 5"
+                ></textarea>
             </div>
         </div>
     </div>
