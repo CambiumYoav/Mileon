@@ -1,70 +1,91 @@
-<div>
-  @if (localData().tableTitle) {
-    <span class="main-title">{{ localData().tableTitle }}</span>
-  }
+@if (localData(); as data) {
+  <div>
+    @if (data.tableTitle) {
+      <span class="main-title">{{ data.tableTitle }}</span>
+    }
 
-  <app-red-line-error [errorMsg]="errorMsg()" />
-  <div class="table-container">
-    <table class="table table-hover shadow-table">
-      <thead class="infrastructure-header">
-        <tr>
-          <th scope="col">
-            <span class="title">
-              {{ localData().category }}
-            </span>
-          </th>
-          <th scope="col">
-            @if (localData().extraColName) {
-              <span class="title">
-                {{ localData().extraColName }}
-              </span>
-            }
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (field of localData().fields; track field.key) {
-          <tr class="user-select-none" style="line-height: 8px; height: 8px">
-            <td class="align-middle w-50">
-              <label class="description">{{ field.label }}</label>
-            </td>
-
-            <td [class.radio-td]="field.type === 'radio'">
-              @if (field.type === 'text' || field.type === 'password' || field.type === 'number') {
-                <input
-                  [type]="field.type"
-                  class="form-text"
-                  [maxlength]="50"
-                  [ngModel]="field.value"
-                  (ngModelChange)="emitChange(field, $event)"
-                  [disabled]="field.isDisabled ?? false"
-                />
+    <app-red-line-error [errorMsg]="errorMsg()" />
+    <div class="table-container">
+      <table class="table table-hover shadow-table">
+        <thead class="infrastructure-header">
+          <tr>
+            <th scope="col">
+              <span class="title">{{ data.category }}</span>
+            </th>
+            <th scope="col">
+              @if (data.extraColName) {
+                <span class="title">{{ data.extraColName }}</span>
               }
+            </th>
+          </tr>
+        </thead>
 
-              @if (field.type === 'radio') {
-                <div class="d-flex">
-                  @for (option of field.options; track option.value) {
-                    <div class="radio-container">
-                      <input
-                        [id]="field.label + '-' + option.value"
-                        type="radio"
-                        [name]="field.label"
-                        [value]="option.value"
-                        class="form-radio"
-                        [ngModel]="field.value"
-                        (change)="emitChange(field, option.value)"
-                        [disabled]="field.isDisabled ?? false"
-                      />
-                      <p>{{ option.label }}</p>
+        <tbody>
+          @for (field of data.fields; track field.key) {
+            <tr class="user-select-none" style="line-height: 8px; height: 8px">
+              <td class="align-middle w-50">
+                <label class="description">{{ field.label }}</label>
+              </td>
+
+              <td [class.radio-td]="field.type === 'radio'">
+                @switch (field.type) {
+                  @case ('text') {
+                    <input
+                      type="text"
+                      class="form-text"
+                      [maxlength]="50"
+                      [ngModel]="field.value"
+                      (ngModelChange)="emitChange(field, $event)"
+                      [disabled]="field.isDisabled ?? false"
+                    />
+                  }
+                  @case ('password') {
+                    <input
+                      type="password"
+                      class="form-text"
+                      [maxlength]="50"
+                      [ngModel]="field.value"
+                      (ngModelChange)="emitChange(field, $event)"
+                      [disabled]="field.isDisabled ?? false"
+                    />
+                  }
+                  @case ('number') {
+                    <input
+                      type="number"
+                      class="form-text"
+                      [maxlength]="50"
+                      [ngModel]="field.value"
+                      (ngModelChange)="emitChange(field, $event)"
+                      [disabled]="field.isDisabled ?? false"
+                    />
+                  }
+                  @case ('radio') {
+                    <div class="d-flex">
+                      @for (option of field.options; track option.value) {
+                        <div class="radio-container">
+                          <input
+                            [id]="field.label + '-' + option.value"
+                            type="radio"
+                            [name]="field.label"
+                            [value]="option.value"
+                            class="form-radio"
+                            [ngModel]="field.value"
+                            (change)="emitChange(field, option.value)"
+                            [disabled]="field.isDisabled ?? false"
+                          />
+                          <p>{{ option.label }}</p>
+                        </div>
+                      }
                     </div>
                   }
-                </div>
-              }
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
+} @else {
+  <app-red-line-error [errorMsg]="errorMsg()" />
+}

@@ -6,10 +6,12 @@
       </div>
     </div>
     <div class="mt-4">
-      <app-terminal-settings-tabs></app-terminal-settings-tabs>
+      <app-terminal-settings-tabs (tabSelected)="onTabSelected($event)"></app-terminal-settings-tabs>
     </div>
   </div>
-  <div class="row">
-    <router-outlet></router-outlet>
-  </div>
+  @if (isTabSelected()) {
+    <div class="row">
+      <router-outlet></router-outlet>
+    </div>
+  }
 </div>

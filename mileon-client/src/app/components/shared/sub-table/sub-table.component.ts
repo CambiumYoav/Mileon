@@ -7,12 +7,13 @@ import {
   computed,
   effect,
   inject,
+  model,
   signal
 } from '@angular/core';
 import { ConstPath } from '../../../constants/const_path';   
 import { TableErrors } from '../../../constants/errors';
 import { BaseFormComponent } from '../base-form/base-form.component';
-import { SubTable } from '../../../types/subTableField';
+import { SubTable, SubTableField } from '../../../types/subTableField';
 import { FormsModule } from '@angular/forms';
 import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
 
@@ -24,26 +25,36 @@ import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.c
   imports: [FormsModule, RedLineErrorComponent]
 })
 export class SubTableComponent extends BaseFormComponent {
-  private cdr = inject(ChangeDetectorRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   // Inputs and Outputs
   @Input({ required: true }) set data(value: SubTable) {
-    this._data.set(value);
-    this._localData.set(JSON.parse(JSON.stringify(value)));
+    // Ensure each field has a unique key
+    const processedValue = {
+      ...value,
+      fields: value.fields?.map((field, index) => ({
+        ...field,
+        key: field.key || `${field.label}-${index}` // Use label-index as fallback key
+      }))
+    };
+    
+    this._data.set(processedValue);
+    this._localData.set(structuredClone(processedValue));
   }
-  @Output() fieldUpdate = new EventEmitter<{ key: string; value: any }>();
+
+  @Output() fieldUpdate = new EventEmitter<{ key: string; value: string }>();
 
   // Signals
-  private _data = signal<SubTable>({} as SubTable);
-  private _localData = signal<SubTable>({} as SubTable);
-  private _errorMsg = signal<string>('');
+  private readonly _data = signal<SubTable>({} as SubTable);
+  private readonly _localData = signal<SubTable>({} as SubTable);
+  private readonly _errorMsg = signal<string>('');
 
   // Public Signals and Computed Values
-  readonly localData = this._localData.asReadonly();
-  readonly errorMsg = this._errorMsg.asReadonly();
+  protected readonly localData = computed(() => this._localData());
+  protected readonly errorMsg = computed(() => this._errorMsg());
 
   // Constants
-  readonly Icons = ConstPath;
+  protected readonly Icons = ConstPath;
 
   constructor() {
     super();
@@ -67,19 +78,16 @@ export class SubTableComponent extends BaseFormComponent {
     this._data.set({} as SubTable);
   }
 
-  emitChange(field: any, newValue: any) {
+  protected emitChange(field: SubTableField, newValue: string | number | boolean): void {
     const updatedField = { ...field, value: String(newValue) };
     
-    // Update the local data
-    const currentData = this._localData();
-    const updatedFields = currentData.fields.map(f => 
-      f.key === field.key ? updatedField : f
-    );
-    
-    this._localData.set({
+    // Update the local data using computed update
+    this._localData.update(currentData => ({
       ...currentData,
-      fields: updatedFields
-    });
+      fields: currentData.fields.map(f => 
+        f.key === field.key ? updatedField : f
+      )
+    }));
 
     // Emit the change
     this.fieldUpdate.emit({ key: field.key, value: updatedField.value });

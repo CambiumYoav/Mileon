@@ -1,4 +1,4 @@
-import { Component, Signal, CUSTOM_ELEMENTS_SCHEMA, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, model, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ConstPath } from '../../../constants/const_path';
 import { TitlesEnum } from '../../../types/enum/titlesEnum';
@@ -13,13 +13,17 @@ import { TerminalSettingsTabsComponent } from '../terminal-settings-tabs/termina
   styleUrls: ['./terminal-settings.component.scss'],
 })
 export class TerminalSettingsComponent {
-    title: Signal<string> = signal<string>(TitlesEnum.TerminalSettingsTitle);
-    Icons = ConstPath;
+    readonly title = signal(TitlesEnum.TerminalSettingsTitle);
+    readonly Icons = ConstPath;
+    readonly isTabSelected = signal(false);
 
-    private routerService = inject(RouterService);
+    private readonly routerService = inject(RouterService);
 
     goBackToPreviousPage() {
       this.routerService.navigateToPageURL('');
     }
 
+    onTabSelected(selected: boolean) {
+      this.isTabSelected.set(selected);
+    }
 }
