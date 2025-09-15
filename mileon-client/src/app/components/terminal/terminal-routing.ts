@@ -81,41 +81,41 @@ export const terminalRoutes: Routes = [
   },
 
   // Terminal statistics with children
-  // {
-  //   path: RP.Terminal.Statistics,
-  //   loadComponent: () =>
-  //     import('./terminal-statistics/terminal-statistics.component')
-  //       .then(m => m.TerminalStatisticsComponent),
-  //   children: [
-  //     {
-  //       path: '',
-  //       redirectTo: RP.Terminal.StatisticsPie,
-  //       pathMatch: 'full',
-  //     },
-  //     {
-  //       path: RP.Terminal.StatisticsPie,
-  //       loadComponent: () =>
-  //         import('./terminal-statistics-pie/terminal-statistics-pie.component')
-  //           .then(m => m.TerminalStatisticsPieComponent),
-  //     },
-  //     {
-  //       path: RP.Terminal.StatisticsLine,
-  //       loadComponent: () =>
-  //         import('./terminal-statistics-line/terminal-statistics-line.component')
-  //           .then(m => m.TerminalStatisticsLineComponent),
-  //     },
-  //     {
-  //       path: RP.Terminal.StatisticsBar,
-  //       loadComponent: () =>
-  //         import('./terminal-statistics-bar/terminal-statistics-bar.component')
-  //           .then(m => m.TerminalStatisticsBarComponent),
-  //     },
-  //     {
-  //       path: RP.Terminal.StatisticsTable,
-  //       loadComponent: () =>
-  //         import('./terminal-statistics-table/terminal-statistics-table.component')
-  //           .then(m => m.TerminalStatisticsTableComponent),
-  //     },
-  //   ],
-  // },
+  {
+    path: RP.Terminal.Statistics,
+    loadComponent: () =>
+      import('./terminal-statistics/terminal-statistics.component')
+        .then(m => m.TerminalStatisticsComponent),
+    children: [
+      {
+        path: '',
+        redirectTo: RP.Terminal.StatisticsPie,
+        pathMatch: 'full',
+      },
+      {
+        path: RP.Terminal.StatisticsPie,
+        loadComponent: () =>
+          import('./terminal-statistics-pie/terminal-statistics-pie.component')
+            .then(m => m.TerminalStatisticsPieComponent),
+      },
+      // {
+      //   path: RP.Terminal.StatisticsLine,
+      //   loadComponent: () =>
+      //     import('./terminal-statistics-line/terminal-statistics-line.component')
+      //       .then(m => m.TerminalStatisticsLineComponent),
+      // },
+      // {
+      //   path: RP.Terminal.StatisticsBar,
+      //   loadComponent: () =>
+      //     import('./terminal-statistics-bar/terminal-statistics-bar.component')
+      //       .then(m => m.TerminalStatisticsBarComponent),
+      // },
+      // {
+      //   path: RP.Terminal.StatisticsTable,
+      //   loadComponent: () =>
+      //     import('./terminal-statistics-table/terminal-statistics-table.component')
+      //       .then(m => m.TerminalStatisticsTableComponent),
+      // },
+    ],
+  },
 ];

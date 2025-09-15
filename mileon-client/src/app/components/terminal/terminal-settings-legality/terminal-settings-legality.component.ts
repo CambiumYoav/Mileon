@@ -50,20 +50,17 @@ import { TextareaCommentsComponent } from '../../shared/base/inputs/textarea-com
     TextareaCommentsComponent
 ]
 })
-export class TerminalSettingsLegalityComponent {
-  // Inject services
+export class TerminalSettingsLegalityComponent {  
   private fb = inject(FormBuilder);
   private toastr = inject(ToastrService);
   private sessionService = inject(SessionService);
   private authorityService = inject(AuthorityService);
   private terminalService = inject(TerminalService);
 
-  // Constants
   readonly Icons = ConstPath;
   readonly form = new MsofonForms().LegalitySettingsForm;
   readonly modalTitle = ModalMessages.UPDATE_SETTINGS;
 
-  // Signals
   rows = signal<DynamicRow[]>(this.form);
   dynamicForm = signal<FormGroup>(this.fb.group({}));
   isSubmitted = signal<boolean>(false);
@@ -75,18 +72,15 @@ export class TerminalSettingsLegalityComponent {
   isModalOpen = signal<boolean>(false);
   modalButtons = signal<ModalButton[]>(this.createModalButtons());
 
-  // Computed values
   protected readonly formValue = computed(() => this.dynamicForm().value);
   protected readonly formValid = computed(() => this.dynamicForm().valid);
 
   constructor() {
-    // Initialize form and setup effects
     this.setupEffects();
     this.createForm();
   }
 
   private setupEffects() {
-    // Effect for handling authority ID changes
     effect(() => {
       const tabId = this.sessionService.getToken('currentActiveTabID');
       this.currentActiveTabID.set(tabId);
@@ -117,7 +111,7 @@ export class TerminalSettingsLegalityComponent {
         } else {
           this.settingsData.set(result.settings);
           this.mergeServerDataIntoRows();
-          this.createForm(); // Recreate form with updated disabled states
+          this.createForm(); 
           this.patchFormWithServerData();
         }
       }
@@ -168,7 +162,6 @@ export class TerminalSettingsLegalityComponent {
     this.rows.set(updatedRows);
   }
 
-  /** Creates the reactive form dynamically based on rows and fields */
   private createForm(): void {
     const currentRows = this.rows();
     const formGroup = currentRows.reduce((group, dynamicRow) => {
@@ -216,16 +209,15 @@ export class TerminalSettingsLegalityComponent {
         const formField = this.findFieldByName(controlKey);
         
         if (formField && formField.type === 'select') {
-          // Handle select field values
           if (formField.isMultiSelect) {
-            // For multi-select, convert value to array if needed
+           
             const values = Array.isArray(field.value) ? field.value : [field.value];
             formPatches[controlKey] = values.map(val => {
               const option = formField.options?.find(opt => opt.value === val);
               return option ? option.value : val;
             }).filter(Boolean);
           } else {
-            // For single select
+           
             const option = formField.options?.find(opt => opt.value === field.value);
             formPatches[controlKey] = option ? option.value : field.value;
           }

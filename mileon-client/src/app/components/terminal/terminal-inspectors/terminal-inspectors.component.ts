@@ -38,7 +38,6 @@ import { ButtonComponent } from "../../shared/base/button/button.component";
 
 
 export class TerminalInspectorsComponent implements OnInit, OnDestroy {
-  // Signals for reactive data
   title = signal(TitlesEnum.InspectorsDaily);
   FieldTypeEnum = FieldTypeEnum;
   seconderyTitle = signal(TitlesEnum.InspectorsTable);
@@ -54,11 +53,9 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
   dashboardSuspended = signal(0);
   fields = signal<any>(null);
 
-  // Form groups
   terminalForm: FormGroup;
   inspectorForm: FormGroup;
 
-  // Inject services
   private toaster = inject(ToastrService);
   private authorityService = inject(AuthorityService);
   private terminalService = inject(TerminalService);
@@ -72,20 +69,16 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
     this.terminalForm = this.terminalSearchFormService.form;
     this.inspectorForm = this.baseFormService.createFormGroup(InspectorsForm);
     this.inspectorForm.setControl('ticketTypes', new FormControl([0]));
-    // Initialize inspectorsIds as an array for multi-select
     this.inspectorForm.setControl('inspectorsIds', new FormControl([]));
   }
 
   ngOnInit(): void {
     this.fields.set(inspectorFilterFields);
-
-    // Subscribe to authority changes using takeUntilDestroyed
     this.authorityService.authorityId$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((authorityID) => {
         this.currentAuthority.set(authorityID);
 
-        // Patch the form values
         this.inspectorForm.patchValue({
           authorityId: authorityID,
           ticketTypes: [0],
@@ -95,7 +88,6 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
         this.getInspectorsDashboardData();
         this.loadData(this.getCombinedFilter());
 
-        // Subscribe to form changes using takeUntilDestroyed
         this.inspectorForm.get('inspectorsIds')?.valueChanges
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
@@ -144,7 +136,6 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
     const remainingTime = MIN_LOADER_TIME - elapsedTime;
 
     if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
       await new Promise((resolve) => setTimeout(resolve, remainingTime));
     }
     this.loader.set(false);

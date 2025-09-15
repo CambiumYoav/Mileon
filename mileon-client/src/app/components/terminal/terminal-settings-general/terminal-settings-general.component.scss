@@ -38,6 +38,18 @@
   }
 }
 
+
+:host::ng-deep app-input-text {
+
+  .input-fill{
+    height: 33px;
+  }
+
+  .inline-header{
+    display: none;
+  }
+}
+
 .save-container {
   margin-top: 15px;
   margin-bottom: 70px;

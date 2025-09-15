@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { AppService } from '../../../app.service';
 import { SessionService } from '../../../services/session.service';
 import { ModuleNames } from '../../../types/enum/moduleEnum';
@@ -14,12 +14,12 @@ import { TabsGroupComponent } from '../../shared/tabs-group/tabs-group.component
   templateUrl: './terminal-settings-tabs.component.html',
   styleUrls: ['./terminal-settings-tabs.component.scss'],
 })
-export class TerminalSettingsTabsComponent {
+export class TerminalSettingsTabsComponent implements OnInit {
   readonly tabSelected = output<boolean>();
 
   readonly tabs = signal<TabAttributes[]>([...TerminalMain.SettingsTabs]);
-  readonly currentActive = signal('');
-  readonly currentActiveTabID = signal<string | undefined>(undefined);
+  readonly currentActive = signal<string>(TerminalMain.SettingsTabs[0]?.text || '');
+  readonly currentActiveTabID = signal<string | undefined>(TerminalMain.SettingsTabs[0]?.id);
 
   private readonly appService = inject(AppService);
   private readonly terminalService = inject(TerminalService);
@@ -28,10 +28,11 @@ export class TerminalSettingsTabsComponent {
   constructor() {
     this.initTabs();
   }
-
-  onDestroy() {
-    this.sessionService.remove('currentActiveTabID');
+  
+  ngOnInit(): void {
+    // The tab selection logic will be handled after fetchCategories completes
   }
+
 
   changeTab(tab: TabAttributes) {
     this.currentActive.set(tab.text);
@@ -80,8 +81,41 @@ export class TerminalSettingsTabsComponent {
         return tab;
       });
       this.tabs.set(updatedTabs);
+      
+      // After tabs are updated with IDs, handle tab selection
+      this.handleInitialTabSelection();
     } catch (error) {
       console.error('Error fetching categories:', error);
+      // Even if categories fail, try to select the first tab
+      this.handleInitialTabSelection();
+    }
+  }
+
+  private handleInitialTabSelection(): void {
+    const storedTabID = this.sessionService.getToken('currentActiveTabID');
+    if (storedTabID) {
+      const storedTab = this.tabs().find((tab) => tab.id === storedTabID);
+      if (storedTab) {
+        this.changeTab(storedTab);
+        return;
+      }
+    }
+    
+    // If no stored tab or stored tab not found, try URL-based selection
+    const path = window.location.pathname.split('/');
+    const currentTab = path[path.length - 1];
+    const foundTab = this.tabs().find((tab) => tab.url === currentTab);
+    if (foundTab) {
+      console.log('tab', foundTab);
+      this.changeTab(foundTab);
+      return;
+    }
+    
+    // If no URL match, select the first available tab
+    const firstTab = this.tabs()[0];
+    if (firstTab) {
+      console.log('Selecting first tab:', firstTab);
+      this.changeTab(firstTab);
     }
   }
 }

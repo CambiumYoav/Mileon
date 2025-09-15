@@ -22,13 +22,11 @@ import { SubTableComponent } from "../../shared/sub-table/sub-table.component";
   imports: [ButtonComponent, AppModalComponent, SubTableComponent],
 })
 export class TerminalSettingsExternalComponent {
-  // Dependency injection
   private sessionService = inject(SessionService);
   private authorityService = inject(AuthorityService);
   private terminalService = inject(TerminalService);
   private toastr = inject(ToastrService);
 
-  // Constants
   readonly objectKeys = Object.keys;
   readonly Icons = ConstPath;
   readonly priorityOrder = [
@@ -39,7 +37,6 @@ export class TerminalSettingsExternalComponent {
   ];
   readonly modalTitle = ModalMessages.UPDATE_SETTINGS;
 
-  // Signals
   private _subTablesData = signal<SubTable[]>([]);
   private _currentActiveTabID = signal<string | null>(null);
   private _currentAuthority = signal<string | null>(null);
@@ -49,7 +46,6 @@ export class TerminalSettingsExternalComponent {
   private _isModalOpen = signal<boolean>(false);
   private _modalButtons = signal<ModalButton[]>(this.createModalButtons());
 
-  // Public readonly signals
   subTablesData = this._subTablesData.asReadonly();
   currentActiveTabID = this._currentActiveTabID.asReadonly();
   currentAuthority = this._currentAuthority.asReadonly();
@@ -60,10 +56,8 @@ export class TerminalSettingsExternalComponent {
   modalButtons = this._modalButtons.asReadonly();
 
   constructor() {
-    // Initialize currentActiveTabID
     this._currentActiveTabID.set(this.sessionService.getToken('currentActiveTabID'));
 
-    // Setup effect to watch authorityID changes
     effect(() => {
       const authorityID = this.authorityService.authorityId();
       this._currentAuthority.set(authorityID);

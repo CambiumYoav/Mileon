@@ -55,12 +55,12 @@ import { MaterialModule } from '../../../shared/material-module';
   ],
 })
 export class TerminalFormComponent {
-  readonly Icons = ConstPath; // Path to icons
+  readonly Icons = ConstPath; 
   DynamicFieldSize = DynamicFieldSize;
-  title = signal<string>(''); // Title of the form
-  rows = signal<DynamicRow[]>([]); // Rows of fields in the form
-  dynamicForm!: FormGroup; // FormGroup for reactive forms
-  isSubmitted = signal(false); // Tracks if the form is submitted
+  title = signal<string>(''); 
+  rows = signal<DynamicRow[]>([]); 
+  dynamicForm!: FormGroup; 
+  isSubmitted = signal(false); 
   isSigns: boolean = false;
   selectedFiles: File | null = null;
   base64File: any;
@@ -84,7 +84,7 @@ export class TerminalFormComponent {
     private dialog: MatDialog,
     private toaster: ToastrService
   ) {
-    this.rows.set(data.form); // Initialize rows from injected data
+    this.rows.set(data.form);
     this.title.set(data.title);
     this.buttonText.set(data.buttonText);
     this.isTransfer = data.isTransfer;
@@ -92,15 +92,13 @@ export class TerminalFormComponent {
 
   ngOnInit(): void {
     console.log(this.data.form);
-    this.createForm(); // Initialize the form on component load
+    this.createForm(); 
   }
 
-  /** Closes the dialog */
   onNoClick(): void {
     this.dialog.closeAll();
   }
 
-  /** Creates the reactive form dynamically based on rows and fields */
 
   private createForm(): void {
     const formGroup = this.rows().reduce((group, dynamicRow) => {

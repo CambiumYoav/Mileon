@@ -48,8 +48,7 @@ export class TerminalSettingsGeneralComponent implements OnInit {
   form!: FormGroup;
   dynamicFields: DynamicField[] | any[] = [];
   isInitialSetup: boolean = false;
-
-  // modal config
+  
   isModalOpen: boolean = false;
   modalButtons: ModalButton[] = this.createModalButtons();
   modalTitle = ModalMessages.UPDATE_SETTINGS;

@@ -33,7 +33,6 @@ export class TerminalSettingsIconsComponent {
   readonly Icons = ConstPath;
   readonly modalTitle = ModalMessages.UPDATE_SETTINGS;
 
-  // Signals
   readonly subTablesData = signal<SubTable[]>([]);
   readonly currentActiveTabID = signal<string | null>(null);
   readonly currentAuthority = signal<string | null>(null);
@@ -44,12 +43,10 @@ export class TerminalSettingsIconsComponent {
   readonly modalButtons = signal<ModalButton[]>(this.createModalButtons());
 
   constructor() {
-    // Initialize currentActiveTabID
     this.currentActiveTabID.set(
       this.sessionService.getToken('currentActiveTabID')
     );
 
-    // Setup effect to watch authorityID changes
     effect(() => {
       const authorityID = this.authorityService.authorityId();
       this.currentAuthority.set(authorityID);
@@ -76,7 +73,6 @@ export class TerminalSettingsIconsComponent {
         }
 
         const serverSettings: TerminalSettingRequest[] = result?.settings ?? [];
-        // Merge server values into default structure by `settingName`
         const updatedSettings = defaultSettings.map((setting) => {
           const serverMatch = serverSettings.find(
             (s: TerminalSettingRequest) => s.settingName?.trim() === setting.settingName?.trim()
@@ -147,14 +143,12 @@ export class TerminalSettingsIconsComponent {
     };
   }
 
-  // Computed signal for payload
   private readonly settingsPayload = computed(() => {
     return this.isInitialSetup()
       ? this.settingsData() // send all fields (initial creation)
       : this.editedSettings(); // send only changes
   });
 
-  // Handle field updates
   onFieldUpdate(event: { key: string; value: any }) {
     const currentSettings = this.settingsData();
     const fieldIndex = currentSettings.findIndex((f) => f.id === event.key);

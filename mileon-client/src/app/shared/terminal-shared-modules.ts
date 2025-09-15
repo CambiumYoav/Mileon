@@ -19,12 +19,12 @@ import { TerminalInsperctorsMessagesComponent } from '../components/terminal/ter
 import { TerminalFormComponent } from '../components/terminal/terminal-form/terminal-form.component';
 import { TerminalSettingsComponent } from '../components/terminal/terminal-settings/terminal-settings.component';
 import { TerminalSettingsTabsComponent } from '../components/terminal/terminal-settings-tabs/terminal-settings-tabs.component';
-// import { TerminalSettingsGeneralComponent } from '../components/terminal/terminal-settings-general/terminal-settings-general.component';
-// import { TerminalSettingsColumnComponent } from '../components/terminal/terminal-settings-column/terminal-settings-column.component';
-// import { TerminalSettingsExternalComponent } from '../components/terminal/terminal-settings-external/terminal-settings-external.component';
-// import { TerminalSettingsLegalityComponent } from '../components/terminal/terminal-settings-legality/terminal-settings-legality.component';
-// import { TerminalSettingsIconsComponent } from '../components/terminal/terminal-settings-icons/terminal-settings-icons.component';
-// import { TerminalStatisticsComponent } from '../components/terminal/terminal-statistics/terminal-statistics.component';
+import { TerminalSettingsGeneralComponent } from '../components/terminal/terminal-settings-general/terminal-settings-general.component';
+import { TerminalSettingsColumnComponent } from '../components/terminal/terminal-settings-column/terminal-settings-column.component';
+import { TerminalSettingsExternalComponent } from '../components/terminal/terminal-settings-external/terminal-settings-external.component';
+import { TerminalSettingsLegalityComponent } from '../components/terminal/terminal-settings-legality/terminal-settings-legality.component';
+import { TerminalSettingsIconsComponent } from '../components/terminal/terminal-settings-icons/terminal-settings-icons.component';
+import { TerminalStatisticsComponent } from '../components/terminal/terminal-statistics/terminal-statistics.component';
 // import { TerminalStatisticsPieComponent } from '../components/terminal/terminal-statistics-pie/terminal-statistics-pie.component';
 // import { TerminalStatisticsLineComponent } from '../components/terminal/terminal-statistics-line/terminal-statistics-line.component';
 // import { TerminalStatisticsBarComponent } from '../components/terminal/terminal-statistics-bar/terminal-statistics-bar.component';
@@ -67,12 +67,12 @@ export const TERMINAL_COMPONENTS = [
   TerminalFormComponent,
   TerminalSettingsComponent,
   TerminalSettingsTabsComponent,
-  // TerminalSettingsGeneralComponent,
-  // TerminalSettingsColumnComponent,
-  // TerminalSettingsExternalComponent,
-  // TerminalSettingsLegalityComponent,
-  // TerminalSettingsIconsComponent,
-  // TerminalStatisticsComponent,
+  TerminalSettingsGeneralComponent,
+  TerminalSettingsColumnComponent,
+  TerminalSettingsExternalComponent,
+  TerminalSettingsLegalityComponent,
+  TerminalSettingsIconsComponent,
+  TerminalStatisticsComponent,
   // TerminalStatisticsPieComponent,
   // TerminalStatisticsLineComponent,
   // TerminalStatisticsBarComponent,

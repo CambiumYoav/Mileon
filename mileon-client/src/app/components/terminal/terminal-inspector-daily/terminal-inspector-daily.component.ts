@@ -36,7 +36,6 @@ export class TerminalInspectorDailyComponent {
   FieldTypeEnum = FieldTypeEnum;
   Icons = ConstPath;
   
-  // Signals for reactive data
   title = signal(TitlesEnum.InspectorDaily);
   seconderyTitle = signal(TitlesEnum.InspectorsTable);
   inspectorName = signal<any>('');
@@ -56,11 +55,9 @@ export class TerminalInspectorDailyComponent {
   fields = signal<any>(null);
   ticketTypes = signal<any[]>([]);
 
-  // Form groups
   terminalForm: FormGroup;
   inspectorForm: FormGroup;
 
-  // Inject services
   private authorityService = inject(AuthorityService);
   private terminalService = inject(TerminalService);
   private routerService = inject(RouterService);
@@ -82,7 +79,6 @@ export class TerminalInspectorDailyComponent {
     this.inspectorName.set(this.route.snapshot.paramMap.get('inspectorName'));
     this.fields.set(inspectorDailyFilterFields);
 
-    // Subscribe to authority changes using takeUntilDestroyed
     this.authorityService.authorityId$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((authorityID) => {
@@ -92,7 +88,6 @@ export class TerminalInspectorDailyComponent {
           ticketTypes: [0],
         });
 
-        // Subscribe to form changes using takeUntilDestroyed
         this.inspectorForm.get('ticketTypes')?.valueChanges
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {

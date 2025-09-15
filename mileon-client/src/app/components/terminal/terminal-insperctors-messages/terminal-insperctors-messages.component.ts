@@ -25,7 +25,6 @@ import { TaskPreviewComponent } from "../../shared/task-preview/task-preview.com
   imports: [ButtonComponent, TaskPreviewComponent],
 })
 export class TerminalInsperctorsMessagesComponent {
-  // Services via modern inject()
   private toaster = inject(ToastrService);
   private authorityService = inject(AuthorityService);
   private terminalService = inject(TerminalService);
@@ -33,7 +32,6 @@ export class TerminalInsperctorsMessagesComponent {
   private terminalSearchFormService = inject(TerminalSearchService);
   private injector = inject(Injector);
 
-  // Signals state
   title = signal<string>(TitlesEnum.InspectorsMessages);
   columns = signal<Column[]>([]);
   data = signal<any[]>([]);
@@ -47,14 +45,11 @@ export class TerminalInsperctorsMessagesComponent {
   list = signal<User[]>([]);
   dialogData = signal<DynamicRow[]>([]);
 
-  // Form
   terminalForm: FormGroup = this.terminalSearchFormService.form;
 
-  // Pagination
   currentPage = signal<number>(1);
   pageSize = signal<number>(10);
 
-  // Convert authority stream to signal and react via effect
   private authorityIdSig = toSignal<string | null>(this.authorityService.authorityId$, { initialValue: null });
 
   constructor() {
