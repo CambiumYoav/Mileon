@@ -6,7 +6,8 @@ import { RouterService } from '../../../services/router.service';
 import { ROUTE_PATH } from '../../../constants/routerPath';
 import { Icon } from '../../../types/icon';
 import { TicketIcons } from '../../../types/ticket/ticket-icons.model';
-import { SharedImports } from '../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-results-dropdown',
@@ -14,7 +15,7 @@ import { SharedImports } from '../../../shared/shared-modules';
   styleUrls: ['./results-dropdown.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SharedImports],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
 })
 export class ResultsDropdownComponent implements OnInit {
   private readonly _resultData = signal<any[]>([]);

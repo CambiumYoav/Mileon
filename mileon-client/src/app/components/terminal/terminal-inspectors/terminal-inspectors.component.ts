@@ -33,7 +33,7 @@ import { ButtonComponent } from "../../shared/base/button/button.component";
   standalone: true,
   templateUrl: './terminal-inspectors.component.html',
   styleUrls: ['./terminal-inspectors.component.scss'],
-  imports: [SummaryCardComponent, SharedImports, SelectComponent, MatSelectModule, ReactiveFormsModule, CommonModule, MatFormFieldModule, MatOptionModule, TerminalTableComponent, ButtonComponent],
+  imports: [SummaryCardComponent, ...SharedImports, SelectComponent, MatSelectModule, ReactiveFormsModule, CommonModule, MatFormFieldModule, MatOptionModule, TerminalTableComponent, ButtonComponent],
 })
 
 

@@ -13,7 +13,7 @@ import { BaseComponents, SharedImports } from '../../shared/shared-modules';
 
 @Component({
   selector: 'app-login',
-  imports: [SharedImports, BaseComponents],
+  imports: [...SharedImports, ...BaseComponents],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

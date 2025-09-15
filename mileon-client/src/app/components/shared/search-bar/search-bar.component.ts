@@ -23,7 +23,9 @@ import { fromEvent } from 'rxjs';
 import { Keys } from '../../../types/enum/keyboardEnum';
 import { AdvancedForm } from '../../../types/advanced-search/form-tab.model';
 import { MyRef } from '../../../types/myRef';
-import { SharedImports } from '../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '../../../shared/material-module';
 import { InputSizeEnum } from '../../../types/enum/inputSizeEnum';
 import { DropdownWindowComponent } from "../dropdown-window/dropdown-window.component";
 import { AdvancedSearchComponent } from "../advanced-search/advanced-search.component";
@@ -38,7 +40,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrls: ['./search-bar.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SharedImports, DropdownWindowComponent, AdvancedSearchComponent, ResultsDropdownComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MaterialModule, DropdownWindowComponent, AdvancedSearchComponent, ResultsDropdownComponent],
   providers: [
     SearchFormService,
     ...HebrewDateService.getProviders()

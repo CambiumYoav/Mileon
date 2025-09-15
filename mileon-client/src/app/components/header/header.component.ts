@@ -6,7 +6,9 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { BaseComponents, SharedImports } from '../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '../../shared/material-module';
 import { CheckboxComponent } from '../shared/base/checkbox/checkbox.component';
 import { Router } from '@angular/router';
 import { ConstPath } from '../../constants/const_path';
@@ -22,9 +24,10 @@ import { MainMenuComponent } from '../shared/base/menu/main-menu/main-menu.compo
 
 @Component({
   selector: 'app-header',
-  imports: [SharedImports, BaseComponents, CheckboxComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MaterialModule, CheckboxComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
+  standalone: true,
 })
 export class HeaderComponent implements OnInit {
   @Input() sideNav!: MainMenuComponent;

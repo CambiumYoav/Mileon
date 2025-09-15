@@ -16,7 +16,7 @@ import { FileUploadNewComponent } from "../../shared/base/upload-files/upload-fi
   selector: 'app-infrastructure-import',
   templateUrl: './infrastructure-import.component.html',
   styleUrls: ['./infrastructure-import.component.scss'],
-  imports: [SharedImports, ButtonComponent, FileUploadNewComponent],
+  imports: [...SharedImports, ButtonComponent, FileUploadNewComponent],
 })
 export class InfrastructureImportComponent implements OnInit {
   readonly Icons = ConstPath;

@@ -4,7 +4,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ConstPath } from '../../../../../constants/const_path'; 
 import { ToastrService } from 'ngx-toastr';
 import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
-import { SharedImports } from '../../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '../../../../../shared/material-module';
 import { HebrewDateService } from '../../../../../services/hebrew-date.service';
 import { DatePipe } from '@angular/common';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -13,8 +15,9 @@ import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
   selector: 'app-input-date',
   templateUrl: './input-date.component.html',
   styleUrls: ['./input-date.component.scss'],
-  imports: [SharedImports],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MaterialModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

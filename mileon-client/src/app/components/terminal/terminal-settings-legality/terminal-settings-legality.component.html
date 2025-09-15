@@ -22,47 +22,50 @@
               >
                 <!-- Field Content -->
                 @if (!field.hide) {
-                  <!-- Field Label -->
-                  <label class="title-placeholder" [for]="field.name">
-                    @if (field.isRequired) {
-                      <img
-                        class="required-icon"
-                        [src]="Icons.ASTERISK_RED"
-                      />
-                    }
-                    {{ field.label }}
-                  </label>
-
                   <!-- Field Types -->
                   @switch (field.type) {
                     @case ('text') {
-                      <input
-                        [id]="field.name"
-                        [type]="field.type"
+                      <app-input-text
+                        [title]="field.label"
+                        [placeholder]="field.placeholder || field.label"
                         [formControlName]="field.name"
-                        [attr.disabled]="dynamicForm().get(field.name)?.disabled"
-                      />
+                        [isRequired]="field.isRequired ?? false"
+                        [isValid]="!dynamicForm().get(field.name)?.errors"
+                        [errorMessage]="getErrorMessage(field.name)"
+                      ></app-input-text>
                     }
                     @case ('text-area') {
-                      <textarea
-                        [id]="field.name"
+                      <label class="title-placeholder" [for]="field.name">
+                        <img
+                          *ngIf="field.isRequired"
+                          class="required-icon"
+                          [src]="Icons.ASTERISK_RED"
+                        />
+                        {{ field.label }}
+                      </label>
+                      <app-textarea-comments
+                        [title]="field.label"
+                        [placeholder]="field.placeholder || field.label"
                         [formControlName]="field.name"
-                        [attr.disabled]="dynamicForm().get(field.name)?.disabled"
-                        [placeholder]="field.label"
-                        class="textarea-field"
-                        [maxlength]="field.validations?.maxLength ||1000"
-                        [class.invalid-input]="
-                          dynamicForm().get(field.name)?.touched &&
-                          dynamicForm().get(field.name)?.invalid
-                        "
-                      ></textarea>
+                        [maxlength]="field.validations?.maxLength || 1000"
+                        [rows]="5"
+                      ></app-textarea-comments>
                     }
                     @case ('number') {
+                      <!-- Field Label for number input -->
+                      <label class="title-placeholder" [for]="field.name">
+                        @if (field.isRequired) {
+                          <img
+                            class="required-icon"
+                            [src]="Icons.ASTERISK_RED"
+                          />
+                        }
+                        {{ field.label }}
+                      </label>
                       <input
                         [id]="field.name"
                         type="number"
                         [formControlName]="field.name"
-                        [attr.disabled]="dynamicForm().get(field.name)?.disabled"
                         [min]="field.validations?.min ?? null"
                         [max]="field.validations?.max ?? null"
                         [class.invalid-input]="
@@ -79,7 +82,6 @@
                         [placeholder]="field.placeholder || field.label"
                         [options]="field.options || []"
                         [isRequired]="field.isRequired ?? false"
-                        [disabled]="dynamicForm().get(field.name)?.disabled ?? false"
                         [isValid]="!dynamicForm().get(field.name)?.errors"
                         [bindLabelKey]="'display'"
                         [bindValueKey]="'value'"

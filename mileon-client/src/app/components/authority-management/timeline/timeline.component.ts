@@ -11,7 +11,7 @@ import { SharedImports } from '../../../shared/shared-modules';
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, SharedImports],
+  imports: [RouterOutlet, ...SharedImports],
 })
 export class TimelineComponent implements OnInit {
   private readonly _tabs = signal<TabAttributes[]>(TimelineSettings.Tabs);

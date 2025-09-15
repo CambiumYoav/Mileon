@@ -10,7 +10,7 @@ import { MainMenuComponent } from "../shared/base/menu/main-menu/main-menu.compo
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
-  imports: [SharedImports, SharedComponents, RouterOutlet, MainMenuComponent],
+  imports: [...SharedImports, ...SharedComponents, RouterOutlet, MainMenuComponent],
 })
 export class MainComponent implements OnInit {
   constructor(private baseService: BaseService) {

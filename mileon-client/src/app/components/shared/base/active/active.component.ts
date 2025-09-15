@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { SharedImports } from '../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-active',
   templateUrl: './active.component.html',
   styleUrls: ['./active.component.scss'],
-  imports: [SharedImports],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class ActiveComponent implements OnInit {
 

@@ -13,7 +13,7 @@ import { ButtonComponent } from "../../shared/base/button/button.component";
   selector: 'app-infrastructure-export',
   templateUrl: './infrastructure-export.component.html',
   styleUrls: ['./infrastructure-export.component.scss'],
-  imports: [SharedImports, ButtonComponent],
+  imports: [...SharedImports, ButtonComponent],
 })
 export class InfrastructureExportComponent implements OnInit {
   Icons = ConstPath;

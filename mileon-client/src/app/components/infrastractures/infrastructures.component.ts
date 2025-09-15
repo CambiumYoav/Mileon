@@ -7,7 +7,7 @@ import { SharedImports } from '../../shared/shared-modules';
   selector: 'app-infrastructures',
   templateUrl: './infrastructures.component.html',
   styleUrls: ['./infrastructures.component.scss'],
-  imports: [SharedImports, InfrastructuresRoutingModule],
+  imports: [...SharedImports, InfrastructuresRoutingModule],
 })
 export class InfrastructuresComponent implements OnInit {
   constructor() {}

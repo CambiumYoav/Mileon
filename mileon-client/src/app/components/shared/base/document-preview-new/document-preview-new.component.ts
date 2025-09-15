@@ -18,13 +18,14 @@ import { BaseService } from '../../../../services/base.service';
 import { PreviewFileType } from '../../../../types/previewFile';
 import { saveAs } from 'file-saver';
 import { UploadStatus } from '../../../../types/enum/uploadStatus.enum';
-import { SharedImports } from '../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-document-preview-new',
   templateUrl: './document-preview-new.component.html',
   styleUrls: ['./document-preview-new.component.scss'],
-  imports: [SharedImports],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
 })

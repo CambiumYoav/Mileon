@@ -19,7 +19,7 @@ import { FieldTypeEnum } from '../../../types/advanced-search/form-tab.model';
   selector: 'app-infrastructures-form-wrapper',
   templateUrl: './infrastructures-form-wrapper.component.html',
   styleUrls: ['./infrastructures-form-wrapper.component.scss'],
-  imports: [SharedImports ,BaseComponents]
+  imports: [...SharedImports, ...BaseComponents]
 })
 export class InfrastructuresFormWrapperComponent implements OnInit {
   Icons = ConstPath;

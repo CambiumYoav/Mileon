@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { ConstPath } from '../../../../../constants/const_path';
-import { SharedImports } from '../../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 export interface CheckboxOption {
   value: string | number | any;
@@ -12,8 +13,9 @@ export interface CheckboxOption {
   selector: 'app-input-checkbox-option-group',
   templateUrl: './input-checkbox-option-group.component.html',
   styleUrls: ['./input-checkbox-option-group.component.scss'],
-  imports: [SharedImports],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class InputCheckboxOptionGroupComponent implements OnInit {
   private readonly _options = signal<CheckboxOption[]>([]);

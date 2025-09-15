@@ -7,14 +7,17 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ConstPath } from '../../../../../constants/const_path';
-import { SharedImports } from '../../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MaterialModule } from '../../../../../shared/material-module';
 
 @Component({
   selector: 'app-input-phone',
   templateUrl: './input-phone.component.html',
   styleUrls: ['./input-phone.component.scss'],
-  imports: [SharedImports],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MaterialModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

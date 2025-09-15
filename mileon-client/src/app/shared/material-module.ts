@@ -3,7 +3,6 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatNativeDateModule } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatDateRangeInput, MatDateRangePicker } from "@angular/material/datepicker";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatExpansionModule } from "@angular/material/expansion";
@@ -25,8 +24,6 @@ export const MaterialModule = [
   MatFormFieldModule,
   MatSelectModule,
   MatDatepickerModule,
-  MatDateRangeInput,
-  MatDateRangePicker,
   MatNativeDateModule,
   MatCheckboxModule,
   MatToolbarModule,

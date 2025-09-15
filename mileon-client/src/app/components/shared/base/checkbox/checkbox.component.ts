@@ -6,14 +6,16 @@ import {
   Output,
   signal,
 } from '@angular/core';
-import { SharedImports } from '../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputSizeEnum } from '../../../../types/enum/inputSizeEnum';
 
 @Component({
   selector: 'app-checkbox',
-  imports: [SharedImports],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './checkbox.component.html',
   styleUrl: './checkbox.component.scss',
+  standalone: true,
 })
 export class CheckboxComponent implements OnInit {
   @Input()

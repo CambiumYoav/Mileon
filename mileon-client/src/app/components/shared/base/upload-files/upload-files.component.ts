@@ -26,14 +26,15 @@ import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../../types/enum/error-success-messages';
 import { UserService } from '../../../../services/user.service';
 import { SessionService } from '../../../../services/session.service';
-import { SharedImports } from '../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentPreviewNewComponent } from "../document-preview-new/document-preview-new.component";
 
 @Component({
   selector: 'app-file-upload-new',
   templateUrl: './upload-files.component.html',
   styleUrls: ['./upload-files.component.scss'],
-  imports: [SharedImports, DocumentPreviewNewComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DocumentPreviewNewComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   providers: [

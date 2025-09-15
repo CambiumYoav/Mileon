@@ -3,13 +3,15 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/f
 import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component'; 
 import { ConstPath } from '../../../../../constants/const_path';
 import { InputSizeEnum } from '../../../../../types/enum/inputSizeEnum';
-import { SharedImports } from '../../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '../../../../../shared/material-module';
 
 @Component({
   selector: 'app-input-text',
   templateUrl: './input-text.component.html',
   styleUrls: ['./input-text.component.scss'],
-  imports: [SharedImports],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MaterialModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   providers: [

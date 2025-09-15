@@ -5,14 +5,16 @@ import { Comment } from '../../../../../types/comment';
 import { ReservedComment } from '../../../../../types/reservedComment';
 import { LookupNewService } from '../../../../../services/lookup-new.service';
 import { ActionModuleEnum } from '../../../../../types/enum/moduleEnum';
-import { SharedImports } from '../../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-textarea-comments',
   templateUrl: './textarea-comments.component.html',
   styleUrls: ['./textarea-comments.component.scss'],
-  imports: [SharedImports],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

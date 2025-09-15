@@ -28,19 +28,15 @@
 
             @case (ColumnTypeEnum.Text) {
               <!-- Text Input -->
-              <input
-                type="text"
-                required="true"
-                [value]="field.value"
-                (input)="onFieldChange(field, onInputChange($event))"
+              <app-input-text
                 [formControlName]="field.name"
+                [title]="field.label"
                 [placeholder]="field.label"
-                [class.invalid-input]="
-                  form().get(field.name)?.touched &&
-                  form().get(field.name)?.invalid &&
-                  form().get(field.name)?.hasError('required')
-                "
-              />
+                [isRequired]="field.isRequired"
+                [isValid]="!(form().get(field.name)?.touched && form().get(field.name)?.invalid)"
+                [errorMessage]="form().get(field.name)?.errors?.['required'] ? 'שדה חובה' : ''"
+                (ngModelChange)="onFieldChange(field, $event)"
+              ></app-input-text>
             }
 
             @case (ColumnTypeEnum.Radio) {

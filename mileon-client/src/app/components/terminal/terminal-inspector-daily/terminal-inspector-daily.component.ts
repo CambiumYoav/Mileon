@@ -30,7 +30,7 @@ import { SelectComponent } from "../../shared/base/select/select.component";
   standalone: true,
   templateUrl: './terminal-inspector-daily.component.html',
   styleUrls: ['./terminal-inspector-daily.component.scss'],
-  imports: [SharedImports, ReactiveFormsModule, CommonModule, TerminalTableComponent, SummaryCardComponent, ButtonComponent, SelectComponent],
+  imports: [...SharedImports, ReactiveFormsModule, CommonModule, TerminalTableComponent, SummaryCardComponent, ButtonComponent, SelectComponent],
 })
 export class TerminalInspectorDailyComponent {
   FieldTypeEnum = FieldTypeEnum;

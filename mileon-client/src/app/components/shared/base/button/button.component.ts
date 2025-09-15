@@ -18,6 +18,7 @@ import { MaterialModule } from '../../../../shared/material-module';
   styleUrl: './button.component.scss',
   imports: [CommonModule, MaterialModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class ButtonComponent {
   @Input() buttonClass = 'primary-btn';

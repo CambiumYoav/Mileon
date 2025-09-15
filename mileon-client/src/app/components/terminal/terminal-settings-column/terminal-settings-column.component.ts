@@ -8,11 +8,12 @@ import { ColumnTypeEnum } from '../../../types/table';
 import { TerminalSettingsResponse } from '../../../types/terminal/terminalSettingsRequestType';
 import { SelectComponent } from '../../shared/base/select/select.component';
 import { RadioButtonComponent } from '../../shared/base/radio-button/radio-button.component';
+import { InputTextComponent } from '../../shared/base/inputs/input-text/input-text.component';
 
 @Component({
   selector: 'app-terminal-settings-column',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, SelectComponent, RadioButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, SelectComponent, RadioButtonComponent, InputTextComponent],
   templateUrl: './terminal-settings-column.component.html',
   styleUrls: ['./terminal-settings-column.component.scss'],
 })

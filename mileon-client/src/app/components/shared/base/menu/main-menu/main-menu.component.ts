@@ -13,7 +13,7 @@ import { SharedImports } from '../../../../../shared/shared-modules';
   selector: 'app-main-menu',
   templateUrl: './main-menu.component.html',
   styleUrls: ['./main-menu.component.scss'],
-  imports: [SharedImports],
+  imports: [...SharedImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainMenuComponent implements OnInit {

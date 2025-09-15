@@ -31,7 +31,7 @@ import { FieldTypeEnum } from '../../../types/advanced-search/form-tab.model';
   selector: 'app-infrastructure-form',
   templateUrl: './infrastructure-form.component.html',
   styleUrls: ['./infrastructure-form.component.scss'],
-  imports: [SharedImports,BaseComponents],
+  imports: [...SharedImports, ...BaseComponents],
 })
 export class InfrastructureFormComponent implements OnInit {
   readonly Icons = ConstPath;

@@ -30,6 +30,8 @@ import {
 import { ButtonComponent } from "../../shared/base/button/button.component";
 import { AppModalComponent } from "../../shared/app-modal/app-modal.component";
 import { SelectComponent } from '../../shared/base/select/select.component';
+import { InputTextComponent } from '../../shared/base/inputs/input-text/input-text.component';
+import { TextareaCommentsComponent } from '../../shared/base/inputs/textarea-comments/textarea-comments.component';
 
 @Component({
   selector: 'app-terminal-settings-legality',
@@ -43,7 +45,9 @@ import { SelectComponent } from '../../shared/base/select/select.component';
     MatSelectModule,
     ButtonComponent,
     AppModalComponent,
-    SelectComponent
+    SelectComponent,
+    InputTextComponent,
+    TextareaCommentsComponent
 ]
 })
 export class TerminalSettingsLegalityComponent {
@@ -113,6 +117,7 @@ export class TerminalSettingsLegalityComponent {
         } else {
           this.settingsData.set(result.settings);
           this.mergeServerDataIntoRows();
+          this.createForm(); // Recreate form with updated disabled states
           this.patchFormWithServerData();
         }
       }
@@ -174,6 +179,26 @@ export class TerminalSettingsLegalityComponent {
     }, {} as { [key: string]: any });
     
     this.dynamicForm.set(this.fb.group(formGroup));
+    this.updateFormControlDisabledStates();
+  }
+
+  private updateFormControlDisabledStates(): void {
+    const form = this.dynamicForm();
+    const currentRows = this.rows();
+    
+    currentRows.forEach((dynamicRow) => {
+      dynamicRow.row.forEach((field: DynamicField) => {
+        const control = form.get(field.name);
+        if (control) {
+          const shouldBeDisabled = field.disabled ?? false;
+          if (shouldBeDisabled && control.enabled) {
+            control.disable();
+          } else if (!shouldBeDisabled && control.disabled) {
+            control.enable();
+          }
+        }
+      });
+    });
   }
   private patchFormWithServerData() {
     const form = this.dynamicForm();
@@ -212,6 +237,7 @@ export class TerminalSettingsLegalityComponent {
     
     form.patchValue(formPatches);
     this.dynamicForm.set(form);
+    this.updateFormControlDisabledStates();
   }
 
   private findFieldByName(name: string): DynamicField | null {
@@ -238,7 +264,7 @@ export class TerminalSettingsLegalityComponent {
 
   private createFieldControl(field: any): any {
     const validations = this.getFieldValidations(field);
-    const isDisabled = field.disabled ?? field.isDisabled ?? false;
+    const isDisabled = field.disabled ?? false;
     
     // For select fields, ensure the value matches the option format
     if (field.type === 'select' && field.value) {
@@ -372,6 +398,35 @@ export class TerminalSettingsLegalityComponent {
         action: async () => await this.saveSettings(),
       },
     ];
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const control = this.dynamicForm().get(fieldName);
+    if (!control || !control.errors) {
+      return '';
+    }
+
+    const errors = control.errors;
+    if (errors['required']) {
+      return 'שדה חובה';
+    }
+    if (errors['minlength']) {
+      return `מינימום ${errors['minlength'].requiredLength} תווים`;
+    }
+    if (errors['maxlength']) {
+      return `מקסימום ${errors['maxlength'].requiredLength} תווים`;
+    }
+    if (errors['min']) {
+      return `ערך מינימלי: ${errors['min'].min}`;
+    }
+    if (errors['max']) {
+      return `ערך מקסימלי: ${errors['max'].max}`;
+    }
+    if (errors['pattern']) {
+      return 'פורמט לא תקין';
+    }
+    
+    return 'ערך לא תקין';
   }
 
   openModal() {

@@ -10,7 +10,7 @@ import { SvgIconComponent } from "../../../svg-icon/svg-icon.component";
   selector: 'app-side-menu',
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.scss'],
-  imports: [SharedImports, SvgIconComponent],
+  imports: [...SharedImports, SvgIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideMenuComponent implements OnInit, OnDestroy { 
