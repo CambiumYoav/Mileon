@@ -1,0 +1,126 @@
+<div class="card">
+  <div class="infrastructure-container p-4">
+    <!-- Form -->
+    <form [formGroup]="dynamicForm()">
+      <div class="form-container">
+        <!-- Loop through rows -->
+        @for (row of rows(); track $index) {
+          <div class="form-row">
+            @for (field of row.row; track field.name) {
+              <div
+                [class]="'form-field' + field.size"
+                [ngClass]="{
+                  disabled: field.disabled,
+                  inputError: 
+                    ( 
+                      dynamicForm().get(field.name)?.invalid &&
+                      dynamicForm().get(field.name)?.touched &&
+                      !!dynamicForm().get(field.name)?.errors
+                    ) ||
+                    (isSubmitted() && dynamicForm().get(field.name)?.errors?.['required'])
+                }"
+              >
+                <!-- Field Content -->
+                @if (!field.hide) {
+                  <!-- Field Label -->
+                  <label class="title-placeholder" [for]="field.name">
+                    @if (field.isRequired) {
+                      <img
+                        class="required-icon"
+                        [src]="Icons.ASTERISK_RED"
+                      />
+                    }
+                    {{ field.label }}
+                  </label>
+
+                  <!-- Field Types -->
+                  @switch (field.type) {
+                    @case ('text') {
+                      <input
+                        [id]="field.name"
+                        [type]="field.type"
+                        [formControlName]="field.name"
+                        [attr.disabled]="dynamicForm().get(field.name)?.disabled"
+                      />
+                    }
+                    @case ('text-area') {
+                      <textarea
+                        [id]="field.name"
+                        [formControlName]="field.name"
+                        [attr.disabled]="dynamicForm().get(field.name)?.disabled"
+                        [placeholder]="field.label"
+                        class="textarea-field"
+                        [maxlength]="field.validations?.maxLength ||1000"
+                        [class.invalid-input]="
+                          dynamicForm().get(field.name)?.touched &&
+                          dynamicForm().get(field.name)?.invalid
+                        "
+                      ></textarea>
+                    }
+                    @case ('number') {
+                      <input
+                        [id]="field.name"
+                        type="number"
+                        [formControlName]="field.name"
+                        [attr.disabled]="dynamicForm().get(field.name)?.disabled"
+                        [min]="field.validations?.min ?? null"
+                        [max]="field.validations?.max ?? null"
+                        [class.invalid-input]="
+                          dynamicForm().get(field.name)?.touched &&
+                          dynamicForm().get(field.name)?.invalid
+                        "
+                      />
+                    }
+                    @case ('select') {
+                      <app-select
+                        [id]="field.name"
+                        [formControlName]="field.name"
+                        [title]="field.label"
+                        [placeholder]="field.placeholder || field.label"
+                        [options]="field.options || []"
+                        [isRequired]="field.isRequired ?? false"
+                        [disabled]="dynamicForm().get(field.name)?.disabled ?? false"
+                        [isValid]="!dynamicForm().get(field.name)?.errors"
+                        [bindLabelKey]="'display'"
+                        [bindValueKey]="'value'"
+                        [appearance]="'fill'"
+                        [displaySearch]="true"
+                        [isMultiSelect]="field.isMultiSelect ?? false"
+                      ></app-select>
+                    }
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </form>
+  </div>
+  <div class="button-container">
+    <app-button
+      [buttonText]="'שמור שינויים'"
+      (clickFunction)="openModal()"
+    ></app-button>
+  </div>
+</div>
+
+@if (isModalOpen()) {
+  <app-modal
+    [isModalOpen]="true"
+    [modalSize]="'md'"
+    [buttons]="modalButtons()"
+    (isModalClosed)="closeModal()"
+    [title]="modalTitle"
+  >
+    <div>
+      <div class="mb-2">
+        <img [src]="Icons.DANGER" />
+        <p class="text-bolder-modal">
+          האם אתה בטוח שברצונך לעדכן את ההגדרות?
+          <br />
+        </p>
+      </div>
+    </div>
+  </app-modal>
+}

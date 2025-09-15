@@ -65,12 +65,12 @@ export const terminalRoutes: Routes = [
           import('./terminal-settings-external/terminal-settings-external.component')
             .then(m => m.TerminalSettingsExternalComponent),
       },
-  //     {
-  //       path: RP.Terminal.LegalityByTypeOfOffenseSettings,
-  //       loadComponent: () =>
-  //         import('./terminal-settings-legality/terminal-settings-legality.component')
-  //           .then(m => m.TerminalSettingsLegalityComponent),
-  //     },
+      {
+        path: RP.Terminal.LegalityByTypeOfOffenseSettings,
+        loadComponent: () =>
+          import('./terminal-settings-legality/terminal-settings-legality.component')
+            .then(m => m.TerminalSettingsLegalityComponent),
+      },
       {
         path: RP.Terminal.IconsSettings,
         loadComponent: () =>
