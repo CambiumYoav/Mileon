@@ -1,0 +1,109 @@
+<div class="pb-4 align-items-center position-relative">
+  <div class="statistics-container">
+    <div class="details-container">
+      <div class="d-flex align-items-center">
+        <span class="secondary-heading">{{ secondaryTitle }}</span>
+      </div>
+
+      @if (chartForm) {
+        <form
+          [formGroup]="chartForm"
+          class="inputs-container-form"
+        >
+          <div class="inputs-container xl-w-1200px xxl-w-1400px">
+            @for (field of chartFields; track field.name) {
+              <div class="input-item">
+                <div
+                  class="wrap-field"
+                  [class]="'field-' + field.length"
+                >
+                  @if (field.type === FieldTypeEnum.Select) {
+                    <app-select
+                      [dataFunction]="field.dataFunction"
+                      [options]="getFieldOptions(field)"
+                      bindLabelKey="value"
+                      bindValueKey="id"
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isMultiSelect]="field.multipleSelect || false"
+                      [isRequired]="field.isRequired || false"
+                    ></app-select>
+                  }
+                </div>
+              </div>
+            }
+
+            @switch (selectedDateMode()) {  
+              @case (DateModeEnum.Daily) {
+                <!-- יומי -->
+                <div class="wrap-field" [class]="'field-' + 'long'">
+                  <app-input-date
+                    [title]="'בחירת תאריך'"
+                    [placeholder]="'בחירת תאריך'"
+                    [formControlName]="'day'"
+                  ></app-input-date>
+                </div>
+              }
+              @case (DateModeEnum.DateRange) {
+                <!-- טווח -->
+                <div class="input-item">
+                  <div style="display: ruby-text; width: 100%">
+                    <div class="wrap-field field-long">
+                      <app-input-date
+                        [title]="'מתאריך'"
+                        [placeholder]="'בחירת תאריך'"
+                        [formControlName]="'fromDate'"
+                      ></app-input-date>
+                    </div>
+                    <br>
+                    <div class="wrap-field field-long mr-2">
+                      <app-input-date
+                        [title]="'עד תאריך'"
+                        [placeholder]="'בחירת תאריך'"
+                        [formControlName]="'toDate'"
+                      ></app-input-date>
+                    </div>
+                  </div>
+                </div>
+              }
+              @case (DateModeEnum.Year) {
+                <!-- שנתי -->
+                <div class="wrap-field field-long">
+                  <app-select
+                    [options]="getYearOptions()"
+                    bindLabelKey="label"
+                    bindValueKey="value"
+                    [title]="'שנה'"
+                    [placeholder]="'בחירת שנה'"
+                    [formControlName]="'year'"
+                    [isMultiSelect]="false"
+                    [isRequired]="false"
+                  ></app-select>
+                </div>
+              }
+            }
+          </div>
+        </form>
+      }
+    </div>
+
+    <div class="chart-container">
+      @if (hasRealData()) {
+        <div style="width: 100%; height: 400px; position: relative;">
+          <canvas 
+            #chartCanvas 
+          ></canvas>
+        </div>
+      } @else {
+        <div class="no-data-message">
+          <div class="no-data-content">
+            <i class="material-icons">bar_chart</i>
+            <h3>No Data Available</h3>
+            <p>אין נתונים זמינים להצגה</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

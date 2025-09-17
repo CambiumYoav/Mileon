@@ -98,18 +98,18 @@ export const terminalRoutes: Routes = [
           import('./terminal-statistics-pie/terminal-statistics-pie.component')
             .then(m => m.TerminalStatisticsPieComponent),
       },
-      // {
-      //   path: RP.Terminal.StatisticsLine,
-      //   loadComponent: () =>
-      //     import('./terminal-statistics-line/terminal-statistics-line.component')
-      //       .then(m => m.TerminalStatisticsLineComponent),
-      // },
-      // {
-      //   path: RP.Terminal.StatisticsBar,
-      //   loadComponent: () =>
-      //     import('./terminal-statistics-bar/terminal-statistics-bar.component')
-      //       .then(m => m.TerminalStatisticsBarComponent),
-      // },
+      {
+        path: RP.Terminal.StatisticsLine,
+        loadComponent: () =>
+          import('./terminal-statistics-line/terminal-statistics-line.component')
+            .then(m => m.TerminalStatisticsLineComponent),
+      },
+      {
+        path: RP.Terminal.StatisticsBar,
+        loadComponent: () =>
+          import('./terminal-statistics-bar/terminal-statistics-bar.component')
+            .then(m => m.TerminalStatisticsBarComponent),
+      },
       // {
       //   path: RP.Terminal.StatisticsTable,
       //   loadComponent: () =>
