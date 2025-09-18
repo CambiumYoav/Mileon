@@ -18,6 +18,7 @@
   border: 1.5951px solid #6d6a6d;
   border-radius: 25.5217px;
   padding: 20px;
+  gap: 20px;
 }
 
 .chart-container {
@@ -27,7 +28,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 45px;
+  // margin-top: 45px;
   border-radius: 10px;
 
   .no-data-message {
@@ -69,7 +70,7 @@
 .details-container {
   flex: 1;
   padding: 20px;
-  height: 15%;
+  // height: 15%;
   border-radius: 15px;
   width: 100%;
 }

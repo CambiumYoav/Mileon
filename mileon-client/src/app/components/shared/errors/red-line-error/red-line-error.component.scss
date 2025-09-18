@@ -1,5 +1,8 @@
 .red-error {
-    font-size: 20px;
-    margin: 2px 0;
-    color: red;
+    color: var(--red, #F00);
+    text-align: right;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }

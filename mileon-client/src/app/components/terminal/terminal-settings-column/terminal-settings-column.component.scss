@@ -47,6 +47,11 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       font-size: 14px;
+
+      &:focus {
+        outline: none;
+        border: 1px solid var(--black, #000);
+      }
     }
 
     .checkbox-input {

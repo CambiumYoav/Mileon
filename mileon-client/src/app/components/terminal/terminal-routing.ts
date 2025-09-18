@@ -110,12 +110,12 @@ export const terminalRoutes: Routes = [
           import('./terminal-statistics-bar/terminal-statistics-bar.component')
             .then(m => m.TerminalStatisticsBarComponent),
       },
-      // {
-      //   path: RP.Terminal.StatisticsTable,
-      //   loadComponent: () =>
-      //     import('./terminal-statistics-table/terminal-statistics-table.component')
-      //       .then(m => m.TerminalStatisticsTableComponent),
-      // },
+      {
+        path: RP.Terminal.StatisticsTable,
+        loadComponent: () =>
+          import('./terminal-statistics-table/terminal-statistics-table.component')
+            .then(m => m.TerminalStatisticsTableComponent),
+      },
     ],
   },
 ];

@@ -22,7 +22,7 @@
                       [dataFunction]="field.dataFunction"
                       [options]="getFieldOptions(field)"
                       bindLabelKey="value"
-                      bindValueKey="id"
+                      [bindValueKey]="field.name === 'mode' ? 'value' : 'id'"
                       [title]="field.displayName"
                       [placeholder]="field.displayName"
                       [formControlName]="field.name"

@@ -55,6 +55,36 @@
     }
   }
 
+  .custom-radio {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid #000000;
+    background-color: #fff;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+  
+    &:checked::after {
+      content: '';
+      background-image: url('/assets/icons/radio-button-checked.svg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+      z-index: 1;
+      display: block;
+      width: 18.5px;
+      height: 18.5px;
+      flex-shrink: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  } 
+
   .form-text {
     margin-top: 0.25rem;
     font-size: 0.875em;

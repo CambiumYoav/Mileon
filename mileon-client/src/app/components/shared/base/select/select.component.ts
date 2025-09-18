@@ -16,6 +16,8 @@ import {
   ChangeDetectionStrategy,
   signal,
   computed,
+  HostListener,
+  ElementRef,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -95,7 +97,7 @@ export class SelectComponent
   private isServerSide: boolean = true;
   private currentStaticItems: Array<any> = [];
 
-  constructor(injector: Injector, private selectService: SelectService) {
+  constructor(injector: Injector, private selectService: SelectService, private eRef: ElementRef) {
     super(injector);
   }
 
@@ -473,9 +475,15 @@ export class SelectComponent
         }
       }, 100);
     } else {
+      // Hide search and reset filter when select closes
       this._isSearchVisible.set(false);
-      // Clear search when select closes
       this.filterFormControl.setValue('');
+      // Reset the items list to show all items when search is cleared
+      if (!this.isServerSide && this.currentStaticItems.length > 0) {
+        this.items$ = of(this.currentStaticItems);
+      } else if (this.options && this.options.length > 0) {
+        this.items$ = of(this.options);
+      }
     }
   }
 
@@ -485,21 +493,48 @@ export class SelectComponent
   }
 
   onSearchBlur(): void {
-    // Hide search when blurred (unless select is still open)
+    // Hide search when blurred and return to normal select mode
     setTimeout(() => {
-      if (!this.control.disabled && !this.control.value) {
-        this._isSearchVisible.set(false);
-      }
+      this._isSearchVisible.set(false);
+      // Clear search filter when hiding search
+      this.filterFormControl.setValue('');
     }, 150);
   }
 
   hideSearch(): void {
     this._isSearchVisible.set(false);
     this.filterFormControl.setValue('');
+    // Reset the items list to show all items when search is cleared
+    if (!this.isServerSide && this.currentStaticItems.length > 0) {
+      this.items$ = of(this.currentStaticItems);
+    } else if (this.options && this.options.length > 0) {
+      this.items$ = of(this.options);
+    }
     // Focus back to the select
     const selectElement = document.querySelector('.mat-mdc-select-trigger') as HTMLElement;
     if (selectElement) {
       selectElement.focus();
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    // Only handle click outside if search is visible and displaySearch is enabled
+    if (this.displaySearch && this.isSearchVisible() && !this.eRef.nativeElement.contains(event.target as Node)) {
+      // Check if click is not on the mat-select panel
+      const target = event.target as Element;
+      const isClickOnSelectPanel = target.closest('.mat-mdc-select-panel');
+      
+      if (!isClickOnSelectPanel) {
+        this._isSearchVisible.set(false);
+        this.filterFormControl.setValue('');
+        // Reset the items list to show all items when search is cleared
+        if (!this.isServerSide && this.currentStaticItems.length > 0) {
+          this.items$ = of(this.currentStaticItems);
+        } else if (this.options && this.options.length > 0) {
+          this.items$ = of(this.options);
+        }
+      }
     }
   }
 
