@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, effect, runInInjectionContext, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -39,6 +39,7 @@ export class UsersNationalComponent implements OnInit {
   private readonly usersService = inject(UsersService);
   private readonly dialog = inject(MatDialog);
   private readonly permissionsService = inject(PermissionService);
+  private readonly injector = inject(Injector);
 
   readonly title = TitlesEnum.UsersTitleNational;
   readonly Icons = ConstPath;
@@ -84,25 +85,21 @@ export class UsersNationalComponent implements OnInit {
     };
     
     this.authorityService.setMunicipalsToNationalAdmin();
-
     this.setupAuthorityEffect();
   }
 
   private setupAuthorityEffect(): void {
-    // React to authority changes using signals
-    const authorityEffect = () => {
-      const authorityID = this.authorityID();
-      if (authorityID) {
-        this.usersSearchFormService.clearForm();
-        this.loadData(this.usersSearchFormService.form.value);
-      }
-    };
-    
-    // Initial call
-    authorityEffect();
-    
-    // Set up reactive effect (this would be replaced with effect() in a real scenario)
-    // For now, we'll handle it in the loadData method
+    // Set up reactive effect to respond to authority changes using runInInjectionContext
+    runInInjectionContext(this.injector, () => {
+      effect(() => {
+        const authorityID = this.authorityID();
+        if (authorityID) {
+          // Clear form and reload data when authority changes
+          this.usersSearchFormService.clearForm();
+          this.loadData(this.usersSearchFormService.form.value);
+        }
+      });
+    });
   }
 
   ngOnDestroy(): void {

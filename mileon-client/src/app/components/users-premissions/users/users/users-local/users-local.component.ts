@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, effect, runInInjectionContext, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -43,6 +43,7 @@ export class UsersLocalComponent implements OnInit {
   private readonly usersService = inject(UsersService);
   private readonly dialog = inject(MatDialog);
   private readonly permissionsService = inject(PermissionService);
+  private readonly injector = inject(Injector);
 
   readonly title = TitlesEnum.UsersTitleLocal;
   readonly Icons = ConstPath;
@@ -96,15 +97,17 @@ export class UsersLocalComponent implements OnInit {
   }
 
   private setupAuthorityEffect(): void {
-    const authorityEffect = () => {
-      const authorityID = this.authorityID();
-      if (authorityID) {
-        this.usersSearchFormService.clearForm();
-        this.loadData(this.usersSearchFormService.form.value);
-      }
-    };
-    
-    authorityEffect();
+    // Set up reactive effect to respond to authority changes using runInInjectionContext
+    runInInjectionContext(this.injector, () => {
+      effect(() => {
+        const authorityID = this.authorityID();
+        if (authorityID) {
+          // Clear form and reload data when authority changes
+          this.usersSearchFormService.clearForm();
+          this.loadData(this.usersSearchFormService.form.value);
+        }
+      });
+    });
   }
 
   ngOnDestroy(): void {
