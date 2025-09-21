@@ -15,6 +15,10 @@
         matTooltipPosition="left"
         aria-label="Info"
         alt="Info"
+        text-align="right"
+        appTruncatedTextTooltip
+        [tooltipText]="tooltipText || getTooltipContent()"
+        [maxWidth]="tooltipMaxWidth"
       />
     }
   </div>

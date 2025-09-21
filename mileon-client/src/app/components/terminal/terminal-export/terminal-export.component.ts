@@ -7,6 +7,7 @@ import {
 import { ConstPath } from '../../../constants/const_path';
 import { ButtonComponent } from "../../shared/base/button/button.component";
 import { TerminalInitialDescription } from '../../../types/enum/terminalEnum';
+import { TitlesEnum } from '../../../types/enum/titlesEnum';
   
 @Component({
   selector: 'app-terminal-export',
@@ -17,7 +18,7 @@ import { TerminalInitialDescription } from '../../../types/enum/terminalEnum';
 export class TerminalExportComponent {
   Icons = ConstPath;
   
-  private readonly _title = signal<string>('יצוא מבנה קובץ');
+  private readonly _title = signal<string>(TitlesEnum.ExportFileTitle);
   private readonly _description = signal<string>('');
   private readonly _exportData = signal<any>(null);
   private readonly _isExporting = signal<boolean>(false);

@@ -1,0 +1,29 @@
+<div class="infrastructure-container p-4">
+  <div class="inline-header">
+    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+    <h5 class="title">{{ title }}</h5>
+  </div>
+
+  <div class="content-container">
+    <div class="w-75">
+      <div>
+        <img [src]="Icons.BACK_ARROW_BLACK" alt="arrow" />
+        A
+      </div>
+      <span class="text">{{ description() }}</span>
+    </div>
+
+    <div class="button-container">
+      <app-button
+        [buttonText]="'ביטול'"
+        (clickFunction)="onNoClick()"
+        [buttonClass]="'outline-btn btn-base'"
+      ></app-button>
+      <app-button
+        [buttonText]="'יצוא'"
+        (clickFunction)="onSubmit()"
+        [buttonClass]="'primary-btn btn-base'"
+      ></app-button>
+    </div>
+  </div>
+</div>

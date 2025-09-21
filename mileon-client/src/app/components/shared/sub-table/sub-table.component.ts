@@ -44,22 +44,18 @@ export class SubTableComponent extends BaseFormComponent {
 
   @Output() fieldUpdate = new EventEmitter<{ key: string; value: string }>();
 
-  // Signals
   private readonly _data = signal<SubTable>({} as SubTable);
   private readonly _localData = signal<SubTable>({} as SubTable);
   private readonly _errorMsg = signal<string>('');
 
-  // Public Signals and Computed Values
   protected readonly localData = computed(() => this._localData());
   protected readonly errorMsg = computed(() => this._errorMsg());
 
-  // Constants
   protected readonly Icons = ConstPath;
 
   constructor() {
     super();
     
-    // Effect to handle data changes
     effect(() => {
       const data = this._data();
       if (!data) return;

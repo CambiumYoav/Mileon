@@ -70,7 +70,7 @@
       @if (items$ | async; as retrievedItems) {
         <div>
           @for (item of retrievedItems; track trackByItemId($index, item)) {
-            <mat-option [value]="item[bindValueKey]">
+            <mat-option [value]="isMultiSelect ? item : item[bindValueKey]">
               @if (bindLabelKeys) {
                 <span appTruncatedTextTooltip>
                   {{ constructLabel(item, bindLabelKeys) }}

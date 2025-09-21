@@ -1,0 +1,13 @@
+<app-table
+  [data]="data"
+  [columns]="columns()"
+  [total]="total"
+  [form]="userForm"
+  (onRowEvent)="goToEditUser($event)"
+  [showPaginator]="showPaginator"
+  (onFormChanges)="emitServerSort($event)"
+  [icons]="TicketStagesIcons"
+  [loader]="loader"
+  [isCheckboxsSelected]="isChecked"
+>
+</app-table>

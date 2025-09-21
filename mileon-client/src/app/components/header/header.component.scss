@@ -1,6 +1,9 @@
 @import "./../../../styles/elements.scss";
 
 :host {
+  display: block;
+  width: 100%;
+  
   button mat-icon {
     color: white !important;
   }
@@ -9,6 +12,7 @@
     box-shadow: 0px 0px 12px -1px #b0bac8;
     padding: 2px 10px;
     height: 106px;
+    width: 100%;
 
     .user {
       display: flex;

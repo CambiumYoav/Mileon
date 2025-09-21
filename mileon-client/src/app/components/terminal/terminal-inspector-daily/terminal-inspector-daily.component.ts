@@ -103,7 +103,7 @@ export class TerminalInspectorDailyComponent {
     const MIN_LOADER_TIME = 1500;
     const startTime = Date.now();
     try {
-      filter.pageSize = 10;
+      filter.pageSize = 100;
 
       filter.interfaceFilter!.InspectorID = this.inspectorID();
       filter.interfaceFilter!.TicketGivingDate = this.todayDate();

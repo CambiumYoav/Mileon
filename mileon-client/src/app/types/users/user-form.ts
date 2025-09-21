@@ -1,5 +1,5 @@
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
-import { Patterns } from 'src/app/validators/validationPatterns';
+import { Patterns } from '../../validators/validationPatterns';
 export class UserForm {
   email: string;
   userName: string;

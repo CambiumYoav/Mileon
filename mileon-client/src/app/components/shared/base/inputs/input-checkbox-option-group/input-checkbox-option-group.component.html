@@ -3,7 +3,7 @@
     @if (isRequired) {
       <img class="exit-icon" [src]="Icons.ASTERISK_RED" />
     }
-    <div class="title-placeholder">{{ title }}</div>
+    <div class="form-title">{{ title }}</div>
   </div>
   <div class="checkbox-group">
     @for (option of options; track option.value) {
@@ -11,16 +11,12 @@
         class="checkbox"
         [ngClass]="!isValid ? 'invalidInput' : ''"
       >
-        <div class="inline">
-          <input
-            type="checkbox"
-            class="check"
-            [id]="option.value"
-            [checked]="option.checked || false"
-            (change)="toggleCheckbox(option.value, $event)"
-          />
-          <label [for]="option.value" class="label">{{ option.label }}</label>
-        </div>
+        <app-checkbox
+          [checked]="option.checked || false"
+          [label]="option.label"
+          [isDisabled]="isDisabled"
+          (valueChanged)="toggleCheckbox(option.value, $event)"
+        ></app-checkbox>
       </div>
     }
   </div>

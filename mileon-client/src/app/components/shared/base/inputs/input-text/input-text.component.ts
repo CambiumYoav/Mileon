@@ -6,12 +6,13 @@ import { InputSizeEnum } from '../../../../../types/enum/inputSizeEnum';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../../../shared/material-module';
+import { TruncatedTextTooltipDirective } from '../../../../../directives/truncated-text-tooltip.directive';
 
 @Component({
   selector: 'app-input-text',
   templateUrl: './input-text.component.html',
   styleUrls: ['./input-text.component.scss'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MaterialModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MaterialModule, TruncatedTextTooltipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   providers: [
@@ -34,6 +35,8 @@ export class InputTextComponent
   private readonly _errorMessage = signal<string>('');
   private readonly _isTooltip = signal<boolean>(false);
   private readonly _isRequired = signal<boolean | undefined>(false);
+  private readonly _tooltipText = signal<string>('');
+  private readonly _tooltipMaxWidth = signal<number>(200);
 
   readonly sizeClass = computed(() => `input-text-${this._size()}`);
 
@@ -78,6 +81,16 @@ export class InputTextComponent
   set isRequired(value: boolean | undefined) {
     this._isRequired.set(value);
   }
+
+  @Input()
+  set tooltipText(value: string) {
+    this._tooltipText.set(value);
+  }
+
+  @Input()
+  set tooltipMaxWidth(value: number) {
+    this._tooltipMaxWidth.set(value);
+  }
   
   @Input()
   set disabled(value: boolean) {
@@ -115,6 +128,14 @@ export class InputTextComponent
 
   get isRequired(): boolean | undefined {
     return this._isRequired();
+  }
+
+  get tooltipText(): string {
+    return this._tooltipText();
+  }
+
+  get tooltipMaxWidth(): number {
+    return this._tooltipMaxWidth();
   }
 
   getTooltipContent(): string {

@@ -1,0 +1,78 @@
+@import "../../../../../styles/import.scss";
+
+// @import "../../../../../styles/elements.scss";
+
+// :host {
+//   .infrastructure-container {
+//     // width: 624px !important;
+//     // height: 307px;
+//     height: 100%;
+
+//     .inline-header {
+//       display: flex;
+//       align-items: center;
+//       justify-content: space-between;
+
+//       .title {
+//         color: black;
+//         font-weight: 800;
+//         font-family: $fontOpenSans;
+//         direction: rtl;
+//         font-size: 18px;
+//         line-height: 25px;
+//         margin: 0;
+//       }
+
+//       .exit-icon {
+//         cursor: pointer;
+//       }
+//     }
+//   }
+
+//   .content-container {
+//     display: flex;
+//     direction: rtl;
+//     margin-top: 30px;
+//     flex-direction: column;
+
+//     .text {
+//       font-family: $fontOpenSans;
+//       font-style: normal;
+//       font-size: 12px;
+//       line-height: 16px;
+//       text-align: right;
+//     }
+//     .text-bold-modal {
+//       font-family: $fontOpenSans;
+//       font-weight: 600;
+//       font-size: 12px;
+//       line-height: 16px;
+//       font-style: normal;
+//     }
+
+//     .file-upload-wrapper {
+//       display: flex;
+//       align-items: center;
+//     }
+//   }
+
+//   .button-container {
+//     display: flex;
+//     flex-direction: row;
+//     align-items: center;
+//     justify-content: end;
+//     margin-top: 25px;
+
+//     ::ng-deep app-button {
+//       margin: 2px;
+//       button {
+//         margin: 0 !important;
+//         padding: 0 35px;
+//       }
+//     }
+//   }
+
+//   ::ng-deep app-file-upload-new {
+//     width: 100%;
+//   }
+// }

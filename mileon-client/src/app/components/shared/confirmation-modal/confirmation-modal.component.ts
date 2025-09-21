@@ -22,7 +22,7 @@ export class ConfirmationModalComponent {
   @Input() modalSize: string = 'md';
   @Input() cancelLabel: string = 'ביטול';
   @Input() confirmLabel: string = 'שמור שינויים';
-  @Input() cancelButtonClass: string = 'pop-up-cancel-btn-fill';
+  @Input() cancelButtonClass: string = 'outline-secondary-btn';
   @Input() confirmButtonClass: string = '';
 
   @Output() onCancel = new EventEmitter<void>();

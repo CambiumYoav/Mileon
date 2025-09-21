@@ -1,0 +1,226 @@
+<div>
+  @if (userForm) {
+    <form [formGroup]="userForm" class="inputs-container-form">
+      <div class="inputs-container xl-w-1200px xxl-w-1400px">
+        @for (field of userFields().slice(0, 4); track field.name) {
+          <div class="input-item">
+            <ng-container [ngSwitch]="field.type">
+              <div
+                class="wrap-field"
+                [class]="'field-' + field.length"
+                [ngSwitch]="field.type"
+              >
+                @if (field.name !== 'userName') {
+                  <app-input-text
+                    *ngSwitchCase="FieldTypeEnum.Text"
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-input-text>
+                }
+                @if (field.name === 'userName') {
+                  <app-input-text
+                    *ngSwitchCase="FieldTypeEnum.Text"
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="true"
+                    [isRequired]="field.isRequired"
+                  ></app-input-text>
+                }
+
+                <app-select
+                  *ngSwitchCase="FieldTypeEnum.Select"
+                  [dataFunction]="field.dataFunction"
+                  bindLabelKey="value"
+                  bindValueKey="id"
+                  [title]="field.displayName"
+                  [placeholder]="field.displayName"
+                  [formControlName]="field.name"
+                  [isMultiSelect]="field.multipleSelect || false"
+                  [isValid]="isFieldValid(field.name)"
+                  [isRequired]="field.isRequired"
+                ></app-select>
+              </div>
+            </ng-container>
+          </div>
+        }
+
+        @for (field of userFields().slice(4, 6); track field.name) {
+          <div class="input-item">
+            <ng-container [ngSwitch]="field.type">
+              <div
+                class="wrap-field"
+                [class]="'field-' + field.length"
+                [ngSwitch]="field.type"
+              >
+                @if (field.name !== 'id') {
+                  <app-input-text
+                    *ngSwitchCase="FieldTypeEnum.Text"
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-input-text>
+                }
+                @if (field.name === 'id') {
+                  <app-input-text
+                    *ngSwitchCase="FieldTypeEnum.Text"
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="true"
+                    [isRequired]="field.isRequired"
+                  ></app-input-text>
+                }
+
+                <app-input-phone
+                  *ngSwitchCase="FieldTypeEnum.Phone"
+                  [title]="field.displayName"
+                  [formControlName]="field.name"
+                  [isValid]="isFieldValid(field.name)"
+                  [isRequired]="field.isRequired"
+                ></app-input-phone>
+              </div>
+            </ng-container>
+          </div>
+        }
+
+        <button
+          [disabled]="disableEdit()"
+          class="reset-password-btn link-btn button-base"
+          [ngClass]="{ disabled: disableEdit() }"
+          (click)="resetPassword()"
+        >
+          אפס סיסמה
+        </button>
+        <div class="password-container"></div>
+        @for (field of userFields().slice(6, 10); track field.name) {
+          <div class="input-item">
+            <ng-container [ngSwitch]="field.type">
+              <div
+                class="wrap-field"
+                [class]="'field-' + field.length"
+                [ngSwitch]="field.type"
+              >
+                <app-input-text
+                  *ngSwitchCase="FieldTypeEnum.Text"
+                  [title]="field.displayName"
+                  [placeholder]="field.displayName"
+                  [formControlName]="field.name"
+                  [isValid]="isFieldValid(field.name)"
+                  [isRequired]="field.isRequired"
+                ></app-input-text>
+                <app-select
+                  *ngSwitchCase="FieldTypeEnum.Select"
+                  [dataFunction]="field.dataFunction"
+                  bindLabelKey="value"
+                  bindValueKey="id"
+                  [title]="field.displayName"
+                  [placeholder]="field.displayName"
+                  [formControlName]="field.name"
+                  [isMultiSelect]="field.multipleSelect || false"
+                  [isValid]="isFieldValid(field.name)"
+                  [isRequired]="field.isRequired"
+                ></app-select>
+
+                @if (field.name === 'appAccess') {
+                  <app-input-checkbox-option-group
+                    *ngSwitchCase="FieldTypeEnum.CheckboxWithOptions"
+                    [options]="optionsApps()"
+                    (selectionChange)="onSelectionChange($event, field.name)"
+                    [title]="field.displayName"
+                    [isValid]="isCheckboxFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                    [isDisabled]="!!field.disabled"
+                  ></app-input-checkbox-option-group>
+                }
+                @if (field.name === 'dataAccess') {
+                  <app-input-checkbox-option-group
+                    *ngSwitchCase="FieldTypeEnum.CheckboxWithOptions"
+                    [options]="optionsPermissions()"
+                    (selectionChange)="onSelectionChange($event, field.name)"
+                    [title]="field.displayName"
+                    [isValid]="isCheckboxFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                    [isDisabled]="!!field.disabled"
+                  ></app-input-checkbox-option-group>
+                }
+              </div>
+            </ng-container>
+          </div>
+        }
+
+        <!-- Upload Component -->
+        <div class="full-width">
+          <app-file-upload-new
+            (fileSelected)="getUploadedFile($event)"
+            [selectedFiles]="filesToUpload()"
+            [documentTypes]="fileTypes()"
+            [allowedFileTypes]="[FileType.PDF]"
+            [title]="signFileTitle()"
+            [disabled]="disableEdit()"
+          ></app-file-upload-new>
+        </div>
+
+        @for (field of userFields().slice(10, 13); track field.name) {
+          <div class="input-item">
+            <ng-container [ngSwitch]="field.type">
+              <div
+                class="wrap-field"
+                [class]="'field-' + field.length"
+                [ngSwitch]="field.type"
+              >
+                <app-input-text
+                  *ngSwitchCase="FieldTypeEnum.Text"
+                  [title]="field.displayName"
+                  [placeholder]="field.displayName"
+                  [formControlName]="field.name"
+                  [isValid]="isFieldValid(field.name)"
+                  [isRequired]="field.isRequired"
+                ></app-input-text>
+
+                <div class="select-container d-flex flex-column">
+                  <div class="inline-header">
+                    @if (field.isRequired) {
+                      <img
+                        class="exit-icon"
+                        [src]="Icons.ASTERISK_RED"
+                      />
+                    }
+                    <label class="title-placeholder" for="group">{{
+                      field.displayName
+                    }}</label>
+                  </div>
+                  <app-select
+                    *ngSwitchCase="FieldTypeEnum.Select"
+                    [dataFunction]="field.dataFunction"
+                    bindLabelKey="value"
+                    bindValueKey="id"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isMultiSelect]="field.multipleSelect || false"
+                    [isValid]="isFieldValid(field.name)"
+                  ></app-select>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        }
+
+        <div class="input-item full-width checkbox-buttons-row">
+          <div class="input-item full-width constant-btns">
+            <app-button
+              [buttonText]="'שמור שינויים'"
+              (clickFunction)="updateLocalUser()"
+              [isDisabled]="disableEdit()"
+            ></app-button>
+          </div>
+        </div>
+      </div>
+    </form>
+  }
+</div>

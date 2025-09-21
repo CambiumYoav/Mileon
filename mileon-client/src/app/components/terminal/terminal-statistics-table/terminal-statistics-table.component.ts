@@ -53,7 +53,6 @@ export class TerminalStatisticsTableComponent {
     return options ? [...options] : [];
   };
   
-  // Signals
   selectedDateMode = signal<DateModeEnum>(DateModeEnum.Empty);
   selectTicketType = signal<TicketTypeForMapEnum>(TicketTypeForMapEnum.ADMIN);
   data = signal<any[]>([]);

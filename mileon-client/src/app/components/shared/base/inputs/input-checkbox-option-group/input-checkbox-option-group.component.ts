@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy
 import { ConstPath } from '../../../../../constants/const_path';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CheckboxComponent } from "../../checkbox/checkbox.component";
+
 
 export interface CheckboxOption {
   value: string | number | any;
@@ -13,7 +15,7 @@ export interface CheckboxOption {
   selector: 'app-input-checkbox-option-group',
   templateUrl: './input-checkbox-option-group.component.html',
   styleUrls: ['./input-checkbox-option-group.component.scss'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, CheckboxComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
 })
@@ -98,8 +100,7 @@ export class InputCheckboxOptionGroupComponent implements OnInit {
     });
   }
 
-  toggleCheckbox(value: number | string, event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
+  toggleCheckbox(value: number | string, checked: boolean): void {
     const numericValue = Number(value);
     const currentSelectedValues = this._selectedValues();
 

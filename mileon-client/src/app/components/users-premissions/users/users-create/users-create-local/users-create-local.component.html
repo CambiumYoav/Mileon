@@ -1,0 +1,211 @@
+<div>
+  @if (userForm) {
+    <form [formGroup]="userForm" class="inputs-container-form">
+      <div class="inputs-container xl-w-1200px xxl-w-1400px">
+        @for (field of userFields.slice(0, 4); track field.name) {
+          <div class="input-item">
+            @switch (field.type) {
+              @case (FieldTypeEnum.Text) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <app-input-text
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-input-text>
+                </div>
+              }
+              @case (FieldTypeEnum.Select) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <app-select
+                    [dataFunction]="field.dataFunction"
+                    bindLabelKey="value"
+                    bindValueKey="id"
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isMultiSelect]="field.multipleSelect || false"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-select>
+                </div>
+              }
+            }
+          </div>
+        }
+
+        @for (field of userFields.slice(4, 7); track field.name) {
+          <div class="input-item">
+            @switch (field.type) {
+              @case (FieldTypeEnum.Text) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  @if (field.name !== 'password' && field.name !== 'id') {
+                    <app-input-text
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isValid]="isFieldValid(field.name)"
+                      [isRequired]="field.isRequired"
+                    ></app-input-text>
+                  }
+                  @if (field.name === 'id') {
+                    <app-input-text
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isValid]="isValidIsraeliID()"
+                      [isRequired]="field.isRequired"
+                    ></app-input-text>
+                  }
+                  @if (field.name === 'password') {
+                    <app-input-text
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isValid]="isPasswordFieldIsValid()"
+                      [isTooltip]="true"
+                      [isRequired]="field.isRequired"
+                    ></app-input-text>
+                  }
+                </div>
+              }
+              @case (FieldTypeEnum.Phone) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <app-input-phone
+                    [title]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-input-phone>
+                </div>
+              }
+            }
+          </div>
+        }
+        <div class="password-container"></div>
+        @for (field of userFields.slice(7, 11); track field.name) {
+          <div class="input-item">
+            @switch (field.type) {
+              @case (FieldTypeEnum.Text) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <app-input-text
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-input-text>
+                </div>
+              }
+              @case (FieldTypeEnum.Select) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <app-select
+                    [dataFunction]="field.dataFunction"
+                    bindLabelKey="value"
+                    bindValueKey="id"
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isMultiSelect]="field.multipleSelect || false"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-select>
+                </div>
+              }
+              @case (FieldTypeEnum.CheckboxWithOptions) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  @if (field.name === 'appAccess') {
+                    <app-input-checkbox-option-group
+                      [options]="optionsApps()"
+                      (selectionChange)="onSelectionChange($event, field.name)"
+                      [title]="field.displayName"
+                      [isValid]="isCheckboxFieldValid(field.name)"
+                      [isRequired]="field.isRequired"
+                    ></app-input-checkbox-option-group>
+                  }
+                  @if (field.name === 'dataAccess') {
+                    <app-input-checkbox-option-group
+                      [options]="optionsPermissions()"
+                      (selectionChange)="onSelectionChange($event, field.name)"
+                      [title]="field.displayName"
+                      [isValid]="isCheckboxFieldValid(field.name)"
+                      [isRequired]="field.isRequired"
+                    ></app-input-checkbox-option-group>
+                  }
+                </div>
+              }
+            }
+          </div>
+        }
+
+        <!-- Upload Component -->
+        <div class="full-width">
+          <app-file-upload-new
+            (fileSelected)="getUploadedFile($event)"
+            [selectedFiles]="filesToUpload()"
+            [documentTypes]="fileTypes()"
+            [allowedFileTypes]="[FileType.PDF]"
+            [title]="signFileTitle()"
+          ></app-file-upload-new>
+        </div>
+
+        @for (field of userFields.slice(11, 13); track field.name) {
+          <div class="input-item">
+            @switch (field.type) {
+              @case (FieldTypeEnum.Text) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <app-input-text
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-input-text>
+                </div>
+              }
+              @case (FieldTypeEnum.Select) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <div class="select-container d-flex flex-column">
+                    <div class="title-container">
+                      <div class="inline-header">
+                        @if (field.isRequired) {
+                          <img
+                            class="exit-icon"
+                            [src]="Icons.ASTERISK_RED"
+                          />
+                        }
+                        <label class="title-placeholder" for="group">{{
+                          field.displayName
+                        }}</label>
+                      </div>
+                    </div>
+
+                    <app-select
+                      [dataFunction]="field.dataFunction"
+                      bindLabelKey="value"
+                      bindValueKey="id"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isMultiSelect]="field.multipleSelect || false"
+                      [isValid]="isFieldValid(field.name)"
+                      [searchPlaceholder]="'חיפוש...'"
+                    ></app-select>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        }
+
+        <!-- Buttons -->
+        <div class="input-item full-width constant-btns">
+          <app-button
+            [buttonText]="'צור משתמש'"
+            (clickFunction)="createLocalUser()"
+          ></app-button>
+        </div>
+      </div>
+    </form>
+  }
+</div>

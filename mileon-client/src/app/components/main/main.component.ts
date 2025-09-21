@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { BaseService } from '../../services/base.service';
 import { SharedComponents } from '../../shared/shared-modules';
 import { SharedImports } from '../../shared/shared-modules';
@@ -13,7 +13,9 @@ import { MainMenuComponent } from "../shared/base/menu/main-menu/main-menu.compo
   imports: [...SharedImports, ...SharedComponents, RouterOutlet, MainMenuComponent],
 })
 export class MainComponent implements OnInit {
-  constructor(private baseService: BaseService) {
+  private baseService = inject(BaseService);
+  
+  constructor() {
     this.baseService.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -21,5 +23,6 @@ export class MainComponent implements OnInit {
       }),
     };
   }
+  
   ngOnInit(): void {}
 }

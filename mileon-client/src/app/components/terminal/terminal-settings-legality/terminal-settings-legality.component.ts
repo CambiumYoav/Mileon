@@ -383,7 +383,7 @@ export class TerminalSettingsLegalityComponent {
       {
         label: 'ביטול',
         action: () => this.closeModal(),
-        buttonClass: 'pop-up-cancel-btn-fill',
+        buttonClass: 'outline-secondary-btn',
       },
       {
         label: 'עדכן הגדרות',

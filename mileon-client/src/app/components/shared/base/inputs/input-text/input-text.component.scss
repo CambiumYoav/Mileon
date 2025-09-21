@@ -22,7 +22,7 @@
 
   &:has(input:disabled) {
     border-radius: 4px;
-    border: 1px solid var(--strok_color, #606060);
+    // border: 1px solid var(--strok_color, #606060);
     background: #E3E7EB !important;
   }
 
@@ -43,10 +43,12 @@
 
 .tooltip-icon {
   font-size: 16px;
+  text-align: right;
   color: #555;
   cursor: pointer;
   margin-bottom: 5px;
   vertical-align: middle;
+
 }
 
 .input-text-sm .input-fill,
@@ -155,16 +157,22 @@ input.hide-border-input:disabled {
   color: red;
 }
 
-::ng-deep .custom-tooltip {
-  &::first-line {
-    text-decoration: underline;
-    font-weight: 600;
-    font-size: 14px;
-    color: red;
-    line-height: 19px;
-    font-family: $fontOpenSans;
-  }
+::ng-deep .custom-tooltip { 
+  display: inline-flex;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  background: #EDF9FF;
+  color: #181818;
+  text-align: right;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; 
 }
+
 
 .inline-header {
   display: flex;

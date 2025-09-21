@@ -22,6 +22,7 @@ export enum TerminalSubModuleNames {
   StatisticsTableTitle = SubModuleNames.StatisticsTableTitle,
 }
 
+
 export enum TerminalTabNames {
   GeneralSettings = 'generalSettings',
   ExternalInterfaceSettings = 'externalInterfaceSettings',

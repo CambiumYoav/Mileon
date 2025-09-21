@@ -140,12 +140,28 @@ export class SelectComponent
     // Initialize listObj$ after constructor
     this.listObj$ = this.selectService.listsObj.asObservable();
     
+    // Ensure multi-select controls always have array values
+    if (this.isMultiSelect) {
+      if (!this.control.value || !Array.isArray(this.control.value)) {
+        this.control.setValue([]);
+      }
+    }
+    
     if (this.control.value) {
       if (this.isMultiSelect) {
         // For multi-select, ensure we have full objects, not just IDs
-        this.selectParams.ids = this.control.value.map((item: any) => 
-          (typeof item === 'object' && item !== null) ? item[this.bindValueKey] : item
-        );
+        // Check if the value is an array before calling map
+        if (Array.isArray(this.control.value)) {
+          this.selectParams.ids = this.control.value.map((item: any) => 
+            (typeof item === 'object' && item !== null) ? item[this.bindValueKey] : item
+          );
+        } else {
+          // If it's not an array but multi-select is enabled, wrap it in an array
+          const value = this.control.value;
+          this.selectParams.ids = [
+            (typeof value === 'object' && value !== null) ? value[this.bindValueKey] : value
+          ];
+        }
       } else {
         const value = this.control.value;
         this.selectParams.ids = [
@@ -162,6 +178,8 @@ export class SelectComponent
       this.items$ = of(this.options);
       this.isServerSide = false;
       this.currentStaticItems = this.options;
+      // Convert existing control values to objects
+      this.convertControlValuesToObjects();
     }
     // Handle dataFunction directly if it's a static function
     else if (this.dataFunction && this.dataFunction.function) {
@@ -171,6 +189,8 @@ export class SelectComponent
           this.items$ = of(staticData);
           this.isServerSide = false;
           this.currentStaticItems = staticData;
+          // Convert existing control values to objects
+          this.convertControlValuesToObjects();
         }
       } catch (error) {
         console.warn('Error executing dataFunction:', error);
@@ -199,6 +219,9 @@ export class SelectComponent
       } else {
         this.items$ = of((res[this.formControlName as keyof typeof res] as any[]) || []);
       }
+      
+      // Convert existing control values from IDs to full objects for multi-select
+      this.convertControlValuesToObjects();
     });
 
     // Respect disabled input using ControlValueAccessor API to avoid template binding warnings
@@ -366,6 +389,8 @@ export class SelectComponent
       this.items$ = of(this.options);
       this.isServerSide = false;
       this.currentStaticItems = this.options;
+      // Convert existing control values to objects
+      this.convertControlValuesToObjects();
     }
 
     if (changes['ids']) {
@@ -396,7 +421,7 @@ export class SelectComponent
     if (option1 === null || option1 === undefined || option2 === null || option2 === undefined) return false;
 
     if (this.isMultiSelect) {
-      // For multi-select, we store full objects, so compare by ID
+      // For multi-select, we now store full objects, so compare by ID
       if (typeof option1 === 'object' && option1 !== null && typeof option2 === 'object' && option2 !== null) {
         return option1[this.bindValueKey] === option2[this.bindValueKey];
       } else if (typeof option1 === 'object' && option1 !== null) {
@@ -435,7 +460,7 @@ export class SelectComponent
     }
     
     // Fallback for single select or edge cases
-    return selectedValue;
+    return selectedValue?.toString() || 'Unknown';
   }
 
   removeSelectedItem(index: number, event: Event): void {
@@ -444,7 +469,9 @@ export class SelectComponent
     event.preventDefault();
     
     if (this.isMultiSelect && this.control.value) {
-      const currentValue = [...this.control.value];
+      // Ensure the control value is an array before spreading
+      const controlValue = Array.isArray(this.control.value) ? this.control.value : [this.control.value];
+      const currentValue = [...controlValue];
       currentValue.splice(index, 1);
       this.control.setValue(currentValue);
       
@@ -547,14 +574,83 @@ export class SelectComponent
   }
 
   /**
+   * Override writeValue to ensure multi-select always gets an array
+   */
+  override writeValue(value: any): void {
+    // For multi-select, ensure the value is always an array
+    if (this.isMultiSelect) {
+      if (value === null || value === undefined) {
+        value = [];
+      } else if (!Array.isArray(value)) {
+        value = [value];
+      }
+    }
+    super.writeValue(value);
+  }
+
+  /**
+   * Helper method to check if control value is an array (for template usage)
+   */
+  isControlValueArray(): boolean {
+    return Array.isArray(this.control?.value);
+  }
+
+  /**
    * TrackBy function for selected items in multi-select
-   * Uses item.id or bindValueKey if available, otherwise falls back to index
+   * Uses item.id or bindValueKey if available, otherwise falls back to a unique combination
    */
   trackBySelectedItem(index: number, item: any): any {
     if (typeof item === 'object' && item !== null) {
-      return item[this.bindValueKey] ?? item.id ?? item.value ?? index;
+      // Try to get a unique identifier from the object
+      const id = item[this.bindValueKey] ?? item.id ?? item.value;
+      if (id !== undefined && id !== null) {
+        return id;
+      }
+      // If no unique id found, create one from multiple properties
+      const label = item[this.bindLabelKey] ?? item.display ?? item.label ?? item.name;
+      return `${index}_${JSON.stringify(item)}_${label}`;
     }
-    return item ?? index;
+    // For primitive values, combine with index to ensure uniqueness
+    return `${index}_${item}`;
+  }
+
+  /**
+   * Convert existing control values from IDs to full objects for multi-select
+   */
+  private convertControlValuesToObjects(): void {
+    if (!this.isMultiSelect || !this.control.value) {
+      return;
+    }
+
+    this.items$.pipe(take(1)).subscribe((items) => {
+      if (!items || items.length === 0) {
+        return;
+      }
+
+      const currentValue = this.control.value;
+      if (Array.isArray(currentValue)) {
+        const convertedValues = currentValue.map((value: any) => {
+          // If it's already an object, return as is
+          if (typeof value === 'object' && value !== null) {
+            return value;
+          }
+          
+          // If it's a primitive value, find the corresponding object
+          const foundItem = items.find(item => 
+            item[this.bindValueKey] === value || 
+            item.id === value || 
+            item.value === value
+          );
+          
+          return foundItem || value;
+        });
+        
+        // Only update if there were changes
+        if (JSON.stringify(convertedValues) !== JSON.stringify(currentValue)) {
+          this.control.setValue(convertedValues);
+        }
+      }
+    });
   }
 }
 

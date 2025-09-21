@@ -6,6 +6,7 @@
   [attr.disabled]="isDisabled ? true : null"
   (click)="clickFunction.emit()"
 >
-  <span *ngIf="buttonText">{{ buttonText }}</span>
   <img *ngIf="imgSrc" [src]="imgSrc" alt="" />
+  <span *ngIf="buttonText">{{ buttonText }}</span>
+  
 </button>

@@ -1,0 +1,115 @@
+<div class="inputs-container-form">
+  @if (userForm) {
+    <form [formGroup]="userForm">
+      <div class="inputs-container xl-w-1200px xxl-w-1400px">
+        @for (field of userFields.slice(0, 4); track field.name) {
+          <div class="input-item">
+            @switch (field.type) {
+              @case (FieldTypeEnum.Text) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <app-input-text
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-input-text>
+                </div>
+              }
+              @case (FieldTypeEnum.Select) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <app-select
+                    [dataFunction]="field.dataFunction"
+                    bindLabelKey="value"
+                    bindValueKey="id"
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isMultiSelect]="field.multipleSelect || false"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-select>
+                </div>
+              }
+            }
+          </div>
+        }
+
+        @for (field of userFields.slice(4, 6); track field.name) {
+          <div class="input-item">
+            @switch (field.type) {
+              @case (FieldTypeEnum.Text) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  @if (field.name !== 'password' && field.name !== 'id') {
+                    <app-input-text
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isValid]="isFieldValid(field.name)"
+                      [isRequired]="field.isRequired"
+                    ></app-input-text>
+                  }
+                  @if (field.name === 'id') {
+                    <app-input-text
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isValid]="isValidIsraeliID()"
+                      [isRequired]="field.isRequired"
+                    ></app-input-text>
+                  }
+                  @if (field.name === 'password') {
+                    <app-input-text
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isValid]="isPasswordFieldIsValid()"
+                      [isRequired]="field.isRequired"
+                    ></app-input-text>
+                  }
+                </div>
+              }
+              @case (FieldTypeEnum.Phone) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <app-input-phone
+                    [title]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-input-phone>
+                </div>
+              }
+            }
+          </div>
+        }
+        <div class="password-container"></div>
+        @for (field of userFields.slice(6, 7); track field.name) {
+          <div class="input-item last-item">
+            @switch (field.type) {
+              @case (FieldTypeEnum.Text) {
+                <div class="wrap-field" [class]="'field-' + field.length">
+                  <app-input-text
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isValid]="isPasswordFieldIsValid()"
+                    [isTooltip]="true"
+                    [isRequired]="field.isRequired"
+                  ></app-input-text>
+                </div>
+              }
+            }
+          </div>
+        }
+
+        <!-- Buttons -->
+        <div class="input-item full-width constant-btns with-top-margin">
+          <app-button
+            [buttonText]="'צור משתמש'"
+            (clickFunction)="createNationalUser()"
+          ></app-button>
+        </div>
+      </div>
+    </form>
+  }
+</div>

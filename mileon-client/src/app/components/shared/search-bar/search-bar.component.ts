@@ -300,14 +300,12 @@ export class SearchBarComponent
   private readonly elementRef = inject(ElementRef);
   private readonly destroyRef = inject(DestroyRef);
 
-  // Signals for keyboard events and form control changes
   private readonly _keyboardEvent = signal<KeyboardEvent | null>(null);
   private readonly _formControlValue = signal<string | null>(null);
 
   constructor() {
     super();
     
-    // Effect to handle keyboard events
     effect(() => {
       const keyboardEvent = this._keyboardEvent();
       if (keyboardEvent) {
@@ -318,7 +316,6 @@ export class SearchBarComponent
       }
     });
 
-    // Effect to handle form control changes
     effect(() => {
       const formValue = this._formControlValue();
       if (formValue !== null) {

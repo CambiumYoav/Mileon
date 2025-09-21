@@ -48,7 +48,7 @@ export class TerminalInsperctorsMessagesComponent {
   terminalForm: FormGroup = this.terminalSearchFormService.form;
 
   currentPage = signal<number>(1);
-  pageSize = signal<number>(10);
+  pageSize = signal<number>(100);
 
   private authorityIdSig = toSignal<string | null>(this.authorityService.authorityId$, { initialValue: null });
 

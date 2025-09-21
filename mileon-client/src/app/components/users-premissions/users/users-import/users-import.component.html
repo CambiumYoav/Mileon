@@ -1,0 +1,50 @@
+<div class="infrastructure-container p-4">
+  <div class="inline-header">
+    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+    <h5 class="title">{{ title }}</h5>
+  </div>
+
+  <div class="content-container">
+    <div class="w-75">
+      <div>
+        <img [src]="Icons.BACK_ARROW_BLACK" alt="arrow" />
+        A
+      </div>
+
+      <span class="text">{{ description() }}</span>
+
+      <div class="mb-2">
+        <img [src]="Icons.DANGER" />
+        <p class="text-bold-modal">
+          שים לב,פעולה זו דורסת את רשימת המשתמשים במערכת
+          <br />
+          ומקימה מחדש בהתאם לקובץ
+          <br />
+          האם להמשיך?
+        </p>
+      </div>
+    </div>
+    <div class="file-upload-wrapper">
+      <app-file-upload-new
+        (fileSelected)="getUploadedFile($event)"
+        [selectedFiles]="filesToUpload()"
+        [documentTypes]="fileTypes()"
+        [allowedFileTypes]="[FileType.XLSX, FileType.XLS, FileType.CSV]"
+        [containerSize]="'lg'"
+      >
+      </app-file-upload-new>
+    </div>
+    <div class="button-container">
+      <app-button
+        [buttonText]="'ביטול'"
+        (clickFunction)="onNoClick()"
+        [buttonClass]="'outline-btn btn-base'"
+      ></app-button>
+      <app-button
+        [buttonText]="'יבוא'"
+        (clickFunction)="onSubmit()"
+        [buttonClass]="'primary-btn btn-base'"
+      ></app-button>
+    </div>
+  </div>
+</div>

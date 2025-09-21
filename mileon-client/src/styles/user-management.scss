@@ -1,0 +1,178 @@
+@import "./elements.scss";
+@import "./buttons.scss";
+@import "./form.scss";
+
+// Common user management component styles
+// This file contains shared styles for user create/edit components
+
+// Button container styles
+.constant-btns {
+  display: flex;
+  justify-content: end;
+  
+  ::ng-deep app-button {
+    button {
+      margin: 0;
+      margin-right: 10px;
+    }
+  }
+  
+  // Variant with top margin for specific layouts
+  &.with-top-margin {
+    margin-top: 220px;
+  }
+}
+
+// Input background styles - ensures white backgrounds for form inputs
+:host ::ng-deep {
+  app-input-text .input-fill,
+  app-select .input-fill,
+  app-input-phone .input-fill {
+    background-color: white;
+  }
+}
+
+// Main form container layout
+.inputs-container-form {
+  margin-right: -15px;
+  
+  .inputs-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 1rem;
+    padding: 1rem 1rem 12rem 1rem;
+    max-width: 1200px;
+  }
+
+  .input-item {
+    min-width: 200px;
+    box-sizing: border-box;
+  }
+
+  .full-width {
+    flex: 1 1 100%;
+  }
+  
+  // Special layout for last item with button
+  .last-item {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 1rem;
+    flex: 1 1 100%;
+  }
+  
+  // Checkbox buttons row layout
+  .checkbox-buttons-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}
+
+.checkbox-container {
+  width: 180px;
+}
+
+// Disabled state for form elements
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+// Reset password button styling
+.reset-password-btn {
+  margin-top: auto;
+}
+
+// Material UI select container styling
+.select-container {
+  max-width: 600px;
+  direction: rtl;
+  margin-top: 5px;
+
+
+  .inline-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    
+    .exit-icon {
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    
+    .title-placeholder {
+      color: var(--black, #000);
+      text-align: right;
+      font-family: $fontOpenSans;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  }
+}
+
+// Password container styling (for create-local component)
+.password-container {
+  height: 100%;
+  margin-top: 10px;
+  width: 100%;
+  
+  .password {
+    font-size: 14px;
+    line-height: 19px;
+    font-family: $fontOpenSans;
+    font-weight: 300;
+    font-style: normal;
+    text-align: right;
+  }
+  
+  .password-title {
+    text-decoration: underline;
+    font-weight: 600;
+  }
+}
+
+// Back button styling (for parent components)
+.back-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+
+  .icon {
+    margin-left: 5px;
+  }
+  
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Text styling for modals
+.text-bolder-modal {
+  font-family: $fontOpenSans;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 25px;
+  text-align: right;
+}
+
+::ng-deep app-input-checkbox-option-group {
+  width: 210px;
+}
+
+// Global button styling override for user components
+::ng-deep app-button button {
+  margin: 0;
+  direction: rtl;
+}
