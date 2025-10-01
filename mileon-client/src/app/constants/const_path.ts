@@ -4,7 +4,7 @@ export class ConstPath {
   public static TRASH = '../assets/icons/trash.svg';
   public static CALL = '../assets/icons/call.svg';
   public static TRASH_NOTICES = '../assets/icons/trashNotices.svg';
-  public static TRASH_TABLE = '../assets/icons/trashOutline.svg';
+  public static TRASH_TABLE = '../assets/icons/trash-outline.svg'; // Mileon\mileon-client\src\assets\icons\trashOutline.svg
   public static TRASH_DARK = '../assets/icons/trash-dark.svg';
   public static PROFILE_PLUS = '../assets/icons/profilePlus.svg';
   public static ADD_CIRCLE = '../assets/icons/addCircle.svg';

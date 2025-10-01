@@ -56,8 +56,9 @@ export class SearchBarComponent
   private readonly _advancedSearch = signal<AdvancedForm | null>(null);
   private readonly _showPlaceholder = signal<boolean>(false);
   private readonly _resultCountMessage = signal<string>('תוצאות חיפוש');
-  private readonly _timeForDebounce = signal<number>(750);
+  private readonly _timeForDebounce = signal<number>(300);
   private readonly _submitOnKey = signal<boolean>(false);
+  private readonly _liveSearch = signal<boolean>(true);
   private readonly _hasResultsDropdown = signal<boolean>(false);
   private readonly _showDatePicker = signal<boolean>(true);
   private readonly _total = signal<number>(0);
@@ -100,6 +101,10 @@ export class SearchBarComponent
 
   get submitOnKey(): boolean {
     return this._submitOnKey();
+  }
+
+  get liveSearch(): boolean {
+    return this._liveSearch();
   }
 
   get hasResultsDropdown(): boolean {
@@ -234,6 +239,11 @@ export class SearchBarComponent
   }
 
   @Input()
+  set liveSearch(value: boolean) {
+    this._liveSearch.set(value);
+  }
+
+  @Input()
   set hasResultsDropdown(value: boolean) {
     this._hasResultsDropdown.set(value);
   }
@@ -318,9 +328,17 @@ export class SearchBarComponent
 
     effect(() => {
       const formValue = this._formControlValue();
-      if (formValue !== null) {
-        if (formValue) this.onSearch();
-        else this.closeDropdownWindow();
+      if (formValue !== null && this.liveSearch) {
+        if (formValue) {
+          this.onSearch();
+        } else {
+          // Close dropdown if it exists, but still trigger search for live search
+          if (this.hasResultsDropdown) {
+            this.closeDropdownWindow();
+          }
+          // Also trigger search when clearing to reset results
+          this.onSearch();
+        }
       }
     });
   }
@@ -341,8 +359,9 @@ export class SearchBarComponent
         this._keyboardEvent.set(e);
       });
 
-    // Set up form control changes using signals
-    if (this.hasResultsDropdown) {
+    // Set up form control changes using signals for live search
+    // This works independently of hasResultsDropdown
+    if (this.liveSearch) {
       let searchControl = this.form.get('searchText');
       if (searchControl) {
         this.formChangeWithDebounce(
@@ -381,8 +400,10 @@ export class SearchBarComponent
       this.triggerAction();
     }
     if (!this.submitOnKey) {
-      if (this.resultData?.length) this.openDropdownWindow();
-      else this.closeDropdownWindow();
+      if (this.hasResultsDropdown) {
+        if (this.resultData?.length) this.openDropdownWindow();
+        else this.closeDropdownWindow();
+      }
     } else {
       this._advancedSearchOpened.set(false);
     }

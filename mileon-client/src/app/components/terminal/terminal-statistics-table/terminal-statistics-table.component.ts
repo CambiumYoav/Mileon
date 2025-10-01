@@ -52,6 +52,11 @@ export class TerminalStatisticsTableComponent {
   getMutableOptions = (options: readonly any[] | undefined): any[] => {
     return options ? [...options] : [];
   };
+
+  // Helper method to get the default mode option for form initialization
+  getDefaultModeOption(): any {
+    return { id: 0, value: 'יומי' };
+  }
   
   selectedDateMode = signal<DateModeEnum>(DateModeEnum.Empty);
   selectTicketType = signal<TicketTypeForMapEnum>(TicketTypeForMapEnum.ADMIN);
@@ -101,7 +106,7 @@ export class TerminalStatisticsTableComponent {
             authorityId: authorityID,
             ticketTypeId: TicketTypeForMapEnum.ADMIN,
             inspectorId: '70DD08B4-A93E-4167-E71C-08DAD05CE74F',
-            mode: DateModeEnum.Daily,
+            mode: this.getDefaultModeOption(), // Use helper method for consistency
             day: new Date(),
           });
         }
@@ -129,8 +134,10 @@ export class TerminalStatisticsTableComponent {
         effect(() => {
           const value = modeSignal();
           if (value !== undefined) {
-            this.selectedDateMode.set(value);
-            Utils.updateValidatorsByMode(form, value);
+            // Extract the value from the object if it's an object
+            const actualModeValue = typeof value === 'object' ? value.value : value;
+            this.selectedDateMode.set(actualModeValue);
+            Utils.updateValidatorsByMode(form, actualModeValue);
           }
         });
       }
@@ -142,7 +149,9 @@ export class TerminalStatisticsTableComponent {
         effect(() => {
           const value = ticketTypeSignal();
           if (value !== undefined) {
-            this.selectTicketType.set(value);
+            // Extract the value from the object if it's an object
+            const actualTicketTypeValue = typeof value === 'object' ? value.id : value;
+            this.selectTicketType.set(actualTicketTypeValue);
           }
         });
       }
@@ -182,14 +191,13 @@ export class TerminalStatisticsTableComponent {
         }
       }
     } catch (error) {
-      console.error('Error fetching inspectors:', error);
+      // Handle error silently
     }
   }
   async loadData(e?: any): Promise<void> {
     try {
       const form = this.chartForm();
       if (!form || !form.valid) {
-        console.log('Form is not valid, skipping data load');
         return;
       }
       
@@ -198,8 +206,21 @@ export class TerminalStatisticsTableComponent {
 
       // Ensure required fields are present
       if (!formValues.authorityId) {
-        console.log('Authority ID is missing, skipping data load');
         return;
+      }
+
+      // Extract IDs from objects if they are objects
+      if (formValues.inspectorId && typeof formValues.inspectorId === 'object') {
+        formValues.inspectorId = formValues.inspectorId.id;
+      }
+      if (formValues.ticketTypeId && typeof formValues.ticketTypeId === 'object') {
+        formValues.ticketTypeId = formValues.ticketTypeId.id;
+      }
+      if (formValues.areaId && typeof formValues.areaId === 'object') {
+        formValues.areaId = formValues.areaId.id;
+      }
+      if (formValues.streetId && typeof formValues.streetId === 'object') {
+        formValues.streetId = formValues.streetId.id;
       }
 
       formValues = {
@@ -221,7 +242,7 @@ export class TerminalStatisticsTableComponent {
         this.data.set(mappedData);
       }
     } catch (e) {
-      console.error('Error loading data:', e);
+      // Handle error silently
     } finally {
       this.loader.set(false);
     }

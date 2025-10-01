@@ -1,0 +1,94 @@
+@import "../../../../../styles/buttons.scss";
+@import "../../../../../styles/form.scss";
+@import "../../../../../styles/elements.scss";
+
+
+.infrastructure-container {
+
+  .form-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+    flex-direction: column;
+  }
+
+  .inputError {
+    input,
+    select,
+    ::ng-deep mat-form-field .mat-form-field-flex {
+      border-color: crimson !important;
+      border: 1px solid;
+      border-radius: 4px;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    justify-content: space-between;
+
+    label {
+      position: absolute;
+      top: -20px;
+      width: max-content;
+    }
+
+
+    .fromTo-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+
+    }
+  }
+  .inline-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    .exit-icon {
+      cursor: pointer;
+    }
+    .form-title {
+      color: var(--text, #000);
+      text-align: right;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  }
+  .form-field {
+    position: relative;
+    margin-top: 30px;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+  }
+
+  .button-container {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    width: 100%;
+
+    app-button {
+      margin-left: 20px;
+    }
+  }
+
+  ::ng-deep app-button button {
+    margin: 0;
+  }
+
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .required-icon {
+    margin-bottom: 2px;
+  }
+}

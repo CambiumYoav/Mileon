@@ -35,7 +35,7 @@ export class PermissionsTable {
       propertyName: 'roleID',
       canSort: true,
       type: ColumnTypeEnum.Icon,
-
+      icon: 'EDIT',
       sortByServer: false,
     },
     {

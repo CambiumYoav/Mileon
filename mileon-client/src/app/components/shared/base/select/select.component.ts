@@ -140,6 +140,7 @@ export class SelectComponent
     // Initialize listObj$ after constructor
     this.listObj$ = this.selectService.listsObj.asObservable();
     
+    
     // Ensure multi-select controls always have array values
     if (this.isMultiSelect) {
       if (!this.control.value || !Array.isArray(this.control.value)) {
@@ -152,20 +153,20 @@ export class SelectComponent
         // For multi-select, ensure we have full objects, not just IDs
         // Check if the value is an array before calling map
         if (Array.isArray(this.control.value)) {
-          this.selectParams.ids = this.control.value.map((item: any) => 
-            (typeof item === 'object' && item !== null) ? item[this.bindValueKey] : item
-          );
+        this.selectParams.ids = this.control.value.map((item: any) => 
+          (typeof item === 'object' && item !== null) ? item[this.bindValueKey || 'id'] : item
+        );
         } else {
           // If it's not an array but multi-select is enabled, wrap it in an array
           const value = this.control.value;
           this.selectParams.ids = [
-            (typeof value === 'object' && value !== null) ? value[this.bindValueKey] : value
+            (typeof value === 'object' && value !== null) ? value[this.bindValueKey || 'id'] : value
           ];
         }
       } else {
         const value = this.control.value;
         this.selectParams.ids = [
-          (typeof value === 'object' && value !== null) ? value[this.bindValueKey] : value
+          (typeof value === 'object' && value !== null) ? value[this.bindValueKey || 'id'] : value
         ];
       }
     }
@@ -179,7 +180,9 @@ export class SelectComponent
       this.isServerSide = false;
       this.currentStaticItems = this.options;
       // Convert existing control values to objects
-      this.convertControlValuesToObjects();
+      setTimeout(() => {
+        this.convertControlValuesToObjects();
+      }, 0);
     }
     // Handle dataFunction directly if it's a static function
     else if (this.dataFunction && this.dataFunction.function) {
@@ -190,7 +193,9 @@ export class SelectComponent
           this.isServerSide = false;
           this.currentStaticItems = staticData;
           // Convert existing control values to objects
-          this.convertControlValuesToObjects();
+          setTimeout(() => {
+            this.convertControlValuesToObjects();
+          }, 0);
         }
       } catch (error) {
         console.warn('Error executing dataFunction:', error);
@@ -221,7 +226,10 @@ export class SelectComponent
       }
       
       // Convert existing control values from IDs to full objects for multi-select
-      this.convertControlValuesToObjects();
+      // Use setTimeout to ensure items$ has been updated
+      setTimeout(() => {
+        this.convertControlValuesToObjects();
+      }, 0);
     });
 
     // Respect disabled input using ControlValueAccessor API to avoid template binding warnings
@@ -390,7 +398,9 @@ export class SelectComponent
       this.isServerSide = false;
       this.currentStaticItems = this.options;
       // Convert existing control values to objects
-      this.convertControlValuesToObjects();
+      setTimeout(() => {
+        this.convertControlValuesToObjects();
+      }, 0);
     }
 
     if (changes['ids']) {
@@ -415,31 +425,29 @@ export class SelectComponent
   }
 
   compareValues(option1: any, option2: any): boolean {
+    // Ensure we have a valid bindValueKey
+    const bindValueKey = this.bindValueKey || 'id';
+
     // Handle null/undefined cases first
     if (option1 === null && option2 === null) return true;
     if (option1 === undefined && option2 === undefined) return true;
     if (option1 === null || option1 === undefined || option2 === null || option2 === undefined) return false;
 
-    if (this.isMultiSelect) {
-      // For multi-select, we now store full objects, so compare by ID
-      if (typeof option1 === 'object' && option1 !== null && typeof option2 === 'object' && option2 !== null) {
-        return option1[this.bindValueKey] === option2[this.bindValueKey];
-      } else if (typeof option1 === 'object' && option1 !== null) {
-        return option1[this.bindValueKey] === option2;
-      } else if (typeof option2 === 'object' && option2 !== null) {
-        return option1 === option2[this.bindValueKey];
-      }
-    }
-    
-    // For single select, compare directly or by value key
+    // Both are objects - compare by bindValueKey
     if (typeof option1 === 'object' && option1 !== null && typeof option2 === 'object' && option2 !== null) {
-      return option1[this.bindValueKey] === option2[this.bindValueKey];
-    } else if (typeof option1 === 'object' && option1 !== null) {
-      return option1[this.bindValueKey] === option2;
-    } else if (typeof option2 === 'object' && option2 !== null) {
-      return option1 === option2[this.bindValueKey];
+      return option1[bindValueKey] === option2[bindValueKey];
     }
     
+    // One is object, one is primitive - extract value from object and compare
+    if (typeof option1 === 'object' && option1 !== null) {
+      return option1[bindValueKey] === option2;
+    }
+    
+    if (typeof option2 === 'object' && option2 !== null) {
+      return option1 === option2[bindValueKey];
+    }
+    
+    // Both are primitives - direct comparison
     return option1 === option2;
   }
 
@@ -477,8 +485,9 @@ export class SelectComponent
       
       // Update the selectParams.ids if needed - extract IDs from full objects
       if (this.selectParams.ids && this.selectParams.ids.length > 0) {
+        const bindValueKey = this.bindValueKey || 'id';
         this.selectParams.ids = currentValue.map((item: any) => 
-          (typeof item === 'object' && item !== null) ? item[this.bindValueKey] : item
+          (typeof item === 'object' && item !== null) ? item[bindValueKey] : item
         );
       }
       
@@ -570,7 +579,8 @@ export class SelectComponent
    * Uses item.id if available, otherwise falls back to index
    */
   trackByItemId(index: number, item: any): any {
-    return item?.id ?? item?.value ?? item?.[this.bindValueKey] ?? index;
+    const bindValueKey = this.bindValueKey || 'id';
+    return item?.id ?? item?.value ?? item?.[bindValueKey] ?? index;
   }
 
   /**
@@ -602,17 +612,20 @@ export class SelectComponent
   trackBySelectedItem(index: number, item: any): any {
     if (typeof item === 'object' && item !== null) {
       // Try to get a unique identifier from the object
-      const id = item[this.bindValueKey] ?? item.id ?? item.value;
+      const bindValueKey = this.bindValueKey || 'id';
+      const bindLabelKey = this.bindLabelKey || 'value';
+      const id = item[bindValueKey] ?? item.id ?? item.value;
       if (id !== undefined && id !== null) {
         return id;
       }
       // If no unique id found, create one from multiple properties
-      const label = item[this.bindLabelKey] ?? item.display ?? item.label ?? item.name;
+      const label = item[bindLabelKey] ?? item.display ?? item.label ?? item.name;
       return `${index}_${JSON.stringify(item)}_${label}`;
     }
     // For primitive values, combine with index to ensure uniqueness
     return `${index}_${item}`;
   }
+
 
   /**
    * Convert existing control values from IDs to full objects for multi-select
@@ -636,8 +649,9 @@ export class SelectComponent
           }
           
           // If it's a primitive value, find the corresponding object
+          const bindValueKey = this.bindValueKey || 'id';
           const foundItem = items.find(item => 
-            item[this.bindValueKey] === value || 
+            item[bindValueKey] === value || 
             item.id === value || 
             item.value === value
           );
@@ -648,6 +662,22 @@ export class SelectComponent
         // Only update if there were changes
         if (JSON.stringify(convertedValues) !== JSON.stringify(currentValue)) {
           this.control.setValue(convertedValues);
+        }
+      } else {
+        // Handle single value case (shouldn't happen in multi-select, but just in case)
+        if (typeof currentValue === 'object' && currentValue !== null) {
+          return; // Already an object
+        }
+        
+        const bindValueKey = this.bindValueKey || 'id';
+        const foundItem = items.find(item => 
+          item[bindValueKey] === currentValue || 
+          item.id === currentValue || 
+          item.value === currentValue
+        );
+        
+        if (foundItem) {
+          this.control.setValue(foundItem);
         }
       }
     });

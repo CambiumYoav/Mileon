@@ -91,7 +91,6 @@ export class TerminalFormComponent {
   }
 
   ngOnInit(): void {
-    console.log(this.data.form);
     this.createForm(); 
   }
 

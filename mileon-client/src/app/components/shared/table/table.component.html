@@ -193,9 +193,9 @@
                   ></app-tag>
                 }
                 @if (column.type === ColumnTypeEnum.Icon) {
-                  <div class="d-flex justify-content-center">
+                  <div>
                     <span
-                      (click)="onRowClick(item, $event)"
+                      (click)="onRowClick(item, $event); $event.stopPropagation()"
                       style="margin-left: 40px"
                     >
                       <img [src]="getIconPath(column.icon)" class="icon-img" />

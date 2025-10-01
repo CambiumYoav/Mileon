@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, signal, computed, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectorRef, Component, signal, computed, inject, effect } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ROUTE_PATH } from '../../../constants/routerPath';  
 import { AuthorityService } from '../../../services/authority.service ';
 import { TitlesEnum } from '../../../types/enum/titlesEnum';
@@ -66,36 +66,43 @@ export class TerminalInspectorDailyComponent {
   private route = inject(ActivatedRoute);
   private baseFormService = inject(BaseFormService);
   private cdr = inject(ChangeDetectorRef);
-  private destroyRef = inject(DestroyRef);
+
+  // Convert authority service to signal
+  private authorityIdSignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
 
   constructor() {
     this.terminalForm = this.terminalSearchFormService.searchForm;
     this.inspectorForm = this.baseFormService.createFormGroup(InspectorForm);
     this.inspectorForm.setControl('ticketTypes', new FormControl([0]));
+
+    // Use effect to react to authority changes
+    effect(() => {
+      const authorityID = this.authorityIdSignal();
+      this.currentAuthority.set(authorityID);
+      
+      if (authorityID) {
+        this.getInspectorsDashboardData();
+        this.inspectorForm.patchValue({
+          ticketTypes: [0],
+        });
+        this.loadData(this.terminalSearchFormService.searchForm.value);
+      }
+    });
+
+    // Use effect to react to form changes
+    effect(() => {
+      const ticketTypes = this.inspectorForm.get('ticketTypes')?.value;
+      
+      if (ticketTypes !== undefined) {
+        this.onInspectorOrTypeChange();
+      }
+    });
   }
 
   ngOnInit(): void {
     this.inspectorID.set(this.route.snapshot.paramMap.get('inspectorId'));
     this.inspectorName.set(this.route.snapshot.paramMap.get('inspectorName'));
     this.fields.set(inspectorDailyFilterFields);
-
-    this.authorityService.authorityId$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((authorityID) => {
-        this.currentAuthority.set(authorityID);
-        this.getInspectorsDashboardData();
-        this.inspectorForm.patchValue({
-          ticketTypes: [0],
-        });
-
-        this.inspectorForm.get('ticketTypes')?.valueChanges
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => {
-            this.onInspectorOrTypeChange();
-          });
-
-        this.loadData(this.terminalSearchFormService.searchForm.value);
-      });
   }
 
   async loadData(filter: TicketFilterOptions) {
@@ -232,14 +239,17 @@ export class TerminalInspectorDailyComponent {
     const types = this.inspectorForm.get('ticketTypes')?.value;
 
     const body: any = {
-      inspectorIds: Array(this.inspectorID()),
+      inspectorIds: [this.inspectorID()],
     };
 
     const cleanTypes = Array.isArray(types) ? types : types ? [types] : [];
 
     if (!(cleanTypes.length === 1 && cleanTypes[0] === 0)) {
-      body.ticketTypes = cleanTypes;
+      body.ticketTypes = cleanTypes.map(type => 
+        typeof type === 'object' && type !== null ? type.id : type
+      );
     }
+    
     return body;
   }
   clearForm(): void {

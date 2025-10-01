@@ -1,0 +1,24 @@
+@if (data().length > 0) {
+  @for (item of data(); track trackByFn($index, item)) {
+    <div class="mb-3">
+      <app-premissions-management-table
+        [data]="[item]"
+        (onModulePermissionChange)="onModulePermissionChange($event)"
+      ></app-premissions-management-table>
+    </div>
+  }
+}
+
+<!-- Loading state -->
+@if (isLoading()) {
+  <div class="text-center">
+    <p>Loading permissions...</p>
+  </div>
+}
+
+<!-- Error state -->
+@if (hasError()) {
+  <div class="text-center text-danger">
+    <p>Error: {{ errorMessage() }}</p>
+  </div>
+}

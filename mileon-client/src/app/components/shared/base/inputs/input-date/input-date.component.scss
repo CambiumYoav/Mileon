@@ -149,5 +149,5 @@ mat-datepicker-toggle {
 
 // Ensure proper RTL layout for Hebrew
 ::ng-deep .mat-calendar-controls {
-  direction: ltr !important;
+  direction: rtl !important;
 }

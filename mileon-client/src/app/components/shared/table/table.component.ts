@@ -281,6 +281,7 @@ export class TableComponent
       .getAttribute('src')
       ?.split('/')
       .pop()
+      ?.replace('.svg', '')
       ?.replace('.png', '');
     if (event && ColumnTypeEnum.Icon && iconName) {
       this.onRowEvent.emit({ item, iconName });
@@ -317,18 +318,23 @@ export class TableComponent
       return this.Icons.EDIT;
     }
 
-    // If it's already a string path, return it directly
-    if (typeof iconName === 'string') {
-      return iconName;
-    }
-
     // If it's an Icon object, use its src property
     if (iconName && typeof iconName === 'object' && 'src' in iconName) {
       return iconName.src;
     }
 
-    // Use type assertion to access the static property dynamically
-    return (this.Icons as any)[iconName] || this.Icons.EDIT;
+    // If it's a string, check if it's a property name in Icons (ConstPath)
+    if (typeof iconName === 'string') {
+      // Check if it's already a full path (contains '/')
+      if (iconName.includes('/')) {
+        return iconName;
+      }
+      // Otherwise, treat it as a property name and look it up in Icons
+      return (this.Icons as any)[iconName] || this.Icons.EDIT;
+    }
+
+    // Fallback
+    return this.Icons.EDIT;
   }
 
   // Removed subscription-based listenToPageReset method

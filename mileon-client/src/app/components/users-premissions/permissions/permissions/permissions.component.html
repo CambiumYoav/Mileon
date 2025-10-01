@@ -1,0 +1,53 @@
+<div class="container-lg p-4">
+  <div class="col d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center w-100">
+      <span class="heading w-100">{{ title() }} </span>
+    </div>
+  </div>
+  <div class="header col pb-4 pt-4">
+    <app-permissions-search
+      (onSearch)="loadGroups($event)"
+      [searchData]="searchData()"
+      [resultData]="resultData()"
+      [total]="total()"
+    ></app-permissions-search>
+    <div class="constant-btns">
+      <app-button
+        [buttonText]="'קבוצה חדשה'"
+        (clickFunction)="openDialogForm(false)"
+      >
+      </app-button>
+    </div>
+    <app-permissions-table
+      [data]="data()"
+      [total]="total()"
+      [count]="count()"
+      (onFormChanges)="loadGroups($event)"
+      tableColumns="PermissionsGroupsColumns"
+      (isEditOrDelete)="onEditOrDelete($event)"
+      [loader]="isLoading()"
+    >
+    </app-permissions-table>
+  </div>
+</div>
+
+@if (isDeleteModalOpen()) {
+  <app-modal
+    [isModalOpen]="isDeleteModalOpen()"
+    [modalSize]="'full'"
+    [buttons]="modalButtons()"
+    (isModalClosed)="closeDeleteModal()"
+    [title]="modalTitle()"
+  >
+    <div>
+      <div class="mb-2">
+        <img [src]="Icons.DANGER" />
+        <p class="text-bolder-modal">
+          שים לב! <br />
+          לא ניתן להסיר קבוצה שמשוכים אליה עובדים
+          <br />
+        </p>
+      </div>
+    </div>
+  </app-modal>
+}

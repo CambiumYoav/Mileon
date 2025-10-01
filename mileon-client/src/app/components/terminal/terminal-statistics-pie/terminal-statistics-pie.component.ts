@@ -179,7 +179,8 @@ export class TerminalStatisticsPieComponent implements OnInit, AfterViewInit {
       if (authorityID) {
         this.chartForm.patchValue({
           authorityId: authorityID,
-          mode: DateModeEnum.Daily, // This will be the string value 'יומי'
+          ticketTypeId: 1, // Default to admin tickets
+          mode: this.getDefaultModeOption(), // Use helper method for consistency
           day: new Date(),
         });
         this.selectedDateMode.set(DateModeEnum.Daily);
@@ -194,7 +195,7 @@ export class TerminalStatisticsPieComponent implements OnInit, AfterViewInit {
     // Effect to handle form changes and trigger data loading
     effect(() => {
       const formChanges = this.formValueChanges();
-      if (formChanges) {
+      if (formChanges && this.chartForm.valid) {
         this.getChartData();
       }
     });
@@ -203,8 +204,10 @@ export class TerminalStatisticsPieComponent implements OnInit, AfterViewInit {
     effect(() => {
       const modeValue = this.modeChanges();
       if (modeValue !== undefined && modeValue !== null) {
+        // Extract the value from the object if it's an object
+        const actualModeValue = typeof modeValue === 'object' ? modeValue.value : modeValue;
         // Convert string value to DateModeEnum
-        const dateMode = this.getDateModeFromString(modeValue);
+        const dateMode = this.getDateModeFromString(actualModeValue);
         this.selectedDateMode.set(dateMode);
         Utils.updateValidatorsByMode(this.chartForm, dateMode);
       }
@@ -213,7 +216,9 @@ export class TerminalStatisticsPieComponent implements OnInit, AfterViewInit {
     // Initialize mode if it exists
     const modeControlForInit = this.chartForm.get('mode');
     if (modeControlForInit?.value) {
-      const initialDateMode = this.getDateModeFromString(modeControlForInit.value);
+      // Extract the value from the object if it's an object
+      const initialModeValue = typeof modeControlForInit.value === 'object' ? modeControlForInit.value.value : modeControlForInit.value;
+      const initialDateMode = this.getDateModeFromString(initialModeValue);
       this.selectedDateMode.set(initialDateMode);
       Utils.updateValidatorsByMode(this.chartForm, initialDateMode);
     }
@@ -289,7 +294,7 @@ export class TerminalStatisticsPieComponent implements OnInit, AfterViewInit {
         plugins: [ChartDataLabels]
       });
     } catch (error) {
-      console.error('Error creating chart:', error);
+      // Handle error silently
     }
   }
 
@@ -309,9 +314,10 @@ export class TerminalStatisticsPieComponent implements OnInit, AfterViewInit {
             inspectorId: firstInspectorId,
           });
         }, 0);
+      } else {
       }
     } catch (error) {
-      console.error('Error fetching inspectors:', error);
+      // Handle error silently
     }
   }
 
@@ -328,12 +334,25 @@ export class TerminalStatisticsPieComponent implements OnInit, AfterViewInit {
 
   async getChartData() {
     try {
+      // Check if form is valid before proceeding
+      if (!this.chartForm.valid) {
+        return;
+      }
+
       let formValues = this.chartForm.value;
 
-      formValues = {
-        ...formValues,
-        mode: DateModeEnumMap[this.selectedDateMode()],
-      };
+      // Extract IDs from objects if they are objects
+      if (formValues.inspectorId && typeof formValues.inspectorId === 'object') {
+        formValues.inspectorId = formValues.inspectorId.id;
+      }
+      if (formValues.mode && typeof formValues.mode === 'object') {
+        formValues.mode = formValues.mode.id;
+      }
+
+      // Only override mode if it's not already a number
+      if (typeof formValues.mode !== 'number') {
+        formValues.mode = DateModeEnumMap[this.selectedDateMode()];
+      }
 
       const responseData = await this.terminalService.getReportDistributionStatics(
         formValues
@@ -347,7 +366,8 @@ export class TerminalStatisticsPieComponent implements OnInit, AfterViewInit {
         }
       }
     } catch (e) {
-      console.error('Error getting chart data:', e);
+      console.error('Error loading pie chart data:', e);
+      this.response.set([]);
     }
   }
 
@@ -377,5 +397,10 @@ export class TerminalStatisticsPieComponent implements OnInit, AfterViewInit {
       default:
         return DateModeEnum.Empty;
     }
+  }
+
+  // Helper method to get the default mode option for form initialization
+  getDefaultModeOption(): any {
+    return { id: 0, value: 'יומי' };
   }
 }

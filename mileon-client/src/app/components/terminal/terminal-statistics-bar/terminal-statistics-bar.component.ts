@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, effect, inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, effect, inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Chart, ChartData, ChartOptions, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -18,7 +18,7 @@ import { Utils } from '../../../utils/utils';
 import { ChartTypeEnum } from '../../../types/enum/chartTypeEnum';
 import { TerminalService } from '../terminal.service';
 import { AuthorityService } from '../../../services/authority.service ';
-import { debounceTime, filter } from 'rxjs';
+import { debounceTime, filter, Subscription } from 'rxjs';
 import { StaticsBarResponse } from '../../../types/terminal/terminalStaticsResponse';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
@@ -38,7 +38,7 @@ import { InputDateComponent } from "../../shared/base/inputs/input-date/input-da
     InputDateComponent
   ],
 })
-export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
+export class TerminalStatisticsBarComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('chartCanvas', { static: false }) chartCanvas!: ElementRef<HTMLCanvasElement>;
   
   private readonly baseFormService = inject(BaseFormService);
@@ -57,8 +57,9 @@ export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
   response = signal<StaticsBarResponse[]>([]);
   selectedDateMode = signal<DateModeEnum>(DateModeEnum.Empty);
   isLoading = signal(false);
-  formValueChanges: any;
   modeChanges: any;
+  private isInitializing = signal(true);
+  private formSubscription?: Subscription;
 
   private chart: Chart | null = null;
 
@@ -214,14 +215,13 @@ export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
     this.baseFormService.setValidations(this.chartForm, chartsValidation);
     
     
-    this.formValueChanges = toSignal(
-      this.chartForm.valueChanges.pipe(
-        debounceTime(300),
-        filter(() => this.chartForm.valid)
-      ), 
-      { initialValue: null }
-    );
-    
+    // Set up form value changes subscription manually to have better control
+    this.formSubscription = this.chartForm.valueChanges.pipe(
+      debounceTime(300),
+      filter(() => this.chartForm.valid && !this.isInitializing())
+    ).subscribe(() => {
+      this.getChartData();
+    });
     
     const modeControlForSignal = this.chartForm.get('mode');
     if (modeControlForSignal) {
@@ -231,40 +231,38 @@ export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
     // Effect to handle authority changes
     effect(() => {
       const authorityId = this.currentAuthority();
-      if (authorityId) {
+      if (authorityId && this.isInitializing()) {
+        // Use emitEvent: false to prevent triggering valueChanges
         this.chartForm.patchValue({
           authorityId: authorityId,
           ticketTypeId: 1,
-          mode: DateModeEnum.Daily,
+          mode: this.getDefaultModeOption(), // Use helper method for consistency
           day: new Date(),
-        });
+        }, { emitEvent: false });
         this.selectedDateMode.set(DateModeEnum.Daily);
         this.loadInspectors(authorityId);
-      }
-    });
-
-    // Effect to handle form changes and trigger data loading
-    effect(() => {
-      const formChanges = this.formValueChanges();
-      if (formChanges) {
-        this.getChartData();
+        this.isInitializing.set(false);
       }
     });
 
     // Effect to handle mode changes
     effect(() => {
       const modeValue = this.modeChanges();
-      if (modeValue !== undefined && modeValue !== null) {
-        this.selectedDateMode.set(modeValue);
-        Utils.updateValidatorsByMode(this.chartForm, modeValue);
+      if (modeValue !== undefined && modeValue !== null && !this.isInitializing()) {
+        // Extract the value from the object if it's an object
+        const actualModeValue = typeof modeValue === 'object' ? modeValue.value : modeValue;
+        this.selectedDateMode.set(actualModeValue);
+        Utils.updateValidatorsByMode(this.chartForm, actualModeValue);
       }
     });
 
     // Initialize mode if it exists
     const modeControlForInit = this.chartForm.get('mode');
     if (modeControlForInit?.value) {
-      this.selectedDateMode.set(modeControlForInit.value);
-      Utils.updateValidatorsByMode(this.chartForm, modeControlForInit.value);
+      // Extract the value from the object if it's an object
+      const initialModeValue = typeof modeControlForInit.value === 'object' ? modeControlForInit.value.value : modeControlForInit.value;
+      this.selectedDateMode.set(initialModeValue);
+      Utils.updateValidatorsByMode(this.chartForm, initialModeValue);
     }
 
     // Effect to update chart when data changes
@@ -273,31 +271,42 @@ export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
       const options = this.chartOptions();
       const hasData = this.hasRealData();
       
-      // Only create/update chart if we have real data
-      if (hasData && data.datasets.length > 0) {
+      // Only create/update chart if we have real data and not initializing
+      if (hasData && data.datasets.length > 0 && !this.isInitializing()) {
         // Use setTimeout to ensure DOM is updated after template change
         setTimeout(() => {
           // Create chart if it doesn't exist and we have the canvas
           if (!this.chart && this.chartCanvas?.nativeElement) {
             this.createChart();
           }
-          // Update existing chart
-          else if (this.chart) {
+          // Update existing chart only if data has actually changed
+          else if (this.chart && this.chart.data !== data) {
             this.updateChart(data, options);
           }
         }, 0);
-      } else {
+      } else if (!hasData && this.chart) {
         // Destroy chart if no real data, but only if it exists
-        if (this.chart) {
-          this.chart.destroy();
-          this.chart = null;
-        }
+        this.chart.destroy();
+        this.chart = null;
       }
     });
   }
 
   ngOnInit(): void {
     // Initial chart data load will be handled by effects
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscription to prevent memory leaks
+    if (this.formSubscription) {
+      this.formSubscription.unsubscribe();
+    }
+    
+    // Destroy chart if it exists
+    if (this.chart) {
+      this.chart.destroy();
+      this.chart = null;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -320,14 +329,18 @@ export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
       if (inspectorList?.length > 0) {
         const firstInspectorId = inspectorList[0].id;
         
+        // Use emitEvent: false to prevent triggering valueChanges during initialization
+        this.chartForm.patchValue({
+          inspectorId: firstInspectorId,
+        }, { emitEvent: false });
+        
+        // Now that all form values are set, trigger data loading once
         setTimeout(() => {
-          this.chartForm.patchValue({
-            inspectorId: firstInspectorId,
-          });
-        }, 0);
+          this.getChartData();
+        }, 100);
       }
     } catch (error) {
-      console.error('Error fetching inspectors:', error);
+      // Handle error silently
     }
   }
 
@@ -358,7 +371,7 @@ export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
         plugins: [ChartDataLabels]
       });
     } catch (error) {
-      console.error('Error creating chart:', error);
+      // Handle error silently
     }
   }
 
@@ -373,13 +386,21 @@ export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
   }
 
   private async getChartData(): Promise<void> {
-    if (!this.chartForm.valid) {
-      return;
+    if (!this.chartForm.valid || this.isLoading() || this.isInitializing()) {
+      return; // Prevent concurrent calls and calls during initialization
     }
 
     try {
       this.isLoading.set(true);
       let formValues = this.chartForm.value;
+
+      // Extract IDs from objects if they are objects
+      if (formValues.inspectorId && typeof formValues.inspectorId === 'object') {
+        formValues.inspectorId = formValues.inspectorId.id;
+      }
+      if (formValues.ticketTypeId && typeof formValues.ticketTypeId === 'object') {
+        formValues.ticketTypeId = formValues.ticketTypeId.id;
+      }
 
       formValues = {
         ...formValues,
@@ -397,9 +418,8 @@ export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
         this.response.set([]);
       }
     } catch (error) {
-      console.error('Error fetching chart data:', error);
       this.response.set([]);
-      // TODO: Add toaster notification for error handling
+      console.error('Error loading chart data:', error);
     } finally {
       this.isLoading.set(false);
     }
@@ -417,5 +437,10 @@ export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
       value: year,
       label: year.toString(),
     }));
+  }
+
+  // Helper method to get the default mode option for form initialization
+  getDefaultModeOption(): any {
+    return { id: 0, value: 'יומי' };
   }
 }

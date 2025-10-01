@@ -10,7 +10,7 @@
   <div class="row pb-4">
     <app-terminal-search
       (onSearch)="loadData($event)"
-      [searchData]="searchData"
+      [searchData]="getSearchData()"
       [resultData]="list()"
       [total]="total()"
     ></app-terminal-search>

@@ -1,0 +1,92 @@
+<div>
+  <app-red-line-error [errorMsg]="errorMsg()"></app-red-line-error>
+  <div class="table-container">
+    <table class="table table-hover shadow-table">
+      <thead class="infrastructure-header">
+        <tr>
+          <th scope="col">
+            <span class="title">
+              {{ processedData()[0]?.category }}
+            </span>
+          </th>
+          <th scope="col">
+            <span class="title">צפה</span>
+          </th>
+          <th scope="col">
+            <span class="title">ערוך</span>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (module of processedData()[0]?.modules; track module.moduleId) {
+          <!-- Parent Row -->
+          <tr class="user-select-none" style="line-height: 8px; height: 8px">
+            <td class="text-overflow-ellipsis">
+              <div class="inline-header">
+                @if (module.childModules?.length) {
+                  <button
+                    (click)="toggleAccordion(module)"
+                    class="btn btn-sm btn-link icon"
+                  >
+                    <img
+                      [src]="module.isExpanded ? Icons.COLLAPSE : Icons.EXPAND"
+                      alt="Toggle"
+                    />
+                  </button>
+                }
+                <span class="description">{{ module.description }}</span>
+              </div>
+            </td>
+
+            <td>
+              <div class="body-td">
+                <app-checkbox
+                  [initialValue]="module.canRead"
+                  (change)="onPermissionChange(module, 'canRead')"
+                ></app-checkbox>
+              </div>
+            </td>
+            <td>
+              <div class="body-td">
+                <app-checkbox
+                  [initialValue]="module.canWrite"
+                  (change)="onPermissionChange(module, 'canWrite')"
+                ></app-checkbox>
+              </div>
+            </td>
+          </tr>
+          <!-- Child Rows -->
+          @if (module.isExpanded) {
+            @for (child of module.childModules; track child.moduleId) {
+              <tr
+                class="user-select-none"
+                style="line-height: 8px; height: 8px"
+              >
+                <td class="text-overflow-ellipsis">
+                  <span class="description">{{ child.description }}</span>
+                </td>
+                <td>
+                  <div class="body-td">
+                    <app-checkbox
+                      [initialValue]="module.canRead"
+                      (change)="onPermissionChange(child, 'canRead')"
+                    ></app-checkbox>
+                  </div>
+                </td>
+                <td>
+                  <div class="body-td">
+                    <app-checkbox
+                      [initialValue]="module.canWrite"
+                      (change)="onPermissionChange(child, 'canWrite')"
+                    ></app-checkbox>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

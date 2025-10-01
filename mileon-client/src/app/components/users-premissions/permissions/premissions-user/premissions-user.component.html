@@ -1,0 +1,11 @@
+@if (hasData()) {
+  <div class="permissions-container">
+    @for (item of categories(); track trackByFn($index, item)) {
+      <div class="mb-3">
+        <app-premissions-management-table
+          [data]="getCategoryModules(item)"
+        ></app-premissions-management-table>
+      </div>
+    }
+  </div>
+}

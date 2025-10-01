@@ -5,10 +5,8 @@ import {
   inject, 
   effect, 
   untracked,
-  OnDestroy,
   OnInit,
-  ChangeDetectionStrategy,
-  DestroyRef
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -36,7 +34,7 @@ import { SortOrder } from '../../../types/enum/sort-order.enum';
 import { CORE_IMPORTS } from '../../../shared/shared-modules';
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { AppModalComponent } from "../../shared/app-modal/app-modal.component";
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TerminalSearchComponent } from "../terminal-search/terminal-search.component";
 import { TerminalTableComponent } from "../terminal-table/terminal-table.component";
 
@@ -54,13 +52,15 @@ import { TerminalTableComponent } from "../terminal-table/terminal-table.compone
     TerminalTableComponent
 ],
 })
-export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
+export class TerminalTicketBooksComponent implements OnInit {
   private terminalSearchFormService = inject(TerminalSearchService);
   private toaster = inject(ToastrService);
   private authorityService = inject(AuthorityService);
   private dialog = inject(MatDialog);
   private terminalService = inject(TerminalService);
-  private destroyRef = inject(DestroyRef);
+
+  // Convert authority service to signal
+  private authorityIdSignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
   
 
   readonly title = TitlesEnum.TicketBooksTitle;
@@ -73,8 +73,18 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
   total = signal<number>(0);
   count = signal<number>(0);
   searchText = signal<string>('');
-  searchData: TicketBookFilterOptions = new TicketBookFilterOptions();
-  filter: TicketBookFilterOptions = new TicketBookFilterOptions();
+  searchData = signal<TicketBookFilterOptions>(new TicketBookFilterOptions({
+    currentPage: 1,
+    pageSize: 100,
+    order: 1,
+    searchText: ''
+  }));
+  filter = signal<TicketBookFilterOptions>(new TicketBookFilterOptions({
+    currentPage: 1,
+    pageSize: 100,
+    order: 1,
+    searchText: ''
+  }));
   list = signal<TicketBook[]>([]);
   dialogData = signal<DynamicRow[]>([]);
   currentAuthority = signal<string | null>(null);
@@ -85,9 +95,24 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
   isModalOpen = signal<boolean>(false);
   assignedTickets = signal<any[]>([]);
   selectedBookNumber = signal<string>('');
+  
+  // Dialog result signals
+  exportDialogResult = signal<any>(null);
+  formDialogResult = signal<any>(null);
+  assignedTicketsDialogResult = signal<any>(null);
 
   modalButtons = computed<ModalButton[]>(() => this.createModalButtons());
   terminalForm = computed<FormGroup>(() => this.terminalSearchFormService.searchForm);
+  
+  // Computed signals for better performance
+  readonly isLoading = computed(() => this.loader());
+  readonly hasData = computed(() => this.data().length > 0);
+  readonly hasSelectedTicketBook = computed(() => this.selectedTicketBook() !== null);
+  readonly canExport = computed(() => this.hasSelectedTicketBook() && !this.isLoading());
+
+  getSearchData() {
+    return this.searchData() as any;
+  }
 
   constructor() {
     this.terminalSearchFormService.setFormsOrderDirection(SortOrder.desc);
@@ -100,7 +125,7 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
     });
 
     effect(() => {
-      const authorityID = this.authorityService.authorityId();
+      const authorityID = this.authorityIdSignal();
       if (!authorityID) return;
 
       this.currentAuthority.set(authorityID);
@@ -109,27 +134,50 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
         this.loadData(this.terminalSearchFormService.form.value);
       });
     });
+
+    // Effect to handle export dialog results
+    effect(() => {
+      const result = this.exportDialogResult();
+      if (result) {
+        this.exportData();
+        this.exportDialogResult.set(null); // Reset after processing
+      }
+    });
+
+    // Effect to handle form dialog results
+    effect(() => {
+      const result = this.formDialogResult();
+      if (result && result.form) {
+        this.handleTicketBookAction(result.form, result.action);
+        this.formDialogResult.set(null); // Reset after processing
+      }
+    });
+
+    // Effect to handle assigned tickets dialog results
+    effect(() => {
+      const result = this.assignedTicketsDialogResult();
+      if (result) {
+        this.exportData(true);
+        this.assignedTicketsDialogResult.set(null); // Reset after processing
+      }
+    });
   }
 
   ngOnInit(): void {
-    this.searchData = {
+    this.searchData.set(new TicketBookFilterOptions({
       searchText: this.searchText(),
       order: 1,
       currentPage: 1,
       pageSize: 100,
-    };
-    this.filter = {
+    }));
+    this.filter.set(new TicketBookFilterOptions({
       order: 1,
       searchText: '',
       currentPage: 1,
       pageSize: 100,
-    };
+    }));
   }
 
-  ngOnDestroy(): void {
-    this.resetSearchForm();
-    this.terminalSearchFormService.reInitSortOrderFormsOnComponentDestroy();
-  }
 
   // async loadData(filter: TicketBookFilterOptions) {
   //   this.loader = true;
@@ -174,14 +222,11 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
   async loadData(filter: TicketBookFilterOptions) {
     this.loader.set(true);
 
-    const MIN_LOADER_TIME = 1500;
-    const startTime = Date.now();
-
     try {
       const incomingSearch = filter.searchText ?? this.searchText();
       this.searchText.set(incomingSearch);
 
-      const currentFilter = this.filter;
+      const currentFilter = this.filter();
       const newFilter: TicketBookFilterOptions = {
         ...currentFilter,
         ...filter,
@@ -195,7 +240,7 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
           ? newFilter.orderByField
           : 'CreationDate';
 
-      this.filter = newFilter;
+      this.filter.set(newFilter);
 
       const res = await this.terminalService.getTicketBooks(newFilter);
       if (res) {
@@ -206,14 +251,9 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
     } catch (e) {
       this.toaster.error(ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER);
       console.error(e);
+    } finally {
+      this.loader.set(false);
     }
-
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-    if (remainingTime > 0) {
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
-    this.loader.set(false);
   }
 
   async openDialogExport() {
@@ -221,14 +261,10 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
     if (dialogComponent) {
       const dialogRef = this.dialog.open(dialogComponent, {});
       
-      // Handle dialog result using afterClosed
-      dialogRef.afterClosed()
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((result) => {
-          if (result) {
-            this.exportData();
-          }
-        });
+      // Handle dialog result using signal
+      dialogRef.afterClosed().subscribe((result) => {
+        this.exportDialogResult.set(result);
+      });
     }
   }
   async openDialog(action: TicketBookAction) {
@@ -261,14 +297,12 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
       },
     });
 
-    // Handle dialog result using afterClosed
-    dialogRef.afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((result) => {
-        if (result && result.form) {
-          this.handleTicketBookAction(result.form, action);
-        }
-      });
+    // Handle dialog result using signal
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.form) {
+        this.formDialogResult.set({ form: result.form, action });
+      }
+    });
   }
 
   /**  Returns the appropriate form data based on action */
@@ -376,7 +410,7 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
   async exportData(isAssigned?: boolean) {
     try {
       const fileBlob = await this.terminalService.exportTicketBooks(
-        this.filter,
+        this.filter(),
         this.selectedBookID()!,
         isAssigned
       );
@@ -427,14 +461,10 @@ export class TerminalTicketBooksComponent implements OnInit, OnDestroy {
         },
       });
 
-      // Handle dialog result using afterClosed
-      dialogRef.afterClosed()
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((result) => {
-          if (result) {
-            this.exportData(true);
-          }
-        });
+      // Handle dialog result using signal
+      dialogRef.afterClosed().subscribe((result) => {
+        this.assignedTicketsDialogResult.set(result);
+      });
     }
   }
 

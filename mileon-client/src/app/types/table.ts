@@ -59,7 +59,7 @@ export enum ColumnTypeEnum {
   SubStageIcon = 'subStageIcon',
   ActiveStatus= 'activeStatus',
   Select='select',
-  Input = 'input'
+  Input = 'input',
 }
 
 // export class Row {

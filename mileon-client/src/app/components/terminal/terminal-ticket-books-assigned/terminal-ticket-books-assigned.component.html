@@ -1,8 +1,9 @@
 <div class="infrastructure-container p-4">
   <!-- Exit Icon -->
   <div class="inline-header">
-    <h5 class="title">פנקס: {{ bookNumber }}</h5>
+    
     <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+    <h5 class="title">פנקס: {{ bookNumber }}</h5>
     
   </div>
   @if (assignedTickets) {

@@ -11,7 +11,9 @@ import {
   signal,
   computed,
   inject,
+  effect,
 } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { ConstPath } from '../../../../constants/const_path';
 import { BaseService } from '../../../../services/base.service';
@@ -54,19 +56,41 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
   private readonly _documentTextIcon = signal<string>('');
   private readonly _exportIcon = signal<string>('');
   private readonly _errorUploadIcon = signal<string>('');
+  private readonly _isDownloading = signal<boolean>(false);
+  private readonly _downloadError = signal<string | null>(null);
 
   readonly attachCircleIcon = this._attachCircleIcon.asReadonly();
   readonly closeCircleIcon = this._closeCircleIcon.asReadonly();
   readonly documentTextIcon = this._documentTextIcon.asReadonly();
   readonly exportIcon = this._exportIcon.asReadonly();
   readonly errorUploadIcon = this._errorUploadIcon.asReadonly();
+  readonly isDownloading = this._isDownloading.asReadonly();
+  readonly downloadError = this._downloadError.asReadonly();
 
   private readonly sanitizer = inject(DomSanitizer);
   private readonly baseService = inject(BaseService);
   private readonly http = inject(HttpClient);
+
+  // Computed signals for better performance
+  readonly canDownload = computed(() => this.isDownoladable && !this.isDownloading());
+  readonly hasError = computed(() => this.downloadError() !== null || this.errorType !== null);
+  readonly fileDisplayName = computed(() => this.previewFile?.fileTypeTitle ?? 'Unknown File');
+  readonly fileType = computed(() => this.previewFile?.file?.type ?? 'unknown');
+  readonly isImageFile = computed(() => {
+    const type = this.fileType();
+    return type.startsWith('image/');
+  });
+  readonly isPdfFile = computed(() => this.fileType() === 'application/pdf');
   
   constructor() {
     this.initializeFileUrl();
+    
+    // Effect to react to preview file changes
+    effect(() => {
+      if (this.previewFile) {
+        this.initializeFileUrl();
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -77,6 +101,10 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
     if (this.previewFile?.fileID) {
       this.deleteEvent.emit(this.previewFile.fileID);
     }
+  }
+
+  clearDownloadError() {
+    this._downloadError.set(null);
   }
 
   private initializeFileUrl() {
@@ -108,21 +136,41 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
     }
   }
 
-  onDownloadFileClicked() {
+  async onDownloadFileClicked() {
     if (!this.isFullPath) {
-      this.http
-        .get(this.finalFileUrl(), { responseType: 'blob' as 'json' })
-        .subscribe((res: any) => {
-          saveAs(res, this.previewFile?.fileTypeTitle ?? '');
-        });
+      try {
+        this._isDownloading.set(true);
+        this._downloadError.set(null);
+        
+        const res = await firstValueFrom(
+          this.http.get(this.finalFileUrl(), { responseType: 'blob' })
+        );
+        
+        saveAs(res as Blob, this.fileDisplayName());
+      } catch (error) {
+        console.error('Download failed:', error);
+        this._downloadError.set('Failed to download file');
+      } finally {
+        this._isDownloading.set(false);
+      }
     } else {
-      const downloadLink = document.createElement('a');
-      downloadLink.href = this.previewFile?.path ?? '';
-      downloadLink.download = this.previewFile?.file?.name ?? '';
-      downloadLink.click();
+      try {
+        this._isDownloading.set(true);
+        this._downloadError.set(null);
+        
+        const downloadLink = document.createElement('a');
+        downloadLink.href = this.previewFile?.path ?? '';
+        downloadLink.download = this.previewFile?.file?.name ?? '';
+        downloadLink.click();
 
-      // Clean up by revoking the object URL
-      URL.revokeObjectURL(this.previewFile?.path ?? '');
+        // Clean up by revoking the object URL
+        URL.revokeObjectURL(this.previewFile?.path ?? '');
+      } catch (error) {
+        console.error('Download failed:', error);
+        this._downloadError.set('Failed to download file');
+      } finally {
+        this._isDownloading.set(false);
+      }
     }
   }
 
@@ -131,11 +179,22 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
 
     if (!file) return;
 
-    // אם זה Blob או File רגיל
-    const fileBlob = new Blob([file], { type: file.type || 'application/pdf' });
-    const fileURL = URL.createObjectURL(fileBlob);
+    try {
+      // Create blob with proper MIME type
+      const fileBlob = new Blob([file], { 
+        type: file.type || this.fileType() || 'application/pdf' 
+      });
+      const fileURL = URL.createObjectURL(fileBlob);
 
-    // פותח בטאב חדש
-    window.open(fileURL, '_blank');
+      // Open in new tab
+      window.open(fileURL, '_blank');
+      
+      // Clean up the object URL after a delay to allow the browser to load it
+      setTimeout(() => {
+        URL.revokeObjectURL(fileURL);
+      }, 1000);
+    } catch (error) {
+      console.error('Failed to open file for print:', error);
+    }
   }
 }

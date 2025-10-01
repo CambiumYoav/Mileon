@@ -129,9 +129,11 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
   async loadData(filter: TicketFilterOptions) {
     this.loader = true;
     try {
+      // Extract IDs from objects in multi-select fields before sending to API
+      const processedFilter = this.extractIdsFromFilter(filter);
+      
       const newFilter = {
-        ...filter,
-
+        ...processedFilter,
         authorityID: this.currentAuthority,
       };
       const res = await this.ticketsService.getTickets(newFilter);
@@ -151,6 +153,67 @@ export class TicketsNewComponent implements OnInit, AfterViewInit {
       console.error(e);
     }
     this.loader = false;
+  }
+
+  /**
+   * Extract IDs from objects in multi-select fields to ensure API receives primitive values
+   */
+  private extractIdsFromFilter(filter: TicketFilterOptions): TicketFilterOptions {
+    const processedFilter = JSON.parse(JSON.stringify(filter)); // Deep clone
+    
+    // Process each filter section
+    if (processedFilter.violationDetailsFilter) {
+      processedFilter.violationDetailsFilter = this.extractIdsFromObject(processedFilter.violationDetailsFilter);
+    }
+    if (processedFilter.ownerDetailsFilter) {
+      processedFilter.ownerDetailsFilter = this.extractIdsFromObject(processedFilter.ownerDetailsFilter);
+    }
+    if (processedFilter.sourceDetailsFilter) {
+      processedFilter.sourceDetailsFilter = this.extractIdsFromObject(processedFilter.sourceDetailsFilter);
+    }
+    if (processedFilter.actionsFilter) {
+      processedFilter.actionsFilter = this.extractIdsFromObject(processedFilter.actionsFilter);
+    }
+    if (processedFilter.otherFilter) {
+      processedFilter.otherFilter = this.extractIdsFromObject(processedFilter.otherFilter);
+    }
+    if (processedFilter.interfaceFilter) {
+      processedFilter.interfaceFilter = this.extractIdsFromObject(processedFilter.interfaceFilter);
+    }
+    
+    return processedFilter;
+  }
+
+  /**
+   * Extract IDs from objects in an object, handling both single values and arrays
+   */
+  private extractIdsFromObject(obj: any): any {
+    if (!obj || typeof obj !== 'object') {
+      return obj;
+    }
+    
+    const processedObj = { ...obj };
+    
+    for (const key in processedObj) {
+      if (processedObj.hasOwnProperty(key)) {
+        const value = processedObj[key];
+        
+        if (Array.isArray(value)) {
+          // Handle arrays - extract IDs from objects
+          processedObj[key] = value.map(item => {
+            if (typeof item === 'object' && item !== null && item.id !== undefined) {
+              return item.id;
+            }
+            return item;
+          });
+        } else if (typeof value === 'object' && value !== null && value.id !== undefined) {
+          // Handle single objects - extract ID
+          processedObj[key] = value.id;
+        }
+      }
+    }
+    
+    return processedObj;
   }
 
   back() {

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, signal, computed, inject, Destr
 import { FormGroup } from '@angular/forms';
 import { BaseService } from '../../../services/base.service';
 import { SearchByTextEnum } from '../../../types/enum/searchByTextEnum';
-import { UsersFilterOptions } from '../../../types/users/usersFilterOptions';
+import { FilterOptions } from '../../../types/filters/filterOptions';
 import { SearchFormService } from '../../shared/search-bar/search-form.service';
 import { TerminalSearchService } from './terminal-search.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,7 +21,7 @@ export class TerminalSearchComponent {
   private readonly _resultData = signal<any[]>([]);
   private readonly _total = signal<number>(0);
   private readonly _hasResultsDropdown = signal<boolean>(false);
-  private readonly _searchData = signal<UsersFilterOptions | null>(null);
+  private readonly _searchData = signal<FilterOptions | null>(null);
   private readonly _activeLegalRequestFilter = signal<string>('');
   private readonly _resultCountMessage = signal<string>('');
   private readonly _searchByText = signal<SearchByTextEnum>(SearchByTextEnum.TicketBooksSearch);
@@ -41,7 +41,7 @@ export class TerminalSearchComponent {
     return this._hasResultsDropdown();
   }
 
-  get searchData(): UsersFilterOptions | null {
+  get searchData(): FilterOptions | null {
     return this._searchData();
   }
 
@@ -85,7 +85,7 @@ export class TerminalSearchComponent {
   }
 
   @Input()
-  set searchData(value: UsersFilterOptions) {
+  set searchData(value: FilterOptions) {
     this._searchData.set(value);
   }
 
@@ -105,7 +105,7 @@ export class TerminalSearchComponent {
   }
 
   @Output() search = new EventEmitter();
-  @Output() onSearch = new EventEmitter<UsersFilterOptions>();
+  @Output() onSearch = new EventEmitter<FilterOptions>();
   @Output() resetTable = new EventEmitter();
 
   infrastructureSearchForm!: FormGroup;

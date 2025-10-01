@@ -110,9 +110,6 @@ export class UsersLocalComponent implements OnInit {
     });
   }
 
-  ngOnDestroy(): void {
-    this.usersSearchFormService.clearForm();
-  }
 
   async loadData(filter: UsersFilterOptions) {
     this.loader.set(true);

@@ -1,0 +1,17 @@
+
+<div class="delete-group-container d-flex flex-column p-4">
+  <h5 class="text-center text">האם אתה בטוח מעוניין למחוק את הקבוצה?</h5>
+  <div class="d-flex flex-wrap justify-content-center">
+      <app-button
+        (clickFunction)="onDelete()"
+        [buttonClass]="'primary-btn button-base'"
+        [buttonText]="'מחק'"
+      ></app-button>
+
+      <app-button
+        (clickFunction)="onCancel()"
+        [buttonClass]="'outline-btn button-base'"
+        [buttonText]="'בטל'"
+      ></app-button>
+  </div>
+</div>

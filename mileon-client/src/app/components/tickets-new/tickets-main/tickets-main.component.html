@@ -10,15 +10,17 @@
     </div>
   </div>
 
-  <div class="search" *ngIf="searchPermission">
-    <app-tickets-search
-      (onSearch)="loadData($event)"
-      [searchData]="searchData"
-      [resultData]="list"
-      [total]="total"
-      [hasResultsDropdown]="true"
-    ></app-tickets-search>
-  </div>
+  @if (searchPermission) {
+    <div class="search">
+      <app-tickets-search
+        (onSearch)="loadData($event)"
+        [searchData]="searchData"
+        [resultData]="list"
+        [total]="total"
+        [hasResultsDropdown]="true"
+      ></app-tickets-search>
+    </div>
+  }
 
   <div class="last-title">10 דוחות אחרונים שנצפו</div>
 
@@ -31,11 +33,13 @@
       [showSort]="true"
       [fromLast]="true"
     ></app-tickets-table-new> -->
-    <div class="error" *ngIf="showErrorCard">
-      <app-tickets-error-new
-        [errorMessage]="errorMessage"
-        (closeError)="showErrorCard = false"
-      ></app-tickets-error-new>
-    </div>
+    @if (showErrorCard) {
+      <div class="error">
+        <app-tickets-error-new
+          [errorMessage]="errorMessage"
+          (closeError)="showErrorCard = false"
+        ></app-tickets-error-new>
+      </div>
+    }
   </div>
 </div>

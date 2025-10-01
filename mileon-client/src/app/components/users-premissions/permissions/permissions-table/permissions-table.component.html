@@ -1,0 +1,11 @@
+<app-table
+  [data]="data()"
+  [columns]="columns()"
+  [total]="total()"
+  [form]="userForm()"
+  (onRowEvent)="editOrDeleteGroup($event)"
+  [showPaginator]="showPaginator()"
+  (onFormChanges)="emitServerSort($event)"
+  [loader]="loader()"
+>
+</app-table>

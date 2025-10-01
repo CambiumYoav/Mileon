@@ -1,6 +1,6 @@
 import { FieldTypeEnum } from './../../../types/advanced-search/form-tab.model';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, signal, computed, effect, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectorRef, Component, OnInit, signal, computed, effect, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ToastrService } from 'ngx-toastr';
 import { AuthorityService } from '../../../services/authority.service ';
 import { TitlesEnum } from '../../../types/enum/titlesEnum';
@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
+import { BehaviorSubject } from 'rxjs';
 
 import {
   inspectorFilterFields,
@@ -37,7 +38,7 @@ import { ButtonComponent } from "../../shared/base/button/button.component";
 })
 
 
-export class TerminalInspectorsComponent implements OnInit, OnDestroy {
+export class TerminalInspectorsComponent implements OnInit {
   title = signal(TitlesEnum.InspectorsDaily);
   FieldTypeEnum = FieldTypeEnum;
   seconderyTitle = signal(TitlesEnum.InspectorsTable);
@@ -63,22 +64,30 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
   private terminalSearchFormService = inject(TerminalSearchService);
   private baseFormService = inject(BaseFormService);
   private cdr = inject(ChangeDetectorRef);
-  private destroyRef = inject(DestroyRef);
+
+  // Convert authority service to signal
+  private authorityIdSignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
+  
+  // Form control signals will be initialized after form creation
+  private inspectorsIdsSignal!: any;
+  private ticketTypesSignal!: any;
 
   constructor() {
     this.terminalForm = this.terminalSearchFormService.form;
     this.inspectorForm = this.baseFormService.createFormGroup(InspectorsForm);
     this.inspectorForm.setControl('ticketTypes', new FormControl([0]));
     this.inspectorForm.setControl('inspectorsIds', new FormControl([]));
-  }
 
-  ngOnInit(): void {
-    this.fields.set(inspectorFilterFields);
-    this.authorityService.authorityId$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((authorityID) => {
-        this.currentAuthority.set(authorityID);
+    // Initialize form control signals after form creation
+    this.inspectorsIdsSignal = toSignal(this.inspectorForm.get('inspectorsIds')!.valueChanges, { initialValue: [] });
+    this.ticketTypesSignal = toSignal(this.inspectorForm.get('ticketTypes')!.valueChanges, { initialValue: [0] });
 
+    // Use effect to react to authority changes
+    effect(() => {
+      const authorityID = this.authorityIdSignal();
+      this.currentAuthority.set(authorityID);
+
+      if (authorityID) {
         this.inspectorForm.patchValue({
           authorityId: authorityID,
           ticketTypes: [0],
@@ -87,27 +96,20 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
 
         this.getInspectorsDashboardData();
         this.loadData(this.getCombinedFilter());
+      }
+    });
 
-        this.inspectorForm.get('inspectorsIds')?.valueChanges
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => {
-            this.onInspectorOrTypeChange();
-          });
-
-        this.inspectorForm.get('ticketTypes')?.valueChanges
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => {
-            this.onInspectorOrTypeChange();
-          });
-
-        this.inspectorForm.patchValue({ inspectorsIds: [], ticketTypes: [0] });
-        this.clearForm();
-      });
+    // Use effect to react to form control changes
+    effect(() => {
+      const inspectorsIds = this.inspectorsIdsSignal();
+      const ticketTypes = this.ticketTypesSignal();
+      
+      this.onInspectorOrTypeChange();
+    });
   }
-  ngOnDestroy(): void {
-    this.inspectorForm.patchValue({ inspectorsIds: [] });
 
-    this.clearForm();
+  ngOnInit(): void {
+    this.fields.set(inspectorFilterFields);
   }
   async loadData(filter: any) {
     this.loader.set(true);
@@ -116,20 +118,28 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
     const startTime = Date.now();
     try {
       const ids = this.inspectorForm.get('inspectorsIds')?.value;
-      filter = {
-        ...filter,
-        inspectorsIds: Array.isArray(ids) ? ids : ids ? [ids] : [],
-        authorityId: this.currentAuthority(),
-        pageSize: 100,
-      };
+      
+      // Ensure authorityID is not null or undefined
+      if (!filter.authorityID) {
+        this.toaster.error('Authority ID is required');
+        return;
+      }
+      
+      // Always include inspectorsIds array
+      const cleanedIds = Array.isArray(ids) ? ids : ids ? [ids] : [];
+      // Extract numeric IDs from objects if they are objects, otherwise use as-is
+      filter.inspectorsIds = cleanedIds.map(id => 
+        typeof id === 'object' && id !== null ? id.id : id
+      );
+      
       const res = await this.terminalService.getAllInspectors(filter);
+      
       if (res) {
         this.data.set(res.data);
         this.total.set(res.totalRecords);
       }
-    } catch (e) {
+    } catch (e: any) {
       this.toaster.error(ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER);
-      console.error(e);
     }
 
     const elapsedTime = Date.now() - startTime;
@@ -147,14 +157,9 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
     const types = this.inspectorForm.get('ticketTypes')?.value;
     const cleanTypes = Array.isArray(types) ? types : types ? [types] : [];
 
-    // console.log('Form values changed:', {
-    //   inspectorsIds: ids,
-    //   cleanIds,
-    //   ticketTypes: types,
-    //   cleanTypes
-    // });
+    const filter = this.getCombinedFilter();
 
-    this.loadData(this.getCombinedFilter());
+    this.loadData(filter);
 
     const hasIds = cleanIds.length > 0;
     const hasRealTypes =
@@ -196,6 +201,13 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
   async getInspectorsDashboardByIds() {
     try {
       const body = this.getFormValues();
+      
+      // Validate that we have at least one inspector ID or ticket type
+      if ((!body.inspectorIds || body.inspectorIds.length === 0) && 
+          (!body.ticketTypes || body.ticketTypes.length === 0)) {
+        return;
+      }
+      
       const res = await this.terminalService.getInspectorsDashboardByIds(body);
 
       if (res) {
@@ -204,8 +216,8 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
         this.dashboardSuspended.set(res.suspended);
         this.dashboardSum.set(res.sum);
       }
-    } catch (e) {
-      console.error('Error fetching dashboard by IDs:', e);
+    } catch (e: any) {
+      // Handle error silently
     }
   }
 
@@ -213,15 +225,22 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
     const ids = this.inspectorForm.get('inspectorsIds')?.value;
     const types = this.inspectorForm.get('ticketTypes')?.value;
 
+    const cleanIds = Array.isArray(ids) ? ids : ids ? [ids] : [];
     const body: any = {
-      inspectorIds: Array.isArray(ids) ? ids : ids ? [ids] : [],
+      inspectorIds: cleanIds.map(id => 
+        typeof id === 'object' && id !== null ? id.id : id
+      ),
     };
 
     const cleanTypes = Array.isArray(types) ? types : types ? [types] : [];
 
     if (!(cleanTypes.length === 1 && cleanTypes[0] === 0)) {
-      body.ticketTypes = cleanTypes;
+      // Extract numeric IDs from objects if they are objects, otherwise use as-is
+      body.ticketTypes = cleanTypes.map(type => 
+        typeof type === 'object' && type !== null ? type.id : type
+      );
     }
+    
     return body;
   }
   // clearForm(): void {
@@ -295,11 +314,17 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
 
     // Create a clean filter object for the GetInspectors API
     const filter: any = {
-      inspectorsIds: Array.isArray(ids) ? ids : ids ? [ids] : [],
-      authorityId: this.currentAuthority(),
+      authorityID: this.currentAuthority(),
       pageSize: 100,
       currentPage: 1,
     };
+
+    // Always include inspectorsIds array, even if empty
+    const cleanedIds = Array.isArray(ids) ? ids : ids ? [ids] : [];
+    // Extract numeric IDs from objects if they are objects, otherwise use as-is
+    filter.inspectorsIds = cleanedIds.map(id => 
+      typeof id === 'object' && id !== null ? id.id : id
+    );
 
     const cleanedTypes = Array.isArray(types) ? types : types ? [types] : [];
 
@@ -307,7 +332,10 @@ export class TerminalInspectorsComponent implements OnInit, OnDestroy {
       cleanedTypes.length > 0 &&
       !(cleanedTypes.length === 1 && cleanedTypes[0] === 0)
     ) {
-      filter.ticketTypes = cleanedTypes;
+      // Extract numeric IDs from objects if they are objects, otherwise use as-is
+      filter.ticketTypes = cleanedTypes.map(type => 
+        typeof type === 'object' && type !== null ? type.id : type
+      );
     }
 
     return filter;

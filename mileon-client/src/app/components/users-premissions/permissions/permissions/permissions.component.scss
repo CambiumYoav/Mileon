@@ -1,0 +1,47 @@
+@import "../../../../../styles/elements.scss";
+:host {
+  .constant-btns {
+    display: flex;
+    justify-content: end;
+    margin: 10px 0px;
+  }
+
+  .back-icon {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    margin-right: 10px; /* Adjust spacing between icon and title */
+  }
+  .header {
+    border-top-style: solid;
+    border-color: transparent;
+  }
+  .heading {
+    font-weight: bold;
+    font-size: 1.25rem; /* Adjust size as necessary */
+  }
+  .send-btn {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.d-flex.align-items-center {
+  display: flex;
+  align-items: center;
+}
+
+.text-bolder-modal {
+  font-size: 12px;
+  line-height: 16.34px;
+  font-family: $fontOpenSans;
+  font-weight: 700;
+  font-style: normal;
+}

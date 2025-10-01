@@ -1,0 +1,138 @@
+@import "../../../../../styles/elements.scss";
+@import "../../../../../styles/table.scss";
+
+:host {
+  tbody {
+    height: fit-content !important;
+  }
+}
+
+.table-container {
+  // Table Styles
+  table {
+    border-spacing: 0;
+    width: 100px;
+    margin: 0;
+
+
+  }
+
+
+
+  // Checkbox Column
+  .checkbox-td {
+    padding: 0.5rem 2.5rem 0.5rem 0.5rem !important;
+  }
+
+
+  // Table Body Row Styles
+  tbody tr {
+    color: #606060;
+
+    .body-td {
+      display: flex;
+      justify-content: start;
+      padding: 5px;
+    }
+
+  }
+
+  // Table Background and Border
+  .table {
+    background: white;
+    border: 0px solid #d8e4f1;
+    border-radius: 4px;
+    table-layout: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    color: #d8e4f1;
+
+    .infrastructure-header {
+      background-color: #d8e4f1;
+      position: sticky;
+      top: 0;
+    }
+  }
+}
+
+// Body row hover and border styles
+tbody tr {
+  cursor: pointer;
+  height: 43px;
+  line-height: 43px;
+}
+
+tbody tr:last-child {
+  border-bottom-style: hidden;
+}
+
+// Table Container Styles
+div.table-container {
+  border: 1px solid #d8e4f1;
+  overflow-y: auto;
+  border-radius: 14px;
+  transform: rotate(0deg);
+  //   height: 40vh;
+}
+
+// Blue Text Color
+.blue {
+  color: $colorDarkBlue;
+}
+
+// Sortable Header Icon Styles
+:host {
+  th[sortable].desc:before,
+  th[sortable].asc:before {
+    content: "";
+    display: block;
+    background: none;
+    background-size: 12px;
+    width: 14px;
+    height: 22px;
+  }
+
+  // Paginator Styles
+  ::ng-deep app-paginator {
+    .page {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 4px;
+
+      &.current {
+        background-color: $colorLightBlue;
+      }
+    }
+  }
+
+  .sort-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 5px;
+  }
+
+  .inline-header {
+    display: flex;
+    align-items: center;
+    // justify-content: space-between;
+
+    .description {
+      margin: 0;
+    }
+
+    .icon {
+      cursor: pointer;
+    }
+  }
+
+  .btn.btn-link:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}

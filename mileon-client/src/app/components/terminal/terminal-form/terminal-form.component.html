@@ -1,8 +1,8 @@
 <div class="infrastructure-container p-4">
   <div class="inline-header">
-    <h5 class="title">{{ title() }}</h5>
+    
     <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
-
+    <h5 class="title">{{ title() }}</h5>
   </div>
   <!-- Form -->
   <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">

@@ -26,42 +26,42 @@ export const usersPermissionsRoutes: Routes = [
   },
 
 //   // Permissions
-//   {
-//     path: RP.UsersPermissions.Permissions,
-//     loadComponent: () =>
-//       import('./permissions/permissions/permissions.component')
-//         .then(m => m.PermissionsComponent),
-//   },
+  {
+    path: RP.UsersPermissions.Permissions,
+    loadComponent: () =>
+      import('./permissions/permissions/permissions.component')
+        .then(m => m.PermissionsComponent),
+  },
 
 //   // Permissions Table
-//   {
-//     path: RP.UsersPermissions.Table,
-//     loadComponent: () =>
-//       import('./permissions/permissions-table/permissions-table.component')
-//         .then(m => m.PermissionsTableComponent),
-//   },
+  {
+    path: RP.UsersPermissions.Table,
+    loadComponent: () =>
+      import('./permissions/permissions-table/permissions-table.component')
+        .then(m => m.PermissionsTableComponent),
+  },
 
 //   // Permissions Management with children
-//   {
-//     path: RP.UsersPermissions.Management,
-//     loadComponent: () =>
-//       import('./permissions/permissions-management/permissions-management.component')
-//         .then(m => m.PermissionsManagementComponent),
-//     children: [
-//       {
-//         path: RP.UsersPermissions.UserRoutes,
-//         loadComponent: () =>
-//           import('./permissions/premissions-user/premissions-user.component')
-//             .then(m => m.PremissionsUserComponent),
-//       },
-//       {
-//         path: RP.UsersPermissions.AdminRoutes,
-//         loadComponent: () =>
-//           import('./permissions/premissions-admin/premissions-admin.component')
-//             .then(m => m.PremissionsAdminComponent),
-//       },
-//     ],
-//   },
+  {
+    path: RP.UsersPermissions.Management,
+    loadComponent: () =>
+      import('./permissions/permissions-management/permissions-management.component')
+        .then(m => m.PermissionsManagementComponent),
+    children: [
+      {
+        path: RP.UsersPermissions.UserRoutes,
+        loadComponent: () =>
+          import('./permissions/premissions-user/premissions-user.component')
+            .then(m => m.PremissionsUserComponent),
+      },
+      {
+        path: RP.UsersPermissions.AdminRoutes,
+        loadComponent: () =>
+          import('./permissions/premissions-admin/premissions-admin.component')
+            .then(m => m.PremissionsAdminComponent),
+      },
+    ],
+  },
 
   // Create User
   {

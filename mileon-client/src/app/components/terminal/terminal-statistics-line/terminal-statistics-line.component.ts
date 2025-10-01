@@ -259,7 +259,7 @@ export class TerminalStatisticsLineComponent implements OnInit, AfterViewInit {
         }, 0);
       }
     } catch (error) {
-      console.error('Error fetching inspectors:', error);
+      // Handle error silently
     }
   }
 
@@ -290,7 +290,7 @@ export class TerminalStatisticsLineComponent implements OnInit, AfterViewInit {
         options
       });
     } catch (error) {
-      console.error('Error creating chart:', error);
+      // Handle error silently
     }
   }
 
@@ -311,7 +311,15 @@ export class TerminalStatisticsLineComponent implements OnInit, AfterViewInit {
 
     try {
       this.isLoading.set(true);
-      const formValues = this.chartForm.value;
+      let formValues = this.chartForm.value;
+
+      // Extract IDs from objects if they are objects
+      if (formValues.inspectorId && typeof formValues.inspectorId === 'object') {
+        formValues.inspectorId = formValues.inspectorId.id;
+      }
+      if (formValues.ticketTypeId && typeof formValues.ticketTypeId === 'object') {
+        formValues.ticketTypeId = formValues.ticketTypeId.id;
+      }
 
       const responseData = await this.terminalService.getReportYearlyStatics(formValues);
       
@@ -324,7 +332,6 @@ export class TerminalStatisticsLineComponent implements OnInit, AfterViewInit {
         this.response.set([]);
       }
     } catch (error) {
-      console.error('Error fetching chart data:', error);
       this.response.set([]);
       // TODO: Add toaster notification for error handling
     } finally {
