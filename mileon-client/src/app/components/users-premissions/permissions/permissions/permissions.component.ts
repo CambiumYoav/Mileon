@@ -33,7 +33,6 @@ import { AppModalComponent } from "../../../shared/app-modal/app-modal.component
   imports: [CommonModule, ReactiveFormsModule, PermissionsSearchComponent, ButtonComponent, PermissionsTableComponent, AppModalComponent]
 })
 export class PermissionsComponent implements OnInit {
-  // Injected services
   private readonly permissionsSearchFormService = inject(PermissionsSearchFormService);
   private readonly dialog = inject(MatDialog);
   private readonly authorityService = inject(AuthorityService);
@@ -41,7 +40,6 @@ export class PermissionsComponent implements OnInit {
   private readonly routerService = inject(RouterService);
   private readonly toaster = inject(ToastrService);
 
-  // Signals for reactive state
   title = signal<string>(TitlesEnum.GroupPermissionsTitle);
   filter = signal<FilterOptions>({ currentPage: 1 });
   resultData = signal<any[]>([]);
@@ -69,7 +67,6 @@ export class PermissionsComponent implements OnInit {
   deleteDialogResult = signal<any>(null);
   currentDeleteElement = signal<any>(null);
   
-  // Computed signals
   Icons = ConstPath;
   hasData = computed(() => this.data().length > 0);
   isLoading = computed(() => this.loader());

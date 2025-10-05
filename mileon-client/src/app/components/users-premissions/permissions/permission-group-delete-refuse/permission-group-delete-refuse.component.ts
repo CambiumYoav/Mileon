@@ -9,11 +9,9 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule]
 })
 export class PermissionGroupDeleteRefuseComponent {
-  // Signals for reactive state
   isVisible = signal<boolean>(true);
   message = signal<string>('permission-group-delete-refuse works!');
   
-  // Output signals
   componentReady = output<boolean>();
 
   constructor() {

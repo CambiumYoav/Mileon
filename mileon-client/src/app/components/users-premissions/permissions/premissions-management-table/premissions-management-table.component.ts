@@ -25,24 +25,19 @@ import { RedLineErrorComponent } from "../../../shared/errors/red-line-error/red
   imports: [CommonModule, CheckboxComponent, RedLineErrorComponent],
 })
 export class PremissionsManagementTableComponent extends BaseFormComponent {
-  // Signal-based inputs
   data = input.required<any[]>();
   
-  // Signal-based outputs
   onIconClick = output<any>();
   onModulePermissionChange = output<any>();
 
-  // Computed signals
   errorMsg = computed(() => {
     const dataValue = this.data();
     return dataValue.length === 0 ? TableErrors.NOT_FOUND : '';
   });
 
-  // Constants
   ColumnTypeEnum = ColumnTypeEnum;
   Icons = ConstPath;
 
-  // Computed signal for processed data
   processedData = computed(() => {
     const dataValue = this.data();
     return dataValue.map((item) => ({

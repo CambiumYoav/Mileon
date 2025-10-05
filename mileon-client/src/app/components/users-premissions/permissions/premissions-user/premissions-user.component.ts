@@ -70,7 +70,6 @@ export class PremissionsUserComponent {
     },
   ]);
 
-  // Computed signals
   hasData = computed(() => this.mockData().length > 0);
   categories = computed(() => this.mockData());
 

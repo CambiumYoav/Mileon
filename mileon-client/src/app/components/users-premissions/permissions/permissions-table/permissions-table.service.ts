@@ -6,11 +6,9 @@ import { Column } from '../../../../types/table';
   providedIn: 'root',
 })
 export class PermissionsTableService {
-  // Signals for reactive state
   table = signal<PermissionsTable>(new PermissionsTable());
   columns = signal<Column[]>([]);
 
-  // Computed signals
   permissionsGroupsColumns = computed(() => this.table().PermissionsGroupsColumns);
   hasTable = computed(() => !!this.table());
   hasColumns = computed(() => this.columns().length > 0);

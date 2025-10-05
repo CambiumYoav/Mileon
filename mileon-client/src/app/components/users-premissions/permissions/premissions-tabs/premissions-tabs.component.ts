@@ -13,15 +13,12 @@ import { TabsGroupComponent } from '../../../../components/shared/tabs-group/tab
   imports: [CommonModule, TabsGroupComponent]
 })
 export class PremissionsTabsComponent implements OnInit {
-  // Injected services
   private readonly sessionService = inject(SessionService);
 
-  // Signals for reactive state
   tabs = signal<TabAttributes[]>(PermissionsMain.Tabs);
   currentActive = signal<string>('');
   currentActiveTabID = signal<string>('');
 
-  // Computed signals
   hasTabs = computed(() => this.tabs().length > 0);
   activeTab = computed(() => this.tabs().find(tab => tab.id === this.currentActiveTabID()));
   isTabActive = computed(() => (tabId: string) => this.currentActiveTabID() === tabId);

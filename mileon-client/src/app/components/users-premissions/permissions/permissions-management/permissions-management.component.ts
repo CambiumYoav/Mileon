@@ -18,7 +18,6 @@ interface AccordionItem {
   imports: [CommonModule, PremissionsTabsComponent, RouterOutlet],
 })
 export class PermissionsManagementComponent implements OnInit {
-  // Signals for reactive state
   title = signal<string>(TitlesEnum.GroupsPermissionsTitle);
   Icons = ConstPath;
   
@@ -30,7 +29,6 @@ export class PermissionsManagementComponent implements OnInit {
 
   expanded = signal<boolean[]>([]);
 
-  // Computed signals
   allExpanded = computed(() => this.expanded().every(exp => exp));
   allCollapsed = computed(() => this.expanded().every(exp => !exp));
   hasItems = computed(() => this.items().length > 0);

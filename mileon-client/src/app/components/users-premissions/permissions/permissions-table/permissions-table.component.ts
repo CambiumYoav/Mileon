@@ -19,11 +19,9 @@ import { TableComponent } from '../../../../components/shared/table/table.compon
   imports: [CommonModule, ReactiveFormsModule, TableComponent]
 })
 export class PermissionsTableComponent implements OnInit {
-  // Injected services
   private readonly permissionsTableService = inject(PermissionsTableService);
   private readonly userSearchForm = inject(PermissionsSearchFormService);
 
-  // Input signals
   showSort = input<boolean>(false);
   sortFromClient = input<boolean>(false);
   filters = input<FilterOptions>({ currentPage: 1 });
@@ -35,22 +33,18 @@ export class PermissionsTableComponent implements OnInit {
   showPaginator = input<boolean>(true);
   tableColumns = input<string>('');
 
-  // Output signals
   onFormChanges = output<TicketFilterOptions>();
   isEditOrDelete = output<EditOrDeleteEvent>();
 
-  // Internal signals
   dialogData = signal<any>(null);
   userForm = signal<FormGroup>(this.userSearchForm.searchForm());
   _columns = signal<Column[]>([]);
 
-  // Computed signals
   columns = computed(() => this._columns());
   hasData = computed(() => this.data().length > 0);
   isLoading = computed(() => this.loader());
 
   constructor() {
-    // Effect to watch tableColumns changes
     effect(() => {
       const tableName = this.tableColumns();
       if (tableName) {
@@ -60,7 +54,6 @@ export class PermissionsTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialize form
     this.initializeForm();
   }
 

@@ -10,12 +10,10 @@ export class PermissionsService {
   private readonly apiController = 'Group';
   private readonly httpService = inject(HttpService);
 
-  // Signals for reactive state
   private modulesData = signal<any[]>([]);
   private loading = signal<boolean>(false);
   private error = signal<string | null>(null);
 
-  // Computed signals
   modules = computed(() => this.modulesData());
   isLoading = computed(() => this.loading());
   hasError = computed(() => this.error() !== null);
@@ -54,7 +52,6 @@ export class PermissionsService {
     return lastValueFrom(request$);
   }
 
-  // Signal-based methods
   async loadModules(groupId: number): Promise<void> {
     this.loading.set(true);
     this.error.set(null);

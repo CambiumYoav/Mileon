@@ -11,8 +11,7 @@ import { PremissionsManagementTableComponent } from "../premissions-management-t
 })
 export class PremissionsAdminComponent {
   private permissionsService = inject(PermissionsService);
-  
-  // Signals
+    
   groupId = signal(1); // admin
   data = computed(() => this.permissionsService.modules());
   isLoading = computed(() => this.permissionsService.isLoading());
@@ -20,7 +19,6 @@ export class PremissionsAdminComponent {
   errorMessage = computed(() => this.permissionsService.errorMessage());
 
   constructor() {
-    // Load data when component initializes
     effect(() => {
       this.loadData();
     });

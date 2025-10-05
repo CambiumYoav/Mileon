@@ -11,11 +11,9 @@ import { UsersFilterOptions } from '../../../../types/users/usersFilterOptions';
 export class PermissionsSearchFormService {
   private readonly baseFormService = inject(BaseFormService);
 
-  // Signals for reactive state
   form = signal<FormGroup>(this.baseFormService.createFormGroup(PermissionsFilterOptions));
   searchForm = signal<FormGroup>(this.baseFormService.createFormGroup(PermissionsFilterOptions));
 
-  // Computed signals
   isFormValid = computed(() => this.form().valid);
   isSearchFormValid = computed(() => this.searchForm().valid);
   formValue = computed(() => this.form().value);

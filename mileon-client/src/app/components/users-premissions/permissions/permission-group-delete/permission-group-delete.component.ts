@@ -13,10 +13,8 @@ import { ButtonComponent } from "../../../shared/base/button/button.component";
 export class PermissionGroupDeleteComponent {
   private readonly dialogRef = inject(MatDialogRef<PermissionGroupDeleteComponent>);
   
-  // Signals for reactive state
   isDeleting = signal<boolean>(false);
   
-  // Output signals
   deleteConfirmed = output<boolean>();
   deleteCancelled = output<boolean>();
 

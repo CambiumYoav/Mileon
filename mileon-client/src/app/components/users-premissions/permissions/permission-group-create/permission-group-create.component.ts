@@ -26,18 +26,15 @@ import { InputTextComponent } from "../../../shared/base/inputs/input-text/input
   imports: [CommonModule, ReactiveFormsModule, ButtonComponent, InputTextComponent]
 })
 export class PermissionGroupCreateComponent implements OnInit {
-  readonly Icons = ConstPath; // Path to icons
+  readonly Icons = ConstPath; 
   
-  // Signals for reactive state
   title = signal<string>('');
   fields = signal<DynamicField[]>([]);
   isSubmitted = signal<boolean>(false);
   isModalOpen = signal<boolean>(false);
   
-  // Output signal for form data
   formData = output<{ form: any; isEdit: boolean }>();
   
-  // Computed signals
   dynamicForm = signal<FormGroup | null>(null);
   isFormValid = computed(() => this.dynamicForm()?.valid ?? false);
 
@@ -46,26 +43,24 @@ export class PermissionGroupCreateComponent implements OnInit {
     public dialogRef: MatDialogRef<PermissionGroupCreateComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      form: DynamicField[]; // Dynamic fields
+      form: DynamicField[]; 
       title: string;
       isEdit: boolean;
     },
     private toaster: ToastrService
   ) {
-    this.fields.set(data.form); // Initialize fields from injected data
-    this.title.set(data.title); // Initialize title from injected data
+    this.fields.set(data.form); 
+    this.title.set(data.title); 
   }
 
   ngOnInit(): void {
-    this.createForm(); // Initialize the form on component load
+    this.createForm(); 
   }
 
-  /** Closes the dialog */
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  /** Creates the reactive form dynamically based on fields */
   private createForm(): void {
     const formGroup = (this.fields() || []).reduce((group, field) => {
       group[field.name] = this.createFieldControl(field);

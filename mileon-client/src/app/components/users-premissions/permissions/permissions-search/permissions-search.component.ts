@@ -16,12 +16,10 @@ import { SearchBarComponent } from '../../../../components/shared/search-bar/sea
   imports: [CommonModule, ReactiveFormsModule, SearchBarComponent]
 })
 export class PermissionsSearchComponent implements OnInit {
-  // Injected services
   private readonly searchFormService = inject(SearchFormService);
   private readonly permissionsSearchFormService = inject(PermissionsSearchFormService);
   private readonly baseService = inject(BaseService);
 
-  // Input signals
   resultData = input<any[]>([]);
   total = input<number>(0);
   hasResultsDropdown = input<boolean>(false);
@@ -33,18 +31,15 @@ export class PermissionsSearchComponent implements OnInit {
   activeLegalRequestFilter = input<string>('');
   resultCountMessage = input<string>('');
 
-  // Output signals
   search = output<any>();
   onSearch = output<PermissionsFilterOptions>();
   resetTable = output<any>();
 
-  // Internal signals
   permissionsSearchForm = signal<FormGroup>(this.permissionsSearchFormService.form());
   searchText = signal<string>('');
   filterHasValue = signal<boolean>(true);
   filterAdvanceHasValue = signal<boolean>(false);
 
-  // Computed signals
   hasResults = computed(() => this.resultData().length > 0);
   isFormValid = computed(() => this.permissionsSearchForm().valid);
   searchPlaceholder = computed(() => 'שם קבוצה, תיאור');
@@ -53,7 +48,6 @@ export class PermissionsSearchComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // Initialize form with search data
     this.initializeForm();
   }
 
@@ -69,7 +63,6 @@ export class PermissionsSearchComponent implements OnInit {
     this.permissionsSearchFormService.searchForm.set(searchForm);
     const formValue = { ...searchForm.value };
     
-    // Process form values
     const processedFormValue = this.processFormValues(formValue);
     
     if (searchForm.valid) {
