@@ -540,6 +540,28 @@ input.mat-input-element {
   position: absolute !important;
 }
 
+// Dialog panel max-width override
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-width: 800px !important;
+  min-width: var(--mat-dialog-container-min-width, 280px);
+}
+
+// Additional Angular Material dialog container overrides
+.mat-mdc-dialog-container {
+  max-width: 800px !important;
+  width: auto !important;
+}
+
+.mat-dialog-container {
+  max-width: 800px !important;
+  width: auto !important;
+}
+
+// Override Angular Material CSS custom properties
+:root {
+  --mat-dialog-container-max-width: 800px !important;
+}
+
 // Specific positioning for datepicker overlay
 .cdk-overlay-pane:has(.mat-datepicker-content) {
   transform: none !important;

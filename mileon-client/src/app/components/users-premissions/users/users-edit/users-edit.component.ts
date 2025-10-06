@@ -60,7 +60,6 @@ export class UsersEditComponent implements OnInit {
   isNationalUser = signal<boolean>(false);
   isActive = signal<boolean>(false);
   
-  // These will be initialized after constructor
   currentAuthority!: any;
   isMviewAuthority!: any;
   disableEdit!: any;
@@ -81,7 +80,6 @@ export class UsersEditComponent implements OnInit {
     this.userForm.get('userName')?.disable();
     this.userForm.get('nid')?.disable();
     
-    // Initialize signals after services are injected
     this.currentAuthority = toSignal(this.authorityService.authorityId$, { initialValue: '' });
     
     this.isMviewAuthority = computed(() => 

@@ -1,0 +1,44 @@
+<div class="infrastructure-container p-4">
+  <div class="inline-header">
+    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+    <h5 class="title">{{ title() }}</h5>
+  </div>
+  <form [formGroup]="form()">
+    <div class="row mt-1 d-flex justify-content-end">
+      <div class="select-container d-flex flex-column">
+        <app-select
+          formControlName="area"
+          [title]="'איזור'"
+          [placeholder]="'בחר איזור'"
+          [options]="areas()"
+          bindValueKey="value"
+          bindLabelKey="display"
+          [isRequired]="true"
+          appearance="fill"
+        ></app-select>
+      </div>
+    </div>
+  </form>
+  <div class="header col">
+    <app-user-permissions-add-user-search
+      (onSearch)="fetchUsersByArea($event)"
+      [searchData]="searchData()"
+      [resultData]="list()"
+      [total]="total()"
+      [searchByText]="SearchByTextEnum.AssignedUsersSearch"
+    ></app-user-permissions-add-user-search>
+  </div>
+  <div class="content-container">
+    @if (tableData()) {
+      <app-user-premissions-assigned-table
+        [data]="tableData()"
+        [total]="total()"
+        [count]="count()"
+        (onIconClick)="removeOrAssignUser($event)"
+        (onFormChanges)="fetchUsersByArea($event)"
+        [columns]="columns()"
+        [form]="form()"
+      ></app-user-premissions-assigned-table>
+    }
+  </div>
+</div>

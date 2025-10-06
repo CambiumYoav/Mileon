@@ -111,7 +111,7 @@ export class UsersResetPasswordFormComponent implements OnInit {
       const matchingControl = formGroup.get(matchingControlName);
 
       if (!control || !matchingControl) {
-        return null; // Controls not found
+        return null;
       }
 
       return control.value === matchingControl.value

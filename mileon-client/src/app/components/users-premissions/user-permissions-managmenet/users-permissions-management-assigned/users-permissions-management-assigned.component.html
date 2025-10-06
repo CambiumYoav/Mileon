@@ -1,0 +1,31 @@
+<div class="infrastructure-container p-4">
+  <div class="inline-header">
+    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+    <h5 class="title">{{ title() }}</h5>
+  </div>
+
+  <div class="header col">
+    <app-users-permissions-management-search
+      (onSearch)="loadData($event)"
+      [searchData]="searchData()"
+      [resultData]="list()"
+      [total]="total()"
+      [searchByText]="SearchByTextEnum.AssignedUsersSearch"
+    ></app-users-permissions-management-search>
+  </div>
+  <div class="content-container">
+    @if (tableData()) {
+      <app-user-premissions-assigned-table
+        [data]="tableData()"
+        [total]="total()"
+        [count]="count()"
+        (onFormChanges)="loadData($event)"
+        (onIconClick)="removeUser($event)"
+        [columns]="columns()"
+        [form]="form"
+        [showPaginator]="true"
+        [pageSize]="10"
+      ></app-user-premissions-assigned-table>
+    }
+  </div>
+</div>

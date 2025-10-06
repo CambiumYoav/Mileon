@@ -1,0 +1,55 @@
+@import "../../../../../styles/elements.scss";
+:host {
+  .infrastructure-container {
+    // height: 550px;
+    // width: 837px;
+
+    .inline-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .title {
+        color: black;
+        font-weight: 800;
+        font-family: $fontOpenSans;
+        direction: rtl;
+        font-size: 24px;
+        line-height: 25px;
+        margin: 0;
+      }
+
+      .exit-icon {
+        cursor: pointer;
+      }
+    }
+
+    .header {
+      border-top-style: solid;
+      border-color: transparent;
+      direction: rtl;
+      margin-top: 10px;
+    }
+    .heading {
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
+  }
+
+  .content-container {
+    display: flex;
+    direction: rtl;
+    height: 80%;
+    margin-top: 10px;
+
+    .text {
+      font-family: $fontOpenSans;
+      font-style: normal;
+      font-size: 12px;
+      line-height: 16px;
+      text-align: right;
+    }
+  }
+
+ 
+}

@@ -17,6 +17,15 @@
                 <span class="title">
                   {{ column.displayName }}
                 </span>
+                <!-- <span class="title">
+                  {{ column.displayName }}
+
+                  @if (column.canSort) {
+                    <button class="sort-button">
+                      <img [src]="Icons.SORT_ICON" alt="sort" />
+                    </button>
+                  }
+                </span> -->
         @if (icon) {
           <img 
             [src]="getIconPath(icon)" 

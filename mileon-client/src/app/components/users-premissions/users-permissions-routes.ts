@@ -79,11 +79,11 @@ export const usersPermissionsRoutes: Routes = [
         .then(m => m.UsersEditComponent),
   },
 
-  // // Parking Permits Management
-  // {
-  //   path: RP.UsersPermissions.ParkingPermitsManagement,
-  //   loadComponent: () =>
-  //     import('./user-permissions-managmenet/users-permissions-management/users-permissions-management.component')
-  //       .then(m => m.UsersPermissionsManagementComponent),
-  // },
+  // Parking Permits Management
+  {
+    path: RP.UsersPermissions.ParkingPermitsManagement,
+    loadComponent: () =>
+      import('./user-permissions-managmenet/users-permissions-management/users-permissions-management.component')
+        .then(m => m.UsersPermissionsManagementComponent),
+  },
 ];

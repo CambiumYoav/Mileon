@@ -1,0 +1,165 @@
+<div>
+  <app-red-line-error [errorMsg]="errorMsg()"></app-red-line-error>
+  <div class="table-container">
+    <table class="table table-hover shadow-table">
+      <thead class="infrastructure-header">
+        <tr>
+          @for (column of columns(); track column.propertyName) {
+            @if (column.type !== ColumnTypeEnum.Hidden) {
+              <th
+                [sortable]="column.sortField || column.propertyName"
+                scope="col"
+                (sort)="onSort($event)"
+                [canSort]="column.canSort"
+                [sortByServer]="column.sortByServer"
+                [direction]="getSortDirection(column.sortField || column.propertyName)"
+              >
+                <span class="title">
+                  {{ column.displayName }}
+
+                  @if (column.canSort) {
+                    <button class="sort-button">
+                      <img [src]="Icons.SORT_ICON" alt="sort" />
+                    </button>
+                  }
+                </span>
+              </th>
+            }
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (hasData()) {
+          @for (item of displayData(); track item.id || $index) {
+            <tr
+              class="user-select-none"
+              style="line-height: 8px; height: 8px"
+              (click)="onRowClick(item, $event)"
+            >
+              @for (column of columns(); track column.propertyName) {
+                @if (column.type !== ColumnTypeEnum.Hidden) {
+                  <td
+                    [ngClass]="{
+                      'radio-td': column.type === ColumnTypeEnum.Radio,
+                      'checkbox-td': column.type === ColumnTypeEnum.Checkbox,
+                      'text-overflow-ellipsis': column.textOverflow
+                    }"
+                  >
+                    <!-- Radio -->
+                    @if (column.type === ColumnTypeEnum.Radio) {
+                      <input
+                        type="radio"
+                        [name]="'radio-' + item.id"
+                        [value]="item"
+                        (change)="onSelectedRowIdChange(item)"
+                      />
+                    }
+
+                    <!-- Text -->
+                    @if (column.type === ColumnTypeEnum.Text) {
+                      <span>
+                        @if (column.hasIcon) {
+                          <app-icon [icon]="getIconById(item[column.fieldId])"></app-icon>
+                        }
+
+                        @if (!column.hasIcon && column.propertyName !== 'nid') {
+                          <span>
+                            {{ item[column.propertyName] }}
+                            {{ column.additionalText ? item[column.additionalText] : "" }}
+                          </span>
+                        }
+
+                        @if (!column.hasIcon && column.propertyName === 'nid') {
+                          <span>
+                            {{ item | renderIdentity }}
+                          </span>
+                        }
+                      </span>
+                    }
+
+                    <!-- Currency -->
+                    @if (column.type === ColumnTypeEnum.Currency) {
+                      <span [ngClass]="column.textColor ?? 'blue'">
+                        {{ item[column.propertyName] | currency : "₪ " }}
+                      </span>
+                    }
+
+                    <!-- Date -->
+                    @if (column.type === ColumnTypeEnum.Date) {
+                      <span>
+                        {{ item[column.propertyName] | date : "dd/MM/yyyy" }}
+                      </span>
+                    }
+
+                    <!-- DateTime -->
+                    @if (column.type === ColumnTypeEnum.DateTime) {
+                      <span>
+                        {{ item[column.propertyName] | date : "HH:mm | dd.MM.yyyy" }}
+                      </span>
+                    }
+
+                    <!-- Checkbox -->
+                    @if (column.type === ColumnTypeEnum.Checkbox) {
+                      <div class="body-td">
+                        <app-checkbox
+                          [initialValue]="item[column.propertyName]"
+                          (change)="onSelectedRowIdChange(item)"
+                        ></app-checkbox>
+                      </div>
+                    }
+
+                    <!-- Tag -->
+                    @if (column.type === ColumnTypeEnum.Tag) {
+                      <div class="body-td">
+                        <app-tag
+                          [tagName]="item[column.propertyName]"
+                          [tagId]="item[column.fieldId]"
+                        ></app-tag>
+                      </div>
+                    }
+
+                    <!-- Active -->
+                    @if (column.type === ColumnTypeEnum.Active) {
+                      <div class="body-td">
+                        <app-active
+                          [isActive]="item[column.propertyName]"
+                        ></app-active>
+                      </div>
+                    }
+
+                    <!-- Icon -->
+                    @if (column.type === ColumnTypeEnum.Icon) {
+                      <div class="d-flex justify-content-end">
+                        <span (click)="onIconClickEvent(item)">
+                          <img
+                            [src]="
+                              item.isIconToggled
+                                ? Icons.TRASH_DARK
+                                : getIconPath(column.icon!)
+                            "
+                          />
+                        </span>
+                      </div>
+                    }
+                  </td>
+                }
+              }
+            </tr>
+          }
+
+          <!-- Extra row to fill the gap -->
+          <tr></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-paginator
+    [showPaginator]="showPaginator()"
+    [total]="tableService.total()"
+    (pageChanger)="pageChanges($event)"
+    [pageSize]="pageSize()"
+    [selectedPage]="selectedPage()"
+  ></app-paginator>
+</div>
