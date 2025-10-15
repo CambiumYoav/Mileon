@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal, computed, effect, inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, signal, computed, effect, inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Chart, ChartData, ChartOptions, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -18,7 +18,7 @@ import { Utils } from '../../../utils/utils';
 import { ChartTypeEnum } from '../../../types/enum/chartTypeEnum';
 import { TerminalService } from '../terminal.service';
 import { AuthorityService } from '../../../services/authority.service ';
-import { debounceTime, filter, Subscription } from 'rxjs';
+import { debounceTime, filter } from 'rxjs';
 import { StaticsBarResponse } from '../../../types/terminal/terminalStaticsResponse';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
@@ -38,7 +38,7 @@ import { InputDateComponent } from "../../shared/base/inputs/input-date/input-da
     InputDateComponent
   ],
 })
-export class TerminalStatisticsBarComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TerminalStatisticsBarComponent implements OnInit, AfterViewInit {
   @ViewChild('chartCanvas', { static: false }) chartCanvas!: ElementRef<HTMLCanvasElement>;
   
   private readonly baseFormService = inject(BaseFormService);
@@ -59,7 +59,7 @@ export class TerminalStatisticsBarComponent implements OnInit, OnDestroy, AfterV
   isLoading = signal(false);
   modeChanges: any;
   private isInitializing = signal(true);
-  private formSubscription?: Subscription;
+  formValueChanges!: any;
 
   private chart: Chart | null = null;
 
@@ -214,14 +214,14 @@ export class TerminalStatisticsBarComponent implements OnInit, OnDestroy, AfterV
     this.chartForm = this.baseFormService.createFormGroup(TicketsBarChartForm);
     this.baseFormService.setValidations(this.chartForm, chartsValidation);
     
-    
-    // Set up form value changes subscription manually to have better control
-    this.formSubscription = this.chartForm.valueChanges.pipe(
-      debounceTime(300),
-      filter(() => this.chartForm.valid && !this.isInitializing())
-    ).subscribe(() => {
-      this.getChartData();
-    });
+    // Convert form value changes to signal with debouncing
+    this.formValueChanges = toSignal(
+      this.chartForm.valueChanges.pipe(
+        debounceTime(300),
+        filter(() => this.chartForm.valid && !this.isInitializing())
+      ),
+      { initialValue: null }
+    );
     
     const modeControlForSignal = this.chartForm.get('mode');
     if (modeControlForSignal) {
@@ -253,6 +253,14 @@ export class TerminalStatisticsBarComponent implements OnInit, OnDestroy, AfterV
         const actualModeValue = typeof modeValue === 'object' ? modeValue.value : modeValue;
         this.selectedDateMode.set(actualModeValue);
         Utils.updateValidatorsByMode(this.chartForm, actualModeValue);
+      }
+    });
+
+    // Effect to handle form value changes
+    effect(() => {
+      const formValues = this.formValueChanges();
+      if (formValues !== null && !this.isInitializing()) {
+        this.getChartData();
       }
     });
 
@@ -296,18 +304,6 @@ export class TerminalStatisticsBarComponent implements OnInit, OnDestroy, AfterV
     // Initial chart data load will be handled by effects
   }
 
-  ngOnDestroy(): void {
-    // Clean up subscription to prevent memory leaks
-    if (this.formSubscription) {
-      this.formSubscription.unsubscribe();
-    }
-    
-    // Destroy chart if it exists
-    if (this.chart) {
-      this.chart.destroy();
-      this.chart = null;
-    }
-  }
 
   ngAfterViewInit(): void {
     // Initialize chart after view is ready with a slight delay to ensure DOM is ready

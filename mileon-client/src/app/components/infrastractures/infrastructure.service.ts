@@ -51,7 +51,8 @@ export class InfrastructureService {
   getInfrastructureTable(
     filters: InfrastructureFilterOptions,
     tableName: InfrastructureTablesTypes,
-    authorityID?: string | null
+    authorityID?: string | null,
+    pageSize: number = 100
   ) {
     // Construct the query parameters
     const search = filters?.searchText ? `&search=${filters.searchText}` : '';
@@ -67,7 +68,7 @@ export class InfrastructureService {
         : '';
 
     // Construct the full request URL
-    const url = `${this.apiController}/${tableName}?size=10&page=${filters.currentPage}${search}${authorityParam}${includeInactiveParam}`;
+    const url = `${this.apiController}/${tableName}?size=${pageSize}&page=${filters.currentPage}${search}${authorityParam}${includeInactiveParam}`;
 
     const res = this.httpService.getRequest(url);
     return lastValueFrom(res);
@@ -75,7 +76,8 @@ export class InfrastructureService {
   getVehicleInfrastructureTable(
     filters: InfrastructureFilterOptions,
     tableName: InfrastructureTablesTypes,
-    authorityID?: string | null
+    authorityID?: string | null,
+    pageSize: number = 100
   ) {
     // Construct search parameters dynamically
     let searchQuery = '';
@@ -101,7 +103,7 @@ export class InfrastructureService {
       queryParams.append('includeInactive', String(filters.includeInactive));
     }
 
-    queryParams.append('size', '10');
+    queryParams.append('size', String(pageSize));
     queryParams.append('page', String(filters.currentPage));
 
     // Combine search query manually with other params

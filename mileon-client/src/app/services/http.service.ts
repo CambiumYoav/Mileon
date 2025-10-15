@@ -26,7 +26,7 @@ export class HttpService {
       headers: this.buildHeaders(),
     };
     if (params) {
-      options.params = params;
+      options.params = this.buildParams(params);
     }
     return this.httpClient
       .get<T>(`${this.apiUrl}/${type}`, options)
@@ -210,16 +210,18 @@ export class HttpService {
     let queryParams = '';
     if (params)
       Object.keys(params).forEach((key) => {
-        if (params[key] !== null && params[key] !== undefined) {
+        if (params[key] !== null && params[key] !== undefined && params[key] !== 'undefined') {
           if (queryParams !== '') {
             queryParams += '&';
           }
           if (Array.isArray(params[key])) {
             const arrayParams = params[key] as Array<any>;
             arrayParams.forEach((value) => {
-              queryParams += `${encodeURIComponent(key)}=${encodeURIComponent(
-                value
-              )}&`;
+              if (value !== null && value !== undefined && value !== 'undefined') {
+                queryParams += `${encodeURIComponent(key)}=${encodeURIComponent(
+                  value
+                )}&`;
+              }
             });
           } else {
             queryParams += `${encodeURIComponent(key)}=${encodeURIComponent(
@@ -236,14 +238,18 @@ export class HttpService {
     for (const key in params) {
       if (params.hasOwnProperty(key)) {
         const value = params[key];
-        if (Array.isArray(value)) {
-          // Handle array values
-          value.forEach((item) => {
-            httpParams = httpParams.append(key, item);
-          });
-        } else {
-          // Handle single values
-          httpParams = httpParams.set(key, value);
+        if (value !== null && value !== undefined && value !== 'undefined') {
+          if (Array.isArray(value)) {
+            // Handle array values
+            value.forEach((item) => {
+              if (item !== null && item !== undefined && item !== 'undefined') {
+                httpParams = httpParams.append(key, item);
+              }
+            });
+          } else {
+            // Handle single values
+            httpParams = httpParams.set(key, value);
+          }
         }
       }
     }

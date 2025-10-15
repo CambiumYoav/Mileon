@@ -1,0 +1,52 @@
+:host {
+    .constant-btns {
+      display: flex;
+      justify-content: end;
+      margin-top: 15px;
+      ::ng-deep app-button {
+        button {
+          margin: 0;
+          margin-right: 10px;
+        }
+      }
+    }
+  
+    ::ng-deep mat-form-field {
+      margin-left: 10px;
+      .mat-form-field-underline {
+        display: none;
+      }
+  
+      .mat-select-value {
+        text-align: right;
+      }
+  
+      .mat-select-arrow-wrapper {
+        transform: none;
+        margin-left: 5px;
+      }
+  
+      .mat-form-field-infix {
+        margin-top: -3px;
+      }
+  
+      .mat-form-field-wrapper {
+        padding: 0;
+  
+        .mat-form-field-flex {
+          height: 40px;
+          padding: 0;
+          background-color: #f7f9fc;
+          border-radius: 4px;
+          border: 1px solid #e3e7eb;
+        }
+      }
+    }
+  
+    ::ng-deep app-input-date{
+      input{
+        padding-right: 15px;
+      }
+    }
+  }
+  

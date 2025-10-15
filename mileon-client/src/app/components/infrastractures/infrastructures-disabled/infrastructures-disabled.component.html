@@ -1,0 +1,9 @@
+<app-infrastructures-table
+  [columns]="columns()"
+  [data]="data()"
+  [total]="total()"
+  [count]="count()"
+  (onFormChanges)="loadData($event)"
+  [form]="infrastructureForm"
+  [loader]="loader()"
+></app-infrastructures-table>

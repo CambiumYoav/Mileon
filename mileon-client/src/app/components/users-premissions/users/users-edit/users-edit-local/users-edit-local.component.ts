@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal, computed, effect } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, signal, computed, effect, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {
@@ -28,6 +28,7 @@ import { ButtonComponent } from "../../../../shared/base/button/button.component
   selector: 'app-users-edit-local',
   templateUrl: './users-edit-local.component.html',
   styleUrls: ['./users-edit-local.component.scss'],
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -40,16 +41,27 @@ import { ButtonComponent } from "../../../../shared/base/button/button.component
   ],
 })
 export class UsersEditLocalComponent implements OnInit {
-  _skipFormValidation = signal(true);
-  readonly FileType = FileType;
-  Icons = ConstPath;
+  // Inject services
+  private usersService = inject(UsersService);
+  private toaster = inject(ToastrService);
+  private routerService = inject(RouterService);
+  private sessionService = inject(SessionService);
+  private permissionService = inject(PermissionService);
+
+  // Input/Output properties
   @Input() userForm!: FormGroup;
   @Input() currentAuthority!: string;
   @Output() isPasswordReset = new EventEmitter<boolean>();
 
+  // Constants
+  readonly FileType = FileType;
+  readonly Icons = ConstPath;
+  readonly FieldTypeEnum = FieldTypeEnum;
+
+  // Signals for reactive state
+  private _skipFormValidation = signal(true);
   disableEdit = signal<boolean>(false);
   userFields = signal(userLocalFields.filter((f) => f.name !== 'password'));
-  FieldTypeEnum = FieldTypeEnum;
   fileTypes = signal<IdValuePair[]>([]);
   filesToUpload = signal<UploadedFile[]>([]);
   uploadedFile = signal<File | null>(null);
@@ -68,13 +80,16 @@ export class UsersEditLocalComponent implements OnInit {
     { value: 4, label: 'אכיפה', checked: false },
   ]);
 
-  constructor(
-    private usersService: UsersService,
-    private toaster: ToastrService,
-    private routerService: RouterService,
-    private sessionService: SessionService,
-    private permissionService: PermissionService
-  ) {}
+  constructor() {}
+
+  // Effect to react to permission changes
+  private permissionEffect = effect(() => {
+    const shouldDisable = this.disableEdit();
+    if (shouldDisable && this.userForm) {
+      // React to permission changes
+      this.setFormControlsDisabled(shouldDisable);
+    }
+  });
 
   ngOnInit(): void {  
     this.userForm.get('id')?.disable();
@@ -88,19 +103,13 @@ export class UsersEditLocalComponent implements OnInit {
       this.userForm?.get('email')?.value === this.permissionService.email;
     
     this.disableEdit.set(shouldDisable);
-    this.setFormControlsDisabled(shouldDisable);
-    this.setFieldsDisabled(shouldDisable);
+    // The effect will handle form control disabling automatically
   }
 
   private setFormControlsDisabled(disable: boolean): void {
     Object.values(this.userForm.controls).forEach((control) => {
       disable ? control.disable() : control.enable();
     });
-  }
-
-  private setFieldsDisabled(disable: boolean): void {
-    // Field disabled state is now managed through FormControl only
-    // This method is kept for potential future use but doesn't modify field properties
   }
 
   async updateLocalUser() {

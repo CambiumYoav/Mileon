@@ -8,7 +8,7 @@
   width: auto;
   min-width: 680px;
   // height: 265px;
-  // max-height: 715px;
+  max-height: 700px;
   .inline-header {
     display: flex;
     align-items: center;
@@ -30,15 +30,48 @@
     }
   }
   .form-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 20px 0;
+    padding-top: 20px;
 
     .form-row {
       display: flex;
       flex-direction: row;
+      gap: 15px;
     }
+
+    .form-field {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+
+      &.Small-size {
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+      }
+
+      &.Regular-size {
+        width: 210px;
+        min-width: 210px;
+        max-width: 210px;
+      }
+
+      .title-placeholder {
+        display: none;
+        
+        .required-icon {
+          width: 8px;
+          height: 8px;
+          margin-right: 4px;
+        }
+      }
+    }
+
+
   }
 
   .inputError {
@@ -62,12 +95,71 @@
       display: none;
     }
 
-    .fromTo-container {
+    // Show field labels ONLY for radio button fields
+    .form-field:has(app-radio-button) .title-placeholder {
+      display: block !important;
+      font-size: 14px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 5px;
+      text-align: right;
+      direction: rtl;
+    }
+
+    .fromTo-wrapper {
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+      flex-direction: column;
       width: 100%;
 
+      .fromTo-main-label {
+        font-size: 14px;
+        font-weight: 700;
+        color: #000;
+        text-align: right;
+        direction: rtl;
+        display: block;
+        margin: 0 0 4px 0;
+      }
+
+      ::ng-deep .title-container {
+        display: none !important;
+      }
+
+      .fromTo-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        gap: 10px;
+
+        .fromTo-field {
+          flex: 1;
+          width: calc(50% - 5px);
+          max-width: calc(50% - 5px);
+          display: flex;
+          flex-direction: column;
+
+          .fromTo-sub-label {
+            display: none;
+          }
+
+          app-input-text {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .field-texts {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+
+      app-input-text {
+        width: 100%;
+        max-width: 100%;
+      }
     }
 
     ::ng-deep mat-form-field {
@@ -124,8 +216,8 @@
   .signs-button-container {
     display: flex;
     align-items: end;
-    justify-content: end;
-    width: 25%;
+    justify-content: flex-end;
+    width: 100%;
     // margin-bottom: 25px;
     margin-bottom: 10px;
 
@@ -144,5 +236,18 @@
 
   .required-icon {
     margin-bottom: 2px;
+  }
+
+  .file-upload-wrapper {
+    width: 100%;
+    margin-top: 20px;
+    
+    ::ng-deep app-file-upload-new {
+      // width: 100%;
+      .button-container {
+        background-color: $colorLightGray !important;
+        // height: 120px;
+      }
+    }
   }
 }

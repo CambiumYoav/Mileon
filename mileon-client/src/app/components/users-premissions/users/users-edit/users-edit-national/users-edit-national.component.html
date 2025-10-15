@@ -4,99 +4,99 @@
       <div class="inputs-container xl-w-1200px xxl-w-1400px">
         @for (field of userFields().slice(0, 4); track field.name) {
           <div class="input-item">
-            <ng-container [ngSwitch]="field.type">
-              <div
-                class="wrap-field"
-                [class]="'field-' + field.length"
-                [ngSwitch]="field.type"
-              >
-                @if (field.name !== 'userName') {
-                  <app-input-text
-                    *ngSwitchCase="FieldTypeEnum.Text"
+            <div
+              class="wrap-field"
+              [class]="'field-' + field.length"
+            >
+              @switch (field.type) {
+                @case (FieldTypeEnum.Text) {
+                  @if (field.name !== 'userName') {
+                    <app-input-text
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isValid]="isFieldValid(field.name)"
+                      [isRequired]="field.isRequired"
+                    ></app-input-text>
+                  }
+                  @if (field.name === 'userName') {
+                    <app-input-text
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isValid]="true"
+                      [isRequired]="field.isRequired"
+                    ></app-input-text>
+                  }
+                }
+                @case (FieldTypeEnum.Select) {
+                  <app-select
+                    [dataFunction]="field.dataFunction"
+                    bindLabelKey="value"
+                    bindValueKey="id"
                     [title]="field.displayName"
                     [placeholder]="field.displayName"
                     [formControlName]="field.name"
+                    [isMultiSelect]="field.multipleSelect || false"
                     [isValid]="isFieldValid(field.name)"
                     [isRequired]="field.isRequired"
-                  ></app-input-text>
+                  ></app-select>
                 }
-                @if (field.name === 'userName') {
-                  <app-input-text
-                    *ngSwitchCase="FieldTypeEnum.Text"
-                    [title]="field.displayName"
-                    [placeholder]="field.displayName"
-                    [formControlName]="field.name"
-                    [isValid]="true"
-                    [isRequired]="field.isRequired"
-                  ></app-input-text>
-                }
-                <app-select
-                  *ngSwitchCase="FieldTypeEnum.Select"
-                  [dataFunction]="field.dataFunction"
-                  bindLabelKey="value"
-                  bindValueKey="id"
-                  [title]="field.displayName"
-                  [placeholder]="field.displayName"
-                  [formControlName]="field.name"
-                  [isMultiSelect]="field.multipleSelect || false"
-                  [isValid]="isFieldValid(field.name)"
-                  [isRequired]="field.isRequired"
-                ></app-select>
-              </div>
-            </ng-container>
+              }
+            </div>
           </div>
         }
 
         @for (field of userFields().slice(4, 6); track field.name) {
           <div class="input-item">
-            <ng-container [ngSwitch]="field.type">
-              <div
-                class="wrap-field"
-                [class]="'field-' + field.length"
-                [ngSwitch]="field.type"
-              >
-                @if (field.name !== 'id') {
-                  <app-input-text
-                    *ngSwitchCase="FieldTypeEnum.Text"
+            <div
+              class="wrap-field"
+              [class]="'field-' + field.length"
+            >
+              @switch (field.type) {
+                @case (FieldTypeEnum.Text) {
+                  @if (field.name !== 'id') {
+                    <app-input-text
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isValid]="isFieldValid(field.name)"
+                      [isRequired]="field.isRequired"
+                    ></app-input-text>
+                  }
+                  @if (field.name === 'id') {
+                    <app-input-text
+                      [title]="field.displayName"
+                      [placeholder]="field.displayName"
+                      [formControlName]="field.name"
+                      [isValid]="true"
+                      [isRequired]="field.isRequired"
+                    ></app-input-text>
+                  }
+                }
+                @case (FieldTypeEnum.Select) {
+                  <app-select
+                    [dataFunction]="field.dataFunction"
+                    bindLabelKey="value"
+                    bindValueKey="id"
                     [title]="field.displayName"
                     [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isMultiSelect]="field.multipleSelect || false"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                  ></app-select>
+                }
+                @case (FieldTypeEnum.Phone) {
+                  <app-input-phone
+                    [title]="field.displayName"
                     [formControlName]="field.name"
                     [isValid]="isFieldValid(field.name)"
                     [isRequired]="field.isRequired"
-                  ></app-input-text>
+                  ></app-input-phone>
                 }
-                @if (field.name === 'id') {
-                  <app-input-text
-                    *ngSwitchCase="FieldTypeEnum.Text"
-                    [title]="field.displayName"
-                    [placeholder]="field.displayName"
-                    [formControlName]="field.name"
-                    [isValid]="true"
-                    [isRequired]="field.isRequired"
-                  ></app-input-text>
-                }
-
-                <app-select
-                  *ngSwitchCase="FieldTypeEnum.Select"
-                  [dataFunction]="field.dataFunction"
-                  bindLabelKey="value"
-                  bindValueKey="id"
-                  [title]="field.displayName"
-                  [placeholder]="field.displayName"
-                  [formControlName]="field.name"
-                  [isMultiSelect]="field.multipleSelect || false"
-                  [isValid]="isFieldValid(field.name)"
-                  [isRequired]="field.isRequired"
-                ></app-select>
-                <app-input-phone
-                  *ngSwitchCase="FieldTypeEnum.Phone"
-                  [title]="field.displayName"
-                  [formControlName]="field.name"
-                  [isValid]="isFieldValid(field.name)"
-                  [isRequired]="field.isRequired"
-                ></app-input-phone>
-              </div>
-            </ng-container>
+              }
+            </div>
           </div>
         }
         

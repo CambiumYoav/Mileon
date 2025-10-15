@@ -2504,6 +2504,8 @@ export class InfrastructureForms {
           size: DynamicFieldSize.Double,
           options: [],
           isMultiSelect: true,
+          bindLabelKey: 'value',
+          bindValueKey: 'id',
           dataFunction: {
             name: 'getStreets',
 
@@ -2518,7 +2520,7 @@ export class InfrastructureForms {
         {
           name: 'linkedInspectors',
           type: 'selectWithLookup',
-          label: 'קישור לקבוצת פקחים ',
+          label: 'קישור לקבוצת פקחים ',
           value: '',
           validations: {},
           disabled: false,
@@ -2526,6 +2528,8 @@ export class InfrastructureForms {
           size: DynamicFieldSize.Double,
           isMultiSelect: true,
           options: [],
+          bindLabelKey: 'value',
+          bindValueKey: 'id',
           dataFunction: {
             name: 'getAllInspectors',
           },

@@ -1,0 +1,14 @@
+<app-search-bar
+  [form]="infrastructureSearchForm()"
+  [showFilters]="false"
+  (search)="sendFormValue($event)"
+  [submitOnKey]="true"
+  [resultData]="resultData() || []"
+  [total]="total() || 0"
+  [searchTextValue]="searchText()"
+  [showDatePicker]="false"
+  [hasResultsDropdown]="hasResultsDropdown()"
+  [searchBy]="searchByText()"
+  searchTitle="חיפוש"
+  [showPlaceholder]="true"
+></app-search-bar>

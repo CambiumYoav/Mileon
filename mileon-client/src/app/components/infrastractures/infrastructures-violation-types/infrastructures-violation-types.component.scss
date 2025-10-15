@@ -1,0 +1,24 @@
+:host {
+  .arrow-container {
+    width: auto;
+    padding-left: 0;
+    align-items: center;
+    cursor: pointer;
+    img {
+      height: 20px;
+      cursor: pointer;
+      padding-left: 12px;
+    }
+  }
+  .constant-btns {
+    display: flex;
+    justify-content: end; 
+    margin-top: 15px;
+    ::ng-deep app-button {
+      button {
+        margin: 0;
+        margin-right: 10px;
+      }
+    }
+  }
+}

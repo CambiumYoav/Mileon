@@ -27,6 +27,12 @@ export const childRoutes: Routes = [
       import('./components/users-premissions/users-permissions-routes')
         .then(m => m.usersPermissionsRoutes),
   },
+  {
+    path: ROUTE_PATH.Infrastructure.Home, // 'infrastructure'
+    loadChildren: () =>
+      import('./components/infrastractures/infrastructures-routing')
+        .then(m => m.infrastructuresRoutes),
+  },
 ];
 export const routes: Routes = [
   { path: ``, redirectTo: 'login', pathMatch: 'full' },

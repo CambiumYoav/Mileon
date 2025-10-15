@@ -1,6 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Component, Inject, OnInit, inject, signal, computed, effect } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
   MatDialogRef,
@@ -27,6 +25,7 @@ import { UserPermissionsAddUserSearchFormService } from '../user-permissions-add
 import { UserPermissionsAddUserSearchComponent } from '../user-permissions-add-user-search/user-permissions-add-user-search.component';
 import { UserPremissionsAssignedTableComponent } from '../user-premissions-assigned-table/user-premissions-assigned-table.component';
 import { SelectComponent } from '../../../shared/base/select/select.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-user-permissions-management-add-user',
@@ -44,7 +43,7 @@ import { SelectComponent } from '../../../shared/base/select/select.component';
     SelectComponent
   ],
 })
-export class UserPermissionsManagementAddUserComponent implements OnInit, OnDestroy {
+export class UserPermissionsManagementAddUserComponent implements OnInit {
 
   private dialogRef = inject(MatDialogRef<UserPermissionsManagementAddUserComponent>);
   private dialog = inject(MatDialog);
@@ -53,7 +52,7 @@ export class UserPermissionsManagementAddUserComponent implements OnInit, OnDest
   private toaster = inject(ToastrService);
   private authorityService = inject(AuthorityService);
   
-  private destroy$ = new Subject<void>();
+  areaValueChanges!: any;
 
   columns = signal<Column[]>([]);
   tableData = signal<any[]>([]);
@@ -87,6 +86,12 @@ export class UserPermissionsManagementAddUserComponent implements OnInit, OnDest
     
     this.form().addControl('area', new FormControl(null));
     
+    // Convert area form control value changes to signal
+    const areaControl = this.form().get('area');
+    if (areaControl) {
+      this.areaValueChanges = toSignal(areaControl.valueChanges, { initialValue: null });
+    }
+    
     effect(() => {
       const authorityID = this.authorityService.authorityId();
       this.currentAuthority.set(authorityID || '');
@@ -96,17 +101,19 @@ export class UserPermissionsManagementAddUserComponent implements OnInit, OnDest
         this.loadAreas();
       }
     });
+
+    // Effect to handle area value changes
+    effect(() => {
+      const areaValue = this.areaValueChanges();
+      if (areaValue !== null) {
+        this.changeType(areaValue);
+      }
+    });
   }
 
   ngOnInit(): void {
     const tableColumns = new UserPremissionsManagmentTable();
     this.columns.set(tableColumns.AddUsersColumns);
-
-    this.form().get('area')?.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(value => {
-        this.changeType(value);
-      });
 
     this.searchData.set({
       searchText: this.searchText(),
@@ -122,11 +129,6 @@ export class UserPermissionsManagementAddUserComponent implements OnInit, OnDest
     this.tableData.set([]);
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.usersPermissionsManagementSearchFormService.clearForm();
-  }
 
   async fetchUsersByArea(filter: any) {
     this.tableData.set([]);

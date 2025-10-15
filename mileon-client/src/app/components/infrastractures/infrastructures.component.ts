@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { InfrastructuresRoutingModule } from "./infrastructures-routing.module";
-import { CommonModule } from '@angular/common';
-import { SharedImports } from '../../shared/shared-modules';
+// import { Component, OnInit } from '@angular/core';
+// import { RouterOutlet } from '@angular/router';
+// import { CommonModule } from '@angular/common';
 
-@Component({
-  selector: 'app-infrastructures',
-  templateUrl: './infrastructures.component.html',
-  styleUrls: ['./infrastructures.component.scss'],
-  imports: [...SharedImports, InfrastructuresRoutingModule],
-})
-export class InfrastructuresComponent implements OnInit {
-  constructor() {}
+// @Component({
+//   selector: 'app-infrastructures',
+//   templateUrl: './infrastructures.component.html',
+//   styleUrls: ['./infrastructures.component.scss'],
+//   standalone: true,
+//   imports: [CommonModule, RouterOutlet]
+// })
+// export class InfrastructuresComponent implements OnInit {
+//   constructor() {}
 
-  ngOnInit(): void {}
-}
+//   ngOnInit(): void {}
+// }

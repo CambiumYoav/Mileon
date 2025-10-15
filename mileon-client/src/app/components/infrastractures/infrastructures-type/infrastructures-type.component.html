@@ -1,0 +1,55 @@
+
+
+<div class="row">
+  <div class="header col">
+    <app-infrastructures-search
+      (onSearch)="loadData($event)"
+      [searchData]="searchData()"
+      [resultData]="list()"
+      [total]="total()"
+      [searchByText]="SearchByTextEnum.TypeSearch"
+    ></app-infrastructures-search>
+  </div>
+
+  <div class="header d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <app-checkbox
+        (valueChanged)="onCheckboxChange($event)"
+        [label]="'הצג רשומות לא פעילות '"
+      ></app-checkbox>
+    </div>
+    <div class="constant-btns d-flex align-items-center">
+      <app-button [buttonText]="'לוג שינויים'"> </app-button>
+      <app-button
+        [isDisabled]="!total()"
+        [buttonText]="'יצוא לאקסל'"
+        (clickFunction)="openDialogExport()"
+        [imgSrc]="Icons.EXCEL_UP"
+      >
+      </app-button>
+      <app-button
+        [buttonText]="'יבוא מאקסל'"
+        (clickFunction)="openDialogImport()"
+        [imgSrc]="Icons.EXCEL_DOWN"
+      >
+      </app-button>
+      <app-button
+        [buttonText]="'הוספה'"
+        (clickFunction)="openDialogForm()"
+        [imgSrc]="Icons.ADD_CIRCLE"
+      >
+      </app-button>
+    </div>
+  </div>
+ 
+</div>
+<app-infrastructures-table
+  [columns]="columns()"
+  [data]="data()"
+  [total]="total()"
+  [count]="count()"
+  (onFormChanges)="loadData($event)"
+  (onRowEvent)="openEdit($event)"
+  [form]="infrastructureForm()"
+  [loader]="loader()"
+></app-infrastructures-table>

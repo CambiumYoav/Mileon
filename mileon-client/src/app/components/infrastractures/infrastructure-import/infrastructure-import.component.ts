@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
+import { Component, Inject, signal, inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 import { ConstPath } from '../../../constants/const_path';
 import {
   FileType,
@@ -8,31 +8,42 @@ import {
 } from '../../../types/enum/fileType.enum';
 import { IdValuePair } from '../../../types/legalRequest/legal-request-file-type-response';
 import { UploadedFile } from '../../../types/uploadedFile';
-import { SharedImports } from '../../../shared/shared-modules';
 import { ButtonComponent } from "../../shared/base/button/button.component";
 import { FileUploadNewComponent } from "../../shared/base/upload-files/upload-files.component";
+import { InfrastructureEnumTexts } from '../../../types/enum/Infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructure-import',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    ButtonComponent,
+    FileUploadNewComponent
+  ],
   templateUrl: './infrastructure-import.component.html',
   styleUrls: ['./infrastructure-import.component.scss'],
-  imports: [...SharedImports, ButtonComponent, FileUploadNewComponent],
 })
-export class InfrastructureImportComponent implements OnInit {
+export class InfrastructureImportComponent {
+  private dialogRef = inject(MatDialogRef<InfrastructureImportComponent>);
+
   readonly Icons = ConstPath;
   readonly FileUploadComponenetType = FileUploadComponenetType;
   readonly FileType = FileType;
-  dataSubject = new Subject<any>();
 
-  title: string = 'יבוא מבנה קובץ';
-  description: string;
-  selectedFiles: File | null = null;
-  fileTypes: IdValuePair[] = [];
-  filesToUpload: UploadedFile[] = [];
-  isSignsImport: boolean = false;
-  isSpecialImport: boolean = false;
+  dataSubject = signal<any>(null);
+  title = signal<string>(InfrastructureEnumTexts.ImportFileTitle);
+  description = signal<string>('');
+  selectedFiles = signal<File | null>(null);
+  fileTypes = signal<IdValuePair[]>([]);
+  filesToUpload = signal<UploadedFile[]>([]);
+  isSignsImport = signal<boolean>(false);
+  isSpecialImport = signal<boolean>(false);
+  
+  allowedFileTypes: FileType[] = [FileType.XLSX, FileType.XLS, FileType.CSV];
+  maxFileSizeMB = 10;
+
   constructor(
-    public dialogRef: MatDialogRef<InfrastructureImportComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       description: string;
@@ -40,25 +51,24 @@ export class InfrastructureImportComponent implements OnInit {
       isSpecialImport?: boolean;
     }
   ) {
-    this.description =
+    this.description.set(
       data?.description ||
-      'קוד, ת.זהות, שם פרטי, שם משפחה, ישוב , רחוב, מספר בית, כניסה, דירה, מיקוד , טלפון, טלפון נייד, מייל';
-    this.isSignsImport = data?.isSignsImport || false;
-    this.isSpecialImport = data?.isSpecialImport || false;
+      InfrastructureEnumTexts.ImportFileDescription
+    );  
+    this.isSignsImport.set(data?.isSignsImport || false);
+    this.isSpecialImport.set(data?.isSpecialImport || false);
   }
 
-  ngOnInit(): void {}
-
   onSubmit(): void {
-    this.dialogRef.close({ uploadedFiles: this.selectedFiles });
+    this.dialogRef.close({ uploadedFiles: this.selectedFiles() });
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  getUploadedFile(file: File): void {
-    this.selectedFiles = file;
+  onFileSelected(file: File): void {
+    this.selectedFiles.set(file);
     // Add logic to process or validate the file if needed
   }
 }

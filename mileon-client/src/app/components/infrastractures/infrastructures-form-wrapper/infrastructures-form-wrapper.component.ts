@@ -1,67 +1,96 @@
-import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Inject,
+  signal,
+  computed,
+  effect,
+  inject,
+  ChangeDetectorRef,
+  OnInit
+} from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
   ValidatorFn,
   Validators,
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 import { ConstPath } from '../../../constants/const_path';   
 import { InfrastructureFormComponent } from '../infrastructure-form/infrastructure-form.component';
-import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
-import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
+import { DynamicRow, FieldOption } from '../../../types/infrastructure/InfrastructureTypes';
 import { BaseComponents, SharedImports } from '../../../shared/shared-modules';
 import { FieldTypeEnum } from '../../../types/advanced-search/form-tab.model';
+import { RadioButtonComponent, RadioOption } from '../../shared/base/radio-button/radio-button.component';
 
 @Component({
   selector: 'app-infrastructures-form-wrapper',
   templateUrl: './infrastructures-form-wrapper.component.html',
   styleUrls: ['./infrastructures-form-wrapper.component.scss'],
-  imports: [...SharedImports, ...BaseComponents]
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ...SharedImports,
+    ...BaseComponents,
+    RadioButtonComponent
+  ]
 })
 export class InfrastructuresFormWrapperComponent implements OnInit {
-  Icons = ConstPath;
-  mainTitle: string = '';
-  sectionsFormGroup: FormGroup; 
-  formSections: { title: string; rows: DynamicRow[] }[] = [];
-  dataSubject = new Subject<any>();
-  isSubmitted = false;
-  private _skipFormValidation = false;
-FieldTypeEnum = FieldTypeEnum;
-  constructor(
-    private fb: FormBuilder,
-    public dialogRef: MatDialogRef<InfrastructureFormComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: {
-      mainTitle: string;
-      isEdit: boolean;
-      sections: { title: string; rows: DynamicRow[] }[];
-    },
-    private toaster: ToastrService,
-    private cdr: ChangeDetectorRef
-  ) {
-    this.mainTitle = data.mainTitle;
-    this.formSections = data.sections;
-    this.sectionsFormGroup = this.fb.group({});
+  private fb = inject(FormBuilder);
+  public dialogRef = inject(MatDialogRef<InfrastructureFormComponent>);
+  public data = inject(MAT_DIALOG_DATA) as {
+    mainTitle: string;
+    isEdit: boolean;
+    sections: { title: string; rows: DynamicRow[] }[];
+  };
+  private toaster = inject(ToastrService);
+  private cdr = inject(ChangeDetectorRef);
+
+  readonly Icons = ConstPath;
+  readonly FieldTypeEnum = FieldTypeEnum;
+  mainTitle = signal<string>(this.data.mainTitle);
+  formSections = signal<{ title: string; rows: DynamicRow[] }[]>(this.data.sections);
+  sectionsFormGroup = signal<FormGroup>(this.fb.group({}));
+  isSubmitted = signal<boolean>(false);
+  private _skipFormValidation = signal<boolean>(false);
+
+  formData = signal<any>(null);
+
+  constructor() {
+    // Don't call initializeForm() in constructor to avoid change detection issues
   }
 
   ngOnInit(): void {
     this.initializeForm();
   }
 
+  private formValidationEffect = effect(() => {
+    const isSubmitted = this.isSubmitted();
+    const formGroup = this.sectionsFormGroup();
+    
+    // React to form submission state changes
+    if (isSubmitted && formGroup) {
+      // Could add additional validation logic here if needed
+      this.cdr.detectChanges();
+    }
+  });
+
   private initializeForm(): void {
     this.createSectionsForms();
-
     this.cdr.detectChanges();
   }
 
   createSectionsForms(): void {
-    this.formSections.forEach((section) => {
-      const formGroup = this.createSectionForm(section.rows);
-      this.sectionsFormGroup.addControl(section.title, formGroup);
+    const formGroup = this.sectionsFormGroup();
+    this.formSections().forEach((section) => {
+      const sectionFormGroup = this.createSectionForm(section.rows);
+      formGroup.addControl(section.title, sectionFormGroup);
     });
+    this.sectionsFormGroup.set(formGroup);
   }
 
   createSectionForm(rows: DynamicRow[]): FormGroup {
@@ -90,11 +119,17 @@ FieldTypeEnum = FieldTypeEnum;
           });
           formGroup.addControl(field.name, fromToGroup);
         } else {
+          // Handle radio button values specially
+          let controlValue = field.value || '';
+          if (field.type === 'radio') {
+            controlValue = this.getRadioButtonValue(field.value);
+          }
+          
           formGroup.addControl(
             field.name,
             this.fb.control(
               {
-                value: field.value || '',
+                value: controlValue,
                 disabled: field.disabled || false,
               },
               validations
@@ -119,10 +154,11 @@ FieldTypeEnum = FieldTypeEnum;
   }
 
   onSubmit(): void {
-    this._skipFormValidation = false;
-    this.isSubmitted = true;
+    this._skipFormValidation.set(false);
+    this.isSubmitted.set(true);
 
-    Object.values(this.sectionsFormGroup.controls).forEach((control) => {
+    const formGroup = this.sectionsFormGroup();
+    Object.values(formGroup.controls).forEach((control) => {
       if (control instanceof FormGroup) {
         this.markFormGroupTouched(control);
       }
@@ -130,9 +166,9 @@ FieldTypeEnum = FieldTypeEnum;
 
     this.cdr.detectChanges();
 
-    if (this.sectionsFormGroup.valid) {
+    if (formGroup.valid) {
       const combinedFormData = this.combineFormData();
-      this.dataSubject.next({
+      this.formData.set({
         form: combinedFormData,
         isEdit: this.data.isEdit,
       });
@@ -143,9 +179,10 @@ FieldTypeEnum = FieldTypeEnum;
   }
 
   combineFormData(): any {
-    return Object.keys(this.sectionsFormGroup.controls).reduce((acc: any, key) => {
+    const formGroup = this.sectionsFormGroup();
+    return Object.keys(formGroup.controls).reduce((acc: any, key) => {
       const sectionValue = (
-        this.sectionsFormGroup.get(key) as FormGroup
+        formGroup.get(key) as FormGroup
       )?.getRawValue();
 
       if (sectionValue) {
@@ -162,18 +199,20 @@ FieldTypeEnum = FieldTypeEnum;
   }
 
   isFieldValid(fieldName: string, sectionTitle?: string): boolean {
+    const formGroup = this.sectionsFormGroup();
     const control = sectionTitle
-      ? this.sectionsFormGroup.get(`${sectionTitle}.${fieldName}`)
-      : this.sectionsFormGroup.get(fieldName);
+      ? formGroup.get(`${sectionTitle}.${fieldName}`)
+      : formGroup.get(fieldName);
 
     return (
       control?.valid ||
-      !(this.isSubmitted || control?.touched || control?.dirty)
+      !(this.isSubmitted() || control?.touched || control?.dirty)
     );
   }
 
   isDateFieldValid(fieldName: string): boolean {
-    const dateControl = this.sectionsFormGroup.get(
+    const formGroup = this.sectionsFormGroup();
+    const dateControl = formGroup.get(
       `פרטי בעל חיים.${fieldName}`
     );
 
@@ -189,5 +228,35 @@ FieldTypeEnum = FieldTypeEnum;
     }
 
     return this.isFieldValid(`פרטי בעל חיים.${fieldName}`);
+  }
+
+  convertToRadioOptions(fieldOptions: FieldOption[] | undefined): RadioOption[] {
+    if (!fieldOptions) {
+      return [];
+    }
+    return fieldOptions.map(option => ({
+      value: String(option.value),
+      label: option.display
+    }));
+  }
+
+  getRadioButtonValue(fieldValue: any): string {
+    // Handle different value formats from database
+    if (typeof fieldValue === 'object' && fieldValue !== null) {
+      // Try to find common ID properties
+      if (fieldValue.genderID !== undefined) {
+        return String(fieldValue.genderID);
+      }
+      if (fieldValue.id !== undefined) {
+        return String(fieldValue.id);
+      }
+      if (fieldValue.value !== undefined) {
+        return String(fieldValue.value);
+      }
+      // If no ID found, return empty string
+      return '';
+    }
+    // If it's a primitive value, convert to string
+    return String(fieldValue || '');
   }
 }

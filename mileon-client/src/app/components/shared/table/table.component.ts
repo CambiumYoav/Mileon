@@ -37,6 +37,7 @@ import { PaginatorComponent } from './paginator/paginator.component';
 import { TagComponent } from '../base/tag/tag.component';
 import { CheckboxComponent } from '../base/checkbox/checkbox.component';
 import { RadioButtonComponent } from '../base/radio-button/radio-button.component';
+import { ActiveComponent } from '../base/active/active.component';
 // import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
 import { IconComponent } from "../base/icon/icon.component";
 import { TruncatedTextTooltipDirective } from '../../../directives/truncated-text-tooltip.directive';
@@ -56,6 +57,7 @@ import { RedLineErrorComponent } from "../errors/red-line-error/red-line-error.c
     TagComponent,
     CheckboxComponent,
     RadioButtonComponent,
+    ActiveComponent,
     IconComponent,
     TruncatedTextTooltipDirective,
     RedLineErrorComponent

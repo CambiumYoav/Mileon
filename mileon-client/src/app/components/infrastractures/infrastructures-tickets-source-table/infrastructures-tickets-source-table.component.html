@@ -1,0 +1,93 @@
+<div>
+  <app-red-line-error [errorMsg]="errorMsg()"></app-red-line-error>
+  <div class="table-container">
+    <table class="table table-hover shadow-table">
+      <thead class="infrastructure-header">
+        <tr>
+          @for (column of columns; track column.propertyName) {
+            <th
+              sortable
+              [sortable]="column.sortField || column.propertyName"
+              scope="col"
+              (sort)="onSort($event)"
+              [canSort]="column.canSort"
+              [sortByServer]="column.sortByServer"
+            >
+              <span class="title">
+                {{ column.displayName }}
+                <!-- Optional sort icon: -->
+                <!-- <img [src]="Icons.SORT_ICON" alt="sort"> -->
+              </span>
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @if (loader) {
+          <div
+            class="d-flex justify-content-center align-items-center loader"
+          >
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        }
+        <!-- Dynamic rows -->
+        @for (row of combinedData(); track row.ticketSourceID) {
+          <!-- First method -->
+          <tr (click)="onRowClick(row, $event)">
+            <td [attr.rowspan]="row.methods.length" class="source-cell">
+              {{ row.ticketSourceName }}
+            </td>
+            <td>{{ row.methods[0]?.deliveryMethodID }}</td>
+            <td>{{ row.methods[0]?.deliveryMethodName }}</td>
+            <td>{{ row.methods[0]?.ticketTypeName }}</td>
+            <td>{{ row.methods[0]?.ticketStageName }}</td>
+            <td>
+              <div class="d-flex justify-content-end">
+                @if (hasIconColumn()) {
+                  <span
+                    (click)="onIconClickEvent(row)"
+                    style="margin-left: 40px"
+                  >
+                    <img [src]="Icons.EDIT" alt="Edit Icon" />
+                  </span>
+                }
+              </div>
+            </td>
+          </tr>
+          <!-- Additional methods -->
+          @for (method of row.methods.slice(1); track method.deliveryMethodID) {
+            <tr (click)="onRowClick(row, $event)">
+              <td>{{ method.deliveryMethodID }}</td>
+              <td>{{ method.deliveryMethodName }}</td>
+              <td>{{ method.ticketTypeName }}</td>
+              <td>{{ method.ticketStageName }}</td>
+              <td>
+                <div class="d-flex justify-content-end">
+                  @if (hasIconColumn()) {
+                    <span
+                      (click)="onIconClickEvent(row)"
+                      style="margin-left: 40px"
+                    >
+                      <img [src]="Icons.EDIT" alt="Edit Icon" />
+                    </span>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-paginator
+    [showPaginator]="showPaginator"
+    [total]="tableTotal()"
+    (pageChanger)="pageChanges($event)"
+    [pageSize]="pageSize"
+    [selectedPage]="selectedPage()"
+  >
+  </app-paginator>
+</div>

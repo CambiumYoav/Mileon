@@ -1,0 +1,46 @@
+<div class="row pb-4">
+  <div class="header col">
+    <app-infrastructures-search
+      (onSearch)="loadData($event)"
+      [searchData]="searchData()"
+      [resultData]="list()"
+      [total]="total()"
+      [searchByText]="SearchByTextEnum.ManufactureSearch"
+    ></app-infrastructures-search>
+  </div>
+
+  <div class="header d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <app-checkbox
+        (valueChanged)="onCheckboxChange($event)"
+        [label]="'הצג רשומות לא פעילות '"
+      ></app-checkbox>
+    </div>
+    <div class="constant-btns d-flex align-items-center">
+      <app-button [buttonText]="'לוג שינויים'"> </app-button>
+      <app-button
+        [buttonText]="'יצוא לאקסל'"
+        (clickFunction)="openDialogExport()"
+        [imgSrc]="Icons.EXCEL_UP"
+        [isDisabled]="!total()"
+      >
+      </app-button>
+      <app-button
+        [buttonText]="'הוספה'"
+        (clickFunction)="openDialogForm()"
+        [imgSrc]="Icons.ADD_CIRCLE"
+      >
+      </app-button>
+    </div>
+  </div>
+</div>
+<app-infrastructures-table
+  [columns]="columns()"
+  [data]="data()"
+  [total]="total()"
+  [count]="count()"
+  (onFormChanges)="loadData($event)"
+  (onRowEvent)="openEdit($event)"
+  (onFormChanges)="loadData($event)"
+  [loader]="loader()"
+></app-infrastructures-table>

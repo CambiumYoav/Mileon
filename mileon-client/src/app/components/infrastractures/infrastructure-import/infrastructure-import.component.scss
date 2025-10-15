@@ -1,7 +1,5 @@
 @import "../../../../styles/import.scss";
-
-// @import "../../../../styles/elements.scss";
-// @import "../infrastructures.component.scss";
+@import "../../../../styles/elements.scss";
 
 
 // :host {
@@ -100,9 +98,10 @@
 //   }
 // }
 
-// :host ::ng-deep app-file-upload-new {
-//   width: 100%;
-//   .button-container {
-//     background-color: $colorLightGray !important;
-//   }
-// }
+:host ::ng-deep app-file-upload-new {
+  width: 100%;
+  min-width: 680px;
+  .button-container {
+    background-color: $colorLightGray !important;
+  }
+}

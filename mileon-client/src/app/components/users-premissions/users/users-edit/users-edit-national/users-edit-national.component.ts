@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, signal, inject, effect } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BaseFormService } from '../../../../shared/base-form/base-form.service';
@@ -26,6 +26,7 @@ import { ButtonComponent } from "../../../../shared/base/button/button.component
   selector: 'app-users-edit-national',
   templateUrl: './users-edit-national.component.html',
   styleUrls: ['./users-edit-national.component.scss'],
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -36,29 +37,47 @@ import { ButtonComponent } from "../../../../shared/base/button/button.component
   ],
 })
 export class UsersEditNationalComponent implements OnInit {
-  userForm: FormGroup;
+  // Inject services
+  private usersService = inject(UsersService);
+  private baseFormService = inject(BaseFormService);
+  private sessionService = inject(SessionService);
+  private toaster = inject(ToastrService);
+  private routerService = inject(RouterService);
+  private permissionService = inject(PermissionService);
 
+  // Form and signals
+  userForm: FormGroup;
+  
   @Output() isPasswordReset = new EventEmitter<boolean>();
   @Output() isNationalUser = new EventEmitter<boolean>(true);
   disableEdit = signal<boolean>(false);
   userFields = signal(userFields);
 
-  FieldTypeEnum = FieldTypeEnum;
+  // Constants
+  readonly FieldTypeEnum = FieldTypeEnum;
 
+  // Private signals
   private _skipFormValidation = signal(true);
-  constructor(
-    private usersService: UsersService,
-    private baseFormService: BaseFormService,
-    private sessionService: SessionService,
-    private toaster: ToastrService,
-    private routerService: RouterService,
-    private permissionService: PermissionService
-  ) {
+
+  constructor() {
     this.userForm = this.baseFormService.createFormGroup(UserNationalForm);
     this.baseFormService.setValidations(this.userForm, usersValidation);
     this.userForm.get('userName')?.disable();
     this.userForm.get('id')?.disable();
   }
+
+  // Effect to react to permission changes
+  private permissionEffect = effect(() => {
+    const shouldDisable = this.disableEdit();
+    if (shouldDisable) {
+      // React to permission changes
+      Object.entries(this.userForm.controls).forEach(
+        ([controlKey, controlValue]) => {
+          controlValue.disable();
+        }
+      );
+    }
+  });
 
   ngOnInit(): void {
     this.isNationalUser.emit(true);
@@ -70,14 +89,6 @@ export class UsersEditNationalComponent implements OnInit {
   checkEditPermission() {
     const shouldDisable = !this.permissionService.checkUserPermission('update/global');
     this.disableEdit.set(shouldDisable);
-    
-    if (shouldDisable) {
-      Object.entries(this.userForm.controls).forEach(
-        ([controlKey, controlValue]) => {
-          controlValue.disable();
-        }
-      );
-    }
   }
 
   fillForm(userData: any): void {

@@ -89,7 +89,7 @@ export class TableService {
   private readonly _total = signal<number>(0);
   private readonly _loading = signal<boolean>(false);
   private readonly _page = signal<number>(1);
-  private readonly _pageSize = signal<number>(10);
+  private readonly _pageSize = signal<number>(100);
   private readonly _sortColumn = signal<string>('');
   private readonly _sortDirection = signal<SortDirection>('');
 
@@ -159,7 +159,7 @@ export class TableService {
     this._total.set(0);
     this._loading.set(false);
     this._page.set(1);
-    this._pageSize.set(10);
+    this._pageSize.set(100);
     this._sortColumn.set('');
     this._sortDirection.set('');
   }

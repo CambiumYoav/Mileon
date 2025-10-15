@@ -1,7 +1,8 @@
 <div class="infrastructure-container p-4">
   <div class="inline-header">
-    <h5 class="title">{{ title }}</h5>
+    
     <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+    <h5 class="title">{{ title() }}</h5>
   </div>
 
   <div class="content-container">
@@ -10,21 +11,25 @@
         <img [src]="Icons.BACK_ARROW_BLACK" alt="arrow" />
         A
       </div>
-      <span class="text" *ngIf="!isSignsExport">{{ description }}</span>
-      <span class="text" *ngIf="isSignsExport">
-        <strong>פרטי השלט:</strong>
-        <p>
-          קוד, מספר שלט, תיאור השלט, שטח השלט, אורך שלט, רוחב שלט סטטוס שלט,
-          מיקום שלט, ישוב שלט, רחוב שלט, מספר בית שלט
-        </p>
-        <strong>פרטי העסק:</strong>
-        <p>שם העסק, ח.פ עסק, ישוב העסק, רחוב העסק, מספר בית - עסק</p>
-        <strong>פרטי בעל השלט:</strong>
-        <p>
-          ת.ז בעל השלט, שם פרטי בעל השלט, שם משפחה בעל השלט, עיר בעל העסק, רחוב
-          בעל השלט, מס' בית בעל העסק, טלפון בעל העסק
-        </p>
-      </span>
+      @if (!isSignsExport()) {
+        <span class="text">{{ description() }}</span>
+      }
+      @if (isSignsExport()) {
+        <span class="text">
+          <strong>פרטי השלט:</strong>
+          <p>
+            קוד, מספר שלט, תיאור השלט, שטח השלט, אורך שלט, רוחב שלט סטטוס שלט,
+            מיקום שלט, ישוב שלט, רחוב שלט, מספר בית שלט
+          </p>
+          <strong>פרטי העסק:</strong>
+          <p>שם העסק, ח.פ עסק, ישוב העסק, רחוב העסק, מספר בית - עסק</p>
+          <strong>פרטי בעל השלט:</strong>
+          <p>
+            ת.ז בעל השלט, שם פרטי בעל השלט, שם משפחה בעל השלט, עיר בעל העסק, רחוב
+            בעל השלט, מס' בית בעל העסק, טלפון בעל העסק
+          </p>
+        </span>
+      }
     </div>
 
     <div class="button-container">

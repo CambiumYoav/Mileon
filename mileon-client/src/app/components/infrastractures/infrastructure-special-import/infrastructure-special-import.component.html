@@ -1,0 +1,48 @@
+<div class="infrastructure-container p-4">
+  <div class="inline-header">
+    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+    <h5 class="title">{{ title() }}</h5>
+  </div>
+
+  <div class="content-container">
+    <div class="w-75">
+      <div class="d-flex flex-column rtl-direction">
+        <label class="upload-title" for="type">סוג קובץ</label>
+
+        <mat-form-field appearance="fill">
+          <mat-select
+            id="type"
+            [value]="selectedType()"
+            placeholder="בחר סוג"
+            aria-disabled="true"
+            (selectionChange)="onTypeChange($event.value)"
+          >
+            @for (option of types; track option) {
+              <mat-option [value]="option.value">
+                {{ option.display }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <h5 class="upload-title">טען קובץ</h5>
+      <div class="file-upload-wrapper">
+        <input
+          type="file"
+          (change)="getUploadedFile($event)"
+          accept=".xlsx,.xls,.csv"
+          class="form-control"
+        />
+      </div>
+      
+    </div>
+
+    <div class="button-container">
+      <app-button
+        [buttonText]="'טען קובץ'"
+        (clickFunction)="onSubmit()"
+        [buttonClass]="'general-btn-fill '"
+      ></app-button>
+    </div>
+  </div>
+</div>

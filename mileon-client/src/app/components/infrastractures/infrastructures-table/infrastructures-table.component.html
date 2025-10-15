@@ -1,0 +1,182 @@
+<!-- <div>
+  <app-red-line-error [errorMsg]="errorMsg()"></app-red-line-error>
+
+  <div class="table-container">
+    <table class="table table-hover shadow-table">
+      <thead class="infrastructure-header">
+        <tr>
+          @for (column of columns; track $index) {
+            @if (column.type !== ColumnTypeEnum.Hidden) {
+              <th
+                class="infrastructure-header"
+                sortable
+                [sortable]="column.sortField || column.propertyName"
+                scope="col"
+                (sort)="onSort($event)"
+                [canSort]="column.canSort"
+                [sortByServer]="column.sortByServer"
+              >
+                <span class="title">
+                  {{ column.displayName }}
+                  Optional sort icon:
+                  <img [src]="Icons.SORT_ICON" alt="sort">
+                </span>
+              </th>
+            }
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (loader) {
+          <div
+            class="d-flex justify-content-center align-items-center loader"
+          >
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        }
+        @if (tableData().length && !loader) {
+          @for (item of tableData(); track item.id || $index) {
+            <tr
+              class="user-select-none"
+              style="line-height: 8px; height: 8px"
+              (click)="onRowClick(item, $event)"
+              [ngClass]="{ 'inactive-row': item.isActive === false }"
+            >
+              @for (column of columns; track $index) {
+                @if (column.type !== ColumnTypeEnum.Hidden) {
+                  <td
+                    [ngClass]="{
+                      'radio-td': column.type === ColumnTypeEnum.Radio,
+                      'checkbox-td': column.type === ColumnTypeEnum.Checkbox,
+                      'text-overflow-ellipsis': column.textOverflow
+                    }"
+                  >
+                    @if (column.type === ColumnTypeEnum.Radio) {
+                      <input
+                        type="radio"
+                        [name]="'radio-' + item.id"
+                        [value]="item"
+                        (change)="onSelectedRowIdChange(item)"
+                      />
+                    }
+
+                    @if (column.type === ColumnTypeEnum.Text) {
+                      <span>
+                        @if (column.hasIcon) {
+                          <app-icon
+                            [icon]="getIconById(item[column.fieldId])"
+                          ></app-icon>
+                        }
+
+                        @if (!column.hasIcon && column.propertyName !== 'nid') {
+                          <span>
+                            {{ item[column.propertyName] }}
+                            {{
+                              column.additionalText ? item[column.additionalText] : ""
+                            }}
+                          </span>
+                        }
+
+                        @if (!column.hasIcon && column.propertyName === 'nid') {
+                          <span>
+                            {{ item | renderIdentity }}
+                          </span>
+                        }
+                      </span>
+                    }
+
+                    @if (column.type === ColumnTypeEnum.Currency) {
+                      <span
+                        [ngClass]="column.textColor ?? 'blue'"
+                      >
+                        {{ item[column.propertyName] | currency : "₪ " }}
+                      </span>
+                    }
+
+                    @if (column.type === ColumnTypeEnum.Date) {
+                      <span>
+                        {{ item[column.propertyName] | date : "dd/MM/yyyy" }}
+                      </span>
+                    }
+
+                    @if (column.type === ColumnTypeEnum.DateTime) {
+                      <span>
+                        {{ item[column.propertyName] | date : "HH:mm | dd.MM.yyyy" }}
+                      </span>
+                    }
+
+                    @if (column.type === ColumnTypeEnum.Checkbox) {
+                      <div class="body-td">
+                        <app-checkbox
+                          [initialValue]="item[column.propertyName]"
+                          (change)="onSelectedRowIdChange(item)"
+                        ></app-checkbox>
+                      </div>
+                    }
+
+                    @if (column.type === ColumnTypeEnum.Tag) {
+                      <div class="body-td">
+                        <app-tag
+                          [tagName]="item[column.propertyName]"
+                          [tagId]="item[column.fieldId]"
+                        ></app-tag>
+                      </div>
+                    }
+
+                    @if (column.type === ColumnTypeEnum.Active) {
+                      <div class="body-td">
+                        <app-active
+                          [isActive]="item[column.propertyName]"
+                        ></app-active>
+                      </div>
+                    }
+
+                    @if (column.type === ColumnTypeEnum.Icon || (column.type === ColumnTypeEnum.SubStageIcon && item['type'] === 'ידני')) {
+                      <div class="d-flex justify-content-end">
+                        <span
+                          (click)="onIconClickEvent(item)"
+                          style="margin-left: 40px"
+                        >
+                          <img [src]="Icons.EDIT" />
+                        </span>
+                      </div>
+                    }
+                  </td>
+                }
+              }
+            </tr>
+          }
+          
+          <tr></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-paginator
+    [showPaginator]="showPaginator"
+    [total]="tableTotal()"
+    (pageChanger)="pageChanges($event)"
+    [pageSize]="pageSize"
+    [selectedPage]="selectedPage()"
+  ></app-paginator>
+</div> -->
+
+
+<app-table
+  [columns]="columns"
+  [data]="data"
+  [total]="total"
+  [form]="form"
+  [pageSize]="pageSize"
+  [showPaginator]="showPaginator"
+  [icons]="icons"
+  [loader]="loader"
+  (onRowEvent)="onRowEvent.emit($event)"
+  (onFormChanges)="onFormChanges.emit($event)"
+  (rowSelected)="onRowSelect.emit($event)"
+>
+</app-table>

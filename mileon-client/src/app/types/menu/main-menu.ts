@@ -289,9 +289,9 @@ export class Menus {
         menuItems: [
           {
             id: '1',
-            path: `${ROUTE_PATH.Infrastructure.Home}/${ROUTE_PATH.Infrastructure.VehiclesType}`,
+            path: `${ROUTE_PATH.Infrastructure.Home}/${ROUTE_PATH.Infrastructure.Main}`,
             displayName: ModuleNames.VehiclesInfrastructure,
-            route: `${ROUTE_PATH.Infrastructure.Home}/${ROUTE_PATH.Infrastructure.VehiclesType}`,
+            route: `${ROUTE_PATH.Infrastructure.Home}/${ROUTE_PATH.Infrastructure.Main}`,
             state: {
               name: InfrastructuresFiltersEnum.Vehicles,
             },

@@ -1,0 +1,17 @@
+:host {
+  .constant-btns {
+    display: flex;
+    justify-content: end; 
+    margin-top: 15px;
+    ::ng-deep app-button {
+      button {
+        margin: 0;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  ::ng-deep tbody {
+    height: fit-content !important;
+  }
+}

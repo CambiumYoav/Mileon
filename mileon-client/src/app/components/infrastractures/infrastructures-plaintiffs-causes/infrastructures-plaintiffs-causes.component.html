@@ -1,0 +1,80 @@
+<div class="container-lg p-4">
+  <div class="row pb-4 align-items-center position-relative">
+    <div class="col d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center col-5">
+        <div class="arrow-container" (click)="back()">
+          <img [src]="Icons.ARROW_LEFT" />
+        </div>
+        <span class="heading">{{ title() }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="row pb-4">
+    <div class="header col">
+      <app-infrastructures-search
+        (onSearch)="loadData($event)"
+        [searchData]="searchData()"
+        [resultData]="list()"
+        [total]="total()"
+        [searchByText]="SearchByTextEnum.CausesSearch"
+      ></app-infrastructures-search>
+    </div>
+
+    <div class="header d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <app-checkbox
+          (valueChanged)="onCheckboxChange($event)"
+          [label]="'הצג רשומות לא פעילות '"
+        ></app-checkbox>
+      </div>
+      <div class="constant-btns d-flex align-items-center">
+        <app-button [buttonText]="'לוג שינויים'"> </app-button>
+        <app-button [buttonText]="'הוספה'" (clickFunction)="openDialogForm()">
+        </app-button>
+        <app-button
+          [buttonText]="'יבוא מאקסל'"
+          (clickFunction)="openDialogImport()"
+          [imgSrc]="Icons.EXCEL_UP"
+          [isDisabled]="isImportDisabled()"
+        >
+        </app-button>
+        <app-button
+          [buttonText]="'יצוא לאקסל'"
+          (clickFunction)="openDialogExport()"
+          [imgSrc]="Icons.EXCEL_UP"
+          [isDisabled]="!isImportDisabled()"
+        >
+        </app-button>
+      </div>
+    </div>
+    <!-- <div class="constant-btns">
+      <app-button [buttonText]="'לוג שינויים'"> </app-button>
+      <app-button [buttonText]="'הוספה'" (clickFunction)="openDialogForm()">
+      </app-button>
+      <app-button
+        [buttonText]="'יבוא מאקסל'"
+        (clickFunction)="openDialogImport()"
+        [imgSrc]="Icons.EXCEL_UP"
+        [isDisabled]="isImportDisabled"
+      >
+      </app-button>
+      <app-button
+        [buttonText]="'יצוא לאקסל'"
+        (clickFunction)="openDialogExport()"
+        [imgSrc]="Icons.EXCEL_UP"
+        [isDisabled]="!isImportDisabled"
+      >
+      </app-button>
+    </div> -->
+  </div>
+  <app-infrastructures-table
+    [columns]="columns()"
+    [data]="data()"
+    [total]="total()"
+    [count]="count()"
+    (onFormChanges)="loadData($event)"
+    (onRowEvent)="openEdit($event)"
+    [form]="infrastructureForm"
+    [loader]="loader()"
+  ></app-infrastructures-table>
+</div>

@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 export class PaginatorComponent implements OnInit {
   private readonly _page = signal<number>(1);
   private readonly _selectedPage = signal<number>(1);
-  private readonly _pageSize = signal<number>(10);
+  private readonly _pageSize = signal<number>(100);
   private readonly _total = signal<number>(0);
   private readonly _showPaginator = signal<boolean>(true);
   private readonly _isDropdownOpen = signal<boolean>(false);

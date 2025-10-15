@@ -1,0 +1,14 @@
+@import "../../../../styles/elements.scss";
+
+// Infrastructure-specific table styles
+:host {
+  // Blue Text Color
+  .blue {
+    color: $colorDarkBlue;
+  }
+  
+  .inactive-row {
+    background-color: #e3e7eb;
+    border-bottom: 1px solid #b9c6d4;
+  }
+}

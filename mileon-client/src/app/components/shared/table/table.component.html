@@ -201,6 +201,11 @@
                     [tagId]="item[column.fieldId]"
                   ></app-tag>
                 }
+                @if (column.type === ColumnTypeEnum.Active) {
+                  <app-active
+                    [isActive]="item[column.propertyName]"
+                  ></app-active>
+                }
                 @if (column.type === ColumnTypeEnum.Icon) {
                   <div>
                     <span
@@ -208,6 +213,16 @@
                       style="margin-left: 40px"
                     >
                       <img [src]="getIconPath(column.icon)" class="icon-img" />
+                    </span>
+                  </div>
+                }
+                @if (column.type === ColumnTypeEnum.SubStageIcon && item['type'] === 'ידני') {
+                  <div class="d-flex justify-content-end">
+                    <span
+                      (click)="onRowClick(item, $event); $event.stopPropagation()"
+                      style="margin-left: 40px"
+                    >
+                      <img [src]="Icons.EDIT" />
                     </span>
                   </div>
                 }

@@ -67,6 +67,8 @@ export interface DynamicField {
   dataFunction?: DataFunction;
   connectedField?: string;
   bindLabelKeys?: string[];
+  bindLabelKey?: string;
+  bindValueKey?: string;
   nestedInputs?: DynamicField[];
   placeholder?: string;
   isRequired?: boolean;

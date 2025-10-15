@@ -1,8 +1,9 @@
 import { tick } from '@angular/core/testing';
 import { Data } from '@angular/router';
-// import { InfrastructureService } from '../components/infrastructures/infrastructure.service';
+import { InfrastructureService } from '../components/infrastractures/infrastructure.service';
 import { FileType, FileTypeExtension } from '../types/enum/fileType.enum';
 import { InfrastructureTablesTypes } from '../types/enum/infrastructureTablesEnum';
+import { DynamicRow, DynamicField, FieldOption } from '../types/infrastructure/InfrastructureTypes';
 import {
   ActionsFilter,
   InterfaceFilter,
@@ -209,44 +210,44 @@ export class Utils {
 
   //fetch options
 
-  // public static async fetchOptionsAndUpdateDialogData(
-  //   infrastructureServer: InfrastructureService,
-  //   tableType: InfrastructureTablesTypes,
-  //   dialogData: any[],
-  //   fieldName: string,
-  //   valueKey: string,
-  //   displayKey: string
-  // ): Promise<any[]> {
-  //   try {
-  //     const response = await infrastructureServer.getInfrastructureTable(
-  //       { currentPage: 1 },
-  //       tableType
-  //     );
+  public static async fetchOptionsAndUpdateDialogData(
+    infrastructureServer: InfrastructureService,
+    tableType: InfrastructureTablesTypes,
+    dialogData: DynamicRow[],
+    fieldName: string,
+    valueKey: string,
+    displayKey: string
+  ): Promise<DynamicRow[]> {
+    try {
+      const response = await infrastructureServer.getInfrastructureTable(
+        { currentPage: 1 },
+        tableType
+      );
 
-  //     if (response && Array.isArray(response.data)) {
-  //       const options = response.data.map((item: any) => ({
-  //         value: item[valueKey],
-  //         display: item[displayKey],
-  //       }));
+      if (response && Array.isArray(response.data)) {
+        const options: FieldOption[] = response.data.map((item: any) => ({
+          value: item[valueKey],
+          display: item[displayKey],
+        }));
 
-  //       // Update `dialogData` with fetched options
-  //       return dialogData.map((dynamicRow) => {
-  //         dynamicRow.row = dynamicRow.row.map((field) => {
-  //           if (field.name === fieldName) {
-  //             return { ...field, options };
-  //           }
-  //           return field;
-  //         });
-  //         return dynamicRow;
-  //       });
-  //     }
+        // Update `dialogData` with fetched options
+        return dialogData.map((dynamicRow: DynamicRow) => {
+          dynamicRow.row = dynamicRow.row.map((field: DynamicField) => {
+            if (field.name === fieldName) {
+              return { ...field, options };
+            }
+            return field;
+          });
+          return dynamicRow;
+        });
+      }
 
-  //     return dialogData;
-  //   } catch (error) {
-  //     console.error('Error fetching options:', error);
-  //     throw error;
-  //   }
-  // }
+      return dialogData;
+    } catch (error) {
+      console.error('Error fetching options:', error);
+      throw error;
+    }
+  }
 
   // public static async fetchOptionsAndData(
   //   infrastructureServer: InfrastructureService,
