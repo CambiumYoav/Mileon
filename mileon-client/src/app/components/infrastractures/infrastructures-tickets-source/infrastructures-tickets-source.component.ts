@@ -43,7 +43,7 @@ import { InfrastructuresSearchComponent } from '../infrastructures-search/infras
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructuresTicketsSourceTableComponent } from '../infrastructures-tickets-source-table/infrastructures-tickets-source-table.component';
 import { SelectComponent } from '../../shared/base/select/select.component';
-import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/Infrastructure.enum';
+import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructures-tickets-source',
@@ -105,10 +105,31 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
   ngOnInit(): void {
     const tableColumns = new InfrastructureTable();
     this.columns.set(tableColumns.TicketsSourceAndMethodTable);
+    
     this.authorityService.setMunicipalsToNationalAdmin();
 
     // Add authority form control
     this.infrastructureSearchFormService.form.addControl('authority', new FormControl(null));
+    
+    // Subscribe to authority control value changes
+    this.infrastructureSearchFormService.form.get('authority')?.valueChanges.subscribe((authorityId) => {
+      // Find the full authority object from the ID
+      const authoritiesList = this.authorities();
+      const selectedAuthority = authoritiesList.find(auth => auth.id === authorityId);
+      
+      if (selectedAuthority && selectedAuthority.id !== this.currentAuthority()?.id) {
+        this.onAuthorityChange(selectedAuthority);
+      }
+    });
+    
+    // Ensure form has proper default values
+    if (!this.infrastructureSearchFormService.form.get('currentPage')?.value) {
+      this.infrastructureSearchFormService.form.patchValue({
+        currentPage: 1,
+        searchText: '',
+        order: 1,
+      });
+    }
 
     this.fetchAuthorities();
     const form = new InfrastructureForms();
@@ -119,7 +140,7 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
       currentPage: 1,
     });
     this.filter.set({
-      searchText: '', // this value does not get updated in the input
+      searchText: '',
       currentPage: 1,
     });
   }
@@ -146,11 +167,9 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
       }
       const authoritiesList = this.authorities();
       if (authoritiesList && authoritiesList.length > 0) {
-        // Set the form control value
-        this.infrastructureSearchFormService.form.get('authority')?.setValue(authoritiesList[0]);
-        // Set the current authority and load data without triggering onAuthorityChange
-        this.currentAuthority.set(authoritiesList[0]);
-        this.loadData(this.infrastructureSearchFormService.form);
+        // Set the form control value to just the ID
+        this.infrastructureSearchFormService.form.get('authority')?.setValue(authoritiesList[0].id);
+        // The valueChanges subscription will handle calling onAuthorityChange and setting currentAuthority
       }
     } catch (error) {
       console.error('Error fetching authorities:', error);
@@ -165,8 +184,7 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
     this.total.set(0);
     this.count.set(0);
 
-    // Load new data
-    this.loadData(this.infrastructureSearchFormService.form);
+    // loadData will be called automatically by the effect when currentAuthority changes
   }
 
   async openDialogImport() {
@@ -201,17 +219,16 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
         autoFocus: false,
         data: { form: this.dialogData(), title: isEdit ? InfrastructureEnumTitles.EditDialogTitle : InfrastructureEnumTitles.AddDialogTitle, isEdit },
       });
-      const dialogInstance = dialogRef.componentInstance;
-      // Use effect to watch for signal changes
-      effect(() => {
-        const result = dialogInstance.dataSubject();
-        if (result) {
-          const action = result.isEdit
-            ? InfrastructureTableAction.Update
-            : InfrastructureTableAction.Add;
-          this.handleInsertOrUpdate(result.form, action);
-        }
-      });
+      
+      // Wait for dialog to close and get result
+      const result = await firstValueFrom(dialogRef.afterClosed());
+      
+      if (result) {
+        const action = result.isEdit
+          ? InfrastructureTableAction.Update
+          : InfrastructureTableAction.Add;
+        await this.handleInsertOrUpdate(result.form, action);
+      }
     }
   }
 
@@ -226,15 +243,13 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
           description: InfrastructureEnumDialogs.TicketsSourceDialogExportDiscription,
         },
       });
-      const dialogInstance = dialogRef.componentInstance;
-      // Use effect to watch for signal changes
-      effect(() => {
-        const result = dialogInstance.dataSubject();
-        if (result) {
-          this.exportData();
-          this.dialog.closeAll();
-        }
-      });
+      
+      // Wait for dialog to close and get result
+      const result = await firstValueFrom(dialogRef.afterClosed());
+      
+      if (result) {
+        await this.exportData();
+      }
     }
   }
 
@@ -325,19 +340,35 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
   async loadData(filter: any) {
     this.loader.set(true);
     try {
+      // Handle both FormGroup and plain object
+      if (filter.value) filter = filter.value;
+      
+      const updatedFilter = {
+        ...filter,
+        searchText: filter.searchText || '',
+        currentPage: filter.currentPage || 1,
+      };
+      
       const result = await this.infrastructureServer.getInfrastructureTable(
-        filter.value,
+        updatedFilter,
         InfrastructureTablesTypes.DeliveryMethod,
         this.currentAuthority()?.id
       );
-      this.total.set(result.totalRecords);
-      this.count.set(result.data.length);
+      
+      this.total.set(result.totalRecords || 0);
+      this.count.set(result.data?.length || 0);
 
-      const transformed = this.transformServerResponse(result.data);
-
-      this.data.set([...transformed.data]);
+      if (result.data && result.data.length > 0) {
+        const transformed = this.transformServerResponse(result.data);
+        this.data.set([...transformed.data]);
+      } else {
+        this.data.set([]);
+      }
     } catch (e) {
       console.error('Error loading data:', e);
+      this.data.set([]);
+      this.total.set(0);
+      this.count.set(0);
     }
     this.loader.set(false);
   }
@@ -389,50 +420,59 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
   }
 
   transformServerResponse = (serverResponse: any) => {
-    const transformedData = serverResponse.reduce(
-      (acc: any[], current: any) => {
-        const {
-          ticketSourceID,
-          ticketSource: { ticketSourceName },
-          deliveryMethodID,
-          name: deliveryMethodName,
-          ticketType,
-          ticketTypeID,
-          ticketStage,
-        } = current;
+    if (!serverResponse || serverResponse.length === 0) {
+      return { data: [] };
+    }
+    
+    try {
+      const transformedData = serverResponse.reduce(
+        (acc: any[], current: any) => {
+          // Safely extract data with fallbacks
+          const ticketSourceID = current.ticketSourceID;
+          const ticketSourceName = current.ticketSource?.ticketSourceName || current.ticketSourceName || 'N/A';
+          const deliveryMethodID = current.deliveryMethodID || current.id;
+          const deliveryMethodName = current.name || current.deliveryMethodName || 'N/A';
+          const ticketType = current.ticketType || {};
+          const ticketTypeID = current.ticketTypeID || ticketType.ticketTypeID;
+          const ticketStage = current.ticketStage || {};
 
-        let existingSource = acc.find(
-          (source) => source.ticketSourceID === ticketSourceID
-        );
+          let existingSource = acc.find(
+            (source) => source.ticketSourceID === ticketSourceID
+          );
 
-        if (!existingSource) {
-          existingSource = {
-            ticketSourceID,
-            ticketSourceName,
-            ticketTypeID,
-            ticketDeliveryMethods: [],
-          };
-          acc.push(existingSource);
-        }
+          if (!existingSource) {
+            existingSource = {
+              ticketSourceID,
+              ticketSourceName,
+              ticketTypeID,
+              ticketDeliveryMethods: [],
+            };
+            acc.push(existingSource);
+          }
 
-        existingSource.ticketDeliveryMethods.push({
-          deliveryMethodID,
-          deliveryMethodName,
-          ticketTypeID: ticketType.ticketTypeID,
-          ticketType: {
-            ticketTypeID: ticketType.ticketTypeID,
-            ticketTypeName: ticketType.ticketTypeName,
-          },
-          ticketStage: {
-            stageID: ticketStage?.stageID || null,
-            name: ticketStage?.name || 'NA',
-          },
-        });
+          existingSource.ticketDeliveryMethods.push({
+            deliveryMethodID,
+            deliveryMethodName,
+            ticketTypeID: ticketType.ticketTypeID || ticketTypeID,
+            ticketType: {
+              ticketTypeID: ticketType.ticketTypeID || ticketTypeID,
+              ticketTypeName: ticketType.ticketTypeName || 'N/A',
+            },
+            ticketStage: {
+              stageID: ticketStage?.stageID || null,
+              name: ticketStage?.name || 'NA',
+            },
+          });
 
-        return acc;
-      },
-      []
-    );
-    return { data: transformedData };
+          return acc;
+        },
+        []
+      );
+      
+      return { data: transformedData };
+    } catch (error) {
+      console.error('Error transforming server response:', error);
+      return { data: [] };
+    }
   };
 }

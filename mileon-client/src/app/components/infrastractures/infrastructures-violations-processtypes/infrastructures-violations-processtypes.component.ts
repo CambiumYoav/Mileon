@@ -36,7 +36,7 @@ import { SearchFormService } from '../../shared/search-bar/search-form.service';
 import { RouterService } from '../../../services/router.service';
 import { InfrastructuresSearchComponent } from '../infrastructures-search/infrastructures-search.component';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
-import { InfrastructureEnumDialogs } from '../../../types/enum/Infrastructure.enum';
+import { InfrastructureEnumDialogs } from '../../../types/enum/infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructures-violations-processtypes',

@@ -34,7 +34,7 @@ import { InfrastructuresDisabledComponent } from '../infrastructures-disabled/in
 import { InfrastructuresPublicComponent } from '../infrastructures-public/infrastructures-public.component';
 import { InputDateComponent } from '../../shared/base/inputs/input-date/input-date.component';
 import { SelectComponent } from '../../shared/base/select/select.component';
-import { InfrastructureEnumDialogs } from '../../../types/enum/Infrastructure.enum';
+import { InfrastructureEnumDialogs } from '../../../types/enum/infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructures-special',

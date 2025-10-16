@@ -16,6 +16,8 @@
               [class]="'form-field' + field.size"
               [ngClass]="{
                 disabled: !!field.disabled,
+                'has-checkbox': field.type === 'checkbox',
+                'has-radio': field.type === 'radio',
                 inputError: 
                   (field.type === 'fromTo' && (
                     dynamicForm.get(field.name + '.from')?.invalid && (dynamicForm.get(field.name + '.from')?.touched || isSubmitted()) ||
@@ -88,7 +90,7 @@
                 @if (field.name !== 'isActive') {
                   <div class="checkbox-container">
                     <app-input-checkbox
-                      [title]="field.label"
+                      [placeholder]="field.label"
                       [formControlName]="field.name"
                     ></app-input-checkbox>
                   </div>

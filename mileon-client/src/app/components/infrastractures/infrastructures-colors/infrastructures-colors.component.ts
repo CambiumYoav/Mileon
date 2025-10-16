@@ -34,7 +34,7 @@ import { InfrastructuresSearchComponent } from '../infrastructures-search/infras
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { CheckboxComponent } from '../../shared/base/checkbox/checkbox.component';
-import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/Infrastructure.enum';
+import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructures-colors',

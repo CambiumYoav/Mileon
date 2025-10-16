@@ -105,8 +105,9 @@
       display: none;
     }
 
-    // Show field labels ONLY for radio button fields
-    .form-field:has(app-radio-button) .title-placeholder {
+    // Show field labels for radio button and checkbox fields
+    .form-field.has-radio .title-placeholder,
+    .form-field.has-checkbox .title-placeholder {
       display: block !important;
       font-size: 14px;
       font-weight: 700;

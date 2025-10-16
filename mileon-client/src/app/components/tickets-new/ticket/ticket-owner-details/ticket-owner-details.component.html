@@ -22,8 +22,8 @@
           <div class="item">
             <div class="title">שם</div>
             <div class="info">
-              {{ ticketDetails.citizen?.firstName }}
-              {{ ticketDetails.citizen?.lastName }}
+              {{ ticketDetails.citizen.firstName }}
+              {{ ticketDetails.citizen.lastName }}
             </div>
           </div>
         </div>
@@ -32,7 +32,7 @@
           <div class="item">
             <div class="title">זהות / ח.פ</div>
             <div class="info">
-              {{ ticketDetails?.citizen | renderIdentity }}
+              {{ ticketDetails.citizen | renderIdentity }}
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@
                 type="text"
                 placeholder="הוסף מייל"
                 formControlName="email"
-                [value]="ticketDetails?.citizen?.email"
+                [value]="ticketDetails.citizen?.email"
                 [(ngModel)]="ticketDetails.citizen.email"
               />
 
@@ -213,7 +213,7 @@
           <div class="item">
             <div class="title">סוג הרכב</div>
             <div class="info" *ngIf="ticketDetails.vehicle">
-              {{ ticketDetails.vehicle?.modelName }}
+              {{ ticketDetails.vehicle.modelName }}
             </div>
           </div>
         </div>
@@ -229,14 +229,14 @@
           <div class="item">
             <div class="title">שנת ייצור</div>
             <div class="info">
-              {{ ticketDetails?.vehicle?.manufacturerYear }}
+              {{ ticketDetails.vehicle?.manufacturerYear }}
             </div>
           </div>
         </div>
         <div class="wrap-item">
           <div class="item">
             <div class="title">צבע הרכב</div>
-            <div class="info">{{ ticketDetails?.vehicle?.colorName }}</div>
+            <div class="info">{{ ticketDetails.vehicle?.colorName }}</div>
           </div>
         </div>
       </div>

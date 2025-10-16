@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { ConstPath } from '../../../constants/const_path';
 import { ButtonComponent } from "../../shared/base/button/button.component";
-import { InfrastructureEnumTexts } from '../../../types/enum/Infrastructure.enum';
+import { InfrastructureEnumTexts } from '../../../types/enum/infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructure-export',

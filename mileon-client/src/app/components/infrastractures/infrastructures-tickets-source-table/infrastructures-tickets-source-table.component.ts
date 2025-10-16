@@ -124,18 +124,40 @@ export class InfrastructuresTicketsSourceTableComponent
   }
 
   processData(): void {
-    const processedData = this.data.map((item) => ({
-      ticketSourceName: item.ticketSourceName,
-      ticketSourceID: item.ticketSourceID,
-      methods: item.ticketDeliveryMethods.map((method: any) => ({
-        deliveryMethodID: method.deliveryMethodID,
-        deliveryMethodName: method.deliveryMethodName,
-        ticketTypeName: method.ticketType.ticketTypeName,
-        ticketTypeID: method.ticketType.ticketTypeID,
-        ticketStageName: method.ticketStage?.name,
-      })),
-    }));
-    this._combinedData.set(processedData);
+    if (!this.data || this.data.length === 0) {
+      this._combinedData.set([]);
+      return;
+    }
+    
+    try {
+      const processedData = this.data.map((item) => {
+        if (!item.ticketDeliveryMethods || !Array.isArray(item.ticketDeliveryMethods)) {
+          // Handle missing or invalid ticketDeliveryMethods
+          return {
+            ticketSourceName: item.ticketSourceName || 'N/A',
+            ticketSourceID: item.ticketSourceID || 0,
+            methods: [],
+          };
+        }
+        
+        return {
+          ticketSourceName: item.ticketSourceName,
+          ticketSourceID: item.ticketSourceID,
+          methods: item.ticketDeliveryMethods.map((method: any) => ({
+            deliveryMethodID: method.deliveryMethodID,
+            deliveryMethodName: method.deliveryMethodName,
+            ticketTypeName: method.ticketType?.ticketTypeName || 'N/A',
+            ticketTypeID: method.ticketType?.ticketTypeID || 'N/A',
+            ticketStageName: method.ticketStage?.name || 'N/A',
+          })),
+        };
+      });
+      
+      this._combinedData.set(processedData);
+    } catch (error) {
+      console.error('Error processing data:', error);
+      this._combinedData.set([]);
+    }
   }
 
   pageChanges(currentPage: number): void {

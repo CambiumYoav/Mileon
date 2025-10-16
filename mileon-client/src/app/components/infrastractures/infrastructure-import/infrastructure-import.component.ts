@@ -10,7 +10,7 @@ import { IdValuePair } from '../../../types/legalRequest/legal-request-file-type
 import { UploadedFile } from '../../../types/uploadedFile';
 import { ButtonComponent } from "../../shared/base/button/button.component";
 import { FileUploadNewComponent } from "../../shared/base/upload-files/upload-files.component";
-import { InfrastructureEnumTexts } from '../../../types/enum/Infrastructure.enum';
+import { InfrastructureEnumTexts } from '../../../types/enum/infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructure-import',

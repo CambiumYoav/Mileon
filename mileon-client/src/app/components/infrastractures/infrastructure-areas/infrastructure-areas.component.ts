@@ -37,7 +37,7 @@ import { RouterService } from '../../../services/router.service';
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructuresTableComponent } from "../infrastructures-table/infrastructures-table.component";
 import { InfrastructuresSearchComponent } from "../infrastructures-search/infrastructures-search.component";
-import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/Infrastructure.enum';
+import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructure-areas',

@@ -1,4 +1,5 @@
 @import "../../../../styles/elements.scss";
+// @import "../../../../styles/table.scss";
 
 .table-container {
   table {
@@ -20,20 +21,16 @@
   }
 
   th {
-    padding: 1px 0.5rem;
-    .title {
-      color: $colorWhite;
-      display: flex;
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      img {
-        margin-right: 5px;
-        height: 17px;
-      }
-    }
+    background: #387EC4;
+    height: 50px;
+    padding: 8px 12px 8px 12px;
+    text-align: right;
+    vertical-align: middle;
+    display: table-cell;
+    position: sticky; 
+    top: 0; 
   }
-
+  
   tbody tr {
     color: #606060;
     .body-td {
@@ -41,41 +38,60 @@
       justify-content: start;
     }
     td {
+      padding: 4px 8px 4px 8px;
+      margin: 5px !important;
+      border-bottom: 1px solid #B9C6D4;
+      background: #F7F9FC;
+      color: var(--black, #000);
       text-align: right;
-      padding: 0.5rem 2.5rem;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      height: 40px;
+      vertical-align: middle;
     }
   }
+  
 
   .table {
-    background: white;
-    border: 0px solid #d8e4f1;
+    background: #F7F9FC;
+    background: #F7F9FC;
+    border-collapse: collapse;
     border-radius: 4px;
-    table-layout: fixed;
+    table-layout: auto;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+    max-width: 100%;
     color: #d8e4f1;
+    margin: 0 !important;
     .infrastructure-header {
       background-color: $colorDarkBlue;
     }
   }
 }
 
-tbody tr {
+
+
+tbody{
   cursor: pointer;
+  overflow: auto;
+  tr:last-child {
+    border-bottom-style: hidden;
+  }
 }
 
-tbody tr:last-child {
-  border-bottom-style: hidden;
-}
 
 div.table-container {
   border: 1px solid #d8e4f1;
-  overflow-y: auto;
-  border-radius: 14px;
+  border-radius: 8px;
   transform: rotate(0deg);
-  height: 50vh;
+  height: 495px;
+  overflow: auto;
 }
+
+
 
 .blue {
   color: $colorDarkBlue;
@@ -92,17 +108,4 @@ div.table-container {
     height: 22px;
   }
 
-  ::ng-deep app-paginator {
-    .page {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 4px;
-      &.current {
-        background-color: $colorLightBlue;
-      }
-    }
-  }
 }
