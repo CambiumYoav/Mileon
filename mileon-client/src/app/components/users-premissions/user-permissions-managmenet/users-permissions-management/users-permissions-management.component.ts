@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, OnDestroy, signal, computed, inject, effect } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, signal, computed, inject, effect, runInInjectionContext, Injector } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
 import { AuthorityService } from '../../../../services/authority.service '; 
 import { TitlesEnum } from '../../../../types/enum/titlesEnum';
@@ -42,6 +43,7 @@ export class UsersPermissionsManagementComponent implements OnInit, OnDestroy {
   private authorityService = inject(AuthorityService);
   private dialog = inject(MatDialog);
   private userPremissionsManagmentService = inject(UserPremissionsManagmentService);
+  private injector = inject(Injector);
 
   isDialogOpen = signal(false);
   title = signal(TitlesEnum.PermissionsManagement);
@@ -148,9 +150,16 @@ export class UsersPermissionsManagementComponent implements OnInit, OnDestroy {
       },
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.isDialogOpen.set(false);
-      this.loadData(this.usersSearchFormService.form.value);
+    runInInjectionContext(this.injector, () => {
+      const afterClosedSignal = toSignal(dialogRef.afterClosed());
+      const dialogEffectRef = effect(() => {
+        const result = afterClosedSignal();
+        if (result !== undefined) {
+          this.isDialogOpen.set(false);
+          this.loadData(this.usersSearchFormService.form.value);
+          dialogEffectRef.destroy();
+        }
+      });
     });
   }
 
@@ -159,9 +168,16 @@ export class UsersPermissionsManagementComponent implements OnInit, OnDestroy {
       data: {},
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.isDialogOpen.set(false);
-      this.loadData(this.usersSearchFormService.form.value);
+    runInInjectionContext(this.injector, () => {
+      const afterClosedSignal = toSignal(dialogRef.afterClosed());
+      const dialogEffectRef = effect(() => {
+        const result = afterClosedSignal();
+        if (result !== undefined) {
+          this.isDialogOpen.set(false);
+          this.loadData(this.usersSearchFormService.form.value);
+          dialogEffectRef.destroy();
+        }
+      });
     });
   }
 }

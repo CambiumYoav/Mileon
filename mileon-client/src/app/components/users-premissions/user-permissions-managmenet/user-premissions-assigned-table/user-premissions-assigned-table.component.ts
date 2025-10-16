@@ -12,6 +12,7 @@ import {
   inject,
   effect
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Icon } from '../../../../types/icon';  
@@ -196,8 +197,12 @@ export class UserPremissionsAssignedTableComponent
   listenToPageReset(): void {
     const currentPage = this.searchFormService.form.get('currentPage');
     if (currentPage) {
-      this.onValueChanges(currentPage).subscribe((res) => {
-        this.selectedPage.set(res);
+      const currentPageSignal = toSignal(this.onValueChanges(currentPage));
+      effect(() => {
+        const pageValue = currentPageSignal();
+        if (pageValue !== undefined) {
+          this.selectedPage.set(pageValue);
+        }
       });
     }
   }

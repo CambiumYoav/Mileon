@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, effect, inject } from '@angular/core';
+import { Component, OnInit, signal, effect, inject, runInInjectionContext, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -53,6 +53,7 @@ export class InfrastructuresTollsComponent implements OnInit {
   private toaster = inject(ToastrService);
   private authorityService = inject(AuthorityService);
   private routerService = inject(RouterService);
+  private injector = inject(Injector);
 
   readonly title: string = TitlesEnum.InfrastructureTollsTitle;
   readonly Icons = ConstPath;
@@ -133,13 +134,18 @@ export class InfrastructuresTollsComponent implements OnInit {
         },
       });
       
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          const action = isEdit
-            ? InfrastructureTableAction.Update
-            : InfrastructureTableAction.Add;
-          this.handleInsertOrUpdate(result, action);
-        }
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            const action = isEdit
+              ? InfrastructureTableAction.Update
+              : InfrastructureTableAction.Add;
+            this.handleInsertOrUpdate(result, action);
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -158,11 +164,16 @@ export class InfrastructuresTollsComponent implements OnInit {
         },
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.exportData();
-          this.dialog.closeAll();
-        }
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            this.exportData();
+            this.dialog.closeAll();
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -279,16 +290,23 @@ export class InfrastructuresTollsComponent implements OnInit {
         },
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result && result.uploadedFiles) {
-          // Process the returned files (e.g., save them, pass them to a service, etc.)
-          this.filesToUpload.set(result.uploadedFiles);
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result !== undefined) {
+            if (result && result.uploadedFiles) {
+              // Process the returned files (e.g., save them, pass them to a service, etc.)
+              this.filesToUpload.set(result.uploadedFiles);
 
-          // Call the importData function to process the uploaded files
-          this.importData();
-        } else {
-          console.log('Dialog was closed without uploading files.');
-        }
+              // Call the importData function to process the uploaded files
+              this.importData();
+            } else {
+              console.log('Dialog was closed without uploading files.');
+            }
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }

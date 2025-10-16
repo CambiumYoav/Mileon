@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, OnDestroy, inject, signal, computed, effect, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, inject, signal, computed, effect, ChangeDetectionStrategy, runInInjectionContext, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ConstPath } from '../../../constants/const_path';
 import {
   InfrastructureTableAction,
@@ -56,6 +57,7 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
   private readonly toaster = inject(ToastrService);
   private readonly authorityService = inject(AuthorityService);
   private readonly routerService = inject(RouterService);
+  private readonly injector = inject(Injector);
 
   readonly title = signal<string>(TitlesEnum.InfrastructureViolationTitle);
   readonly columns = signal<Column[]>([]);
@@ -75,17 +77,15 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
   readonly SearchByTextEnum = SearchByTextEnum;
 
   constructor() {
-    effect(() => {
-      const authority = this.currentAuthority();
-      if (authority) {
-        this.loadData(this.infrastructureSearchFormService.form);
-      }
-    });
+    // Convert authority subscription to signal
+    const authoritySignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
     
     effect(() => {
-      this.authorityService.authorityId$.subscribe((authorityID: string | null) => {
+      const authorityID = authoritySignal();
+      if (authorityID) {
         this.currentAuthority.set(authorityID);
-      });
+        this.loadData(this.infrastructureSearchFormService.form);
+      }
     });
   }
 
@@ -134,13 +134,19 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
           isEdit: isEdit,
         },
       });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          const action = result.isEdit
-            ? InfrastructureTableAction.Update
-            : InfrastructureTableAction.Add;
-          this.handleInsertOrUpdate(result.form, action);
-        }
+      
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            const action = result.isEdit
+              ? InfrastructureTableAction.Update
+              : InfrastructureTableAction.Add;
+            this.handleInsertOrUpdate(result.form, action);
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }

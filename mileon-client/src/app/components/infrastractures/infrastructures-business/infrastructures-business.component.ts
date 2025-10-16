@@ -1,4 +1,4 @@
-import { Component, signal, inject, effect, DestroyRef } from '@angular/core';
+import { Component, signal, inject, effect, DestroyRef, runInInjectionContext, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -59,6 +59,7 @@ export class InfrastructuresBusinessComponent {
   private authorityService = inject(AuthorityService);
   private routerService = inject(RouterService);
   private destroyRef = inject(DestroyRef);
+  private injector = inject(Injector);
 
   title = signal<string>(TitlesEnum.InfrastructureBusinessTitle);
   Icons = ConstPath;
@@ -174,12 +175,19 @@ export class InfrastructuresBusinessComponent {
         },
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.importDialogResult.set(result);
-        } else {
-          console.log('Dialog was closed without uploading files.');
-        }
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result !== undefined) {
+            if (result) {
+              this.importDialogResult.set(result);
+            } else {
+              console.log('Dialog was closed without uploading files.');
+            }
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -197,10 +205,16 @@ export class InfrastructuresBusinessComponent {
       const dialogRef = this.dialog.open(dialogComponent, {
         data: { form: dialogData, title: isEdit ? InfrastructureEnumTitles.EditDialogTitle : InfrastructureEnumTitles.AddDialogTitle, isEdit: isEdit },
       });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.dialogResult.set(result);
-        }
+      
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            this.dialogResult.set(result);
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -214,10 +228,16 @@ export class InfrastructuresBusinessComponent {
             InfrastructureEnumDialogs.BusinessDialogExportDiscription,
         },
       });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.exportDialogResult.set(result);
-        }
+      
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            this.exportDialogResult.set(result);
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }

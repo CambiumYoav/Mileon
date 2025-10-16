@@ -2505,7 +2505,7 @@ export class InfrastructureForms {
           options: [],
           isMultiSelect: true,
           bindLabelKey: 'value',
-          bindValueKey: 'id',
+          bindValueKey: '',
           dataFunction: {
             name: 'getStreets',
 
@@ -2529,22 +2529,10 @@ export class InfrastructureForms {
           isMultiSelect: true,
           options: [],
           bindLabelKey: 'value',
-          bindValueKey: 'id',
+          bindValueKey: '',
           dataFunction: {
             name: 'getAllInspectors',
           },
-        },
-        {
-          name: 'authorityID',
-          type: 'text',
-          label: 'שיוך לרחובות',
-          value: '',
-          validations: {},
-          disabled: false,
-          hide: true,
-          size: DynamicFieldSize.Double,
-          options: [],
-          isMultiSelect: true,
         },
       ],
     },

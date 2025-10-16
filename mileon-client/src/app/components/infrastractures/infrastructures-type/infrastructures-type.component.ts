@@ -84,17 +84,15 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
   readonly mviewAuthority = '11111111-1111-1111-1111-111111111111';
 
   constructor() {
-    effect(() => {
-      const authority = this.currentAuthority();
-      if (authority) {
-        this.loadData(this.infrastructureSearchFormService.form);
-      }
-    });
+    // Convert authority subscription to signal
+    const authoritySignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
     
     effect(() => {
-      this.authorityService.authorityId$.subscribe((authorityID: string | null) => {
+      const authorityID = authoritySignal();
+      if (authorityID) {
         this.currentAuthority.set(authorityID);
-      });
+        this.loadData(this.infrastructureSearchFormService.form);
+      }
     });
   }
   back(): void {

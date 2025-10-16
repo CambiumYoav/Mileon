@@ -170,10 +170,15 @@ export class InfrastructuresViolationsComponent implements OnInit {
         },
       });
 
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.dialogResult.set(result);
-        }
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            this.dialogResult.set(result);
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -218,12 +223,19 @@ export class InfrastructuresViolationsComponent implements OnInit {
         },
       });
       
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.importDialogResult.set(result);
-        } else {
-          console.log('Dialog was closed without uploading files.');
-        }
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result !== undefined) {
+            if (result) {
+              this.importDialogResult.set(result);
+            } else {
+              console.log('Dialog was closed without uploading files.');
+            }
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }

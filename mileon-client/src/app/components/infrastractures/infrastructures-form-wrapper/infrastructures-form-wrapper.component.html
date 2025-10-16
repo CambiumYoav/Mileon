@@ -73,10 +73,11 @@
                         [dataFunction]="field.dataFunction"
                         [options]="field.options || []"
                         searchPlaceholder="חיפוש"
-                        bindLabelKey="display"
-                        bindValueKey="value"
+                        [bindLabelKey]="field.bindLabelKey || 'display'"
+                        [bindValueKey]="field.bindValueKey || 'value'"
                         [isMultiSelect]="field.isMultiSelect || false"
                         [title]="field.label || ''"
+                        [isValid]="isFieldValid(field.name, formSections()[0].title)"
                       ></app-select>
                     }
                     @case ('selectWithLookup') {
@@ -90,10 +91,11 @@
                         [dataFunction]="field.dataFunction"
                         [options]="field.options || []"
                         searchPlaceholder="חיפוש"
-                        bindLabelKey="display"
-                        bindValueKey="value"
+                        [bindLabelKey]="field.bindLabelKey || 'value'"
+                        [bindValueKey]="field.bindValueKey || 'id'"
                         [isMultiSelect]="field.isMultiSelect || false"
                         [title]="field.label || ''"
+                        [isValid]="isFieldValid(field.name, formSections()[0].title)"
                       ></app-select>
                     }
                     @case ('checkbox') {
@@ -214,10 +216,11 @@
                         [dataFunction]="field.dataFunction"
                         [options]="field.options || []"
                         searchPlaceholder="חיפוש"
-                        bindLabelKey="display"
-                        bindValueKey="value"
+                        [bindLabelKey]="field.bindLabelKey || 'display'"
+                        [bindValueKey]="field.bindValueKey || 'value'"
                         [isMultiSelect]="field.isMultiSelect || false"
                         [title]="field.label || ''"
+                        [isValid]="isFieldValid(field.name, formSections()[1].title)"
                       ></app-select>
                     }
                     @case ('selectWithLookup') {
@@ -231,10 +234,11 @@
                         [dataFunction]="field.dataFunction"
                         [options]="field.options || []"
                         searchPlaceholder="חיפוש"
-                        bindLabelKey="display"
-                        bindValueKey="value"
+                        [bindLabelKey]="field.bindLabelKey || 'value'"
+                        [bindValueKey]="field.bindValueKey || 'id'"
                         [isMultiSelect]="field.isMultiSelect || false"
                         [title]="field.label || ''"
+                        [isValid]="isFieldValid(field.name, formSections()[1].title)"
                       ></app-select>
                     }
                     @case ('checkbox') {

@@ -1,5 +1,5 @@
 import { Utils } from '../../../utils/utils';
-import { Component, OnInit, signal, computed, effect, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, effect, inject, runInInjectionContext, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -54,6 +54,7 @@ export class InfrastructuresCitizensComponent implements OnInit {
   private toaster = inject(ToastrService);
   private authorityService = inject(AuthorityService);
   private routerService = inject(RouterService);
+  private injector = inject(Injector);
 
   title: string = TitlesEnum.InfrastructureCitizensTitle;
   Icons = ConstPath;
@@ -81,16 +82,27 @@ export class InfrastructuresCitizensComponent implements OnInit {
   currentAuthority = signal<string | null>('');
   loader = signal<boolean>(false);
   citizenID = signal<any>('');
+  
+  // Prevent duplicate requests
+  private lastLoadTime = 0;
+  private readonly LOAD_DEBOUNCE_MS = 500;
 
   constructor() {
     this.infrastructureForm = this.infrastructureSearchFormService.form;
     
-    const authorityIDSignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
-    
     effect(() => {
-      const authorityID = authorityIDSignal();
-      if (authorityID) {
+      const authorityID = this.authorityService.authorityId();
+      const SUPER_ID = '11111111-1111-1111-1111-111111111111';
+      
+      if (authorityID && authorityID !== SUPER_ID) {
         this.currentAuthority.set(authorityID);
+        
+        const now = Date.now();
+        if (now - this.lastLoadTime < this.LOAD_DEBOUNCE_MS) {
+          return;
+        }
+        this.lastLoadTime = now;
+        
         this.loadData(this.infrastructureSearchFormService.form);
       }
     });
@@ -100,7 +112,7 @@ export class InfrastructuresCitizensComponent implements OnInit {
     this.routerService.back();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const tableColumns = new InfrastructureTable();
     this.columns.set(tableColumns.CitizenTable);
     const form = new InfrastructureForms();
@@ -114,6 +126,11 @@ export class InfrastructuresCitizensComponent implements OnInit {
       searchText: '',
       currentPage: 1,
     });
+    
+    if (this.authorityService.municipals().length === 0) {
+      await this.authorityService.getMunicipals(1);
+    }
+    
     this.authorityService.setMunicipalsToNationalRegional();
   }
   
@@ -128,16 +145,23 @@ export class InfrastructuresCitizensComponent implements OnInit {
         },  
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result && result.uploadedFiles) {
-          // Process the returned files (e.g., save them, pass them to a service, etc.)
-          this.filesToUpload.set(result.uploadedFiles);
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result !== undefined) {
+            if (result && result.uploadedFiles) {
+              // Process the returned files (e.g., save them, pass them to a service, etc.)
+              this.filesToUpload.set(result.uploadedFiles);
 
-          // Call the importData function to process the uploaded files
-          this.importData();
-        } else {
-          console.log('Dialog was closed without uploading files.');
-        }
+              // Call the importData function to process the uploaded files
+              this.importData();
+            } else {
+              console.log('Dialog was closed without uploading files.');
+            }
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -154,13 +178,19 @@ export class InfrastructuresCitizensComponent implements OnInit {
         // width: '835px',
         data: { form: dialogData, title: isEdit ? InfrastructureEnumTitles.EditDialogTitle : InfrastructureEnumTitles.AddDialogTitle, isEdit: isEdit },
       });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          const action = isEdit
-            ? InfrastructureTableAction.Update
-            : InfrastructureTableAction.Add;
-          this.handleInsertOrUpdate(result, action);
-        }
+      
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            const action = isEdit
+              ? InfrastructureTableAction.Update
+              : InfrastructureTableAction.Add;
+            this.handleInsertOrUpdate(result, action);
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -174,11 +204,17 @@ export class InfrastructuresCitizensComponent implements OnInit {
             InfrastructureEnumDialogs.CitizensDialogExportDiscription, // Dynamic text
         },
       });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.exportData();
-          this.dialog.closeAll();
-        }
+      
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            this.exportData();
+            this.dialog.closeAll();
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -290,6 +326,10 @@ export class InfrastructuresCitizensComponent implements OnInit {
   }
 
   async loadData(filter: any) {
+    if (this.loader()) {
+      return;
+    }
+    
     this.loader.set(true);
     if (filter.value) filter = filter.value;
 
@@ -304,18 +344,19 @@ export class InfrastructuresCitizensComponent implements OnInit {
       const updatedFilter = {
         ...currentFilter,
         ...filter.value,
+        searchText: currentFilter.searchText || '',
+        currentPage: currentFilter.currentPage || 1,
       };
 
       const response = await this.infrastructureServer.getInfrastructureTable(
         updatedFilter,
         InfrastructureTablesTypes.Citizen,
-        this.currentAuthority()
+        this.currentAuthority(),
       );
 
       if (response?.data) {
         this.data.set(response.data.map((item: any) => ({
           ...item,
-
           homeAddressFormatted: item.homeAddress
             ? ` ${item.homeAddress.city.cityName || ''} ${
                 item.homeAddress.street.streetName || ''
@@ -328,7 +369,6 @@ export class InfrastructuresCitizensComponent implements OnInit {
           citizenPhoneFormatted:
             item.citizenPhones?.find((phone: any) => phone.isMain)?.phone || 'N/A',
           city: item.homeAddress?.city.cityName || 'N/A',
-          // lastUpdated: item.homeAddress?.lastUpdated || 'N/A',
         })));
 
         this.total.set(response.totalRecords);
@@ -337,11 +377,11 @@ export class InfrastructuresCitizensComponent implements OnInit {
     } catch (e) {
       console.error(e);
     }
+    
     const elapsedTime = Date.now() - startTime;
     const remainingTime = MIN_LOADER_TIME - elapsedTime;
 
     if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
       await new Promise((resolve) => setTimeout(resolve, remainingTime));
     }
     this.loader.set(false);

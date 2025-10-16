@@ -22,11 +22,9 @@ import { Column } from '../../../types/table';
 import { InfrastructureExportComponent } from '../infrastructure-export/infrastructure-export.component';
 import { InfrastructureFormComponent } from '../infrastructure-form/infrastructure-form.component';
 import { InfrastructureService } from '../infrastructure.service';
-import { Utils } from '../../../utils/utils';
 import { AuthorityService } from '../../../services/authority.service ';
 import { UploadedFile } from '../../../types/uploadedFile';
 import { ToastrService } from 'ngx-toastr';
-import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
 import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
 import { InfrastructureImportComponent } from '../infrastructure-import/infrastructure-import.component';
 import { SearchByTextEnum } from '../../../types/enum/searchByTextEnum';
@@ -36,6 +34,7 @@ import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructuresSearchComponent } from "../infrastructures-search/infrastructures-search.component";
 import { InfrastructuresTableComponent } from "../infrastructures-table/infrastructures-table.component";
 import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/Infrastructure.enum';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 
 @Component({
   selector: 'app-infrastructure-streets',
@@ -139,16 +138,10 @@ export class InfrastructureStreetsComponent {
     const form = new InfrastructureForms();
     this.dialogData.set(form.InfrastructureStreetsForm);
     
-    this.searchData.set({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
-    });
-    
-    this.filter.set({
-      searchText: '',
-      currentPage: 1,
-    });
+    // ✅ Refactored: Use utility to initialize filters
+    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(this.searchText());
+    this.searchData.set(searchData);
+    this.filter.set(filter);
 
     this.authorityService.setMunicipalsToNationalRegional();
   }
@@ -157,27 +150,18 @@ export class InfrastructureStreetsComponent {
     let dialogComponent = InfrastructureFormComponent;
     if (dialogComponent) {
       let dialogData = this.dialogData();
-      for (const row of dialogData) {
-        for (const field of row.row) {
-          if (field.name === 'authorityID') {
-            field.value = this.currentAuthority();
-            break;
-          }
-        }
-      }
+      
       if (!isEdit) {
         const form = new InfrastructureForms();
         dialogData = form.InfrastructureStreetsForm;
-
-        for (const row of dialogData) {
-          for (const field of row.row) {
-            if (field.name === 'authorityID') {
-              field.value = this.currentAuthority();
-              break;
-            }
-          }
-        }
       }
+      
+      // ✅ Refactored: Use utility to set authority ID in dialog data
+      dialogData = InfrastructuresUtils.setAuthorityInDialogData(
+        dialogData,
+        this.currentAuthority()
+      );
+      
       const dialogRef = this.dialog.open(dialogComponent, {
         autoFocus: false,
         data: {
@@ -187,40 +171,30 @@ export class InfrastructureStreetsComponent {
         },
       });
       
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.dialogResult.set(result);
-        }
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            this.dialogResult.set(result);
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
 
   async importData() {
-    try {
-      const res = this.infrastructureServer
-        .importDataByTableType(
-          InfrastructureTablesTypes.Street,
-          this.filesToUpload(),
-          this.currentAuthority()!
-        )
-        .then((res) => {
-          if (res.errors) {
-            this.toaster.error(
-              ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-            );
-          } else {
-            this.toaster.success(ErrorSuccessMessages.UPLOADED_SUCCESSFULY);
-            this.loadData(this.infrastructureSearchFormService.form);
-          }
-        })
-        .catch((error) => {
-          this.toaster.error(
-            ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-          );
-        });
-    } catch (e) {
-      console.error(e);
-    }
+    // ✅ Refactored: Use utility to handle import data
+    await InfrastructuresUtils.handleImportData(
+      () => this.infrastructureServer.importDataByTableType(
+        InfrastructureTablesTypes.Street,
+        this.filesToUpload(),
+        this.currentAuthority()!
+      ),
+      this.toaster,
+      () => this.loadData(this.infrastructureSearchFormService.form)
+    );
   }
 
   async openDialogExport() {
@@ -267,126 +241,116 @@ export class InfrastructureStreetsComponent {
         InfrastructureTablesTypes.Street,
         action
       );
-      if (result && result?.success) {
+      
+      if (result?.success) {
         this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        // ✅ Refactored: Use utility for success handling
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
     } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER);
-      console.error(e);
+      // ✅ Refactored: Use utility for error handling
+      InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
     }
   }
 
   openEdit(rowData: StreetsTypes) {
-    this.dialogData.set(this.dialogData().map((dynamicRow) => {
-      dynamicRow.row = dynamicRow.row.map((field) => {
+    // ✅ Refactored: Use utility for basic mapping, keep custom fromTo logic
+    let updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.dialogData(),
+      rowData
+    );
+    
+    // Apply custom logic for fromTo field type
+    updatedDialogData = updatedDialogData.map((dynamicRow) => ({
+      ...dynamicRow,
+      row: dynamicRow.row.map((field) => {
         if (field.type === 'fromTo') {
           field.fields?.forEach((formField) => {
-            formField.name === 'from'
-              ? (formField.value = (rowData as any)[field.name]?.from)
-              : '';
-            formField.name === 'to'
-              ? (formField.value = (rowData as any)[field.name]?.to)
-              : '';
+            if (formField.name === 'from') {
+              formField.value = (rowData as any)[field.name]?.from;
+            }
+            if (formField.name === 'to') {
+              formField.value = (rowData as any)[field.name]?.to;
+            }
           });
         }
-        if ((rowData as any)[field.name] !== undefined) {
-          return { ...field, value: (rowData as any)[field.name] };
-        }
         return field;
-      });
-      return dynamicRow;
+      }),
     }));
+    
+    this.dialogData.set(updatedDialogData);
     this.streetID.set(rowData.streetID);
     this.openDialogForm(true);
   }
 
   private lastLoadTime = 0;
-  private readonly LOAD_DEBOUNCE_MS = 500; // Prevent rapid successive calls
 
   async loadData(filter: any) {
-    // Debounce rapid successive calls
-    const now = Date.now();
-    if (now - this.lastLoadTime < this.LOAD_DEBOUNCE_MS) {
+    // ✅ Refactored: Use utility for debouncing
+    if (InfrastructuresUtils.shouldDebounce(this.lastLoadTime)) {
       return;
     }
-    this.lastLoadTime = now;
+    this.lastLoadTime = Date.now();
 
     this.loader.set(true);
-    if (filter.value) filter = filter.value;
-
-    const MIN_LOADER_TIME = 1500;
+    // ✅ Refactored: Use utility to normalize filter
+    filter = InfrastructuresUtils.normalizeFilter(filter);
+    
     const startTime = Date.now();
+    
     try {
-      this.filter.set({ ...filter });
-      this.filter.set({
-        ...this.filter(),
-        searchText: this.infrastructureSearchFormService.form.value.searchText,
-      });
+      const searchText = this.infrastructureSearchFormService.form.value.searchText;
+      
+      // ✅ Refactored: Use utility to prepare filters
+      const updatedFilter = InfrastructuresUtils.prepareLoadDataFilters(
+        this.filter(),
+        filter,
+        searchText
+      );
 
-      const updatedFilter = {
-        ...this.filter(),
-        ...filter.value,
-      };
+      this.filter.set(updatedFilter);
+      
       const result = await this.infrastructureServer.getInfrastructureTable(
         updatedFilter,
         InfrastructureTablesTypes.Street,
         this.currentAuthority()
       );
+      
       this.data.set(result.data);
       this.total.set(result.totalRecords);
       this.count.set(result.data.length);
 
-      const searchText =
-        this.infrastructureSearchFormService.form.value.searchText?.trim() ||
-        '';
+      const trimmedSearchText = searchText?.trim() || '';
 
-      // Set `isImportDisabled` based on the conditions
+      // ✅ Refactored: Use utility to check import disabled state
       this.isImportDisabled.set(
-        this.data().length === 0
-          ? searchText !== '' // Disable if no data and there is search text
-          : true // Enable if there is data
+        InfrastructuresUtils.shouldDisableImport(this.data().length, trimmedSearchText)
       );
     } catch (e) {
-      console.error(e);
+      // ✅ Refactored: Use utility for error handling
+      InfrastructuresUtils.handleError(e, 'loadData');
     }
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    
+    // ✅ Refactored: Use utility for minimum loader time
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
+    const searchText = this.infrastructureSearchFormService.form.value.searchText;
+    
+    // ✅ Refactored: Use utility to prepare export filters
+    const filters = InfrastructuresUtils.prepareExportFilters(searchText, {
       authorityID: this.currentAuthority(),
-    };
-    const tableName = InfrastructureTablesTypes.Street;
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
-    }
+    });
+
+    // ✅ Refactored: Use utility to handle export
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.Street,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
 
   back() {
@@ -402,12 +366,19 @@ export class InfrastructureStreetsComponent {
         },
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.importDialogResult.set(result);
-        } else {
-          console.log('Dialog was closed without uploading files.');
-        }
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result !== undefined) {
+            if (result) {
+              this.importDialogResult.set(result);
+            } else {
+              console.log('Dialog was closed without uploading files.');
+            }
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, effect, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, effect, inject, runInInjectionContext, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -59,6 +59,7 @@ export class InfrastructuresChipsComponent implements OnInit {
   private toaster = inject(ToastrService);
   private authorityService = inject(AuthorityService);
   private routerService = inject(RouterService);
+  private injector = inject(Injector);
 
   title: string = TitlesEnum.InfrastructureChipsTitle;
   Icons = ConstPath;
@@ -140,16 +141,23 @@ export class InfrastructuresChipsComponent implements OnInit {
         },
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result && result.uploadedFiles) {
-          // Process the returned files (e.g., save them, pass them to a service, etc.)
-          this.filesToUpload.set(result.uploadedFiles);
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result !== undefined) {
+            if (result && result.uploadedFiles) {
+              // Process the returned files (e.g., save them, pass them to a service, etc.)
+              this.filesToUpload.set(result.uploadedFiles);
 
-          // Call the importData function to process the uploaded files
-          this.importData();
-        } else {
-          console.log('Dialog was closed without uploading files.');
-        }
+              // Call the importData function to process the uploaded files
+              this.importData();
+            } else {
+              console.log('Dialog was closed without uploading files.');
+            }
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -188,15 +196,20 @@ export class InfrastructuresChipsComponent implements OnInit {
 
       const dialogInstance = dialogRef.componentInstance;
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          const action = isEdit
-            ? InfrastructureTableAction.Update
-            : InfrastructureTableAction.Add;
-          this.handleInsertOrUpdate(result, action);
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            const action = isEdit
+              ? InfrastructureTableAction.Update
+              : InfrastructureTableAction.Add;
+            this.handleInsertOrUpdate(result, action);
 
-          console.log(result);
-        }
+            // console.log(result);
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -213,11 +226,17 @@ export class InfrastructuresChipsComponent implements OnInit {
             InfrastructureEnumDialogs.ChipsDialogExportDiscription,
         },
       });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.exportData();
-          this.dialog.closeAll();
-        }
+      
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            this.exportData();
+            this.dialog.closeAll();
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -399,7 +418,7 @@ export class InfrastructuresChipsComponent implements OnInit {
   }
 
   openEdit(rowData: ChipsTypes) {
-    console.log(rowData);
+    // console.log(rowData);
     const typeMapping = this.getTypeMapping();
 
     const addressParts = this.extractAddressComponents(rowData.fullAddress);
@@ -418,7 +437,7 @@ export class InfrastructuresChipsComponent implements OnInit {
       city: rowData.address?.cityID,
       streetID: rowData.address?.streetID,
     };
-    console.log(transformedData);
+    // console.log(transformedData);
     this.ownerDialogData.set(this.ownerDialogData().map((dynamicRow) => ({
       ...dynamicRow,
       row: dynamicRow.row.map((field) => ({

@@ -37,6 +37,7 @@ import { RouterService } from '../../../services/router.service';
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructuresTableComponent } from "../infrastructures-table/infrastructures-table.component";
 import { InfrastructuresSearchComponent } from "../infrastructures-search/infrastructures-search.component";
+import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/Infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructure-areas',
@@ -187,10 +188,15 @@ export class InfrastructureAreasComponent {
         },
       });
       
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.dialogResult.set(result);
-        }
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result) {
+            this.dialogResult.set(result);
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -201,16 +207,23 @@ export class InfrastructureAreasComponent {
         autoFocus: false,
         data: {
           isSignsImport: false,
-          description: 'קוד, שם אזור,הגדרת אזור',
+          description: InfrastructureEnumDialogs.AreasDialogImportDiscription,
         },
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.importDialogResult.set(result);
-        } else {
-          console.log('Dialog was closed without uploading files.');
-        }
+      runInInjectionContext(this.injector, () => {
+        const afterClosedSignal = toSignal(dialogRef.afterClosed());
+        const dialogEffectRef = effect(() => {
+          const result = afterClosedSignal();
+          if (result !== undefined) {
+            if (result) {
+              this.importDialogResult.set(result);
+            } else {
+              console.log('Dialog was closed without uploading files.');
+            }
+            dialogEffectRef.destroy();
+          }
+        });
       });
     }
   }
@@ -249,13 +262,17 @@ export class InfrastructureAreasComponent {
       let newData: AreaTypes = new AreaTypes(areaData);
       if (newData && newData.streets) {
         const streetsIDS = newData.streets.map((street: any) => {
-          return { streetID: street };
+          // Extract ID whether it's an object or a primitive
+          const streetID = typeof street === 'object' && street !== null ? (street.streetID || street.id) : street;
+          return { streetID };
         });
         newData.streets = streetsIDS as any;
       }
       if (newData && newData.linkedInspectors) {
         const userIDS = newData.linkedInspectors.map((inspector: any) => {
-          return { userID: inspector };
+          // Extract ID whether it's an object or a primitive
+          const userID = typeof inspector === 'object' && inspector !== null ? (inspector.userID || inspector.id) : inspector;
+          return { userID };
         });
         newData.linkedInspectors = userIDS as any;
       }
@@ -337,8 +354,14 @@ export class InfrastructureAreasComponent {
             ? 'כל הרחובות'
             : area.streets.map((street: any) => street.streetName).join(', '),
 
-          streets: area.streets.map((street: any) => street.streetID),
-          linkedInspectors: area.linkedInspectors.map((user: any) => user.userID),
+          streets: area.streets.map((street: any) => ({ 
+            id: street.streetID, 
+            value: street.streetName 
+          })),
+          linkedInspectors: area.linkedInspectors.map((user: any) => ({ 
+            id: user.userID, 
+            value: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.userName || 'Unknown'
+          })),
         };
         return formattedObj;
       });
