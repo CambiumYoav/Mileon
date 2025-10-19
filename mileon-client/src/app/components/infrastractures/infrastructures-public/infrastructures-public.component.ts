@@ -21,6 +21,7 @@ import {
 import { InfrastructureFilterOptions } from '../../../types/infrastructure/infrastructureFilterOptions';
 import { Column } from '../../../types/table';
 import { InfrastructureService } from '../infrastructure.service';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { SearchFormService } from '../../shared/search-bar/search-form.service';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
 
@@ -98,13 +99,14 @@ export class InfrastructuresPublicComponent implements OnInit, OnDestroy {
   async loadData(filter: any) {
     this.loader.set(true);
 
-    const MIN_LOADER_TIME = 1500;
     const startTime = Date.now();
     try {
+      const normalizedFilter = InfrastructuresUtils.normalizeFilter(filter);
+      
       const updatedFilter = {
-        ...filter,
+        ...normalizedFilter,
         searchText: this.searchText(),
-        currentPage: filter.value?.currentPage || 1,
+        currentPage: normalizedFilter?.currentPage || 1,
         date: this.dateValue(),
       };
 
@@ -119,14 +121,10 @@ export class InfrastructuresPublicComponent implements OnInit, OnDestroy {
       this.totalPublic.emit(result.data.length);
       this.count.set(result.data.length);
     } catch (e) {
-      console.error(e);
+      InfrastructuresUtils.handleError(e, 'loadData');
     }
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 }

@@ -21,6 +21,7 @@ import {
 } from '../../../types/enum/infrastructureTablesEnum';
 import { SubStagesTypesEnum } from '../../../types/enum/subStagesEnum';
 import { Utils } from '../../../utils/utils';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { InfrastructureService } from '../infrastructure.service';
 import { InfrastructureFormComponent } from '../infrastructure-form/infrastructure-form.component';
 import { InfrastructureExportComponent } from '../infrastructure-export/infrastructure-export.component';
@@ -103,15 +104,13 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeComponent();
-    this.searchData.set({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
-    });
-    this.filter.set({
-      searchText: '',
-      currentPage: 1,
-    });
+    
+    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
+      this.searchText()
+    );
+    
+    this.searchData.set(searchData);
+    this.filter.set(filter);
   }
 
   ngOnDestroy(): void {
@@ -144,7 +143,6 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
       },
     });
 
-    // Handle dialog result using runInInjectionContext for proper effect usage
     runInInjectionContext(this.injector, () => {
       const dialogInstance = dialogRef.componentInstance;
       const dataSubject = dialogInstance.dataSubject();
@@ -197,14 +195,11 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
           ? typeMapping[rowData.type!]
           : rowData.type, // Use the name for dropdown display
     };
-
-    const updatedDialogData = this.dialogData().map((dynamicRow) => ({
-      ...dynamicRow,
-      row: dynamicRow.row.map((field) => ({
-        ...field,
-        value: (transformedData as any)[field.name] ?? field.value,
-      })),
-    }));
+    
+    const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.dialogData(),
+      transformedData
+    );
     this.dialogData.set(updatedDialogData);
 
     this.openDialogForm(true);
@@ -221,7 +216,6 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
       },
     });
 
-    // Handle export dialog result using runInInjectionContext for proper effect usage
     runInInjectionContext(this.injector, () => {
       const dialogInstance = dialogRef.componentInstance;
       const dataSubject = dialogInstance.dataSubject();
@@ -239,27 +233,17 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-      includeInactive: this.includeInactive(),
-    };
-    const tableName = InfrastructureTablesTypes.TicketSubStage;
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText,
+      { includeInactive: this.includeInactive() }
+    );
 
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER);
-      console.error(e);
-    }
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.TicketSubStage,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
   async handleInsertOrUpdate(
     newType: TicketSubStage,
@@ -302,17 +286,11 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
       );
 
       if (result && result?.success) {
-        this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        await this.loadData(this.infrastructureSearchFormService.form);
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
     } catch (error) {
-      console.error('Error during insert or update:', error);
+      InfrastructuresUtils.handleInsertUpdateError(error, this.toaster);
     }
   }
 
@@ -340,9 +318,8 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
   async loadData(filter: any): Promise<void> {
     this.loader.set(true);
 
-    if (filter.value) filter = filter.value;
+    filter = InfrastructuresUtils.normalizeFilter(filter);
 
-    const MIN_LOADER_TIME = 1500;
     const startTime = Date.now();
     try {
       const currentFilter = { ...filter };
@@ -353,7 +330,6 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
 
       const updatedFilter = {
         ...this.filter(),
-        ...filter.value,
         includeInactive: this.includeInactive(),
       };
       const response = await this.infrastructureServer.getInfrastructureTable(
@@ -378,24 +354,20 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
         this.count.set(response.data.length);
       }
     } catch (error) {
-      console.error('Error loading data:', error);
+      InfrastructuresUtils.handleError(error, 'loadData');
     }
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 
   async onCheckboxChange(includeInactive: boolean) {
     this.includeInactive.set(includeInactive);
-
-    // Reset filter and update currentPage  value
-    this.filter.set({ currentPage: 1, includeInactive });
-
-    await this.loadData(this.filter());
+    
+    await InfrastructuresUtils.handleIncludeInactiveChange(
+      includeInactive,
+      this.filter,
+      (filter) => this.loadData(filter)
+    );
   }
 }

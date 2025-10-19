@@ -23,6 +23,7 @@ import {
   InfrastructureTablesTypes,
   } from '../../../types/enum/infrastructureTablesEnum';
 import { Utils } from '../../../utils/utils';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
 import { AuthorityService } from '../../../services/authority.service ';
@@ -102,15 +103,14 @@ export class InfrastructuresColorsComponent implements OnInit {
     this.columns.set(tableColumns.ColorTable);
     const form = new InfrastructureForms();
     this.dialogData.set(form.InfrastructureColorForm);
-    this.searchData.set({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
-    });
-    this.filter.set({
-      searchText: '',
-      currentPage: 1,
-    });
+    
+    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
+      this.searchText()
+    );
+    
+    this.searchData.set(searchData);
+    this.filter.set(filter);
+    
     // this.authorityService.setSuperAdminMunicipal();
     this.authorityService.setMunicipalsToNationalAdmin();
   }
@@ -138,7 +138,6 @@ export class InfrastructuresColorsComponent implements OnInit {
           isEdit: isEdit,
         },
       });
-      // Handle dialog result using runInInjectionContext for proper effect usage
       runInInjectionContext(this.injector, () => {
         const dialogInstance = dialogRef.componentInstance;
         const dataSubject = dialogInstance.dataSubject();
@@ -169,7 +168,6 @@ export class InfrastructuresColorsComponent implements OnInit {
           description: InfrastructureEnumDialogs.ColorsDialogDiscription,
         },
       });
-      // Handle export dialog result using runInInjectionContext for proper effect usage
       runInInjectionContext(this.injector, () => {
         const dialogInstance = dialogRef.componentInstance;
         const dataSubject = dialogInstance.dataSubject();
@@ -199,39 +197,28 @@ export class InfrastructuresColorsComponent implements OnInit {
         action
       );
       if (result && result?.success) {
-        this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        await this.loadData(this.infrastructureSearchFormService.form);
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
     } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
+      InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
     }
   }
 
   openEdit(rowData: VehicleColor) {
-    this.dialogData.set(this.dialogData().map((dynamicRow) => {
-      dynamicRow.row = dynamicRow.row.map((field) => {
-        if ((rowData as any)[field.name] !== undefined) {
-          return { ...field, value: (rowData as any)[field.name] };
-        }
-        return field;
-      });
-      return dynamicRow;
-    }));
+    const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.dialogData(),
+      rowData
+    );
+    this.dialogData.set(updatedDialogData);
     this.openDialogForm(true);
   }
 
   async loadData(filter: any) {
     this.loader.set(true);
-    if (filter.value) filter = filter.value;
+    
+    filter = InfrastructuresUtils.normalizeFilter(filter);
 
-    const MIN_LOADER_TIME = 1500;
     const startTime = Date.now();
     try {
       this.filter.set({ ...filter });
@@ -241,7 +228,6 @@ export class InfrastructuresColorsComponent implements OnInit {
 
       const updatedFilter = {
         ...currentFilter,
-        ...filter.value,
         includeInactive: this.includeInactive(),
       };
 
@@ -253,49 +239,34 @@ export class InfrastructuresColorsComponent implements OnInit {
       this.total.set(result.totalRecords);
       this.count.set(result.data.length);
     } catch (e) {
-      console.error(e);
+      InfrastructuresUtils.handleError(e, 'loadData');
     }
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-      includeInactive: this.includeInactive(),
-    };
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText,
+      { includeInactive: this.includeInactive() }
+    );
 
-    const tableName = InfrastructureTablesTypes.VehicleColor;
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
-    }
-
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.VehicleColor,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
 
   async onCheckboxChange(includeInactive: boolean) {
     this.includeInactive.set(includeInactive);
-
-    // Reset filter and update currentPage  value
-    this.filter.set({ currentPage: 1, includeInactive });
-
-    await this.loadData(this.filter());
+    
+    await InfrastructuresUtils.handleIncludeInactiveChange(
+      includeInactive,
+      this.filter,
+      (filter) => this.loadData(filter)
+    );
   }
 }

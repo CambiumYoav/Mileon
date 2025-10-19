@@ -17,16 +17,13 @@ import { InfrastructuresTicketsStatusesComponent } from "../infrastructures-tick
   ],
 })
 export class InfrastructuresTicketsStagesStatusesComponent implements OnInit {
-  // Injected services
   private authorityService = inject(AuthorityService);
 
-  // Signals
   title = signal<string>(TitlesEnum.InfrastructureTicketsStagesStatusesTitle);
 
   constructor() {}
 
   ngOnInit(): void {
-    // this.authorityService.setSuperAdminMunicipal();
     this.authorityService.setMunicipalsToNationalAdmin();
   }
 }

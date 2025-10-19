@@ -22,6 +22,7 @@ import {
   InfrastructureTablesTypes,
 } from '../../../types/enum/infrastructureTablesEnum';
 import { Utils } from '../../../utils/utils';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
 import { AuthorityService } from '../../../services/authority.service ';
@@ -107,16 +108,12 @@ export class InfrastructuresManufactureComponent {
     const form = new InfrastructureForms();
     this.dialogData.set(form.InfrastructureManufacturerForm);
     
-    this.searchData.set({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
-    });
+    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
+      this.searchText()
+    );
     
-    this.filter.set({
-      searchText: '',
-      currentPage: 1,
-    });
+    this.searchData.set(searchData);
+    this.filter.set(filter);
     
     // this.authorityService.setSuperAdminMunicipal();
     this.authorityService.setMunicipalsToNationalAdmin();
@@ -173,7 +170,7 @@ export class InfrastructuresManufactureComponent {
           description: InfrastructureEnumDialogs.ManufactureDialogExportDiscription,
         },
       });
-      // Handle export dialog result using runInInjectionContext for proper effect usage
+
       runInInjectionContext(this.injector, () => {
         const dialogInstance = dialogRef.componentInstance;
         const dataSubject = dialogInstance.dataSubject();
@@ -203,67 +200,44 @@ export class InfrastructuresManufactureComponent {
         action
       );
       if (result && result?.success) {
-        this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        await this.loadData(this.infrastructureSearchFormService.form);
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
     } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
+      InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
     }
   }
 
   openEdit(rowData: VehicleManufacturer) {
-    const updatedDialogData = this.dialogData().map((dynamicRow) => {
-      dynamicRow.row = dynamicRow.row.map((field) => {
-        if ((rowData as any)[field.name] !== undefined) {
-          return { ...field, value: (rowData as any)[field.name] };
-        }
-        return field;
-      });
-      return dynamicRow;
-    });
+    const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.dialogData(),
+      rowData
+    );
     this.dialogData.set(updatedDialogData);
     this.openDialogForm(true);
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-      includeInactive: this.includeInactive(),
-    };
-    const tableName = InfrastructureTablesTypes.VehicleManufacturer;
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText,
+      { includeInactive: this.includeInactive() }
+    );
 
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
-    }
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.VehicleManufacturer,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
 
   async loadData(filter: any) {
-    const MIN_LOADER_TIME = 1500;
+    this.loader.set(true);
+    
+    filter = InfrastructuresUtils.normalizeFilter(filter);
+
     const startTime = Date.now();
     try {
-      this.loader.set(true);
-
-      if (filter.value) filter = filter.value;
-
       const currentFilter = { ...filter };
       currentFilter.searchText =
         this.infrastructureSearchFormService.form.value.searchText;
@@ -272,7 +246,6 @@ export class InfrastructuresManufactureComponent {
 
       const updatedFilter = {
         ...this.filter(),
-        ...filter.value,
         includeInactive: this.includeInactive(),
       };
       const result = await this.infrastructureServer.getInfrastructureTable(
@@ -283,26 +256,20 @@ export class InfrastructuresManufactureComponent {
       this.total.set(result.totalRecords);
       this.count.set(result.data.length);
     } catch (e) {
-      console.error(e);
-      this.loader.set(false);
+      InfrastructuresUtils.handleError(e, 'loadData');
     }
 
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 
   async onCheckboxChange(includeInactive: boolean) {
     this.includeInactive.set(includeInactive);
-
-    // Reset filter and update currentPage  value
-    this.filter.set({ currentPage: 1, includeInactive });
-
-    await this.loadData(this.filter());
+    
+    await InfrastructuresUtils.handleIncludeInactiveChange(
+      includeInactive,
+      this.filter,
+      (filter) => this.loadData(filter)
+    );
   }
 }

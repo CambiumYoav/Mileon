@@ -4,7 +4,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ConstPath } from '../../../constants/const_path'; 
-import { Citizen } from '../../../types/citizen';
 import {
   InfrastructureTableAction,
   InfrastructureTablesTypes,
@@ -38,6 +37,7 @@ import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructuresSearchComponent } from '../infrastructures-search/infrastructures-search.component';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
 import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import { Citizen } from '../../../types/citizen';
 
 @Component({
   selector: 'app-infrastructures-business',
@@ -181,8 +181,6 @@ export class InfrastructuresBusinessComponent {
           if (result !== undefined) {
             if (result) {
               this.importDialogResult.set(result);
-            } else {
-              console.log('Dialog was closed without uploading files.');
             }
             dialogEffectRef.destroy();
           }
@@ -298,10 +296,8 @@ export class InfrastructuresBusinessComponent {
   }
 
   openEdit(rowData: BusinessType) {
-    // Store the business ID for update operations
     this.businessID.set(rowData.id || null);
     
-    // Update dialog data with the row data using utility
     const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
       this.dialogData(),
       rowData
@@ -311,15 +307,13 @@ export class InfrastructuresBusinessComponent {
     this.openDialogForm(true);
   }
 
-  onIconEvent(rowData: Citizen) {
-    //send this to server?
-    console.log(rowData);
+  onIconEvent(rowData: any) {
+    // Placeholder for future implementation
   }
 
   private lastLoadTime = 0;
 
   async loadData(filter: any) {
-    // Debounce rapid successive calls using utility
     if (InfrastructuresUtils.shouldDebounce(this.lastLoadTime)) {
       return;
     }
@@ -327,7 +321,6 @@ export class InfrastructuresBusinessComponent {
 
     this.loader.set(true);
     
-    // Normalize filter using utility
     filter = InfrastructuresUtils.normalizeFilter(filter);
     
     const startTime = Date.now();
@@ -335,7 +328,6 @@ export class InfrastructuresBusinessComponent {
     try {
       const searchText = this.infrastructureSearchFormService.form.value.searchText;
       
-      // Prepare filters using utility
       const updatedFilter = InfrastructuresUtils.prepareLoadDataFilters(
         this.filter(),
         filter,
@@ -351,7 +343,6 @@ export class InfrastructuresBusinessComponent {
       );
       
       if (response?.data) {
-        // Process data with formatted address using utility
         const processedData = InfrastructuresUtils.processDataWithFormattedAddress(
           response.data,
           (item: any) => {
@@ -370,7 +361,6 @@ export class InfrastructuresBusinessComponent {
       InfrastructuresUtils.handleError(error, 'loadData');
     }
     
-    // Ensure minimum loader time using utility
     await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }

@@ -13,7 +13,9 @@ import { InfrastructureService } from '../../infrastructure.service';
 import { InfrastructureSearchFormService } from '../../infrastructures-search/infrastructure-search-form.service';
 import { InfrastructureTablesTypes } from '../../../../types/enum/infrastructureTablesEnum';
 import { Utils } from '../../../../utils/utils';
+import { InfrastructuresUtils } from '../../../../utils/infrastructuresUtils';
 import { SearchFormService } from '../../../shared/search-bar/search-form.service';
+import { ToastrService } from 'ngx-toastr';
 import { ButtonComponent } from '../../../shared/base/button/button.component';
 import { InfrastructuresTableComponent } from '../../infrastructures-table/infrastructures-table.component';
 
@@ -30,12 +32,11 @@ import { InfrastructuresTableComponent } from '../../infrastructures-table/infra
   ]
 })
 export class InfrastructuresTicketsStagesComponent implements OnInit {
-  // Injected services
   private infrastructureServer = inject(InfrastructureService);
   private infrastructureSearchFormService = inject(SearchFormService);
   private dialog = inject(MatDialog);
+  private toaster = inject(ToastrService);
 
-  // Signals
   title = signal<string>(TitlesEnum.InfrastructureTicketsStagesTitle);
   Icons = ConstPath;
   columns = signal<Column[]>([]);
@@ -72,12 +73,12 @@ export class InfrastructuresTicketsStagesComponent implements OnInit {
       });
       const dialogInstance = dialogRef.componentInstance;
       
-      // Handle export dialog result with effect to watch signal changes
-      effect(() => {
+      const dialogEffectRef = effect(() => {
         const result = dialogInstance.dataSubject();
         if (result) {
           this.exportData();
           this.dialog.closeAll();
+          dialogEffectRef.destroy();
         }
       });
     }
@@ -86,7 +87,6 @@ export class InfrastructuresTicketsStagesComponent implements OnInit {
   async loadData(filter: any) {
     this.loader.set(true);
 
-    const MIN_LOADER_TIME = 1500;
     const startTime = Date.now();
     try {
       const result = await this.infrastructureServer.getInfrastructureTable(
@@ -103,31 +103,23 @@ export class InfrastructuresTicketsStagesComponent implements OnInit {
       this.total.set(result.totalRecords);
       this.count.set(result.data.length);
     } catch (e) {
-      console.error(e);
+      InfrastructuresUtils.handleError(e, 'loadData');
     }
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-     
-    };
-    const tableName = InfrastructureTablesTypes.TicketStage;
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText
+    );
 
-    await Utils.exportData(
+    await InfrastructuresUtils.handleExportData(
       filters,
-      tableName,
-      this.infrastructureServer.exportTableData.bind(this.infrastructureServer)
+      InfrastructureTablesTypes.TicketStage,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
     );
   }
 }

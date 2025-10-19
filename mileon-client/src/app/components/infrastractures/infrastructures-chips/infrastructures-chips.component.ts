@@ -22,6 +22,7 @@ import {
 import { Column } from '../../../types/table';
 import { UploadedFile } from '../../../types/uploadedFile';
 import { Utils } from '../../../utils/utils';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { InfrastructureExportComponent } from '../infrastructure-export/infrastructure-export.component';
 import { InfrastructureImportComponent } from '../infrastructure-import/infrastructure-import.component';
 import { InfrastructureService } from '../infrastructure.service';
@@ -113,15 +114,14 @@ export class InfrastructuresChipsComponent implements OnInit {
     const form = new InfrastructureForms();
     this.ownerDialogData.set(form.InfrastructureChipsOwnerForm);
     this.petDialogData.set(form.InfrastructureChipsPetForm);
-    this.searchData.set({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
-    });
-    this.filter.set({
-      searchText: '', 
-      currentPage: 1,
-    });
+    
+    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
+      this.searchText()
+    );
+    
+    this.searchData.set(searchData);
+    this.filter.set(filter);
+    
     this.authorityService.setMunicipalsToNationalAdmin();
   }
 
@@ -152,8 +152,6 @@ export class InfrastructuresChipsComponent implements OnInit {
 
               // Call the importData function to process the uploaded files
               this.importData();
-            } else {
-              console.log('Dialog was closed without uploading files.');
             }
             dialogEffectRef.destroy();
           }
@@ -205,8 +203,6 @@ export class InfrastructuresChipsComponent implements OnInit {
               ? InfrastructureTableAction.Update
               : InfrastructureTableAction.Add;
             this.handleInsertOrUpdate(result, action);
-
-            // console.log(result);
             dialogEffectRef.destroy();
           }
         });
@@ -305,26 +301,16 @@ export class InfrastructuresChipsComponent implements OnInit {
   }
 
   async exportData(): Promise<void> {
-    // const filters = this.infrastructureSearchFormService.form.value.searchText;
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-    };
-    const tableName = InfrastructureTablesTypes.Chips;
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
-    }
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText
+    );
+
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.Chips,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
 
   async handleInsertOrUpdate(newType: any, action: InfrastructureTableAction) {
@@ -384,25 +370,17 @@ export class InfrastructuresChipsComponent implements OnInit {
         delete processedData.addressId;
         delete processedData.address.addressId;
       }
-      // console.log(processedData);
       const result = await this.infrastructureServer.insertToTypeTableDynamic(
         processedData,
         InfrastructureTablesTypes.Chips,
         action
       );
       if (result && result?.success) {
-        this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        await this.loadData(this.infrastructureSearchFormService.form);
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
     } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
+      InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
     }
   }
 
@@ -418,7 +396,6 @@ export class InfrastructuresChipsComponent implements OnInit {
   }
 
   openEdit(rowData: ChipsTypes) {
-    // console.log(rowData);
     const typeMapping = this.getTypeMapping();
 
     const addressParts = this.extractAddressComponents(rowData.fullAddress);
@@ -437,22 +414,19 @@ export class InfrastructuresChipsComponent implements OnInit {
       city: rowData.address?.cityID,
       streetID: rowData.address?.streetID,
     };
-    // console.log(transformedData);
-    this.ownerDialogData.set(this.ownerDialogData().map((dynamicRow) => ({
-      ...dynamicRow,
-      row: dynamicRow.row.map((field) => ({
-        ...field,
-        value: (transformedData as any)[field.name] ?? field.value,
-      })),
-    })));
+    
+    const updatedOwnerDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.ownerDialogData(),
+      transformedData
+    );
+    this.ownerDialogData.set(updatedOwnerDialogData);
 
-    this.petDialogData.set(this.petDialogData().map((dynamicRow) => ({
-      ...dynamicRow,
-      row: dynamicRow.row.map((field) => ({
-        ...field,
-        value: (transformedData as any)[field.name] ?? field.value,
-      })),
-    })));
+    const updatedPetDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.petDialogData(),
+      transformedData
+    );
+    this.petDialogData.set(updatedPetDialogData);
+    
     this.obj = transformedData;
     this.openDialogForm(true);
   }
@@ -481,9 +455,9 @@ export class InfrastructuresChipsComponent implements OnInit {
 
   async loadData(filter: any) {
     this.loader.set(true);
-    if (filter.value) filter = filter.value;
+    
+    filter = InfrastructuresUtils.normalizeFilter(filter);
 
-    const MIN_LOADER_TIME = 1500;
     const startTime = Date.now();
     try {
       this.filter.set({ ...filter });
@@ -492,23 +466,19 @@ export class InfrastructuresChipsComponent implements OnInit {
         this.infrastructureSearchFormService.form.value.searchText;
 
       const updatedFilter = {
-        ...currentFilter,
-        ...filter.value,
+        ...currentFilter
       };
       const response = await this.infrastructureServer.getInfrastructureTable(
         updatedFilter,
         InfrastructureTablesTypes.Chips
-        // this.currentAuthority
       );
       if (response?.data) {
         // Map the response to manipulate the address object
         this.data.set(response.data.map((item: any) => {
-          // console.log(item);
           const streetName = item.address?.street?.streetName;
           const houseNumber = item.address?.houseNumber;
           const cityName = item.address?.city?.cityName;
           const cityId = item.address?.cityID;
-          // console.log(cityId);
           // Create a full address string
           const fullAddress =
             `${streetName} ${houseNumber}, ${cityName}`.trim();
@@ -526,15 +496,10 @@ export class InfrastructuresChipsComponent implements OnInit {
         this.count.set(response.data.length);
       }
     } catch (e) {
-      console.error(e);
+      InfrastructuresUtils.handleError(e, 'loadData');
     }
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 }

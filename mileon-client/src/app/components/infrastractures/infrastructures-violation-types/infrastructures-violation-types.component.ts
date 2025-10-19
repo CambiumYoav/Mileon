@@ -23,6 +23,7 @@ import { InfrastructureFormComponent } from '../infrastructure-form/infrastructu
 import { InfrastructureService } from '../infrastructure.service';
 import { InfrastructureExportComponent } from '../infrastructure-export/infrastructure-export.component';
 import { Utils } from '../../../utils/utils';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
 import { AuthorityService } from '../../../services/authority.service ';
@@ -76,8 +77,7 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
   readonly Icons = ConstPath;
   readonly SearchByTextEnum = SearchByTextEnum;
 
-  constructor() {
-    // Convert authority subscription to signal
+    constructor() {   
     const authoritySignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
     
     effect(() => {
@@ -108,11 +108,12 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
     this.columns.set(tableColumns.ViloationTypesTable);
     this.dialogData.set(form.InfrastructureViolationTypeForm);
 
-    this.searchData.set({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
-    });
+    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
+      this.searchText()
+    );
+    
+    this.searchData.set(searchData);
+    this.filter.set(filter);
     
     // this.authorityService.setSuperAdminMunicipal();
     this.authorityService.setMunicipalsToNationalAdmin();
@@ -171,18 +172,11 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
       );
 
       if (result?.success) {
-        this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        await this.loadData(this.infrastructureSearchFormService.form);
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
     } catch (error) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error('Error during insert or update:', error);
+      InfrastructuresUtils.handleInsertUpdateError(error, this.toaster);
     }
   }
 
@@ -205,50 +199,36 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-    };
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText
+    );
 
-    const tableName = InfrastructureTablesTypes.ViolationType;
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
-    }
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.ViolationType,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
   openEdit(rowData: ViloationTypes): void {
     rowData.ticketTypeID = Utils.getTicketTypeId(
       rowData.ticketTypeID!.toString()
     );
     
-    const updatedDialogData = this.dialogData().map((dynamicRow) => ({
-      ...dynamicRow,
-      row: dynamicRow.row.map((field) => ({
-        ...field,
-        value: rowData[field.name as keyof ViloationTypes] ?? field.value,
-      })),
-    }));
+    const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.dialogData(),
+      rowData
+    );
     
     this.dialogData.set(updatedDialogData);
     this.openDialogForm(true);
   }
 
-  // Load data from server
   async loadData(filter: any): Promise<void> {
     this.loader.set(true);
-    if (filter.value) filter = filter.value;
+    
+    filter = InfrastructuresUtils.normalizeFilter(filter);
 
-    const MIN_LOADER_TIME = 1500;
     const startTime = Date.now();
     try {
       const currentFilter = { ...filter };
@@ -256,7 +236,6 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
 
       const updatedFilter = {
         ...currentFilter,
-        ...filter.value,
       };
       
       this.filter.set(updatedFilter);
@@ -277,15 +256,10 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
         this.total.set(response.totalRecords);
       }
     } catch (error) {
-      console.error('Error loading data:', error);
+      InfrastructuresUtils.handleError(error, 'loadData');
     }
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 

@@ -17,6 +17,7 @@ import {
 } from '../../../types/infrastructure/infrastructureFilterOptions';
 import { Column } from '../../../types/table';
 import { Utils } from '../../../utils/utils';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { InfrastructureExportComponent } from '../infrastructure-export/infrastructure-export.component';
 import { InfrastructureService } from '../infrastructure.service';
 import { UploadedFile } from '../../../types/uploadedFile';
@@ -116,7 +117,6 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
         const dateValue = new Date(value);
         const formattedDate = this.formatDate(dateValue);
         this.dateValue.set(formattedDate);
-        console.log('Last Update Changed:', formattedDate);
       }
     });
 
@@ -197,8 +197,6 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
             this.vehicleType.set(InfrastructureTablesTypes.Disabled);
             this.importData();
           }
-        } else if (result !== undefined) {
-          console.log('Dialog was closed without uploading files.');
         }
       });
     }
@@ -221,12 +219,6 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-      date: this.dateValue(),
-    };
     let tableName: any = null;
 
     if (this.selectedTable() === InfrastructureTablesTypes.Public) {
@@ -235,17 +227,23 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
       tableName = InfrastructureTablesTypes.DisabledVehicleBadge;
     }
 
-    if (tableName) {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-    } else {
+    if (!tableName) {
       console.error('Error: Table name is not defined for the selected type.');
+      this.toaster.error(ErrorSuccessMessages.DEFAULT);
+      return;
     }
+
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText,
+      { date: this.dateValue() }
+    );
+
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      tableName,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
   setType(type: InfrastructureTablesTypes) {
     this.selectedTable.set(type);
@@ -253,32 +251,24 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
 
   getTotalRecords(total: number) {
     this.totalRecords.set(total);
-    if(total === 0) {
-      this.isImportDisabled.set(false);
-    }
+    
+    const searchText = this.infrastructureSearchFormService.form.value.searchText?.trim() || '';
+    this.isImportDisabled.set(
+      !InfrastructuresUtils.shouldDisableImport(total, searchText)
+    );
   }
 
   async importData() {
-    try {
-      const vehicleType = this.vehicleType();
-      if (!vehicleType) return;
-      
-      const res = this.infrastructureServer
-        .importDataByTableType(vehicleType, this.filesToUpload())
-
-        .then((res) => {
-          if (res) {
-            this.isImported.set(true);
-            this.toaster.success(ErrorSuccessMessages.UPLOADED_SUCCESSFULY);
-          }
-        })
-        .catch((error) => {
-          this.toaster.error(
-            ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-          );
-        });
-    } catch (e) {
-      console.error(e);
-    }
+    const vehicleType = this.vehicleType();
+    if (!vehicleType) return;
+    
+    await InfrastructuresUtils.handleImportData(
+      () => this.infrastructureServer.importDataByTableType(
+        vehicleType,
+        this.filesToUpload()
+      ),
+      this.toaster,
+      () => { this.isImported.set(true); }
+    );
   }
 }

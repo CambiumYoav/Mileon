@@ -44,6 +44,7 @@ import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructuresTicketsSourceTableComponent } from '../infrastructures-tickets-source-table/infrastructures-tickets-source-table.component';
 import { SelectComponent } from '../../shared/base/select/select.component';
 import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 
 @Component({
   selector: 'app-infrastructures-tickets-source',
@@ -122,7 +123,6 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
       }
     });
     
-    // Ensure form has proper default values
     if (!this.infrastructureSearchFormService.form.get('currentPage')?.value) {
       this.infrastructureSearchFormService.form.patchValue({
         currentPage: 1,
@@ -134,15 +134,13 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
     this.fetchAuthorities();
     const form = new InfrastructureForms();
     this.dialogData.set(form.InfrastructureTicketsSourceForm);
-    this.searchData.set({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
-    });
-    this.filter.set({
-      searchText: '',
-      currentPage: 1,
-    });
+    
+    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
+      this.searchText()
+    );
+    
+    this.searchData.set(searchData);
+    this.filter.set(filter);
   }
 
   ngOnDestroy(): void {
@@ -157,7 +155,6 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
     try {
       const response = await this.lookupService.getAuthorities();
 
-      // Cast the response to the expected structure
       const castedResponse = response as any as {
         list: { id: string; value: string }[];
       };
@@ -206,8 +203,6 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
 
         // Call the importData function to process the uploaded files
         this.importData();
-      } else {
-        console.log('Dialog was closed without uploading files.');
       }
     }
   }
@@ -220,7 +215,6 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
         data: { form: this.dialogData(), title: isEdit ? InfrastructureEnumTitles.EditDialogTitle : InfrastructureEnumTitles.AddDialogTitle, isEdit },
       });
       
-      // Wait for dialog to close and get result
       const result = await firstValueFrom(dialogRef.afterClosed());
       
       if (result) {
@@ -244,7 +238,6 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
         },
       });
       
-      // Wait for dialog to close and get result
       const result = await firstValueFrom(dialogRef.afterClosed());
       
       if (result) {
@@ -279,22 +272,15 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
         action
       );
       if (result && result?.success) {
-        this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        await this.loadData(this.infrastructureSearchFormService.form);
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
     } catch (e) {
-      console.error(e);
+      InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
     }
   }
 
   openEdit(rowData: any) {
-    // Validate and extract methods data
     if (!rowData.methods || !Array.isArray(rowData.methods)) {
       console.error('No methods array found in the selected row');
       return;
@@ -321,27 +307,20 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
     if (extractedData.length > 0) {
       const firstMethod = extractedData[0]; // You can loop through all methods if required
 
-      this.dialogData.set(this.dialogData().map((dynamicRow) => {
-        dynamicRow.row = dynamicRow.row.map((field) => {
-          if (firstMethod[field.name] !== undefined) {
-            // Update field value if it exists in extracted data
-            return { ...field, value: firstMethod[field.name] };
-          }
-          return field;
-        });
-        return dynamicRow;
-      }));
+      const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+        this.dialogData(),
+        firstMethod
+      );
+      this.dialogData.set(updatedDialogData);
     }
 
-    // Open the dialog form with the populated data
     this.openDialogForm(true);
   }
 
   async loadData(filter: any) {
     this.loader.set(true);
     try {
-      // Handle both FormGroup and plain object
-      if (filter.value) filter = filter.value;
+      filter = InfrastructuresUtils.normalizeFilter(filter);
       
       const updatedFilter = {
         ...filter,
@@ -365,7 +344,7 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
         this.data.set([]);
       }
     } catch (e) {
-      console.error('Error loading data:', e);
+      InfrastructuresUtils.handleError(e, 'loadData');
       this.data.set([]);
       this.total.set(0);
       this.count.set(0);
@@ -374,49 +353,29 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-      authorityID: this.currentAuthority()?.id,
-    };
-    const tableName = InfrastructureTablesTypes.DeliveryMethod;
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText,
+      { authorityID: this.currentAuthority()?.id }
+    );
 
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
-    }
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.DeliveryMethod,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
 
   async importData() {
-    try {
-      const res = this.infrastructureServer
-        .importDataByTableType(
-          InfrastructureTablesTypes.DeliveryMethod,
-          this.filesToUpload,
-          this.mviewAuthority
-        )
-        .then((res) => {
-          this.loadData(this.infrastructureSearchFormService.form);
-          this.toaster.success(ErrorSuccessMessages.UPLOADED_SUCCESSFULY);
-        })
-        .catch((error) => {
-          this.toaster.error(
-            ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-          );
-        });
-    } catch (e) {
-      console.error(e);
-    }
+    await InfrastructuresUtils.handleImportData(
+      () => this.infrastructureServer.importDataByTableType(
+        InfrastructureTablesTypes.DeliveryMethod,
+        this.filesToUpload(),
+        this.mviewAuthority
+      ),
+      this.toaster,
+      () => this.loadData(this.infrastructureSearchFormService.form)
+    );
   }
 
   transformServerResponse = (serverResponse: any) => {
@@ -427,7 +386,6 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
     try {
       const transformedData = serverResponse.reduce(
         (acc: any[], current: any) => {
-          // Safely extract data with fallbacks
           const ticketSourceID = current.ticketSourceID;
           const ticketSourceName = current.ticketSource?.ticketSourceName || current.ticketSourceName || 'N/A';
           const deliveryMethodID = current.deliveryMethodID || current.id;

@@ -23,6 +23,7 @@ import {
 import { InfrastructureFilterOptions } from '../../../types/infrastructure/infrastructureFilterOptions';
 import { Column } from '../../../types/table';
 import { InfrastructureService } from '../infrastructure.service';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { AuthorityService } from '../../../services/authority.service ';
 import { SearchFormService } from '../../shared/search-bar/search-form.service';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
@@ -109,13 +110,14 @@ export class InfrastructuresDisabledComponent implements OnChanges {
   async loadData(filter: any) {
     this.loader.set(true);
 
-    const MIN_LOADER_TIME = 1500;
     const startTime = Date.now();
     try {
+      const normalizedFilter = InfrastructuresUtils.normalizeFilter(filter);
+      
       const updatedFilter = {
-        ...filter,
+        ...normalizedFilter,
         searchText: this.searchText, // Always take from form
-        currentPage: filter.value?.currentPage || 1,
+        currentPage: normalizedFilter?.currentPage || 1,
         date: this.dateValue,
       };
 
@@ -129,15 +131,10 @@ export class InfrastructuresDisabledComponent implements OnChanges {
       this.total.set(result.totalRecords);
       this.count.set(this.dataLength());
     } catch (e) {
-      console.error(e);
+      InfrastructuresUtils.handleError(e, 'loadData');
     }
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 }

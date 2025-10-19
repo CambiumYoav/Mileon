@@ -20,6 +20,7 @@ import {
 import { Column } from '../../../types/table';
 import { UploadedFile } from '../../../types/uploadedFile';
 import { Utils } from '../../../utils/utils';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { InfrastructureExportComponent } from '../infrastructure-export/infrastructure-export.component';
 import { InfrastructureImportComponent } from '../infrastructure-import/infrastructure-import.component';
 import { InfrastructureService } from '../infrastructure.service';
@@ -117,18 +118,18 @@ export class InfrastructuresPlaintiffsCausesComponent {
 
   private initializeTableAndForm(): void {
     const tableColumns = new InfrastructureTable();
-
-    this.currentAuthority.set(this.authorityService.getAuthorityID());
     const form = new InfrastructureForms();
 
+    this.currentAuthority.set(this.authorityService.getAuthorityID());
     this.columns.set(tableColumns.PlaintiffsCausesTable);
     this.dialogData.set(form.InfrastructurePlaintiffsCausesForm);
 
-    this.searchData.set({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
-    });
+    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
+      this.searchText()
+    );
+    
+    this.searchData.set(searchData);
+    this.filter.set(filter);
   }
 
   async openDialogImport() {
@@ -144,7 +145,6 @@ export class InfrastructuresPlaintiffsCausesComponent {
         },
       });
 
-      // Handle dialog result using runInInjectionContext for proper effect usage
       runInInjectionContext(this.injector, () => {
         const dialogResult = toSignal(dialogRef.afterClosed());
         effect(() => {
@@ -155,8 +155,6 @@ export class InfrastructuresPlaintiffsCausesComponent {
 
             // Call the importData function to process the uploaded files
             this.importData();
-          } else if (result !== undefined) {
-            console.log('Dialog was closed without uploading files.');
           }
         });
       });
@@ -221,11 +219,11 @@ export class InfrastructuresPlaintiffsCausesComponent {
     });
   }
 
-  // Data Fetch and Update Functions
   async loadData(filter: any): Promise<void> {
     this.loader.set(true);
-    if (filter.value) filter = filter.value;
-    const MIN_LOADER_TIME = 1500;
+    
+    filter = InfrastructuresUtils.normalizeFilter(filter);
+    
     const startTime = Date.now();
     try {
       const currentFilter = { ...filter };
@@ -237,7 +235,6 @@ export class InfrastructuresPlaintiffsCausesComponent {
 
       const updatedFilter = {
         ...this.filter(),
-        ...filter.value,
         includeInactive: this.includeInactive(),
       };
       const result = await this.infrastructureServer.getInfrastructureTable(
@@ -270,28 +267,18 @@ export class InfrastructuresPlaintiffsCausesComponent {
         this.infrastructureSearchFormService.form.value.searchText?.trim() ||
         '';
 
-      // Set `isImportDisabled` based on the conditions
       this.isImportDisabled.set(
-        this.data().length === 0
-          ? searchText !== '' // Disable if no data and there is search text
-          : true // Enable if there is data
+        InfrastructuresUtils.shouldDisableImport(this.data().length, searchText)
       );
     } catch (error) {
-      console.error('Error loading data:', error);
-      this.loader.set(false);
+      InfrastructuresUtils.handleError(error, 'loadData');
     }
 
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 
-  // Insert or Update Records
+
   async handleInsertOrUpdate(
     record: PlaintiffsCausesTypes,
     action: InfrastructureTableAction
@@ -310,96 +297,62 @@ export class InfrastructuresPlaintiffsCausesComponent {
       );
 
       if (result?.success) {
-        this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        await this.loadData(this.infrastructureSearchFormService.form);
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
     } catch (error) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error('Error inserting or updating record:', error);
+      InfrastructuresUtils.handleInsertUpdateError(error, this.toaster);
     }
   }
 
-  // Export Data
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-      authorityID: this.currentAuthority(),
-      includeInactive: this.includeInactive(),
-    };
-    const tableName = InfrastructureTablesTypes.InspectorReservedRemark;
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
-    }
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText,
+      { 
+        authorityID: this.currentAuthority(),
+        includeInactive: this.includeInactive()
+      }
+    );
+
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.InspectorReservedRemark,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
 
-  // Import Data
   async importData() {
-    try {
-      const res = this.infrastructureServer
-        .importDataByTableType(
-          InfrastructureTablesTypes.InspectorReservedRemark,
-          this.filesToUpload(),
-          this.currentAuthority()!
-        )
-        .then((res) => {
-          if (res.errors) {
-            this.toaster.error(
-              ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-            );
-          } else {
-            this.loadData(this.infrastructureSearchFormService.form);
-            this.toaster.success(ErrorSuccessMessages.UPLOADED_SUCCESSFULY);
-          }
-        })
-        .catch((error) => {
-          this.toaster.error(
-            ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-          );
-        });
-    } catch (e) {
-      console.error(e);
-    }
+    await InfrastructuresUtils.handleImportData(
+      () => this.infrastructureServer.importDataByTableType(
+        InfrastructureTablesTypes.InspectorReservedRemark,
+        this.filesToUpload(),
+        this.currentAuthority()!
+      ),
+      this.toaster,
+      () => this.loadData(this.infrastructureSearchFormService.form)
+    );
   }
 
-  // Edit Row Data
   openEdit(rowData: PlaintiffsCausesTypes): void {
     rowData.ticketType = Utils.getTicketTypeId(rowData.ticketTypeID!);
 
-    const updatedDialogData = this.dialogData().map((dynamicRow) => {
-      dynamicRow.row = dynamicRow.row.map((field) => ({
-        ...field,
-        value: (rowData as any)[field.name] ?? field.value,
-      }));
-      return dynamicRow;
-    });
+    const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.dialogData(),
+      rowData
+    );
+    
     this.dialogData.set(updatedDialogData);
     this.openDialogForm(true);
   }
 
   async onCheckboxChange(includeInactive: boolean) {
     this.includeInactive.set(includeInactive);
-
-    // Reset filter and update currentPage  value
-    this.filter.set({ currentPage: 1, includeInactive });
-
-    await this.loadData(this.filter());
+    
+    await InfrastructuresUtils.handleIncludeInactiveChange(
+      includeInactive,
+      this.filter,
+      (filter) => this.loadData(filter)
+    );
   }
 }

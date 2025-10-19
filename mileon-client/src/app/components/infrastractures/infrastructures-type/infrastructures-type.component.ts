@@ -23,6 +23,7 @@ import {
   InfrastructureTablesTypes,
 } from '../../../types/enum/infrastructureTablesEnum';
 import { Utils } from '../../../utils/utils';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { InfrastructureImportComponent } from '../infrastructure-import/infrastructure-import.component';
 import { UploadedFile } from '../../../types/uploadedFile';
 import { ToastrService } from 'ngx-toastr';
@@ -84,7 +85,6 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
   readonly mviewAuthority = '11111111-1111-1111-1111-111111111111';
 
   constructor() {
-    // Convert authority subscription to signal
     const authoritySignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
     
     effect(() => {
@@ -128,7 +128,6 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
           isEdit: isEdit,
         },
       });
-      // Handle dialog result using runInInjectionContext for proper effect usage
       runInInjectionContext(this.injector, () => {
         const dialogInstance = dialogRef.componentInstance;
         const dataSubject = dialogInstance.dataSubject();
@@ -159,7 +158,6 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
           description: InfrastructureEnumDialogs.TypesDialogExportDiscription,
         },
       });
-      // Handle export dialog result using runInInjectionContext for proper effect usage
       runInInjectionContext(this.injector, () => {
         const dialogInstance = dialogRef.componentInstance;
         const dataSubject = dialogInstance.dataSubject();
@@ -192,18 +190,11 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
       );
 
       if (result && result?.success) {
-        this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        await this.loadData(this.infrastructureSearchFormService.form);
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
     } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER);
-      console.error(e);
+      InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
     }
   }
   async openDialogImport(): Promise<void> {
@@ -218,67 +209,41 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
         },
       });
 
-      // Convert subscription to async/await pattern
       const result = await firstValueFrom(dialogRef.afterClosed());
       if (result && result.uploadedFiles) {
-        // Process the returned files (e.g., save them, pass them to a service, etc.)
         this.filesToUpload.set(result.uploadedFiles);
 
-        // Call the importData function to process the uploaded files
         this.importData();
-      } else {
-        console.log('Dialog was closed without uploading files.');
       }
     }
   }
 
   async importData(): Promise<void> {
-    try {
-      this.infrastructureServer
-        .importDataByTableType(
-          InfrastructureTablesTypes.VehicleType,
-          this.filesToUpload(),
-          this.mviewAuthority
-        )
-        .then((res) => {
-          if (res.errors) {
-            this.toaster.error(
-              ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-            );
-          } else {
-            this.toaster.success(ErrorSuccessMessages.UPLOADED_SUCCESSFULY);
-            this.loadData(this.infrastructureSearchFormService.form);
-          }
-        })
-        .catch((error) => {
-          this.toaster.error(
-            ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-          );
-        });
-    } catch (e) {
-      console.error(e);
-    }
+    await InfrastructuresUtils.handleImportData(
+      () => this.infrastructureServer.importDataByTableType(
+        InfrastructureTablesTypes.VehicleType,
+        this.filesToUpload(),
+        this.mviewAuthority
+      ),
+      this.toaster,
+      () => this.loadData(this.infrastructureSearchFormService.form)
+    );
   }
 
   openEdit(rowData: VehicleType): void {
-    const updatedDialogData = this.dialogData().map((dynamicRow) => {
-      dynamicRow.row = dynamicRow.row.map((field) => {
-        if (rowData[field.name as keyof VehicleType] !== undefined) {
-          return { ...field, value: rowData[field.name as keyof VehicleType] };
-        }
-        return field;
-      });
-      return dynamicRow;
-    });
+    const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.dialogData(),
+      rowData
+    );
     this.dialogData.set(updatedDialogData);
     this.openDialogForm(true);
   }
 
   async loadData(filter: any): Promise<void> {
     this.loader.set(true);
-    if (filter.value) filter = filter.value;
+    
+    filter = InfrastructuresUtils.normalizeFilter(filter);
 
-    const MIN_LOADER_TIME = 1500;
     const startTime = Date.now();
     try {
       const currentFilter = { ...filter };
@@ -286,7 +251,6 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
 
       const updatedFilter = {
         ...currentFilter,
-        ...filter.value,
         includeInactive: this.includeInactive(),
       };
       
@@ -300,49 +264,34 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
       this.total.set(result.totalRecords);
       this.count.set(result.data.length);
     } catch (e) {
-      console.error(e);
-      this.loader.set(false);
+      InfrastructuresUtils.handleError(e, 'loadData');
     }
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-      includeInactive: this.includeInactive(),
-    };
-    const tableName = InfrastructureTablesTypes.VehicleType;
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
-    }
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText,
+      { includeInactive: this.includeInactive() }
+    );
+
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.VehicleType,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
 
   async onCheckboxChange(includeInactive: boolean): Promise<void> {
     this.includeInactive.set(includeInactive);
-
-    // Reset filter and update currentPage value
-    const newFilter = { currentPage: 1, includeInactive };
-    this.filter.set(newFilter);
-
-    await this.loadData(newFilter);
+    
+    await InfrastructuresUtils.handleIncludeInactiveChange(
+      includeInactive,
+      this.filter,
+      (filter) => this.loadData(filter)
+    );
   }
 }

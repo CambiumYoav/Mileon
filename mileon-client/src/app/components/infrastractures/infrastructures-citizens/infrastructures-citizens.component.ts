@@ -1,4 +1,5 @@
 import { Utils } from '../../../utils/utils';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { Component, OnInit, signal, computed, effect, inject, runInInjectionContext, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -85,7 +86,6 @@ export class InfrastructuresCitizensComponent implements OnInit {
   
   // Prevent duplicate requests
   private lastLoadTime = 0;
-  private readonly LOAD_DEBOUNCE_MS = 500;
 
   constructor() {
     this.infrastructureForm = this.infrastructureSearchFormService.form;
@@ -97,11 +97,10 @@ export class InfrastructuresCitizensComponent implements OnInit {
       if (authorityID && authorityID !== SUPER_ID) {
         this.currentAuthority.set(authorityID);
         
-        const now = Date.now();
-        if (now - this.lastLoadTime < this.LOAD_DEBOUNCE_MS) {
+        if (InfrastructuresUtils.shouldDebounce(this.lastLoadTime)) {
           return;
         }
-        this.lastLoadTime = now;
+        this.lastLoadTime = Date.now();
         
         this.loadData(this.infrastructureSearchFormService.form);
       }
@@ -115,17 +114,16 @@ export class InfrastructuresCitizensComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const tableColumns = new InfrastructureTable();
     this.columns.set(tableColumns.CitizenTable);
+    
     const form = new InfrastructureForms();
     this.dialogData.set(form.InfrastructureCitizensForm);
-    this.searchData.set({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
-    });
-    this.filter.set({
-      searchText: '',
-      currentPage: 1,
-    });
+    
+    // Initialize search and filters using utility
+    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
+      this.searchText()
+    );
+    this.searchData.set(searchData);
+    this.filter.set(filter);
     
     if (this.authorityService.municipals().length === 0) {
       await this.authorityService.getMunicipals(1);
@@ -156,8 +154,6 @@ export class InfrastructuresCitizensComponent implements OnInit {
 
               // Call the importData function to process the uploaded files
               this.importData();
-            } else {
-              console.log('Dialog was closed without uploading files.');
             }
             dialogEffectRef.destroy();
           }
@@ -220,55 +216,29 @@ export class InfrastructuresCitizensComponent implements OnInit {
   }
 
   async importData() {
-    try {
-      const res = this.infrastructureServer
-        .importDataByTableType(
-          InfrastructureTablesTypes.Citizen,
-          this.filesToUpload(),
-          this.currentAuthority()!
-        )
-
-        .then((res) => {
-          if (res.errors) {
-            this.toaster.error(
-              ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-            );
-          } else {
-            this.toaster.success(ErrorSuccessMessages.UPLOADED_SUCCESSFULY);
-            this.loadData(this.infrastructureSearchFormService.form);
-          }
-        })
-        .catch((error) => {
-          this.toaster.error(
-            ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-          );
-        });
-    } catch (e) {
-      console.error(e);
-    }
+    await InfrastructuresUtils.handleImportData(
+      () => this.infrastructureServer.importDataByTableType(
+        InfrastructureTablesTypes.Citizen,
+        this.filesToUpload(),
+        this.currentAuthority()!
+      ),
+      this.toaster,
+      () => this.loadData(this.infrastructureSearchFormService.form)
+    );
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-      authorityID: this.currentAuthority(),
-    };
-    const tableName = InfrastructureTablesTypes.Citizen;
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
-    }
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText,
+      { authorityID: this.currentAuthority() }
+    );
+
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.Citizen,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
 
   async handleInsertOrUpdate(
@@ -285,43 +255,35 @@ export class InfrastructuresCitizensComponent implements OnInit {
         InfrastructureTablesTypes.Citizen,
         action
       );
+      
       if (result && result?.success) {
-        this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        await this.loadData(this.infrastructureSearchFormService.form);
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
+    } catch (error) {
+      InfrastructuresUtils.handleInsertUpdateError(error, this.toaster);
     }
   }
 
   openEdit(rowData: any) {
-    // console.log(rowData);
-    rowData.city = rowData.homeAddress.city.cityName;
-    rowData.street = rowData.homeAddress.street.streetName;
-    rowData.houseNumber = rowData.homeAddress.houseNumber;
-    rowData.entrance = rowData.homeAddress.entrance;
-    rowData.apartment = rowData.homeAddress.apartment;
+    rowData.city = rowData.homeAddress?.city?.cityName;
+    rowData.street = rowData.homeAddress?.street?.streetName;
+    rowData.houseNumber = rowData.homeAddress?.houseNumber;
+    rowData.entrance = rowData.homeAddress?.entrance;
+    rowData.apartment = rowData.homeAddress?.apartment;
     rowData.phone = rowData.citizenPhoneFormatted;
-    rowData.postalCode = rowData.homeAddress.postalCode;
-    rowData.mailbox = rowData.homeAddress.mailbox;
+    rowData.postalCode = rowData.homeAddress?.postalCode;
+    rowData.mailbox = rowData.homeAddress?.mailbox;
 
     if (rowData) this.citizenID.set(rowData.citizenID);
-    this.dialogData.set(this.dialogData().map((dynamicRow) => {
-      dynamicRow.row = dynamicRow.row.map((field) => {
-        if (rowData[field.name] !== undefined) {
-          return { ...field, value: rowData[field.name] };
-        }
-        return field;
-      });
-      return dynamicRow;
-    }));
+    
+    // Map row data to dialog fields using utility
+    const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.dialogData(),
+      rowData
+    );
+    this.dialogData.set(updatedDialogData);
+    
     this.openDialogForm(true);
   }
 
@@ -331,22 +293,21 @@ export class InfrastructuresCitizensComponent implements OnInit {
     }
     
     this.loader.set(true);
-    if (filter.value) filter = filter.value;
-
-    const MIN_LOADER_TIME = 1500;
+    
+    filter = InfrastructuresUtils.normalizeFilter(filter);
+    
     const startTime = Date.now();
+    
     try {
-      this.filter.set({ ...filter });
-      const currentFilter = this.filter();
-      currentFilter.searchText =
-        this.infrastructureSearchFormService.form.value.searchText;
-
-      const updatedFilter = {
-        ...currentFilter,
-        ...filter.value,
-        searchText: currentFilter.searchText || '',
-        currentPage: currentFilter.currentPage || 1,
-      };
+      const searchText = this.infrastructureSearchFormService.form.value.searchText;
+      
+      const updatedFilter = InfrastructuresUtils.prepareLoadDataFilters(
+        this.filter(),
+        filter,
+        searchText
+      );
+      
+      this.filter.set(updatedFilter);
 
       const response = await this.infrastructureServer.getInfrastructureTable(
         updatedFilter,
@@ -358,32 +319,20 @@ export class InfrastructuresCitizensComponent implements OnInit {
         this.data.set(response.data.map((item: any) => ({
           ...item,
           homeAddressFormatted: item.homeAddress
-            ? ` ${item.homeAddress.city.cityName || ''} ${
-                item.homeAddress.street.streetName || ''
-              } ${item.homeAddress.houseNumber || ''}${
-                item.homeAddress.apartment
-                  ? `, דירה ${item.homeAddress.apartment}`
-                  : ''
-              }`
+            ? InfrastructuresUtils.formatAddress(item.homeAddress)
             : 'N/A',
-          citizenPhoneFormatted:
-            item.citizenPhones?.find((phone: any) => phone.isMain)?.phone || 'N/A',
-          city: item.homeAddress?.city.cityName || 'N/A',
+          citizenPhoneFormatted: InfrastructuresUtils.extractMainPhone(item.citizenPhones),
+          city: item.homeAddress?.city?.cityName || 'N/A',
         })));
 
         this.total.set(response.totalRecords);
         this.count.set(response.data.length);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      InfrastructuresUtils.handleError(error, 'loadData');
     }
     
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 
