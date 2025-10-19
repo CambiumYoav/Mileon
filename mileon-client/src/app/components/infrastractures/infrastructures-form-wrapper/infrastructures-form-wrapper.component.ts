@@ -68,16 +68,16 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
     this.initializeForm();
   }
 
-  private formValidationEffect = effect(() => {
-    const isSubmitted = this.isSubmitted();
-    const formGroup = this.sectionsFormGroup();
+  // private formValidationEffect = effect(() => {
+  //   const isSubmitted = this.isSubmitted();
+  //   const formGroup = this.sectionsFormGroup();
     
-    // React to form submission state changes
-    if (isSubmitted && formGroup) {
-      // Could add additional validation logic here if needed
-      this.cdr.detectChanges();
-    }
-  });
+  //   // React to form submission state changes
+  //   if (isSubmitted && formGroup) {
+  //     // Could add additional validation logic here if needed
+  //     this.cdr.detectChanges();
+  //   }
+  // });
 
   private initializeForm(): void {
     this.createSectionsForms();

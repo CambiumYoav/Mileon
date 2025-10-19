@@ -1,4 +1,4 @@
-import { Component, signal, inject, effect, DestroyRef, runInInjectionContext, Injector } from '@angular/core';
+import { Component, signal, inject, effect, runInInjectionContext, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -22,6 +22,7 @@ import {
 import { Column } from '../../../types/table';
 import { UploadedFile } from '../../../types/uploadedFile';
 import { Utils } from '../../../utils/utils';
+import { InfrastructuresUtils } from '../../../utils/infrastructuresUtils';
 import { InfrastructureExportComponent } from '../infrastructure-export/infrastructure-export.component';
 import { InfrastructureFormComponent } from '../infrastructure-form/infrastructure-form.component';
 import { InfrastructureImportComponent } from '../infrastructure-import/infrastructure-import.component';
@@ -58,7 +59,6 @@ export class InfrastructuresBusinessComponent {
   private toaster = inject(ToastrService);
   private authorityService = inject(AuthorityService);
   private routerService = inject(RouterService);
-  private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
 
   title = signal<string>(TitlesEnum.InfrastructureBusinessTitle);
@@ -150,17 +150,16 @@ export class InfrastructuresBusinessComponent {
     const form = new InfrastructureForms();
     this.dialogData.set(form.InfrastructureBusinessForm);
     
+    // Initialize search and filters using utility
+    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
+      this.searchText()
+    );
+    
     this.searchData.set({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
+      ...searchData,
       authorityID: this.currentAuthority() || undefined,
     });
-    
-    this.filter.set({
-      searchText: '',
-      currentPage: 1,
-    });
+    this.filter.set(filter);
 
     this.authorityService.setMunicipalsToNationalRegional();
   }
@@ -243,54 +242,29 @@ export class InfrastructuresBusinessComponent {
   }
 
   async importData() {
-    try {
-      const res = this.infrastructureServer
-        .importDataByTableType(
-          InfrastructureTablesTypes.Business,
-          this.filesToUpload(),
-          this.currentAuthority()!
-        )
-        .then((res) => {
-          if (res.errors) {
-            this.toaster.error(
-              ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-            );
-          } else {
-            this.toaster.success(ErrorSuccessMessages.UPLOADED_SUCCESSFULY);
-            this.loadData(this.infrastructureSearchFormService.form);
-          }
-        })
-        .catch((error) => {
-          this.toaster.error(
-            ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER
-          );
-        });
-    } catch (e) {
-      console.error('Error import data:', e);
-    }
+    await InfrastructuresUtils.handleImportData(
+      () => this.infrastructureServer.importDataByTableType(
+        InfrastructureTablesTypes.Business,
+        this.filesToUpload(),
+        this.currentAuthority()!
+      ),
+      this.toaster,
+      () => this.loadData(this.infrastructureSearchFormService.form)
+    );
   }
 
   async exportData(): Promise<void> {
-    const filter = this.infrastructureSearchFormService.form.value.searchText;
-    const filters = {
-      ...filter,
-      searchText: filter,
-      authorityID: this.currentAuthority(),
-    };
-    const tableName = InfrastructureTablesTypes.Business;
-    try {
-      await Utils.exportData(
-        filters,
-        tableName,
-        this.infrastructureServer.exportTableData.bind(
-          this.infrastructureServer
-        )
-      );
-      this.toaster.success(ErrorSuccessMessages.DOWNLOADED_SUCCESSFULY);
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
-    }
+    const filters = InfrastructuresUtils.prepareExportFilters(
+      this.infrastructureSearchFormService.form.value.searchText,
+      { authorityID: this.currentAuthority() }
+    );
+
+    await InfrastructuresUtils.handleExportData(
+      filters,
+      InfrastructureTablesTypes.Business,
+      this.infrastructureServer.exportTableData.bind(this.infrastructureServer),
+      this.toaster
+    );
   }
 
   async handleInsertOrUpdate(
@@ -309,19 +283,13 @@ export class InfrastructuresBusinessComponent {
         InfrastructureTablesTypes.Business,
         action
       );
+      
       if (result && result?.success) {
-        this.loadData(this.infrastructureSearchFormService.form);
-        this.dialog.closeAll();
-        if (action == InfrastructureTableAction.Add) {
-          this.toaster.success(ErrorSuccessMessages.ADDED_SUCCESUFULY);
-        }
-        if (action == InfrastructureTableAction.Update) {
-          this.toaster.success(ErrorSuccessMessages.UPDATED_SUCCESUFULY);
-        }
+        await this.loadData(this.infrastructureSearchFormService.form);
+        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
-    } catch (e) {
-      this.toaster.error(ErrorSuccessMessages.DEFAULT);
-      console.error(e);
+    } catch (error) {
+      InfrastructuresUtils.handleInsertUpdateError(error, this.toaster);
     }
   }
 
@@ -333,16 +301,12 @@ export class InfrastructuresBusinessComponent {
     // Store the business ID for update operations
     this.businessID.set(rowData.id || null);
     
-    // Update dialog data with the row data
-    this.dialogData.set(this.dialogData().map((dynamicRow) => {
-      dynamicRow.row = dynamicRow.row.map((field) => {
-        if ((rowData as any)[field.name] !== undefined) {
-          return { ...field, value: (rowData as any)[field.name] };
-        }
-        return field;
-      });
-      return dynamicRow;
-    }));
+    // Update dialog data with the row data using utility
+    const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
+      this.dialogData(),
+      rowData
+    );
+    this.dialogData.set(updatedDialogData);
     
     this.openDialogForm(true);
   }
@@ -353,65 +317,61 @@ export class InfrastructuresBusinessComponent {
   }
 
   private lastLoadTime = 0;
-  private readonly LOAD_DEBOUNCE_MS = 500; // Prevent rapid successive calls
 
   async loadData(filter: any) {
-    // Debounce rapid successive calls
-    const now = Date.now();
-    if (now - this.lastLoadTime < this.LOAD_DEBOUNCE_MS) {
+    // Debounce rapid successive calls using utility
+    if (InfrastructuresUtils.shouldDebounce(this.lastLoadTime)) {
       return;
     }
-    this.lastLoadTime = now;
+    this.lastLoadTime = Date.now();
 
     this.loader.set(true);
-
-    if (filter.value) filter = filter.value;
-
-    const MIN_LOADER_TIME = 1500;
+    
+    // Normalize filter using utility
+    filter = InfrastructuresUtils.normalizeFilter(filter);
+    
     const startTime = Date.now();
+    
     try {
-      this.filter.set({ ...filter });
-      this.filter.set({
-        ...this.filter(),
-        searchText: this.infrastructureSearchFormService.form.value.searchText,
-      });
-
-      const updatedFilter = {
-        ...this.filter(),
-        ...filter.value,
-      };
+      const searchText = this.infrastructureSearchFormService.form.value.searchText;
+      
+      // Prepare filters using utility
+      const updatedFilter = InfrastructuresUtils.prepareLoadDataFilters(
+        this.filter(),
+        filter,
+        searchText
+      );
+      
+      this.filter.set(updatedFilter);
+      
       const response = await this.infrastructureServer.getInfrastructureTable(
         updatedFilter,
         InfrastructureTablesTypes.Business,
         this.currentAuthority()
       );
+      
       if (response?.data) {
-        // Optimize data processing to prevent memory issues
-        const processedData = response.data.map((item: any) => {
-          const street = item.street || '';
-          const houseNumber = item.houseNumber || '';
-          const apartment = item.apartment ? `, דירה ${item.apartment}` : '';
-          
-          return {
-            ...item,
-            fullAddress: `${street} ${houseNumber}${apartment}`.trim(),
-          };
-        });
+        // Process data with formatted address using utility
+        const processedData = InfrastructuresUtils.processDataWithFormattedAddress(
+          response.data,
+          (item: any) => {
+            const street = item.street || '';
+            const houseNumber = item.houseNumber || '';
+            const apartment = item.apartment ? `, דירה ${item.apartment}` : '';
+            return `${street} ${houseNumber}${apartment}`.trim();
+          }
+        );
 
         this.data.set(processedData);
         this.total.set(response.totalRecords);
         this.count.set(response.data.length);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      InfrastructuresUtils.handleError(error, 'loadData');
     }
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-    if (remainingTime > 0) {
-      //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-      await new Promise((resolve) => setTimeout(resolve, remainingTime));
-    }
+    
+    // Ensure minimum loader time using utility
+    await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 

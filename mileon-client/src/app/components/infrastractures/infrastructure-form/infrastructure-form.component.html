@@ -18,6 +18,7 @@
                 disabled: !!field.disabled,
                 'has-checkbox': field.type === 'checkbox',
                 'has-radio': field.type === 'radio',
+                hide: !!field.hide,
                 inputError: 
                   (field.type === 'fromTo' && (
                     dynamicForm.get(field.name + '.from')?.invalid && (dynamicForm.get(field.name + '.from')?.touched || isSubmitted()) ||

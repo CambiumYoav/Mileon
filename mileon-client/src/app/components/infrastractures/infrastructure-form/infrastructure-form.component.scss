@@ -52,6 +52,7 @@
         width: 100px;
         min-width: 100px;
         max-width: 100px;
+        margin-top: auto;
       }
 
       &.Regular-size {
@@ -60,15 +61,19 @@
         max-width: 210px;
       }
 
-      // &.Double-size {
-      //   width: 430px;
-      //   min-width: 430px;
-      //   max-width: 430px;
+      &.Double-size {
+        width: 435px;
+        min-width: 435px;
+        max-width: 435px;
 
-      //   ::ng-deep .select {
-      //     width: 100%;
-      //   }
-      // }
+        ::ng-deep .select {
+          width: 100%;
+        }
+      }
+
+      &.hide {
+        display: none;
+      }
 
       .title-placeholder {
         display: none;

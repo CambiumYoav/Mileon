@@ -21,7 +21,6 @@ import {
 import { InfrastructureFilterOptions } from '../../../types/infrastructure/infrastructureFilterOptions';
 import { Column } from '../../../types/table';
 import { InfrastructureService } from '../infrastructure.service';
-import { InfrastructureSearchFormService } from '../infrastructures-search/infrastructure-search-form.service';
 import { SearchFormService } from '../../shared/search-bar/search-form.service';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
 

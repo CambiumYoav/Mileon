@@ -1,4 +1,4 @@
-import { Component, signal, inject, effect, DestroyRef, runInInjectionContext, Injector } from '@angular/core';
+import { Component, signal, inject, effect, runInInjectionContext, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -56,7 +56,6 @@ export class InfrastructureStreetsComponent {
   private authorityService = inject(AuthorityService);
   private toaster = inject(ToastrService);
   private routerService = inject(RouterService);
-  private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
 
   title = signal<string>(TitlesEnum.InfrastructureStreetsTitle);
@@ -138,7 +137,6 @@ export class InfrastructureStreetsComponent {
     const form = new InfrastructureForms();
     this.dialogData.set(form.InfrastructureStreetsForm);
     
-    // ✅ Refactored: Use utility to initialize filters
     const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(this.searchText());
     this.searchData.set(searchData);
     this.filter.set(filter);
@@ -156,7 +154,6 @@ export class InfrastructureStreetsComponent {
         dialogData = form.InfrastructureStreetsForm;
       }
       
-      // ✅ Refactored: Use utility to set authority ID in dialog data
       dialogData = InfrastructuresUtils.setAuthorityInDialogData(
         dialogData,
         this.currentAuthority()
@@ -185,7 +182,6 @@ export class InfrastructureStreetsComponent {
   }
 
   async importData() {
-    // ✅ Refactored: Use utility to handle import data
     await InfrastructuresUtils.handleImportData(
       () => this.infrastructureServer.importDataByTableType(
         InfrastructureTablesTypes.Street,
@@ -244,23 +240,19 @@ export class InfrastructureStreetsComponent {
       
       if (result?.success) {
         this.loadData(this.infrastructureSearchFormService.form);
-        // ✅ Refactored: Use utility for success handling
         InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
       }
     } catch (e) {
-      // ✅ Refactored: Use utility for error handling
       InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
     }
   }
 
   openEdit(rowData: StreetsTypes) {
-    // ✅ Refactored: Use utility for basic mapping, keep custom fromTo logic
     let updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
       this.dialogData(),
       rowData
     );
     
-    // Apply custom logic for fromTo field type
     updatedDialogData = updatedDialogData.map((dynamicRow) => ({
       ...dynamicRow,
       row: dynamicRow.row.map((field) => {
@@ -286,14 +278,12 @@ export class InfrastructureStreetsComponent {
   private lastLoadTime = 0;
 
   async loadData(filter: any) {
-    // ✅ Refactored: Use utility for debouncing
     if (InfrastructuresUtils.shouldDebounce(this.lastLoadTime)) {
       return;
     }
     this.lastLoadTime = Date.now();
 
     this.loader.set(true);
-    // ✅ Refactored: Use utility to normalize filter
     filter = InfrastructuresUtils.normalizeFilter(filter);
     
     const startTime = Date.now();
@@ -301,7 +291,6 @@ export class InfrastructureStreetsComponent {
     try {
       const searchText = this.infrastructureSearchFormService.form.value.searchText;
       
-      // ✅ Refactored: Use utility to prepare filters
       const updatedFilter = InfrastructuresUtils.prepareLoadDataFilters(
         this.filter(),
         filter,
@@ -322,16 +311,13 @@ export class InfrastructureStreetsComponent {
 
       const trimmedSearchText = searchText?.trim() || '';
 
-      // ✅ Refactored: Use utility to check import disabled state
       this.isImportDisabled.set(
         InfrastructuresUtils.shouldDisableImport(this.data().length, trimmedSearchText)
       );
     } catch (e) {
-      // ✅ Refactored: Use utility for error handling
       InfrastructuresUtils.handleError(e, 'loadData');
     }
     
-    // ✅ Refactored: Use utility for minimum loader time
     await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
@@ -339,12 +325,10 @@ export class InfrastructureStreetsComponent {
   async exportData(): Promise<void> {
     const searchText = this.infrastructureSearchFormService.form.value.searchText;
     
-    // ✅ Refactored: Use utility to prepare export filters
     const filters = InfrastructuresUtils.prepareExportFilters(searchText, {
       authorityID: this.currentAuthority(),
     });
 
-    // ✅ Refactored: Use utility to handle export
     await InfrastructuresUtils.handleExportData(
       filters,
       InfrastructureTablesTypes.Street,

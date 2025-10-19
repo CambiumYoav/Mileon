@@ -1,11 +1,10 @@
-import { Component, signal, computed, effect, inject, runInInjectionContext, Injector } from '@angular/core';
+import { Component, signal, effect, inject, runInInjectionContext, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConstPath } from '../../../constants/const_path';
 import { TitlesEnum } from '../../../types/enum/titlesEnum';
-import { FilterOptions } from '../../../types/filters/filterOptions';
 import {
   InfrastructureForms,
   InfrastructureTable,

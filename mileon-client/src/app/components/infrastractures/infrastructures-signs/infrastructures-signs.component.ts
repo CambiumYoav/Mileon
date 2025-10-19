@@ -1,4 +1,4 @@
-import { Component, signal, computed, effect, inject, OnInit, OnDestroy, runInInjectionContext, Injector } from '@angular/core';
+import { Component, signal, effect, inject, OnInit, OnDestroy, runInInjectionContext, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
@@ -28,8 +28,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
 import { AuthorityService } from '../../../services/authority.service ';
 import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
-import { SearchByTextEnum } from '../../../types/enum/searchByTextEnum';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { SearchByTextEnum } from '../../../types/enum/searchByTextEnum';  
 import { SearchFormService } from '../../shared/search-bar/search-form.service';
 import { RouterService } from '../../../services/router.service';
 import { ButtonComponent } from '../../shared/base/button/button.component';

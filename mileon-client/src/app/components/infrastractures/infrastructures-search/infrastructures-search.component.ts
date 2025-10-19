@@ -6,7 +6,6 @@ import { SearchFormService } from '../../shared/search-bar/search-form.service';
 import {
   InfrastructureFilterOptions,
 } from '../../../types/infrastructure/infrastructureFilterOptions';
-import { InfrastructureSearchFormService } from './infrastructure-search-form.service';
 import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
 
 @Component({
@@ -20,7 +19,6 @@ import { SearchBarComponent } from '../../shared/search-bar/search-bar.component
   ]
 })
 export class InfrastructuresSearchComponent implements OnInit {
-  private searchFormService = inject(SearchFormService);
   private infrastructureSearchFormService = inject(SearchFormService);
   private _baseService = inject(BaseService);
 

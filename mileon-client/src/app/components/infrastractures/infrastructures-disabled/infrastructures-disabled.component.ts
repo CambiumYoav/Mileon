@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ConstPath } from '../../../constants/const_path'; 
 import { InfrastructureTablesTypes } from '../../../types/enum/infrastructureTablesEnum';
 import { TitlesEnum } from '../../../types/enum/titlesEnum';
@@ -24,7 +23,6 @@ import {
 import { InfrastructureFilterOptions } from '../../../types/infrastructure/infrastructureFilterOptions';
 import { Column } from '../../../types/table';
 import { InfrastructureService } from '../infrastructure.service';
-import { InfrastructureSearchFormService } from '../infrastructures-search/infrastructure-search-form.service';
 import { AuthorityService } from '../../../services/authority.service ';
 import { SearchFormService } from '../../shared/search-bar/search-form.service';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
@@ -83,12 +81,12 @@ export class InfrastructuresDisabledComponent implements OnChanges {
     this.loadData(this.infrastructureSearchFormService.form);
   }
 
-  private dataChangeEffect = effect(() => {
-    const length = this.dataLength();
-    if (length >= 0) {
-      this.totalDisabled.emit(length);
-    }
-  });
+  // private dataChangeEffect = effect(() => {
+  //   const length = this.dataLength();
+  //   if (length >= 0) {
+  //     this.totalDisabled.emit(length);
+  //   }
+  // });
 
   async ngOnChanges(changes: SimpleChanges) {
     if (
