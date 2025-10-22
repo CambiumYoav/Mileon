@@ -1,0 +1,58 @@
+<div class="field-box" [ngClass]="field.size" [formGroup]="form">
+  <div class="field-inner-box" [ngClass]="field.size">
+    <!-- Title only when not selecting and not selected -->
+    @if (!isSelecting() && !selectedValue()) {
+      <div class="field-text">
+        תבנית טקסט
+      </div>
+    }
+
+    <!-- Default button to start selection -->
+    @if (!isSelecting() && !selectedValue()) {
+      <app-button
+        [buttonClass]="'primary-draft-and-letter-btn-outline'"
+        [buttonText]="'לחץ על הכפתור כדי לבחור תבנית טקסט'"
+        (click)="startSelecting()"
+      ></app-button>
+    }
+
+    <!-- Dropdown top-right, Button bottom-left -->
+    @if (isSelecting()) {
+      <div class="template-selection-container">
+        <div class="dropdown-top-right">
+          <app-select
+            fxFill
+            appearance="fill"
+            [bindLabelKeys]="field.bindLabelKeys"
+            [formControlName]="field.name"
+            [dataFunction]="field.dataFunction"
+            searchPlaceholder="חיפוש"
+            bindLabelKey="value"
+            bindValueKey="id"
+            [isMultiSelect]="false"
+            [placeholder]="'בחירת תבנית טקסט'"
+          ></app-select>
+        </div>
+
+        <div class="save-bottom-left">
+          <app-button
+            [buttonClass]="'general-btn-fill'"
+            [buttonText]="'שמור'"
+            (click)="saveSelection()"
+          ></app-button>
+        </div>
+      </div>
+    }
+
+    <!-- After save: show selected value and change button -->
+    @if (selectedValue() && !isSelecting()) {
+      <div class="template-selected">
+        <app-selected-template-field
+          [buttonText]="selectedValue()"
+          (click)="startSelecting()"
+        >
+        </app-selected-template-field>
+      </div>
+    }
+  </div>
+</div>

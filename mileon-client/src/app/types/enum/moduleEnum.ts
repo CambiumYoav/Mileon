@@ -1,4 +1,4 @@
-import { DraftsAndLetters } from './../draftsAndLettersType';
+
 export enum ModuleEnum {
   TicketsNewModule = 1,
   ParkingPermitsModule,
@@ -17,12 +17,13 @@ export enum ModuleEnum {
 
 export enum ModuleNames {
   TicketsNewModule = 'עולם הדוחות',
-  ParkingPermitsModule = 'תווי דייר',
+  ParkingPermitsModule = 'עולם התווים',
   LegalRequestsModule = 'מחלקה משפטית',
   MinistryOfInteriorModule = 'משרד הפנים',
   MinistryOfTransportModule = 'משרד התחבורה',
   InterfacesModule = 'ממשקים',
   NoticesModule = 'הפקות',
+  NoticesMain = 'ניהול',
   InfrastructureModule = 'טבלאות תשתית',
   InfrastructureLocalModule = 'טבלאות תשתית - ',
   InfrastructureAdminModule = 'טבלאות תשתית - ',
@@ -51,7 +52,7 @@ export enum ModuleNames {
   Management = 'ניהול תווים',
   NationalUsers = 'משתמשים ארצי',
   Enforcement = 'אכיפה',
-  TimelineSettings = 'ניהול סרגל אכיפה',
+  TimelineSettings = 'סרגל ניהול חיי דוח',
   Settings = 'מאפייני רשות',
   Dashboards = 'דשבורדים - ',
   DashboardsSub = 'ניתוח BI ושאילתות',
@@ -73,7 +74,11 @@ export enum ModuleNames {
   TerminalStatistics = 'חיתוכים וגרפים',
   TerminalInsperctorsMessagesComponent = 'משימות והודעות לפקח',
   DraftsAndLetters = 'ניהול גלופות ומכתבים',
-  DraftsAndLettersNewLetter='מכתב חדש',
+  DraftsAndLettersNewLetter = 'מכתב חדש',
+  ParkingPermitsTypes = 'ניהול הגדרות סוגי תווים',
+  ParkingPemitsTypesCreate = 'יצירת סוג תו חדש',
+  ParkingPermitsCreate = 'יצירת תו חניה',
+  ParkingPermitsMain = 'ניהול חיפוש תווים',
 }
 
 export enum SubModuleNames {
@@ -103,6 +108,9 @@ export enum SubModuleNames {
   TemplatesText = 'טקסטים',
   TemplatesLogo = 'לוגואים',
   TemplatesSignature = 'חתימות',
+  ParkingPermitsTypesDocumnents = '  טפסים',
+  ParkingPermitsTypesSettings = '  הגדרות',
+
 }
 
 export enum ActionModuleEnum {

@@ -1,6 +1,6 @@
 import { Validators } from '@angular/forms';
 import { ModuleEnum } from '../enum/moduleEnum';
-import { Patterns } from 'src/app/validators/validationPatterns';
+import { Patterns } from '../../validators/validationPatterns'; 
 
 export class ConfigForm {
   module: ModuleEnum;

@@ -1,0 +1,40 @@
+@import "../../../../styles/buttons.scss";
+@import "../../../../styles/form.scss";
+@import "../../../../styles/elements.scss";
+
+.wrap-card {
+  padding: 24px;
+
+  .card {
+    padding: 25px;
+    // margin: 0 auto;
+    height: 45vh;
+
+    overflow: auto;
+    .main-title {
+      display: flex;
+      justify-content: right;
+      color: var(--text, #000);
+      text-align: right;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      margin-bottom: 10px;
+      // padding: 1rem;
+      span {
+        color: #000000;
+      }
+    }
+    .input-group {
+      row-gap: 5px;
+    }
+  }
+}
+
+::ng-deep .cdk-program-focused {
+  display: none;
+}
+.required-icon {
+  margin-bottom: 2px;
+}

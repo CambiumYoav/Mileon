@@ -20,7 +20,7 @@ import { TemplatesTypesEnum } from '../types/enum/templatesTypesEnum';
 export class LookupNewService {
   apiController: string = 'Lookup';
   ticketLookups!: Lookup;
-  
+
   constructor(private httpService: HttpService) {}
 
   getAuthorities(filter?: SelectParams): Promise<ReturnedData<string>[]> {
@@ -52,7 +52,7 @@ export class LookupNewService {
     return lastValueFrom(res);
   }
 
-  getAreas(filter?: SelectParams): Promise<ReturnedData<number>[]> {
+  getAreas(filter?: SelectParams): Promise<any> {
     const res = this.httpService.getRequestWithQueryParams<ListData<number>[]>(
       `${this.apiController}/Areas`,
       filter
@@ -110,41 +110,46 @@ export class LookupNewService {
     return lastValueFrom(res);
   }
 
-  getViolationTypesList(params: {
-    authorityID: string[];
-    cityID?: string[];
-  }): Promise<any[]> {
-    //FIXME - make this dynamic
-    const authorityIDs = params.authorityID;
-
-    const id =
-      authorityIDs && authorityIDs.length > 0
-        ? authorityIDs[0]
-        : '9d24f102-dbcc-49bc-8258-0b58af257b89';
+  getViolationTypesList(filter: any): Promise<any[]> {
     const res = this.httpService.getRequest<any[]>(
-      `${this.apiController}/${id}/ViolationLookups`
+      `${this.apiController}/${filter.authorityIDs}/ViolationLookups`
     );
     return lastValueFrom(res);
   }
 
-  //FIXME - make this dynamic
+  getViolations(filter: any): Promise<any[]> {
+    const res = this.httpService.getRequest<any[]>(
+      `${this.apiController}/${filter.authorityIDs}/Violations`
+    );
+    return lastValueFrom(res);
+  }
+
   getPrintingBoard(params: {
-    authorityID: string[];
+    // authorityID: string[];
     noticeMessageOptionId: string;
   }): Promise<any> {
-    const authorityIDs = params.authorityID;
-    const id =
-      authorityIDs && authorityIDs.length > 0
-        ? authorityIDs[0]
-        : '9d24f102-dbcc-49bc-8258-0b58af257b89';
+    // const authorityIDs = params.authorityID;
+    // const id =
+    //   authorityIDs && authorityIDs.length > 0
+    //     ? authorityIDs[0]
+    //     : '9d24f102-dbcc-49bc-8258-0b58af257b89';
 
     // Use params.noticeMessageOptionId as the UUID to find the corresponding enum value
     const messageType =
       params.noticeMessageOptionId as noticeMessageOptionsEnum;
 
-    const res = this.httpService.getRequestForPdfCheck<any[]>(
-      `GetPrintingBoard?authorityId=${id}&messageType=${messageType}`
+    const res = this.httpService.getRequest<any[]>(
+      `${this.apiController}/PrintingBoards?messageType=${messageType}`
     );
+    return lastValueFrom(res);
+  }
+
+  getDraftAndLetters(filter?: SelectParams) {
+    const res = this.httpService.getRequestWithQueryParams<ListData<string>[]>(
+      `${this.apiController}/DraftsLetters`,
+      filter
+    );
+
     return lastValueFrom(res);
   }
 
@@ -231,6 +236,30 @@ export class LookupNewService {
     return lastValueFrom(res);
   }
 
+  async getUsers(filter?: SelectParams): Promise<ReturnedData<string>[]> {
+    const res = this.httpService.getRequest<ListData<string>[]>(
+      `${this.apiController}/Users`,
+      filter
+    );
+    return lastValueFrom(res);
+  }
+
+  async getManotUsers(filter?: SelectParams): Promise<ReturnedData<string>[]> {
+    const res = this.httpService.getRequest<ListData<string>[]>(
+      `${this.apiController}/ManotUsers`,
+      filter
+    );
+    return lastValueFrom(res);
+  }
+
+  async getFees(filter?: SelectParams): Promise<ReturnedData<string>[]> {
+    const res = this.httpService.getRequest<ListData<string>[]>(
+      `${this.apiController}/Fees`,
+      filter
+    );
+    return lastValueFrom(res);
+  }
+
   getYesNoOptions(): Promise<ListData<boolean>[]> {
     return Utils.toPromise(GlobalOptions.yesNoOptions);
   }
@@ -245,6 +274,25 @@ export class LookupNewService {
 
   getPopulation(): Promise<ListData<boolean>[]> {
     return Utils.toPromise(GlobalOptions.population);
+  }
+
+  getExportType(): Promise<ListData<boolean>[]> {
+    return Utils.toPromise(GlobalOptions.exportType);
+  }
+
+  getMessageType(): Promise<ListData<boolean>[]> {
+    return Utils.toPromise(GlobalOptions.messageType);
+  }
+
+  getSendingType(): Promise<ListData<boolean>[]> {
+    return Utils.toPromise(GlobalOptions.sendingType);
+  }
+
+  getPostStatus(): Promise<ListData<boolean>[]> {
+    return Utils.toPromise(GlobalOptions.postStatus);
+  }
+  getNotoceMessageType(): Promise<ListData<boolean>[]> {
+    return Utils.toPromise(GlobalOptions.postStatus);
   }
 
   getLegalRequestsLookups(): Promise<ListData<number>[]> {
@@ -290,7 +338,6 @@ export class LookupNewService {
     );
     return lastValueFrom(res);
   }
-  
   getDeliveryMethodsTypes(filter?: SelectParams): Promise<ListData<string>> {
     const res = this.httpService.getRequestWithQueryParams<ListData<string>[]>(
       `${this.apiController}/DeliveryMethods`,
@@ -298,7 +345,6 @@ export class LookupNewService {
     );
     return lastValueFrom(res);
   }
-
   getDeviceStatuses(): Promise<ListData<string>> {
     const res = this.httpService.getRequest<ListData<string>[]>(
       `${this.apiController}/DeviceStatuses`
@@ -306,9 +352,19 @@ export class LookupNewService {
     return lastValueFrom(res);
   }
 
+  // getTextTemplates(authorityId: string, filter?: SelectParams) {
+  //   const res = this.httpService.getRequest<ListData<string>[]>(
+  //     `${this.apiController}/Templates?authorityID=${authorityId}&TypeId=${TemplatesTypesEnum.TEXT}`
+  //     // filter
+  //   );
+  //   console.log('AUTH ID →', authorityId);
+  //   return lastValueFrom(res);
+  // }
+
   getTextTemplates(filter?: SelectParams) {
     const updatedFilter = {
       ...filter,
+      pageSize: 5,
       TypeId: TemplatesTypesEnum.TEXT,
     };
     const res = this.httpService.getRequestWithQueryParams<ListData<string>[]>(
@@ -321,11 +377,22 @@ export class LookupNewService {
   getImagesTemplates(filter?: SelectParams) {
     const updatedFilter = {
       ...filter,
+      pageSize: 5,
       TypeId: TemplatesTypesEnum.LOGO,
     };
     const res = this.httpService.getRequestWithQueryParams<ListData<string>[]>(
       `${this.apiController}/Templates`,
       updatedFilter
+    );
+
+    return lastValueFrom(res);
+  }
+  getParkingPermitTypesByAuthority(
+    filter?: SelectParams
+  ): Promise<ListData<number>[]> {
+    const res = this.httpService.getRequestWithQueryParams<ListData<number>[]>(
+      `${this.apiController}/PermitTypes`,
+      filter
     );
 
     return lastValueFrom(res);

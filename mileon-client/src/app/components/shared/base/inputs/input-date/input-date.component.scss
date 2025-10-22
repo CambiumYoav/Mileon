@@ -135,6 +135,15 @@ mat-datepicker-toggle {
   border: 1px solid var(--dark-grey, #606060) !important;
 }
 
+// Weekend blocked dates styling
+::ng-deep .mat-calendar-body-cell.mat-calendar-body-disabled {
+  color: #ccc !important;
+  background-color: #f8f8f8 !important;
+  border: none !important;
+  border-radius: 4px;
+  cursor: not-allowed !important;
+}
+
 
 // Hebrew month and day name styling
 ::ng-deep .mat-calendar-period-button {

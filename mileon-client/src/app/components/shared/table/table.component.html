@@ -191,8 +191,9 @@
                 }
                 @if (column.type === ColumnTypeEnum.Checkbox) {
                   <app-checkbox
-                    [initialValue]="item[column.propertyName]"
-                    (change)="onSelectedRowIdChange(item)"
+                    [checked]="item[column.propertyName]"
+                    [isDisabled]="column.isDisabled ?? null"
+                    (valueChanged)="onSelectedRowIdChange(item)"
                   ></app-checkbox>
                 }
                 @if (column.type === ColumnTypeEnum.Tag) {

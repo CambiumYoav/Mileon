@@ -98,8 +98,9 @@
 
   &:disabled,
   &.disabled {
+    pointer-events: none;
     border-radius: 4px;
-    border: 1px solid #C5C6C7;
+    border: 1px solid #C5C6C7 !important;
     background: #E3E7EB !important;
   }
 }
@@ -128,6 +129,7 @@ input[disabled].input-text,
 .hide-border-input.input-text[disabled] {
   background: #E3E7EB !important;
   background-color: #E3E7EB !important;
+  border: 1px solid #C5C6C7 !important;
 }
 
 /* Override the global hide-border-input transparent background for disabled state */
@@ -135,6 +137,7 @@ input[disabled].input-text,
 input.hide-border-input:disabled {
   background: #E3E7EB !important;
   background-color: #E3E7EB !important;
+  border: 1px solid #C5C6C7 !important;
 }
 
 .title-placeholder{

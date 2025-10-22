@@ -1,0 +1,127 @@
+<div class="container-lg p-4">
+  <div class="row pb-4 align-items-center position-relative">
+    <div class="col d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center col-5">
+        <span class="heading">{{ title() }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="wrap-card">
+    <div class="card">
+      <div class="main-title">חיפוש</div>
+
+      @if (noticeForm) {
+        <form
+          class="d-flex flex-row align-items-center"
+          [formGroup]="noticeForm"
+        >
+          <div class="input-group">
+            @for (field of noticeSearchFields; track field.name) {
+              <div class="p-2 d-flex flex-column justify-content-end">
+                @switch (field.type) {
+                  @case (FieldTypeEnum.Text) {
+                    <div
+                      class="wrap-field"
+                      [class]="'field-' + field.length"
+                    >
+                      <app-input-text
+                        [title]="field.displayName"
+                        [placeholder]="field.displayName"
+                        [formControlName]="field.name"
+                        [ngClass]="field.length"
+                        [isValid]="isFieldValid(field.name)"
+                      ></app-input-text>
+                    </div>
+                  }
+                  @case (FieldTypeEnum.Select) {
+                    <div
+                      class="wrap-field"
+                      [class]="'field-' + field.length"
+                    >
+                      <app-select
+                        fxFill
+                        [dataFunction]="field.dataFunction"
+                        bindLabelKey="value"
+                        bindValueKey="id"
+                        [title]="field.displayName"
+                        [placeholder]="field.displayName"
+                        [formControlName]="field.name"
+                        [isMultiSelect]="false"
+                        [ngClass]="field.length"
+                        [isValid]="isFieldValid(field.name)"
+                      ></app-select>
+                    </div>
+                  }
+                  @case (FieldTypeEnum.Date) {
+                    <div
+                      class="wrap-field"
+                      [class]="'field-' + field.length"
+                    >
+                      <app-input-date
+                      [isRequired]="field.isRequired ?? false"
+                        [title]="field.displayName"
+                        [formControlName]="field.name"
+                        [placeholder]="field.displayName"
+                      ></app-input-date>
+                    </div>
+                  }
+                }
+              </div>
+            }
+            <div
+              class="p-2 d-flex flex-column justify-content-flex-end ng-star-inserted"
+            >
+              <app-button 
+              class="search-btn"
+              (clickFunction)="search()"
+              buttonText="חפש">
+            </app-button>
+            </div>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+
+  <div class="constant-btns">
+    <app-button
+      [buttonText]="Buttons.ViewMana"
+      (clickFunction)="getMana()"
+      [isDisabled]="!isManaSelected()"
+    ></app-button>
+
+    <app-button
+      [buttonText]="Buttons.RestoreMana"
+      (clickFunction)="restoreMana()"
+      [isDisabled]="!isManaSelected()"
+    ></app-button>
+    <app-button
+      [isDisabled]="!isManaSelected()"
+      [buttonText]="Buttons.PostApprove"
+      (clickFunction)="openDialog(false)"
+    >
+    </app-button>
+    <app-button
+      [isDisabled]="!isManaSelected() || !isRegisteredMail()"
+      [buttonText]="Buttons.CopyReport"
+      (clickFunction)="openDialog(true)"
+    >
+    </app-button>
+  </div>
+
+  <div class="d-flex align-items-center col-5">
+    <span class="search-results"> סה"כ {{ total() }} תוצאות חיפוש </span>
+  </div>
+
+  <div class="row">
+    <app-notices-table
+      tableColumns="NoticesMainColumns"
+      [data]="productionTickets()"
+      [total]="total()"
+      [count]="count()"
+      (onFormChanges)="loadData($event)"
+      [loader]="false"
+      (onManaSelected)="onManaSelected($event)"
+    ></app-notices-table>
+  </div>
+</div>

@@ -15,6 +15,8 @@ export enum FileType {
 export enum FileTypeExtension {
   XLSX = 'xlsx',
   ZIP = 'zip',
+  TXT='txt',
+  PDF='pdf'
 }
 
 export enum FileUploadComponenetType {

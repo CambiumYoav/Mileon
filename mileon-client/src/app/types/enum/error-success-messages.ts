@@ -5,7 +5,6 @@ export enum ErrorSuccessMessages {
   SUCCESS = 'נשמר בהצלחה',
   DELETE_SUCCESSFULLY = 'נמחק בהצלחה',
   SENT_SUCCESSFULLY = 'נשלח בהצלחה',
-  SEARCH_FAILED='לא ניתן לבצע את החיפוש, אנא נסה שנית מאוחר יותר',
   INVALID_DETAILS_TRY_AGAIN = 'אחד הפרטים או יותר אינו תקין, אנא נסה שנית',
   PAYMENT_SUCCESS = 'התשלום בוצע בהצלחה',
   LIMITED_ACCOUNT = 'ישנן הגבלות על החשבון',
@@ -43,6 +42,7 @@ export enum ErrorSuccessMessages {
   TICKET_BOOK__ADDED_SUCCESSFULY = 'הפנקס נוסף בהצלחה',
   TICKET_BOOK__NOT_ADDED_SUCCESSFULY = 'שגיאה בהוספת פנקס',
   TICKET_BOOK__ERROR_TICKET_NUMBER = 'מספר פנקס לא תקין או בשימוש',
+  SEARCH_FAILED='לא ניתן לבצע את החיפוש, אנא נסה שנית מאוחר יותר',
 
   TICKET_BOOKED_CLOSED_SUCCESSFULY = 'הפנקס נסגר בהצלחה',
   TICKET_BOOKED_ASSIGNED_SUCCESSFULY = 'הפנקס הועבר בהצלחה',
@@ -55,10 +55,22 @@ export enum ErrorSuccessMessages {
   TEMPLATE_EDITED_SUCCESSFULY = 'התבנית עודכנה בהצלחה',
   FILL_REQUIRED_TEMPLATE_FIELDS = 'יש למלא את כל השדות הנדרשים בתבניות',
 
-  FAILED_EXPORT='ייצוא נכשל, אנא נסה שנית',
-  LETTER_UPDATED_SUCCESSFULY='המכתב עודכן בהצלחה',
-  LETTER_CREATED_SUCCESSFULY='המכתב נוצר בהצלחה',
-  DRAFT_UPDATED_SUCCESSFULY='הגלופה עודכנה בהצלחה',
-  DRAFT_CREATED_SUCCESSFULY='הגלופה נוצרה בהצלחה',
+  FAILED_EXPORT = 'ייצוא נכשל, אנא נסה שנית',
+  LETTER_UPDATED_SUCCESSFULY = 'המכתב עודכן בהצלחה',
+  LETTER_CREATED_SUCCESSFULY = 'המכתב נוצר בהצלחה',
+  DRAFT_UPDATED_SUCCESSFULY = 'הגלופה עודכנה בהצלחה',
+  DRAFT_CREATED_SUCCESSFULY = 'הגלופה נוצרה בהצלחה',
   COPY_CREATED_SUCCESSFULY = 'העתק נוצר בהצלחה',
+
+  PRODUCTION_SEND_TO_MAIL = 'הקבצים נשלחו למייל בהצלחה',
+  MANA_CREATED = 'מנה נוצרה בהצלחה',
+  MANA_RESTORED = 'מנה שוחזרה בהצלחה',
+  NO_TICKET_IN_MANA = 'לא נמצאו דוחות להפקה ',
+
+  PARKING_PERMIT_COUNT_UPDATED = 'כמות תווים עודכנה בהצלחה',
+  PERMIT_TYPE_EDITED_SUCCESSFULY = 'סוג תו עודכן בהצלחה',
+  PERMIT_TYPE_CREATED_SUCCESSFULY = 'סוג תו נוצר בהצלחה',
+  PERMIT_TYPE_FORMS_CREATED_SUCCESSFULY = 'הטפסים לסוג תו נוצרו בהצלחה',
+  PERMIT_TYPE_FORMS_EDITED_SUCCESSFULY = 'הטפסים לסוג תו עודכנו בהצלחה',
+  PARKING_PERMIT_REQUEST_CREATED_SUCCESSFULLY = 'בקשתך התקבלה, פרטי הבקשה יבדקו. עדכונים יתקבלו בסמס / מייל ',
 }

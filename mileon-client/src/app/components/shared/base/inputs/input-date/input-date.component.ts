@@ -32,12 +32,18 @@ export class InputDateComponent
   implements OnInit, OnDestroy, ControlValueAccessor
 { 
   private readonly _isValid = signal<boolean | undefined>(true);
+  private readonly _isRequired = signal<boolean | undefined>(false);
 
   get isValid(): boolean | undefined {
     return this._isValid();
   }
 
+  get isRequired(): boolean | undefined {
+    return this._isRequired();
+  }
+
   readonly calendarImg = ConstPath.CELANDER;
+  readonly Icons = ConstPath;
   // Set startAt to current date to ensure proper calendar rendering
   readonly startAt = new Date();
 
@@ -50,6 +56,23 @@ export class InputDateComponent
   @Input() set isValid(value: boolean | undefined) {
     this._isValid.set(value);
   }
+
+  @Input() set isRequired(value: boolean | undefined) {
+    this._isRequired.set(value);
+  }
+
+  @Input() isWeekendBlocked: boolean = false;
+
+  // Date filter functions
+  allowAllDates = (date: Date | null): boolean => {
+    return true;
+  };
+
+  noFriSat = (date: Date | null): boolean => {
+    if (!date) return false;
+    const day = date.getDay();
+    return day !== 5 && day !== 6; // Block Friday (5) and Saturday (6)
+  };
 
   constructor() {
     super(inject(Injector));

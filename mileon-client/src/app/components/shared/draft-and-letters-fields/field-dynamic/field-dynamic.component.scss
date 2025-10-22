@@ -1,0 +1,39 @@
+@import "../../../../../styles/elements.scss";
+@import "../../../../../styles/buttons.scss";
+
+.form-card {
+  background: white;
+  margin: 15px 0;
+  overflow: hidden;
+  direction: rtl;
+  width: 1170px;
+  height: 194px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1px solid #e3e7eb;
+
+  box-shadow: 0px 0px 12px -1px #d2dbe8;
+  border-radius: 8px;
+}
+// .form-container {
+//   display: flex;
+//   width: 75%;
+//   flex-wrap: wrap;
+//   margin-bottom: 50px;
+//   flex-direction: column;
+// }
+.form-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+
+:host .page-disabled {
+  pointer-events: none;           // blocks clicks on all children
+  opacity: 0.5;
+      // optional tiny dim
+}
+:host .page-disabled .ck-content {
+  user-select: none;              // no text selection
+}

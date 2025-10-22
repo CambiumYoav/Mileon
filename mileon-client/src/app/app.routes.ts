@@ -33,6 +33,12 @@ export const childRoutes: Routes = [
       import('./components/infrastractures/infrastructures-routing')
         .then(m => m.infrastructuresRoutes),
   },
+  {
+    path: ROUTE_PATH.Notices.Home, // 'notices'
+    loadChildren: () =>
+      import('./components/notices/notices-routing')
+        .then(m => m.noticesRoutes),
+  },
 ];
 export const routes: Routes = [
   { path: ``, redirectTo: 'login', pathMatch: 'full' },

@@ -46,6 +46,7 @@
           class="search-input-overlay"
           [placeholder]="searchPlaceholder"
           [formControl]="filterFormControl"
+          name="searchFilter"
           (focus)="onSearchFocus()"
           (blur)="onSearchBlur()"
           (keydown.escape)="hideSearch()"

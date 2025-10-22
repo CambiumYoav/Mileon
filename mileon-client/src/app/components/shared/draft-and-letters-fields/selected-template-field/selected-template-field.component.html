@@ -1,0 +1,9 @@
+<button class="action-btn" (click)="clickFunction.emit()">
+  <mat-icon class="remove-icon" (click)="onClick()">clear</mat-icon>
+  <div class="btn-content">
+    <img [src]="selectedIcon()" alt="add" />
+    @if (buttonTextSignal()) {
+      <span>{{ buttonTextSignal() }}</span>
+    }
+  </div>
+</button>

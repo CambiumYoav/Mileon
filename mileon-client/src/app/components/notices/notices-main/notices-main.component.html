@@ -1,0 +1,105 @@
+<div class="container-lg p-4">
+  <div class="row pb-4 align-items-center position-relative">
+    <span class="d-flex align-items-center heading col-5">{{ title() }} </span>
+  </div>
+  <div class="row pb-4">
+    <div class="header">
+      <div class="header-content">
+        <form [formGroup]="noticeForm" class="form-section">
+          <div
+            [class]="
+              'field-' + noticeMessagesFields['noticeMessageOption'].length
+            "
+            [ngSwitch]="noticeMessagesFields['noticeMessageOption']"
+          >
+            <app-select
+              [title]="noticeMessagesFields['noticeMessageOption'].displayName"
+              [formControlName]="
+                noticeMessagesFields['noticeMessageOption'].name
+              "
+              [dataFunction]="
+                noticeMessagesFields['noticeMessageOption'].dataFunction
+              "
+              searchPlaceholder="חיפוש"
+              bindLabelKey="value"
+              bindValueKey="id"
+              [isMultiSelect]="false"
+              [placeholder]="
+                noticeMessagesFields['noticeMessageOption'].displayName
+              "
+            ></app-select>
+          </div>
+        </form>
+
+        @if (selectedMessageType()) {
+          <div class="constant-btns">
+            <app-button
+              [buttonText]="Buttons.ClearData"
+              (clickFunction)="clearFormFields()"
+              [imgSrc]="Icons.TRASH"
+            ></app-button>
+
+            <app-button
+              [buttonText]="Buttons.ExportTestFile"
+              (clickFunction)="sendFormValue()"
+              [imgSrc]="Icons.EXCEL_UP"
+            ></app-button>
+
+            <app-button
+              [buttonText]="Buttons.ExportMana"
+              (clickFunction)="getFinalFile()"
+              [isDisabled]="isCraeteDisabled()"
+            ></app-button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  @if (total() && isTestExported()) {
+    <span class="result-count-msg">{{
+      total() + " " + resultCountMessage()
+    }}</span>
+  }
+</div>
+
+@if (isTypePreOrPayment()) {
+  <app-notices-pre-and-payment-messages
+    [noticeForm]="noticeForm"
+    [skipFormValidation]="skipFormValidation()"
+  ></app-notices-pre-and-payment-messages>
+}
+
+@if (isNotTypePreOrPayment()) {
+  <app-notices-demand-reminder-form3-messages
+    [noticeForm]="noticeForm"
+    [skipFormValidation]="skipFormValidation()"
+  >
+  </app-notices-demand-reminder-form3-messages>
+}
+
+@if (shouldShowNoticeTypeComponent()) {
+  <app-notices-notice-type
+    class="mb-2"
+    [noticeForm]="noticeForm"
+    [notVisibleFields]="computedNotVisibleFields()"
+    [skipFormValidation]="skipFormValidation()"
+    [settings]="enforcmentRes()"
+  ></app-notices-notice-type>
+}
+
+<app-modal
+  [title]="modalTitle()"
+  [isModalOpen]="isChangingNoticeModalOpen()"
+  [modalSize]="'full'"
+  [buttons]="modalButtons()"
+  (isModalClosed)="closeModal()"
+>
+  <div>
+    <div class="mb-2">
+      <img [src]="Icons.DANGER" />
+      <p class="text-bolder-modal">
+        שים לב! שינוי סוג הודעה תאפס את ההגדרות שביצעת. האם <br />להמשיך?
+      </p>
+    </div>
+  </div>
+</app-modal>

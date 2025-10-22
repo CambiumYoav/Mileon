@@ -1,0 +1,50 @@
+<div class="field-box" [ngClass]="field.size">
+  <div class="field-inner-box" [ngClass]="field.size">
+    @if (!isSelecting() && !hasData()) {
+      <div class="field-text">
+        גוף מכתב - טקסט חופשי
+      </div>
+    }
+
+    @if (!isSelecting() && !hasData()) {
+      <app-button
+        [buttonClass]="'primary-draft-and-letter-btn-outline'"
+        [buttonText]="'לחץ על הכפתור כדי לכתוב את גוף המכתב'"
+        (click)="startSelecting()"
+      ></app-button>
+    }
+
+    @if (isSelecting()) {
+      <div [ngClass]="field.size" class="wrapper">
+        <app-ck-editor-wrapper
+          [value]="editorData()"
+          [config]="config"
+          [isSelecting]="isSelecting()"
+          (valueChange)="emitChangedData($event)"
+          [size]="field.size"
+        ></app-ck-editor-wrapper>
+      </div>
+    }
+
+    <div class="save-bottom-left">
+      @if (isSelecting()) {
+        <app-button
+          [buttonClass]="'general-btn-fill'"
+          [buttonText]="'שמור'"
+          (click)="saveSelection()"
+        ></app-button>
+      }
+    </div>
+
+    @if (hasData() && !isSelecting()) {
+      <div class="template-selected">
+        <app-selected-template-text
+          [data]="editorData()"
+          (clickFunction)="editData($event)"
+          [size]="field.size"
+        >
+        </app-selected-template-text>
+      </div>
+    }
+  </div>
+</div>

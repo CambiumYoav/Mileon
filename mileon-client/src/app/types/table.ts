@@ -31,6 +31,7 @@ export class Column {
   icon?: string;
   hasCheckbox?: boolean;
   radioConfig?: RadioButtonConfig; // Configuration for radio buttons
+  isDisabled?: boolean;
   constructor(options: Partial<Column> = {}) {
     this.displayName = options.displayName || '';
     this.sortField = options.sortField || '';

@@ -33,6 +33,12 @@
   class="title-placeholder"
   [ngStyle]="{ 'margin-bottom': title ? '0.5rem' : '0' }"
 >
+  @if (isRequired) {
+    <img
+      class="required-icon"
+      [src]="Icons.ASTERISK_RED"
+    />
+  }
   {{ title }}
 </div>
 <div class="input-fill" [ngClass]="!isValid ? 'invalidInput' : ''">
@@ -44,8 +50,9 @@
     [formControl]="control"
     matInput
     [matDatepicker]="picker"
-    style="border: none; max-width: 115px;"
+    style="border: none;"
     [placeholder]="placeholder || 'dd/mm/yyyy, ddmmyy, dd.mm.yy'"
+    [matDatepickerFilter]="isWeekendBlocked ? noFriSat : allowAllDates"
   />
   <div>
     <mat-datepicker-toggle [disableRipple]="true" matSuffix [for]="picker">

@@ -68,21 +68,19 @@
 
 
 .disabled {
-  opacity: 0.5;
   pointer-events: none;
-  
   .select {
-    border: 1px solid #606060 !important;
+    border-radius: 4px;
+    border: 1px solid #C5C6C7;
     background: #E3E7EB !important;
     
     .search-overlay {
       background: #E3E7EB !important;
-      border: 1px solid #606060 !important;
+      border: 1px solid #C5C6C7 !important;
     }
     
     &.multiselect::before {
       background: #E3E7EB !important;
-      opacity: 0.4 !important;
     }
     
     .mat-icon {
@@ -193,6 +191,13 @@
       
       &:focus {
         outline: none;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #E3E7EB !important;
+        border: 1px solid #C5C6C7 !important;
       }
     }
     

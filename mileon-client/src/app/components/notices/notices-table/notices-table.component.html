@@ -1,0 +1,16 @@
+<app-table
+  [data]="data"
+  [columns]="columns()"
+  [total]="total"
+  [count]="count"
+  [form]="ticketForm"
+  [pageSize]="50"
+  [showPaginator]="showPaginator"
+  (onFormChanges)="emitServerSort($event)"
+  [icons]="TicketStagesIcons"
+  [loader]="loader"
+  (onRowEvent)="emitRowData($event)"
+  (onRowSelect)="emitRowData($event)"
+  (rowSelected)="emitRowData($event)"
+>
+</app-table>

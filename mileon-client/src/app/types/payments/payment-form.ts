@@ -1,7 +1,7 @@
 import {Validators} from "@angular/forms";
 import {ModuleEnum} from "../enum/moduleEnum";
 import {Address} from "../address";
-import {Patterns} from "src/app/validators/validationPatterns";
+import {Patterns} from "../../validators/validationPatterns";
 import {paymentSourceEnum} from "../enum/paymentSourceEnum";
 
 export class PaymentForm {

@@ -47,6 +47,9 @@ export class InterfaceFilter {
   seriesNumber?: number;
   inspectorName?: string;
   ticketTypeID?: number[];
+  determiningDateFrom?: Date;
+  determiningDateTo?: Date;
+  inspectorIDs?: string[];
   //TODO
   //סטטוס דואר
   //סטטוס משפטי
@@ -66,6 +69,9 @@ export class InterfaceFilter {
     this.fromCN = filters.fromCN;
     this.toCN = filters.toCN;
     this.ticketTypeID = filters.ticketTypeID;
+    this.determiningDateFrom = filters.determiningDateFrom;
+    this.determiningDateTo = filters.determiningDateTo;
+    this.inspectorIDs = filters.inspectorIDs;
   }
 }
 export class ViolationDetailsFilter {

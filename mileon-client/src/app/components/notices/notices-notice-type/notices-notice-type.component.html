@@ -1,0 +1,89 @@
+<div class="container-lg wrap-card">
+  @if (noticeForm) {
+    <form class="card" [formGroup]="noticeForm">
+      <div class="main-title">אופן ההפקה</div>
+      <div class="input-group g-3">
+        @for (field of filteredFields(); track field.name) {
+          <div class="p-2 d-flex flex-column justify-content-center">
+            <!-- <label class="title-placeholder" [for]="field.name">
+              @if (field.isRequired) {
+                <img
+                  class="required-icon"
+                  [src]="Icons.ASTERISK_RED"
+                />
+              }
+              {{ field.displayName }}
+            </label> -->
+            @switch (field.type) {
+              @case (FieldTypeEnum.Text) {
+                <div
+                  class="wrap-field"
+                  [class]="'field-' + field.length"
+                >
+                  <app-input-text
+                    [title]="field.displayName"
+                    [isRequired]="field.isRequired"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [ngClass]="field.length"
+                    [isValid]="isFieldValid(field.name)"
+                    [disabled]="field.disabled ?? false"
+                  ></app-input-text>
+                </div>
+              }
+              @case (FieldTypeEnum.Select) {
+                <div
+                  class="wrap-field"
+                  [class]="'field-' + field.length"
+                >
+                  <app-select
+                    fxFill
+                    [title]="field.displayName"
+                    [isRequired]="field.isRequired"
+                    [dataFunction]="field.dataFunction"
+                    bindLabelKey="value"
+                    bindValueKey="id"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                    [isMultiSelect]="false"
+                    [ngClass]="field.length"
+                    [isValid]="isFieldValid(field.name)"
+                    [disabled]="field.disabled ?? false"
+                  ></app-select>
+                </div>
+              }
+              @case (FieldTypeEnum.Date) {
+                <div
+                  class="wrap-field"
+                  [class]="'field-' + field.length"
+                >
+                  <app-input-date
+                    [title]="field.displayName"
+                    [formControlName]="field.name"
+                    [placeholder]="field.displayName"
+                    [isValid]="isFieldValid(field.name)"
+                    [isRequired]="field.isRequired"
+                    [isWeekendBlocked]="true"
+                  ></app-input-date>
+                  <!-- [isWeekendBlocked]="true" -->
+                </div>
+              }
+              @case (FieldTypeEnum.Checkbox) {
+                <div
+                  class="wrap-field"  
+                  [class]="'field-' + field.length"
+                >
+                  <app-input-checkbox
+                    [title]="field.displayName"
+                    [placeholder]="field.displayName"
+                    [formControlName]="field.name"
+                  ></app-input-checkbox>
+                </div>
+              }
+            }
+          </div>
+        }
+      </div>
+    </form>
+  }
+</div>

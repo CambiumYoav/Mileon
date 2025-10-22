@@ -163,4 +163,15 @@ export class InputTextComponent
       this.setDisabledState(this.disabled);
     }
   }
+
+  override setDisabledState(isDisabled: boolean): void {
+    this._disabled.set(isDisabled);
+    if (this.control) {
+      if (isDisabled) {
+        this.control.disable();
+      } else {
+        this.control.enable();
+      }
+    }
+  }
 }

@@ -2,41 +2,61 @@ import { Column, ColumnTypeEnum } from '../../table';
 
 export class NoticesTable {
   public NoticesMainColumns: Column[] = [
-    //FIXME - update the names
-
-    //ManaId
     {
       displayName: '',
-      propertyName: 'ticketID',
+      propertyName: 'manaId',
       canSort: false,
       type: ColumnTypeEnum.Hidden,
       sortByServer: true,
     },
-
     {
       displayName: '',
-      propertyName: 'ticketID',
+      propertyName: 'interfaceType',
+      canSort: false,
+      type: ColumnTypeEnum.Hidden,
+      sortByServer: true,
+    },
+    {
+      displayName: '',
+      propertyName: 'postType',
+      canSort: false,
+      type: ColumnTypeEnum.Hidden,
+      sortByServer: true,
+    },
+    {
+      displayName: '',
+      propertyName: 'selected',
       canSort: false,
       type: ColumnTypeEnum.Radio,
       sortByServer: false,
+      radioConfig: {
+        // Single radio button per row; shared name across rows ensures single selection
+        name: 'noticesRowSelect',
+        options: [
+          { value: 'selected', label: '' }
+        ],
+        allowDeselect: false,
+        direction: 'horizontal',
+        type: 'default'
+      }
     },
     {
       displayName: 'משלוח',
-      propertyName: 'ticketNumber',
+      propertyName: 'sendingNumber',
       canSort: true,
       type: ColumnTypeEnum.Text,
       sortByServer: true,
     },
     {
       displayName: 'תאריך יצירת מנה',
-      propertyName: 'nid',
+      propertyName: 'sendDate',
       canSort: true,
-      type: ColumnTypeEnum.Text,
+      type: ColumnTypeEnum.Date,
       sortByServer: true,
     },
     {
       displayName: 'הופק ע"י',
-      propertyName: 'name',
+      propertyName: 'userName',
       canSort: true,
       type: ColumnTypeEnum.Text,
       sortByServer: true,
@@ -44,86 +64,85 @@ export class NoticesTable {
     },
     {
       displayName: 'מתאריך הפקה',
-      propertyName: 'ticketTypeName',
+      propertyName: 'fromDate',
       canSort: true,
       type: ColumnTypeEnum.Date,
       sortByServer: true,
     },
     {
       displayName: 'עד תאריך הפקה',
-      propertyName: 'ticketStatusID',
+      propertyName: 'toDate',
       canSort: false,
       type: ColumnTypeEnum.Date,
       sortByServer: true,
     },
     {
       displayName: 'כמות דוחות',
-      propertyName: 'ticketStatusName',
+      propertyName: 'totalTickets',
       canSort: true,
       type: ColumnTypeEnum.Tag,
       sortByServer: true,
-      fieldId: 'ticketStatusID',
     },
     {
       displayName: 'אישור משלוח',
-      propertyName: 'ticketStageName',
+      propertyName: 'sendStatusId',
       canSort: true,
       type: ColumnTypeEnum.Text,
       sortByServer: true,
-      fieldId: 'ticketStageID',
       hasIcon: true,
     },
     {
       displayName: 'העתק דוח',
       propertyName: 'paymentBalance',
       canSort: true,
-      type: ColumnTypeEnum.Currency,
+      type: ColumnTypeEnum.Text,
       sortByServer: true,
       textColor: 'blue',
     },
 
     {
       displayName: 'תאריך קובע',
-      propertyName: 'ticketGivingDate',
+      propertyName: 'lastPaymentDate',
       canSort: true,
       type: ColumnTypeEnum.Date,
       sortByServer: true,
     },
     {
       displayName: 'סוג דוח',
-      propertyName: 'violationDate',
+      propertyName: 'ticketTypeName',
       canSort: true,
-      type: ColumnTypeEnum.Date,
+      type: ColumnTypeEnum.Text,
       sortByServer: true,
     },
     {
       displayName: 'דואר',
-      propertyName: 'additionalTicketPaymentBalance',
+      propertyName: 'displayInterfaceType', // מקומי בית דפוס
       canSort: false,
-      type: ColumnTypeEnum.Currency,
+      type: ColumnTypeEnum.Text,
       sortByServer: true,
-      textColor: 'black',
     },
     {
       displayName: 'מקור',
-      propertyName: 'authorityName',
+      propertyName: 'ticketSourceName',
       canSort: true,
       type: ColumnTypeEnum.Text,
       sortByServer: true,
     },
     {
       displayName: 'אוכלוסייה',
-      propertyName: 'ticketStageID',
+      propertyName: 'isDisabled',
       canSort: false,
       type: ColumnTypeEnum.Text,
       sortByServer: true,
     },
     {
       displayName: 'נשלח',
-      propertyName: 'ticketStageID',
+      propertyName: 'sendStatusDisplay',
       canSort: false,
       type: ColumnTypeEnum.Checkbox,
       sortByServer: true,
+      isDisabled: true,
+      
     },
   ];
 }

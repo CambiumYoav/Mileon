@@ -1,0 +1,85 @@
+@import "../../../../styles/elements.scss";
+@import "../../../../styles/form.scss";
+:host {
+  .send-btn {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .search-btn {
+    margin-top: 30%;
+  }
+}
+
+.search-results {
+  display: flex;
+  justify-content: right;
+  font-family: $fontOpenSans;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  margin-bottom: 10px;
+}
+.constant-btns {
+  width: 100%;
+  // margin-left: 50px;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // width: 100%;
+}
+
+.d-flex.align-items-center {
+  display: flex;
+  align-items: center;
+}
+
+.wrap-card {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .card {
+    padding: 20px;
+    // padding: 2rem;
+    width: 100%;
+    // height: 12vh;
+
+    overflow: auto;
+    .main-title {
+      display: flex;
+      justify-content: right;
+      font-family: $fontOpenSans;
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 24px;
+      margin-bottom: 10px;
+
+      span {
+        color: #000000;
+      }
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 100%;
+    }
+
+    .general-btn.btn-save {
+      margin-top: 25px;
+    }
+  }
+}
+
+::ng-deep .cdk-program-focused {
+  display: none;
+}

@@ -1,0 +1,13 @@
+<div class="field-inner-box" [ngClass]="sizeSignal()">
+  <div class="header">
+    <span class="title">{{ titleSignal() }}</span>
+    <app-button
+      [buttonClass]="'general-btn-fill'"
+      [buttonText]="'עריכה'"
+      (click)="onEditClick()"
+    ></app-button>
+  </div>
+  @if (safeData()) {
+    <div class="data ck-content" [innerHTML]="safeData()"></div>
+  }
+</div>

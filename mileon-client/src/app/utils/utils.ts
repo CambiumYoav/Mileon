@@ -6,7 +6,6 @@ import { InfrastructureTablesTypes } from '../types/enum/infrastructureTablesEnu
 import { DynamicRow, DynamicField, FieldOption } from '../types/infrastructure/InfrastructureTypes';
 import {
   ActionsFilter,
-  InterfaceFilter,
   OtherFilter,
   OwnerDetailsFilter,
   SourceDetailsFilter,
@@ -24,6 +23,8 @@ import { RelatedGroupEnum } from '../types/enum/relatedGroupEnum';
 import { TicketBookAction } from '../types/enum/TicketBookActionEnum';
 import { FormGroup, Validators } from '@angular/forms';
 import { DateModeEnum } from '../types/enum/dateTypeEnum';
+import { ProductionTicketsFilterOptions } from '../types/filters/prodction-tickets/productionTicketsFilterOptions';
+import { InterfaceFilter } from '../types/filters/ticket/ticketFilterOptionsNew';
 
 export class Utils {
   public static getID(ticket: TicketDetails): string {
@@ -84,6 +85,31 @@ export class Utils {
     return data;
   }
 
+  public static mapNoticeFormToProductionTicketFilterOptions(
+    formValues: any
+  ): ProductionTicketsFilterOptions {
+    // console.log(formValues);
+
+    return new ProductionTicketsFilterOptions({
+      currentPage: 1,
+      // pageSize: 200,
+      pageSize: 100,
+      searchText: formValues.ticketNumber || '',
+      authorityID: formValues.authorityID,
+      userId: formValues.userId,
+      templateId: formValues.templateId,
+      fromDate: Utils.toUtcStartOfDayISO(formValues.fromDate),  
+      toDate: Utils.toUtcExclusiveEndISO(formValues.toDate),
+      // fromDate: formValues.fromDate,
+      // toDate: formValues.toDate,
+      ticketNumber: formValues.ticketNumber,
+      interfaceFilter: new InterfaceFilter({
+        determiningDateFrom: formValues.determiningDateFrom, 
+        determiningDateTo: formValues.determiningDateTo,
+      }),
+    });
+  }
+
   public static mapNoticeFormToTicketFilterOptions(
     formValues: any
   ): TicketFilterOptions {
@@ -127,6 +153,48 @@ export class Utils {
         seriesNumber: formValues.seriesNumber,
       }),
     });
+  }
+
+  // Helpers: Local start-of-day → UTC ISO, וגרסת end-of-day exclusive (day+1)
+  public static toUtcStartOfDayISO(
+    input?: string | Date | null
+  ): string | undefined {
+    if (!input) return undefined;
+    const d = new Date(input);
+    const localStart = new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
+      0,
+      0,
+      0,
+      0
+    );
+    const utcStart = new Date(
+      localStart.getTime() - localStart.getTimezoneOffset() * 60000
+    );
+    return utcStart.toISOString();
+  }
+
+  public static toUtcExclusiveEndISO(
+    input?: string | Date | null
+  ): string | undefined {
+    if (!input) return undefined;
+    const d = new Date(input);
+    const localNextDayStart = new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate() + 1,
+      0,
+      0,
+      0,
+      0
+    );
+    const utc = new Date(
+      localNextDayStart.getTime() -
+        localNextDayStart.getTimezoneOffset() * 60000
+    );
+    return utc.toISOString();
   }
 
   public static getTicketTypeDisplayName(ticketTypeID: number): string {
@@ -424,4 +492,7 @@ export class Utils {
     // Update form validity without triggering valueChanges
     form.updateValueAndValidity({ emitEvent: false });
   }
+
+  static guidEq = (a?: string, b?: string) =>
+    (a ?? '').toLowerCase() === (b ?? '').toLowerCase();
 }

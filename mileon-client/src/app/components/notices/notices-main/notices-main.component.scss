@@ -1,0 +1,58 @@
+@import "../../../../styles/elements.scss";
+@import "../../../../styles/form.scss";
+
+
+
+.text-bold-modal {
+  font-size: 12px;
+  line-height: 16.34px;
+  font-family: $fontOpenSans;
+  font-weight: 600;
+  font-style: normal;
+}
+.text-modal {
+  font-size: 12px;
+  line-height: 16.34px;
+  font-family: $fontOpenSans;
+  font-weight: 300;
+}
+
+.text-bolder-modal {
+  font-size: 12px;
+  line-height: 16.34px;
+  font-family: $fontOpenSans;
+  font-weight: 700;
+  font-style: normal;
+}
+// .constant-btns {
+//   display: flex;
+//   gap: 10px;
+//   flex-shrink: 0;
+// }
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; // or align-items: center if you prefer
+  gap: 20px; // space between select and buttons
+}
+
+.form-section {
+  flex: 1; // takes remaining space
+  min-width: 0; // prevents overflow
+}
+
+.constant-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.result-count-msg {
+  font-size: 16px;
+  color: #a9a5a5;
+}
+
+.text {
+  align-self: normal;
+}

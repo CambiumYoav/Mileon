@@ -141,6 +141,14 @@
   ::ng-deep .mat-drawer-backdrop {
     background: transparent;
   }
+
+  // Address aria-hidden accessibility warning
+  // This is a known limitation with Angular Material's sidenav component
+  // where aria-hidden is applied to backdrop but focusable elements remain
+  ::ng-deep .mat-drawer-backdrop[aria-hidden="true"] {
+    // Ensure backdrop doesn't interfere with focus management
+    pointer-events: auto;
+  }
 }
 
 

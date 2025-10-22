@@ -1,5 +1,5 @@
 import { inspectorEnforcementActionMap } from './../maps/userMaps';
-import { ROUTE_PATH } from '../../constants/routerPath';  
+import { ROUTE_PATH } from '../../constants/routerPath';
 import { ModuleNames } from '../enum/moduleEnum';
 import { InfrastructuresFiltersEnum } from '../../constants/InfrastructuresFiltersEnum';
 import { ExternalInterfacesFiltersEnum } from '../../constants/ExternalInterfacesFiltersEnum';
@@ -35,6 +35,16 @@ export class Menus {
         active: true,
         showItem: true,
       },
+      // {
+      //   id: '3',
+      //   path: ROUTE_PATH.ParkingPermits.Home,
+      //   displayName: ModuleNames.ParkingPermitsModule,
+      //   icon: 'permits-world-menu.svg',
+      //   route: ROUTE_PATH.ParkingPermits.Home,
+      //   permissionRoute: [],
+      //   active: true,
+      //   showItem: true,
+      // },
       {
         id: '3',
         path: ROUTE_PATH.ParkingPermits.Home,
@@ -44,16 +54,61 @@ export class Menus {
         permissionRoute: [],
         active: true,
         showItem: true,
+        menuItems: [
+          {
+            id: '0',
+            path: `${ROUTE_PATH.ParkingPermits.Home}`,
+            displayName: ModuleNames.ParkingPermitsMain,
+            route: `${ROUTE_PATH.ParkingPermits.Home}`,
+            icon: 'productions-menu.svg',
+          },
+          {
+            id: '1',
+            path: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.TypesMain}`,
+            displayName: ModuleNames.ParkingPermitsTypes,
+            route: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.TypesMain}`,
+            icon: 'productions-menu.svg',
+          },
+          {
+            id: '2',
+            path: `${ROUTE_PATH.ParkingPermits.Home}/create/${ROUTE_PATH.ParkingPermits.CreateUpdateMain}`,
+            displayName: ModuleNames.ParkingPemitsTypesCreate,
+            route: `${ROUTE_PATH.ParkingPermits.Home}/create/${ROUTE_PATH.ParkingPermits.CreateUpdateMain}`,
+            icon: 'productions-menu.svg',
+          },
+          {
+            id: '3',
+            path: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.CreateNew}`,
+            displayName: ModuleNames.ParkingPermitsCreate,
+            route: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.CreateNew}`,
+            icon: 'productions-menu.svg',
+          },
+        ],
       },
       {
         id: '4',
-        path: '',
+        path: ROUTE_PATH.Notices.Home,
         displayName: ModuleNames.NoticesModule,
         icon: 'productions-menu.svg',
-        route: '',
+        route: ROUTE_PATH.Notices.Home,
         permissionRoute: [],
-        menuItems: [],
-        active: false,
+        menuItems: [
+          {
+            id: '1',
+            path: ROUTE_PATH.Notices.Home,
+            displayName: ModuleNames.NoticesModule,
+            route: ROUTE_PATH.Notices.Home,
+            icon: 'productions-menu.svg',
+          },
+          {
+            id: '2',
+            path: `${ROUTE_PATH.Notices.Home}/${ROUTE_PATH.Notices.Main}`,
+            displayName: ModuleNames.NoticesMain,
+            route: `${ROUTE_PATH.Notices.Home}/${ROUTE_PATH.Notices.Main}`,
+            icon: 'productions-menu.svg',
+          },
+        ],
+        active: true,
         showItem: true,
       },
       {
@@ -179,7 +234,7 @@ export class Menus {
         id: '8',
         path: '',
         displayName: ModuleNames.Modules,
-        icon: 'modules-menu.svg',
+        icon: 'terminal-menu.svg',
         route: '',
         permissionRoute: [],
         menuItems: [],
@@ -297,6 +352,16 @@ export class Menus {
             },
             icon: ConstPath.INFRASTRUCTURE_VEHICLES,
           },
+          // {
+          //   id: '1',
+          //   path: `${ROUTE_PATH.Infrastructure.Home}/${ROUTE_PATH.Infrastructure.VehiclesType}`,
+          //   displayName: ModuleNames.VehiclesInfrastructure,
+          //   route: `${ROUTE_PATH.Infrastructure.Home}/${ROUTE_PATH.Infrastructure.VehiclesType}`,
+          //   state: {
+          //     name: InfrastructuresFiltersEnum.Vehicles,
+          //   },
+          //   icon: ConstPath.INFRASTRUCTURE_VEHICLES,
+          // },
           {
             id: '2',
             path: `${ROUTE_PATH.Infrastructure.Home}/${ROUTE_PATH.Infrastructure.SubStages}`,
@@ -388,7 +453,7 @@ export class Menus {
             route: `${ROUTE_PATH.Management.Home}/create/${ROUTE_PATH.Management.Authority}`,
             permissionRoute: [],
             icon: ConstPath.INVENTORY,
-            active:false
+            active: false,
           },
           {
             id: '4',
@@ -397,7 +462,7 @@ export class Menus {
             route: `${ROUTE_PATH.Management.Home}/edit/${ROUTE_PATH.Management.Authority}`,
             permissionRoute: [],
             icon: ConstPath.INVENTORY,
-            active:false
+            active: false,
           },
           {
             id: '5',
@@ -604,16 +669,62 @@ export class Menus {
         route: ROUTE_PATH.ParkingPermits.Home,
         permissionRoute: [PermissionRoutes.PARKING_PERMIT],
         active: true,
+        menuItems: [
+          {
+            id: '0',
+            path: `${ROUTE_PATH.ParkingPermits.Home}`,
+            displayName: ModuleNames.ParkingPermitsModule,
+            route: `${ROUTE_PATH.ParkingPermits.Home}`,
+            icon: 'productions-menu.svg',
+          },
+          {
+            id: '1',
+            path: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.TypesMain}`,
+            displayName: ModuleNames.ParkingPermitsTypes,
+            route: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.TypesMain}`,
+            icon: 'productions-menu.svg',
+          },
+          {
+            id: '2',
+            path: `${ROUTE_PATH.ParkingPermits.Home}/create/${ROUTE_PATH.ParkingPermits.CreateUpdateMain}`,
+            displayName: ModuleNames.ParkingPemitsTypesCreate,
+            route: `${ROUTE_PATH.ParkingPermits.Home}/create/${ROUTE_PATH.ParkingPermits.CreateUpdateMain}`,
+            icon: 'productions-menu.svg',
+          },
+          {
+            id: '3',
+            path: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.CreateNew}`,
+            displayName: ModuleNames.ParkingPermitsCreate,
+            route: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.CreateNew}`,
+            icon: 'productions-menu.svg',
+          },
+        ],
       },
       {
         id: '4',
-        path: '',
+        path: ROUTE_PATH.Notices.Home,
         displayName: ModuleNames.NoticesModule,
         icon: 'productions-menu.svg',
-        route: '',
+        route: ROUTE_PATH.Notices.Home,
         permissionRoute: [],
-        menuItems: [],
-        active: false,
+        menuItems: [
+          {
+            id: '1',
+            path: ROUTE_PATH.Notices.Home,
+            displayName: ModuleNames.NoticesModule,
+            route: ROUTE_PATH.Notices.Home,
+            icon: 'productions-menu.svg',
+          },
+          {
+            id: '2',
+            path: `${ROUTE_PATH.Notices.Home}/${ROUTE_PATH.Notices.Main}`,
+            displayName: ModuleNames.NoticesMain,
+            route: `${ROUTE_PATH.Notices.Home}/${ROUTE_PATH.Notices.Main}`,
+            icon: 'productions-menu.svg',
+          },
+        ],
+        active: true,
+        showItem: true,
       },
       {
         id: '5',
@@ -666,7 +777,7 @@ export class Menus {
         displayName: ModuleNames.Msofon,
         icon: 'terminal-menu.svg',
         route: ROUTE_PATH.Terminal.Home,
-        permissionRoute: [],
+        permissionRoute: [PermissionRoutes.INFRASTRUCTURE_TABLES],
         active: true,
         menuItems: [
           {
@@ -892,8 +1003,8 @@ export class Menus {
         displayName: ModuleNames.Settings,
         icon: 'municipal-menu.svg',
         route: ROUTE_PATH.Management.Home,
-        permissionRoute: [],
-        active: false,
+        permissionRoute: [PermissionRoutes.INFRASTRUCTURE_TABLES],
+        active: true,
         showItem: true,
         menuItems: [
           {
@@ -909,6 +1020,23 @@ export class Menus {
             displayName: ModuleNames.InventoryManagement,
             route: ROUTE_PATH.InventoryManagement.Home,
             permissionRoute: [],
+          },
+          {
+            id: '3',
+            path: `${ROUTE_PATH.Management.Home}/edit/${ROUTE_PATH.Management.Authority}`,
+            displayName: ModuleNames.AuthoritySettings,
+            route: `${ROUTE_PATH.Management.Home}/edit/${ROUTE_PATH.Management.Authority}`,
+            permissionRoute: [PermissionRoutes.INFRASTRUCTURE_TABLES],
+            icon: ConstPath.INVENTORY,
+            active: false,
+          },
+          {
+            id: '4',
+            path: `${ROUTE_PATH.Management.Home}/${ROUTE_PATH.Management.DraftsAndLetters}`,
+            displayName: ModuleNames.DraftsAndLetters,
+            route: `${ROUTE_PATH.Management.Home}/${ROUTE_PATH.Management.DraftsAndLetters}`,
+            permissionRoute: [],
+            icon: ConstPath.INVENTORY,
           },
           // {
           //   id: '3',

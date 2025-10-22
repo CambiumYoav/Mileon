@@ -1,0 +1,53 @@
+@if (form()) {
+  <form [formGroup]="form()!" (ngSubmit)="triggerSubmit()" [class.page-disabled]="isDisable">
+    <div class="form-rows">
+      @for (row of rows; track row) {
+        <div class="form-row">
+          @for (field of row.row; track field.name) {
+            @if (!field.hide) {
+              <div class="form-field" [ngClass]="field.size">
+                @switch (field.type) {
+                  @case ('details') {
+                    <app-field-details
+                      (formSubmitted)="onDetailsFormSubmit($event)"
+                      (isIndictmentChanged)="onIsIndictmentChanged($event)"
+                      [isDraft]="isDraft"
+                      [isEdit]="isEdit"
+                      #fieldDetailsRef
+                    ></app-field-details>
+                  }
+                  
+                  @case ('text') {
+                    <app-field-text
+                      [field]="field"
+                      [form]="form()!"
+                      [textsOptions]="textsOptions"
+                    ></app-field-text>
+                  }
+                  
+                  @case ('image') {
+                    <app-field-image
+                      [field]="field"
+                      [form]="form()!"
+                      [imagesOptions]="imagesOptions"
+                      (valueChanged)="onCustomFieldValueChanged(field.name, $event)"
+                    ></app-field-image>
+                  }
+                  
+                  @case ('text-area') {
+                    <app-field-text-editor
+                      [field]="field"
+                      [form]="form()!"
+                      [textData]="field.value"
+                      (editorDataChange)="onEditorDataChange($event, field.name)"
+                    ></app-field-text-editor>
+                  }
+                }
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+  </form>
+}

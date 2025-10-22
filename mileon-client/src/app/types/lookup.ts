@@ -51,19 +51,66 @@ export class GlobalOptions {
 
   public static population = [
     {
+      id: true,
+      value: 'נכים',
+    },
+    {
+      id: false,
+      value: 'לא נכים',
+    },
+  ];
+  public static exportType = [
+    {
+      id: false,
+      value: 'הכל',
+    },
+    {
+      id: false,
+      value: 'ת.ז',
+    },
+    {
+      id: true,
+      value: ' ח.פ',
+    },
+  ];
+
+  public static messageType = [
+    {
+      id: false,
+      value: 'בודדת',
+    },
+    {
+      id: true,
+      value: 'מרוכזת',
+    },
+  ];
+
+  public static sendingType = [
+    {
+      id: 1,
+      value: 'דואר רגיל',
+    },
+    {
+      id: 2,
+      value: 'דואר רשום',
+    },
+  ];
+
+  public static postStatus = [
+    {
       id: 1,
       value: 'הכל',
     },
     {
       id: 2,
-      value: 'נכים',
+      value: 'אי מסירה',
     },
     {
-      id: 2,
-      value: 'לא נכים',
+      id: 3,
+      value: 'מסירה',
     },
   ];
-  
+
   public static permitBy = [
     {
       id: PermitByEnum.ALL_CITY,

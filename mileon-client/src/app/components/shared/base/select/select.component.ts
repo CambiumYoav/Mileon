@@ -137,12 +137,18 @@ export class SelectComponent
   }
 
   ngOnInit(): void {
+    // Ensure there is always a control instance to bind to
+    const parentControl = this.formControl || this.controlContainer.control?.get(this.formControlName);
+    if (!parentControl) {
+      this.formControl = new FormControl('');
+    }
+
     // Initialize listObj$ after constructor
     this.listObj$ = this.selectService.listsObj.asObservable();
     
     
     // Ensure multi-select controls always have array values
-    if (this.isMultiSelect) {
+    if (this.isMultiSelect && this.control) {
       if (!this.control.value || !Array.isArray(this.control.value)) {
         this.control.setValue([]);
       }
@@ -580,7 +586,9 @@ export class SelectComponent
    */
   trackByItemId(index: number, item: any): any {
     const bindValueKey = this.bindValueKey || 'id';
-    return item?.id ?? item?.value ?? item?.[bindValueKey] ?? index;
+    // Prefer a stable identifier, but append index to avoid NG0955 on duplicate keys
+    const stableId = item?.[bindValueKey] ?? item?.id ?? item?.value;
+    return stableId !== undefined && stableId !== null ? `${stableId}__${index}` : index;
   }
 
   /**
