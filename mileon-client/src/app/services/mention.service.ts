@@ -46,7 +46,7 @@ export class MentionService {
             pageSize,
           };
 
-          const res = await this.authorityManagementService.getSystemFields(
+          const res = await this.authorityManagementService.getSystemFields(  
             moduleId,
             body
           );

@@ -31,10 +31,13 @@ import { SelectComponent } from "../../base/select/select.component";
   ],
 })
 export class FieldTextComponent implements OnInit {
-  @Input() textsOptions: IdValue[] = [];
+  @Input() set textsOptions(value: IdValue[]) {
+    this._textsOptions.set(value);
+  }
   @Input() field!: DynamicField;
   @Input() form!: FormGroup;
 
+  private readonly _textsOptions = signal<IdValue[]>([]);
   private readonly _isSelecting = signal<boolean>(false);
   private readonly _currentSelection = signal<IdValue | null>(null);
 
@@ -43,7 +46,8 @@ export class FieldTextComponent implements OnInit {
   
   readonly selectedValue = computed(() => {
     const id = this.form.get(this.field.name)?.value;
-    const selected = this.textsOptions.find((opt) => opt.id === id);
+    const options = this._textsOptions();
+    const selected = options.find((opt: IdValue) => opt.id === id);
     return selected?.value ?? '';
   });
 

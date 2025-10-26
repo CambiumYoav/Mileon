@@ -19,16 +19,17 @@
   overflow: visible;
   flex-shrink: 0;
   height: auto;
-  min-height: 40px;
-  max-height: 60px;
+  position: relative;
+  z-index: 1;
+  background-color: transparent !important;
 }
 
 :host ::ng-deep .ck.ck-toolbar {
-  width: auto !important;
+  background-color: transparent !important;
+  width: 100% !important;
   height: auto !important;
   min-height: 40px !important;
   max-height: 60px !important;
-
   overflow: visible !important;
   justify-content: flex-start !important;
   text-align: left !important;
@@ -38,43 +39,41 @@
   box-sizing: border-box;
   direction: rtl !important;
   border: none !important;
-  flex-wrap: nowrap !important;
+  flex-wrap: wrap !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 :host ::ng-deep .ck.ck-toolbar button {
   margin-inline-start: 4px;
   margin-inline-end: 0;
+  height: 30px !important;
+  min-width: 30px !important;
+  border: none !important;
+  background-color: transparent !important;
 }
+
+
 
 :host ::ng-deep .ck-dropdown__panel {
-  z-index: 9999 !important;
+  z-index: 10000 !important;
+  position: absolute !important;
 }
 
-.ck.ck-content.ck-editor__editable_inline {
-  // min-height: 285px;
-  //   min-height: 85%;
+:host ::ng-deep .ck-dropdown {
+  position: relative !important;
+}
+
+:host ::ng-deep .ck.ck-content.ck-editor__editable_inline {
   padding: 1rem;
   border-top: 1px solid #98a2b3;
   width: 100%;
   box-sizing: border-box;
   direction: rtl !important;
-
-  &.Regular-size {
-    max-height: 285px;
-    min-height: 90%;
-  }
-  &.Small-size {
-    max-height: 80px;
-    min-height: 80%;
-  }
-  &.Double-size {
-    max-height: 80px;
-    min-height: 95%;
-  }
-  //   max-height:285px;
+  overflow-y: auto;
 }
 
-.ck.ck-content.ck-editor__editable_inline:focus {
+:host ::ng-deep .ck.ck-content.ck-editor__editable_inline:focus {
   border: none !important;
   box-shadow: none !important;
   outline: none !important;
@@ -135,23 +134,25 @@
 
 // Error styling for CKEditor
 :host ::ng-deep .ck-editor__editable.ck-error {
-  border-color: crimson !important;
-  border: 1px solid crimson !important;
+  border-color: #dc3545 !important;
+  border: 1px solid #dc3545 !important;
   border-radius: 4px !important;
 
   // Override the default border-top when in error state
   &:focus {
-    border: 1px solid crimson !important;
+    border: 1px solid #dc3545 !important;
+    border-top: 1px solid #dc3545 !important;
   }
 }
 
 // Alternative: Host-based conditional styling
 :host(.has-error) ::ng-deep .ck-editor__editable {
-  border-color: crimson !important;
-  border: 1px solid crimson !important;
+  border-color: #dc3545 !important;
+  border: 1px solid #dc3545 !important;
   border-radius: 4px !important;
 
   &:focus {
-    border: 1px solid crimson !important;
+    border: 1px solid #dc3545 !important;
+    border-top: 1px solid #dc3545 !important;
   }
 }

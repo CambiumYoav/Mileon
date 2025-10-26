@@ -7,19 +7,11 @@
       </div>
     </div>
     <div class="mt-5">
-      <!-- Tabs group component removed - needs to be implemented -->
-      <div class="tabs-container">
-        @for (tab of tabs; track tab.name) {
-          <button 
-            class="tab-button"
-            [class.active]="currentActive === tab.text"
-            (click)="changeTab(tab)"
-            [disabled]="tab.disabled"
-          >
-            {{ tab.text }}
-          </button>
-        }
-      </div>
+      <app-tabs-group
+        [tabs]="tabs"
+        (action)="changeTab($event)"
+        [currentActive]="currentActive"
+      ></app-tabs-group>
     </div>
   </div>
 

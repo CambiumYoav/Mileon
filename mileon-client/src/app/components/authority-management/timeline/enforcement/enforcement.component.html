@@ -1,0 +1,11 @@
+@if (steps().length > 0) {
+  <app-ticket-timeline-bar
+    [formState]="form()?.value"
+    [steps]="steps()"
+    [isFirstTime]="isFirstTime()"
+  ></app-ticket-timeline-bar>
+}
+<router-outlet></router-outlet>
+<div class="submit-button">
+  <button [disabled]="!formState()" (click)="submit()">שמור שינויים</button>
+</div>

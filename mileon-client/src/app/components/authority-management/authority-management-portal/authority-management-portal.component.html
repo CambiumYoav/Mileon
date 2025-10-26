@@ -1,0 +1,90 @@
+<div class="card">
+  <div class="title-section">
+    <div class="title">
+      {{ title() }}
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="form-container">
+      <form [formGroup]="dynamicForm" class="form-row" *ngIf="dynamicForm">
+        <div
+          *ngFor="let field of form[0].row"
+          class="form-field"
+          [ngClass]="{
+            disabled: !!field.disabled,
+            inputError: hasSubmitted() && dynamicForm.get(field.name)?.invalid
+          }"
+        >
+          <label class="title-placeholder direction-rtl" [for]="field.name">
+            <img
+              *ngIf="field.isRequired"
+              class="required-icon"
+              [src]="Icons.ASTERISK_RED"
+            />
+            {{ field.label }}
+          </label>
+
+          <input
+            class="form-control"
+            [id]="field.name"
+            [type]="field.type"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder"
+          />
+        </div>
+      </form>
+    </div>
+    <app-authority-management-portal-table
+      tableId="table1"
+      [title]="generalTitle()"
+      [data]="generalData()"
+      (valuesChanged)="onTableValuesChanged($event)"
+    >
+    </app-authority-management-portal-table>
+    <app-authority-management-portal-table
+      tableId="table2"
+      [data]="extraData()"
+      [activeColumns]="['parking']"
+      [title]="extraTitle()"
+      (valuesChanged)="onTableValuesChanged($event)"
+    >
+    </app-authority-management-portal-table>
+    <!-- </div> -->
+    <div
+      class="d-flex mt-4"
+      [ngClass]="{
+        'justify-content-between': !isEditMode,
+        'justify-content-end': isEditMode
+      }"
+    >
+      @if (!isEditMode) {
+        <app-button
+          [buttonClass]="'secondary-btn outline-btn'"
+          class="constant-btns mt-2"
+          (clickFunction)="back()"
+          [buttonText]="'חזור '"
+        ></app-button>
+      }
+      @if (!isEditMode) {
+        <app-button
+          class="constant-btns mt-2"
+          [buttonText]="' הבא'"
+          (clickFunction)="submitForm()"
+        ></app-button>
+      }
+      @if (isEditMode) {
+        <app-button
+          class="constant-btns mt-2"
+          [buttonText]="'שמור '"
+          (clickFunction)="openModal()"
+        ></app-button>
+      }
+    </div>
+  </div>
+</div>
+
+<app-confirmation-modal
+  [isModalOpen]="isModalOpen()"
+  (onConfirm)="submitForm()"
+  (isModalClosed)="closeModal()"
+></app-confirmation-modal>

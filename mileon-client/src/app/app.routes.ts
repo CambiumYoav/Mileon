@@ -39,6 +39,12 @@ export const childRoutes: Routes = [
       import('./components/notices/notices-routing')
         .then(m => m.noticesRoutes),
   },
+  {
+    path: ROUTE_PATH.Management.Home, // 'management'
+    loadChildren: () =>
+      import('./components/authority-management/authority-management-routing')
+        .then(m => m.authorityManagementRoutes),
+  },
 ];
 export const routes: Routes = [
   { path: ``, redirectTo: 'login', pathMatch: 'full' },

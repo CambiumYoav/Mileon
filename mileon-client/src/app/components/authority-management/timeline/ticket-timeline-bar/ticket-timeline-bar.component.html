@@ -1,9 +1,9 @@
 <div class="time-line">
-  <ng-container *ngIf="steps.length > 0">
-    <ng-container *ngFor="let step of steps; let i = index; let last = last">
+  @if (stepsSignal().length > 0) {
+    @for (step of stepsSignal(); track step.enumName; let i = $index; let last = $last) {
       <div
         class="step"
-        [ngClass]="{ selected: selectedStep?.text === step?.text }"
+        [ngClass]="{ selected: selectedStep().text === step.text }"
       >
         <div class="stage">
           {{ step.text }}
@@ -22,43 +22,48 @@
             updated: step.isUpdated && step.errors === 0,
             'has-errors': step.errors > 0,
             'has-updates': step.updatedCount > 0 && step.errors === 0,
-            'step-missed': formSubmitted && !step.seen && isFirstTime
+            'step-missed': formSubmitted() && !step.seen && isFirstTimeSignal()
           }"
           (click)="moveTo(step)"
         >
           <img [src]="'assets/icons/time-line/' + step.imgSrc" loading="lazy" />
 
-          <div class="errors-container" *ngIf="step.errors > 0">
-            <div class="errors">
-              <span>{{ step.errors }}</span>
+          @if (step.errors > 0) {
+            <div class="errors-container">
+              <div class="errors">
+                <span>{{ step.errors }}</span>
+              </div>
             </div>
-          </div>
+          }
 
-          <div
-            class="updated-container"
-            *ngIf="step.updatedCount > 0 && step.errors === 0"
-          >
-            <div class="updated">
-              <span>{{ step.updatedCount }}</span>
+          @if (step.updatedCount > 0 && step.errors === 0) {
+            <div class="updated-container">
+              <div class="updated">
+                <span>{{ step.updatedCount }}</span>
+              </div>
             </div>
+          }
+        </div>
+        @if (step.isMoveable) {
+          <div class="change-order">
+            <button (click)="changeOrder(step)">
+              @if (step.order !== switchStep()?.order) {
+                <img
+                  [src]="'assets/icons/time-line/cross-arrows.svg'"
+                  loading="lazy"
+                />
+              }
+              @if (step.order === switchStep()?.order) {
+                <img
+                  [src]="'assets/icons/time-line/cross-arrows-selected.svg'"
+                  loading="lazy"
+                />
+              }
+            </button>
           </div>
-        </div>
-        <div class="change-order" *ngIf="step.isMoveable">
-          <button (click)="changeOrder(step)">
-            <img
-              *ngIf="step.order !== switchStep?.order"
-              [src]="'assets/icons/time-line/cross-arrows.svg'"
-              loading="lazy"
-            />
-            <img
-              *ngIf="step.order === switchStep?.order"
-              [src]="'assets/icons/time-line/cross-arrows-selected.svg'"
-              loading="lazy"
-            />
-          </button>
-        </div>
+        }
       </div>
       <div class="line" [ngStyle]="{ width: step.lineWidth }"></div>
-    </ng-container>
-  </ng-container>
+    }
+  }
 </div>

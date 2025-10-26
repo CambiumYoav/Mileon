@@ -1,0 +1,81 @@
+@import "../../../../styles/elements.scss";
+.card {
+  height: 100%;
+  border-radius: 8px;
+  background-color: white;
+  direction: rtl;
+  padding: 25px;
+
+  .table-card {
+    flex: 1 1 auto;
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+
+.title-section {
+  .title {
+    font-family: $fontOpenSans;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+}
+
+.constant-btns {
+  display: flex;
+  justify-content: end;
+  ::ng-deep app-button {
+    button {
+      margin: 0;
+      margin-right: 10px;
+    }
+  }
+}
+
+.form-container {
+  display: flex;
+  width: 75%;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  flex-direction: column;
+
+  .form-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; // Add this to allow wrapping
+    gap: 15px; // Add gap for spacing
+  }
+}
+.form-field {
+  position: relative;
+  margin-top: 30px;
+  margin-left: 15px;
+  display: flex;
+  flex-direction: column;
+  //   direction: rtl;
+  direction: ltr;
+  width: 517px;
+  .title-placeholder {
+    direction: rtl;
+  }
+}
+.required-icon {
+  margin-bottom: 2px;
+}
+
+.inputError {
+  input {
+    border-color: crimson !important;
+    border: 1px solid;
+    border-radius: 4px;
+  }
+}
+// .form-field.inputError input {
+//   border-color: crimson !important;
+//   border: 1px solid crimson !important;
+//   border-radius: 4px;
+// }

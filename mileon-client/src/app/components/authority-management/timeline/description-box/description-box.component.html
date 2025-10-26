@@ -1,0 +1,20 @@
+<div class="description">
+  @if (title) {
+    <h5>{{ title }}</h5>
+  }
+  <div class="steps">
+    @for (step of descriptionSteps; track step.step; let last = $last) {
+      <div class="step">
+        <div class="flow-title">
+          <div class="dot"></div>
+          <h6>{{ step.step }}</h6>
+        </div>
+        @if (!last && descriptionSteps.length > 1) {
+          <div class="flow">
+            <img [src]="Icons.STEPS_LINES" alt="" />
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

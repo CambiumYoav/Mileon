@@ -1,0 +1,145 @@
+<div class="card">
+  <div class="card-content">
+    <div class="menu-card">
+      @if (menu()) {
+        <mat-nav-list>
+          @for (item of menu()!.menuItems; track item.id) {
+            @if (item.showItem) {
+              <mat-list-item
+                class="parent cursor-pointer"
+                [ngClass]="{ disabled: !item.active, 'expanded-item': item.expanded }"
+                (click)="
+                  !item.menuItems?.length
+                    ? openForm(item.id)
+                    : (item.expanded = !item.expanded)
+                "
+              >
+                <div class="menu-item-container">
+                  @if (item.icon) {
+                    <div class="icon-wrapper">
+                      <img
+                        class="icon"
+                        [src]="'../assets/icons/' + item.icon"
+                        [alt]="item.displayName"
+                      />
+                    </div>
+                  }
+
+                  <div class="label-wrapper">
+                    <span
+                      class="menu-item-title"
+                      [ngClass]="{ bold: item.expanded }"
+                    >
+                      {{ item.displayName }} {{ item.subDisplayName }}
+                    </span>
+                  </div>
+
+                  @if (item.menuItems?.length) {
+                    <div
+                      class="menu-button"
+                      (click)="
+                        item.expanded = !item.expanded; $event.stopPropagation()
+                      "
+                      [ngClass]="{ rotated: item.expanded }"
+                    >
+                      <img
+                        class="arrow-icon"
+                        src="../../../../assets/icons/arrow-bottom.svg"
+                        alt="arrow-bottom"
+                      />
+                    </div>
+                  }
+                </div>
+              </mat-list-item>
+            }
+
+            @if (item.menuItems?.length) {
+              <div
+                class="submenu"
+                [ngClass]="{ expanded: item.expanded }"
+              >
+                @for (subItem of item.menuItems; track subItem.id) {
+                  <mat-list-item (click)="openForm(subItem.id)">
+                    <div class="w-15"></div>
+                    <div
+                      class="w-85 menu-item sub-menu-item-title"
+                      [ngClass]="{ selected: subItem.id === currentFormId() }"
+                    >
+                      <div>
+                        {{ subItem.displayName }}
+                      </div>
+                    </div>
+                  </mat-list-item>
+                  @if (subItem.menuItems?.length && isExpanded()) {
+                    <div
+                      class="submenu"
+                      [ngClass]="{ expanded: subItem.expanded }"
+                    >
+                      @for (subSubItem of subItem.menuItems; track subSubItem.id) {
+                        <mat-list-item [ngClass]="{ selected: isItemSelected() }">{{
+                          subSubItem.displayName
+                        }}</mat-list-item>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            }
+          }
+        </mat-nav-list>
+      }
+    </div>
+
+    <div class='card-content-table'>
+      <div class="title-section">
+        <div class="title">
+          {{ title }}
+        </div>
+      </div>
+      <div class="table-card">
+        <app-authority-management-forms-table
+          [data]="data()"
+          (emitValues)="getUpdatedFormValues($event)"
+        >
+        </app-authority-management-forms-table>
+        <div
+          class="d-flex mt-4"
+          [ngClass]="{
+            'justify-content-between': !isEditMode,
+            'justify-content-end': isEditMode
+          }"
+        >
+          @if (!isEditMode) {
+            <app-button
+              [buttonClass]="'secondary-btn outline-btn'"
+              class="constant-btns mt-2"
+              (clickFunction)="back()"
+              [buttonText]="'חזור '"
+            ></app-button>
+          }
+          @if (!isEditMode && isItemSelected()) {
+            <app-button
+              class="constant-btns mt-2"
+              (clickFunction)="saveAuthorityForms()"
+              [buttonText]="'יצירת רשות '"
+              [buttonClass]="'general-btn-fill '"
+            ></app-button>
+          }
+          @if (isEditMode && isItemSelected()) {
+            <app-button
+              class="constant-btns mt-2"
+              [buttonText]="' שמור'"
+              (clickFunction)="openModal()"
+            ></app-button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-confirmation-modal
+    [isModalOpen]="isModalOpen()"
+    (onConfirm)="saveAuthorityForms()"
+    (isModalClosed)="closeModal()"
+  ></app-confirmation-modal>
+</div>

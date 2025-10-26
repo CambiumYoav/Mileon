@@ -1,0 +1,46 @@
+@import "../../../../styles/elements.scss";
+
+.tab-button {
+  background: #f7f9fc;
+  border: 1px solid #b9c6d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px 12px 21px;
+  gap: 9px;
+  font-size: 16px;
+  border: 1px solid #b9c6d4;
+  width: 150px !important;
+  min-height: 50px !important;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+
+  &:hover {
+    background: #D4F8D3;
+  }
+}
+
+.active {
+  background: #D4F8D3;
+}
+
+.btn-group {
+  & .disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
+.tab-button:first-of-type {
+  padding: 10px 39px 12px 40px;
+  border-radius: 0px 8px 8px 0px;
+}
+
+.tab-button:last-of-type {
+  border-radius: 8px 0px 0px 8px;
+}
+
+.total {
+  color: $colorDarkBlue;
+}

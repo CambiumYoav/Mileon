@@ -1,0 +1,88 @@
+@import "./../../../../../styles/elements.scss";
+/* Table Styling */
+.table-wrapper {
+  border: 1px solid #ccc;
+  overflow-y: auto;
+  border-radius: 8px;
+  transform: rotate(0deg);
+  margin-bottom: 20px;
+}
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Ensures equal column widths */
+}
+
+/* Header Styling */
+.custom-table thead {
+  tr {
+    th {
+      background-color: $backGroundLightBlue;
+      color: black;
+      text-align: right;
+      font-weight: 400;
+      width: 33.33%; /* Ensures equal column widths */
+      padding: 10px 35px;
+
+      &.column-start {
+        border-radius: 0 5px 0 0;
+        border-bottom: 1px solid #ccc;
+      }
+      &.column-middle {
+        border-right: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+      }
+      &.column-end {
+        border-radius: 5px 0 0 0;
+        border-bottom: 1px solid #ccc;
+      }
+    }
+  }
+}
+
+/* Body Styling */
+.custom-table tbody {
+  min-height: 200px;
+  display: table-row-group; /* Default table display for alignment */
+}
+
+/* Row and Cell Styling */
+.custom-table tr {
+  height: 50px; /* Optional: Set row height */
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  label {
+    text-align: right;
+    font-weight: 600;
+    .required {
+      color: red;
+    }
+  }
+  input {
+    width: 250px;
+  }
+}
+
+.custom-table td {
+  text-align: center;
+  height: 344px;
+  vertical-align: initial;
+  
+  .components-wrapper {
+    display: flex;
+    padding: 30px 20px;
+    flex-direction: column;
+    .form-field{
+      margin-bottom: 20px;
+    }
+  }
+  &.column-middle {
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+  }
+}

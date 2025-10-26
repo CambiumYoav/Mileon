@@ -1,0 +1,38 @@
+<div class="mt-3">
+  @if (isEditMode()) {
+    <app-authority-management-search
+      (onSearch)="getTemplatesFromServer($event)"
+      [searchData]="searchData"
+      [resultData]="templates()"
+      [total]="total"
+      [searchByText]="signatureSearch"
+    >
+    </app-authority-management-search>
+  }
+
+  @if (!isEditMode()) {
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+      <span class="second-title">  ניהול תבניות לוגואים למכתבים וגלופות</span>
+    </div>
+  }
+
+  <div class="template-list-wrapper" (scroll)="onScroll($event)">
+    <div class="template-list-row">
+      @for (template of templates(); track template.templateID) {
+        <app-template-preview
+          [template]="template"
+          (editTemplate)="onEditTemplate($event)"
+          [isPic]="true"
+        ></app-template-preview>
+      }
+
+      @if (isEditMode()) {
+        <app-template-preview
+          [template]="newTemplatePlaceholder"
+          (addNewTemplate)="onAddNewTemplate()"
+          [isPic]="true"
+        ></app-template-preview>
+      }
+    </div>
+  </div>
+</div>

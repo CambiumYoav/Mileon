@@ -32,6 +32,8 @@ import { CheckboxOption } from '../../base/inputs/input-checkbox-option-group/in
 import { DraftsAndLettersTypes } from '../../../../types/enum/draftAndLetters.enum';
 import { SelectComponent } from '../../base/select/select.component';
 import { InputCheckboxOptionGroupComponent } from '../../base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
+import { InputTextComponent } from '../../base/inputs/input-text/input-text.component';
+import { InputCheckboxComponent } from '../../base/inputs/input-checkbox/input-checkbox.component';
 
 @Component({
   selector: 'app-field-details',
@@ -44,6 +46,8 @@ import { InputCheckboxOptionGroupComponent } from '../../base/inputs/input-check
     ReactiveFormsModule,
     SelectComponent,
     InputCheckboxOptionGroupComponent,
+    InputTextComponent,
+    InputCheckboxComponent,
   ],
 })
 export class FieldDetailsComponent implements OnInit, OnChanges {
@@ -76,6 +80,32 @@ export class FieldDetailsComponent implements OnInit, OnChanges {
   
   private readonly authorityID = toSignal(this.authorityService.authorityId$, { initialValue: null });
 
+  // Move effect to field initializer to run in injection context
+  private readonly authorityEffect = effect(() => {
+    const authorityID = this.authorityID();
+    if (authorityID !== null) {
+      this._rows.update(rows => 
+        rows.map(row => ({
+          ...row,
+          row: row.row.map(field => {
+            if (field.name === 'authorityID') {
+              return { ...field, value: authorityID?.toString() };
+            }
+            if (field.name === 'draftsAndLettersTypeId') {
+              return { 
+                ...field, 
+                value: this.isDraft
+                  ? DraftsAndLettersTypes.Draft
+                  : DraftsAndLettersTypes.Letter
+              };
+            }
+            return field;
+          })
+        }))
+      );
+    }
+  });
+
   ngOnInit(): void {
     const form = new DraftsAndLettersForms();
     if (this.isDraft) {
@@ -84,41 +114,16 @@ export class FieldDetailsComponent implements OnInit, OnChanges {
       this._rows.set(this.isEdit ? form.DetailsForm : form.DetailsForm);
     }
 
-    effect(() => {
-      const authorityID = this.authorityID();
-      if (authorityID !== null) {
-        this._rows.update(rows => 
-          rows.map(row => ({
-            ...row,
-            row: row.row.map(field => {
-              if (field.name === 'authorityID') {
-                return { ...field, value: authorityID?.toString() };
-              }
-              if (field.name === 'draftsAndLettersTypeId') {
-                return { 
-                  ...field, 
-                  value: this.isDraft
-                    ? DraftsAndLettersTypes.Draft
-                    : DraftsAndLettersTypes.Letter
-                };
-              }
-              return field;
-            })
-          }))
-        );
-      }
-    }, { allowSignalWrites: true });
-
     this.createForm(); // Initialize the form on component load
     
-    effect(() => {
-      const control = this.dynamicForm?.get('isIndictment');
-      if (control) {
-        const currentValue = control.value;
-        this._isIndictmentValue.set(currentValue);
-        this.isIndictmentChanged.emit(currentValue);
-      }
-    }, { allowSignalWrites: true });
+    // Subscribe to isIndictment field changes
+    const isIndictmentControl = this.dynamicForm?.get('isIndictment');
+    if (isIndictmentControl) {
+      isIndictmentControl.valueChanges.subscribe((value) => {
+        this._isIndictmentValue.set(value);
+        this.isIndictmentChanged.emit(value);
+      });
+    }
   }
 
   patchFormWithData(data: any) {

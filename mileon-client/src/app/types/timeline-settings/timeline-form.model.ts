@@ -93,7 +93,7 @@ export const OrderMessageForm = {
 
 // טופס 3
 const Form3DaysForPayment: DynamicField = {
-  name: 'DemandNoticeDaysForPayment',
+  name: 'Form3DaysForPayment',
   type: 'number',
   label: 'פרמטר ימים לתשלום',
   validations: {
@@ -114,7 +114,7 @@ export const FormThreeForm = {
 
 // תזכורת חוב
 const DebtReminderDaysForPayment: DynamicField = {
-  name: 'DemandNoticeDaysForPayment',
+  name: 'DebtReminderDaysForPayment',
   type: 'number',
   label: 'פרמטר ימים לתשלום',
   validations: {

@@ -1,3 +1,53 @@
+// import { Injectable } from '@angular/core';
+// declare global {
+//   interface Window {
+//     CKEditor?: any;
+//     ClassicEditor?: any;
+//   }
+// }
+// @Injectable({
+//   providedIn: 'root',
+// })
+// export class CkEditorService {
+//   private isScriptLoading = false;
+//   private loadPromise: Promise<any> | null = null;
+
+//   loadEditor(): Promise<any> {
+//     return new Promise((resolve, reject) => {
+//       let editorModule = (window as any).ClassicEditor;
+//       if (editorModule) {
+//         const Editor = editorModule.default ?? editorModule;
+//         if (typeof Editor.create === 'function') {
+//           return resolve(Editor);
+//         }
+//       }
+
+//       const script = document.createElement('script');
+//       script.src = 'assets/ckeditor5/ckeditor.js';
+//       script.async = true;
+
+//       script.onload = () => {
+//         console.log('CKEditor script loaded:', window.ClassicEditor);
+//         editorModule = (window as any).ClassicEditor;
+//         if (!editorModule) {
+//           return reject('window.ClassicEditor is undefined after script load.');
+//         }
+//         const Editor = editorModule.default ?? editorModule;
+//         if (typeof Editor.create === 'function') {
+//           resolve(Editor);
+//         } else {
+//           reject('ClassicEditor loaded but create() not found on module.');
+//         }
+//       };
+
+//       script.onerror = (err) => {
+//         reject('Failed to load CKEditor script: ' + err);
+//       };
+
+//       document.body.appendChild(script);
+//     });
+//   }
+// }
 import { Injectable } from '@angular/core';
 
 declare global {

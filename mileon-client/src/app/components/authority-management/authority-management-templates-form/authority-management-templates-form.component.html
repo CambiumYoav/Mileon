@@ -1,0 +1,187 @@
+<div
+  class="infrastructure-container p-4"
+  [ngClass]="{
+    'has-related':
+      template?.isInUse && draftLettersValues && draftLettersValues!.length > 0,
+    'no-related':
+      !template?.isInUse ||
+      (draftLettersValues && draftLettersValues.length === 0)
+  }"
+>
+  <div class="inline-header">
+    <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+    <h5 class="title">{{ title }}</h5>
+  </div>
+  <!-- Form -->
+  <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
+    <div class="form-container">
+      <!-- Loop through rows -->
+      @for (row of rows; track $index) {
+        <div class="form-row">
+          @for (field of row.row; track $index) {
+            <div
+              [class]="'form-field' + field.size"
+              [ngClass]="{
+                disabled: !!field.disabled,
+                inputError: 
+                  (isSubmitted() && dynamicForm.get(field.name)?.errors?.['required'])
+              }"
+            >
+              <!-- Field Content -->
+              @if (!field.hide) {
+                <!-- Field Types -->
+                @switch (field.type) {
+                  @case ('text') {
+                    <!-- Text Input -->
+                    <app-input-text
+                      [formControlName]="field.name"
+                      [disabled]="isRequired"
+                      [isRequired]="field.isRequired"
+                      [isValid]="isFieldValid(field.name)"
+                      [errorMessage]="getFieldErrorMessage(field.name)"
+                      [placeholder]="field.placeholder || ''"
+                      [title]="field.label"
+                    />
+                  }
+                  @case ('text-area') {
+                    <!-- Field Label for text-area -->
+                    <label class="title-placeholder" [for]="field.name">
+                      @if (field.isRequired) {
+                        <img
+                          class="required-icon"
+                          [src]="Icons.ASTERISK_RED"
+                        />
+                      }
+                      {{ field.label }}
+                    </label>
+                    <!-- ck editor  -->
+                    <div
+                      [ngClass]="field.size || 'Double-size'"
+                      class="wrapper"
+                    >
+                      <app-ck-editor-wrapper
+                      
+                        [(value)]="editorData"
+                        [config]="config"
+                        [isSelecting]="true"
+                        (valueChange)="emitChangedData($event)"
+                        [size]="field.size"
+                        [hasError]="!isFieldValid(field.name)"
+                      ></app-ck-editor-wrapper>
+                    </div>
+                  }
+                  @case ('file') {
+                    <!-- Field Label for file -->
+                    <label class="title-placeholder" [for]="field.name">
+                      @if (field.isRequired) {
+                        <img
+                          class="required-icon"
+                          [src]="Icons.ASTERISK_RED"
+                        />
+                      }
+                      {{ field.label }}
+                    </label>
+                    <app-file-upload-new
+                      class="upload-file"
+                      (fileSelected)="getUploadedFile($event)"
+                      [maxFileSizeMB]="14"
+                      [selectedFiles]="filesToUpload"
+                      [isDownoladable]="true"
+                      [allowedFileTypes]="[FileType.PDF, FileType.JPG, FileType.PNG]"
+                    ></app-file-upload-new>
+                  }
+                }
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </form>
+
+  @if (isEdit && (template?.isInUse ?? false)) {
+    <div class="actions-container">
+      <div class="related-objects-container">
+        <p class="related-objects-title">אובייקטים מקושרים</p>
+        @if (draftLettersValues && draftLettersValues.length) {
+          @for (draft of draftLettersValues; track $index) {
+            <a
+              class="related-object-link"
+              href="javascript:void(0)"
+              (click)="
+                onLinkClick(draft.id, draft.value, draft.draftsAndLettersTypeId)
+              "
+            >
+              {{ draft.value }} </a
+            >@if (
+              draftLettersValues!.length > 1 &&
+              $index < draftLettersValues!.length - 1
+            ) {
+              <span>,</span>
+            }
+          }
+        }
+      </div>
+    </div>
+  }
+
+  @if (isEdit) {
+    <div
+      [ngClass]="{
+        'no-delete-button-container': isRequired,
+        'edit-button-container': !isRequired
+      }"
+    >
+      <app-button
+        [buttonText]="'שמור שינויים '"
+        (clickFunction)="openSaveModal()"
+      ></app-button>
+      @if (!isRequired) {
+        <app-button
+          [buttonText]="' מחק גלופה'"
+          (clickFunction)="openDeleteModal()"
+          [isDisabled]="draftLettersValues && draftLettersValues!.length > 0"
+          [buttonClass]="'outline-btn button-base'"
+          ></app-button>
+      }
+    </div>
+  }
+
+  @if (!isEdit) {
+    <div
+      class="mt-3"
+      [ngClass]="{
+        'button-container': true
+      }"
+    >
+      <app-button
+        [buttonText]="'שמור '"
+        (clickFunction)="onSubmit()"
+      ></app-button>
+    </div>
+  }
+
+  <app-confirmation-modal
+    [isModalOpen]="isSaveModalOpen()"
+    (onConfirm)="onSubmit()"
+    (onCancel)="closeModal()"
+    (isModalClosed)="closeModal()"
+    [confirmLabel]="'אשר'"
+    [cancelLabel]="'בטל'"
+    [message]="
+      'שים לב! שינוי התבנית ישפיע על המכתבים והגלופות שמתשמתשים בתבנית זו. לאישור שמירת השינויים אנא לחץ אשר, לביטול לחץ בטל.'
+    "
+    [title]="ModalMessages.UPDATE_TEMPLATE"
+  ></app-confirmation-modal>
+
+  <app-confirmation-modal
+    [isModalOpen]="isDeleteModalOpen()"
+    (onConfirm)="onDelete()"
+    (onCancel)="closeModal()"
+    (isModalClosed)="closeModal()"
+    [confirmLabel]="'אשר'"
+    [cancelLabel]="'בטל'"
+    [message]="' האם ברצונך למחוק תבנית זו?'"
+    [title]="ModalMessages.DELETE_TEMPLATE"
+  ></app-confirmation-modal>
+</div>

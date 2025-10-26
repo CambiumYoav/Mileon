@@ -1,0 +1,83 @@
+<div>
+  <div class="haeder">
+    <span class="title">{{ title() }}</span>
+  </div>
+  <div class="container-lg p-4">
+    <app-field-dynamic
+      [rows]="rows()"
+      (submit)="onSubmit($event)"
+      [imagesOptions]="imagesOptions()"
+      [textsOptions]="textsOptions()"
+      [draftOrLetterData]="letterData()"
+      (preview)="getTemplatesValues($event)"
+      #fieldDynamicRef
+    ></app-field-dynamic>
+  </div>
+
+  <div class="footer">
+    <div class="header col d-flex align-items-center justify-content-between">
+      <div class="left-buttons d-flex align-items-center">
+        <app-button
+          [buttonText]="'חזור '"
+          (clickFunction)="canNavigateAway()"
+          [buttonClass]="'secondary-btn outline-btn'"
+        >
+        </app-button>
+        <app-button
+          [buttonText]="'תצוגה מקדימה'"
+          (clickFunction)="getValuesToPreview()"
+          [buttonClass]="'secondary-btn outline-btn'"
+        >
+        </app-button>
+      </div>
+
+      <div class="right-buttons d-flex align-items-center">
+        @if (isEdit()) {
+          <app-button
+            [buttonText]="'יצירת העתק '"
+            (clickFunction)="openCopyModal()"
+            [buttonClass]="'secondary-btn outline-btn'"
+          >
+          </app-button>
+        }
+
+        @if (isEdit()) {
+          <app-button
+            [buttonText]="'שמור שינויים'"
+            (clickFunction)="submitFromParent()"
+          >
+          </app-button>
+        }
+        @if (!isEdit()) {
+          <app-button
+            [buttonText]="'צור מכתב'"
+            (clickFunction)="submitFromParent()"
+          >
+          </app-button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-confirmation-modal
+  [isModalOpen]="isModalOpen()"
+  (onConfirm)="navigateBack()"
+  (isModalClosed)="closeGoBackModal()"
+  [title]="modalTitle"
+  [message]="modalText"
+  [cancelLabel]="'לא'"
+  [confirmLabel]="'כן'"
+></app-confirmation-modal>
+
+<app-confirmation-modal
+  [isModalOpen]="isCopyModalOpen()"
+  (onConfirm)="createCopy()"
+  (isModalClosed)="closeCopyModal()"
+  [title]="modalTitle"
+  [message]="
+    'שים לב! יצירת העתק תסגור את המכתב הנוכחי ללא שמירת השינויים האחרונים שביצעת בו. עותק המכתב ייווצר על בסיס הגרסה השמורה האחרונה. האם ברצונך להמשיך?'
+  "
+  [cancelLabel]="'ביטול'"
+  [confirmLabel]="'המשך'"
+></app-confirmation-modal>

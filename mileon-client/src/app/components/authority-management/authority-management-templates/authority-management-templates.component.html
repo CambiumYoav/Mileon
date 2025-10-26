@@ -1,0 +1,39 @@
+<div class="card">
+  <div class="card-content p-4">
+    @if (isEditMode()) {
+      <app-authority-management-templates-tabs></app-authority-management-templates-tabs>
+    }
+    <router-outlet></router-outlet>
+
+    <div
+      class="d-flex mt-4"
+      [ngClass]="{
+        'justify-content-between': !isEditMode(),
+        'justify-content-end': isEditMode()
+      }"
+    >
+      @if (!isEditMode()) {
+        <app-button
+          [buttonClass]="'secondary-btn outline-btn'"
+          class="constant-btns mt-2"
+          (clickFunction)="back()"
+          [buttonText]="'חזור '"
+        ></app-button>
+      }
+      @if (!isEditMode()) {
+        <app-button
+          class="constant-btns mt-2"
+          [buttonText]="' הבא'"
+          (clickFunction)="navigateToNextForm()"
+        ></app-button>
+      }
+      <!-- @if (isEditMode()) {
+        <app-button
+          class="constant-btns mt-2"
+          [buttonText]="' שמור'"
+          (clickFunction)="navigateToNextForm()"
+        ></app-button>
+      } -->
+    </div>
+  </div>
+</div>

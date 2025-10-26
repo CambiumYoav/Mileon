@@ -31,10 +31,13 @@ import { SelectComponent } from "../../base/select/select.component";
   ],
 })
 export class FieldImageComponent implements OnInit {
-  @Input() imagesOptions: IdValue[] = [];
+  @Input() set imagesOptions(value: IdValue[]) {
+    this._imagesOptions.set(value);
+  }
   @Input() field!: DynamicField;
   @Input() form!: FormGroup;
 
+  private readonly _imagesOptions = signal<IdValue[]>([]);
   private readonly _isSelecting = signal<boolean>(false);
   private readonly _currentSelection = signal<IdValue | null>(null);
 
@@ -43,7 +46,8 @@ export class FieldImageComponent implements OnInit {
   
   readonly selectedValue = computed(() => {
     const id = this.form.get(this.field.name)?.value;
-    const selected = this.imagesOptions.find((opt) => opt.id === id);
+    const options = this._imagesOptions();
+    const selected = options.find((opt: IdValue) => opt.id === id);
     return selected?.value ?? '';
   });
 

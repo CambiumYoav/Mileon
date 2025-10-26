@@ -10,7 +10,7 @@
     <!-- Default button to start selection -->
     @if (!isSelecting() && !selectedValue()) {
       <app-button
-        [buttonClass]="'primary-draft-and-letter-btn-outline'"
+        [buttonClass]="'secondary-btn outline-btn'"
         [buttonText]="'לחץ על הכפתור כדי לבחור תבנית תמונה'"
         (click)="startSelecting()"
       ></app-button>
@@ -36,7 +36,7 @@
 
         <div class="save-bottom-left">
           <app-button
-            [buttonClass]="'general-btn-fill'"
+            [buttonClass]="'primary-btn'"
             [buttonText]="'שמור'"
             (click)="saveSelection()"
           ></app-button>

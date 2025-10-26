@@ -8,6 +8,7 @@ import {
   signal,
   inject,
   effect,
+  computed,
 } from '@angular/core';
 import { RouterService } from '../../../../services/router.service';
 import { ConstPath } from '../../../../constants/const_path';
@@ -17,23 +18,33 @@ import {
   UpdatedStepData,
 } from '../../../../types/timeline-settings/timeline-settings-types';
 import { TimelineSettingsFormService } from '../../timeline-settings-form.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { TimelineService } from '../../timeline.service';
 import { TimelineStepsType } from '../../../../types/enum/timelineSettings.enum';
-import { SharedImports } from '../../../../shared/shared-modules';
+import { CommonModule } from '@angular/common';
+import { MaterialModule } from '../../../../shared/material-module';
 import { StepTooltipComponent } from "./step-tooltip/step-tooltip.component";
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-ticket-timeline-bar',
   templateUrl: './ticket-timeline-bar.component.html',
   styleUrls: ['./ticket-timeline-bar.component.scss'],
+  standalone: true,
   imports: [
-    SharedImports,
-    StepTooltipComponent
-], 
+    CommonModule,
+    ReactiveFormsModule,
+    MaterialModule,
+    StepTooltipComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TicketTimelineBarComponent implements OnInit, OnChanges {
+  private readonly routerService = inject(RouterService);
+  private readonly fbService = inject(TimelineSettingsFormService);
+  private readonly timelineService = inject(TimelineService);
+
+  // Private signals
   private readonly _timeLinePath = signal<string>('');
   private readonly _selectedStep = signal<TimelineItem>({} as TimelineItem);
   private readonly _steps = signal<TimelineItem[]>([]);
@@ -42,33 +53,20 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
   private readonly _switchStep = signal<TimelineItem | undefined>(undefined);
   private readonly _formSubmitted = signal<boolean>(false);
 
-  get timeLinePath(): string {
-    return this._timeLinePath();
-  }
+  // Convert RxJS subscription to signal
+  private readonly submitFormSignal = toSignal(
+    this.fbService.submitForm,
+    { initialValue: null }
+  );
 
-  get selectedStep(): TimelineItem {
-    return this._selectedStep();
-  }
-
-  get steps(): TimelineItem[] {
-    return this._steps();
-  }
-
-  get formState(): FormGroup {
-    return this._formState();
-  }
-
-  get isFirstTime(): boolean {
-    return this._isFirstTime();
-  }
-
-  get switchStep(): TimelineItem | undefined {
-    return this._switchStep();
-  }
-
-  get formSubmitted(): boolean {
-    return this._formSubmitted();
-  }
+  // Public computed signals
+  readonly timeLinePath = computed(() => this._timeLinePath());
+  readonly selectedStep = computed(() => this._selectedStep());
+  readonly stepsSignal = computed(() => this._steps());
+  readonly formStateSignal = computed(() => this._formState());
+  readonly isFirstTimeSignal = computed(() => this._isFirstTime());
+  readonly switchStep = computed(() => this._switchStep());
+  readonly formSubmitted = computed(() => this._formSubmitted());
 
   readonly srcIcons = [
     'car',
@@ -86,10 +84,6 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
     '',
   ];
 
-  private readonly routerService = inject(RouterService);
-  private readonly fbService = inject(TimelineSettingsFormService);
-  private readonly timelineService = inject(TimelineService);
-
   @Input() set steps(value: TimelineItem[]) {
     this._steps.set(value);
   }
@@ -103,10 +97,12 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
   }
 
   constructor() {
+    // Effect to handle form submission
     effect(() => {
-      this.fbService.submitForm.subscribe(() => {
+      const submitEvent = this.submitFormSignal();
+      if (submitEvent) {
         this._formSubmitted.set(true);
-      });
+      }
     });
   }
 
@@ -204,7 +200,7 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
 
           Object.entries(categoryFormGroup.controls).forEach(
             ([field, fieldControl]) => {
-              if (!step.validateFields.includes(field)) return;
+              if (!step.validateFields || !step.validateFields.includes(field)) return;
 
               const formField = fieldControl as FormControl;
 
@@ -241,6 +237,7 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
 
         const stepErrors = Object.entries(categoryFormGroup.controls).filter(
           ([field, fieldControl]) =>
+            step.validateFields && 
             step.validateFields.includes(field) &&
             !(fieldControl as FormControl).valid
         ).length;

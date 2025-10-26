@@ -1,0 +1,50 @@
+<div class="card">
+  <!-- <div class="title-section">
+    <div class="title">
+      {{ title }}
+    </div>
+  </div> -->
+  <div class="table-card">
+    <!-- <div class="card-content"> -->
+    <app-authority-management-dymanic-form
+      #form1
+      [title]="title"
+      [rows]="form()"
+      [triggerFormRecreation]="formRecreationTrigger()"
+      (formSubmitted)="checkIfFormIsValid($event)"
+    >
+    </app-authority-management-dymanic-form>
+
+    <app-authority-management-dymanic-form
+      #form2
+      [title]="titleCustomer"
+      [rows]="customerForm()"
+      [triggerFormRecreation]="formRecreationTrigger()"
+      (formSubmitted)="checkIfFormIsValid($event)"
+    >
+    </app-authority-management-dymanic-form>
+    <!-- </div> -->
+    
+    @if (!isEditMode) {
+      <app-button
+        class="constant-btns mt-2"
+        (clickFunction)="submitForm()"
+        [buttonText]="' הבא '"
+      ></app-button>
+    }
+
+    @if (isEditMode) {
+      <app-button
+        class="constant-btns mt-2"
+        (clickFunction)="openModal()"
+        [buttonText]="' שמור '"
+      ></app-button>
+    }
+  </div>
+</div>
+
+<app-confirmation-modal
+  [isModalOpen]="isModalOpen()"
+  (onConfirm)="submitForm()"
+  (isModalClosed)="closeModal()"
+></app-confirmation-modal>

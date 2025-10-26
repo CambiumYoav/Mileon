@@ -2,6 +2,7 @@ import { Menu, MenuItem } from '../types/base/menu.model';
 import {
   AuthorityCategoryLabels,
   AuthorityCategoryIcons,
+  AuthorityCategory,
 } from '../types/enum/authorityFormsCategory.enum';
 import { FormsServerResponse } from '../types/management/authority-form.menu';
 
@@ -121,10 +122,10 @@ export class PortalFormsUtils {
     const menuItems: MenuItem[] = Object.entries(data).map(
       ([categoryId, forms]) => ({
         id: categoryId,
-        displayName: AuthorityCategoryLabels[categoryId],
+        displayName: AuthorityCategoryLabels[Number(categoryId) as AuthorityCategory],
         path: '',
         route: '',
-        icon: AuthorityCategoryIcons[categoryId],
+        icon: AuthorityCategoryIcons[Number(categoryId) as AuthorityCategory],
         active: true,
         showItem: true,
         expanded: false,

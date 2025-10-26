@@ -143,6 +143,7 @@ export class TableComponent
   @ViewChildren(NgbdSortableHeader) headers?: QueryList<NgbdSortableHeader>;
 
   @Output() onRowEvent = new EventEmitter<any>();
+  @Output() rowClick = new EventEmitter<any>();
   @Output() onFormChanges = new EventEmitter<FormGroup>();
   @Output() onRowSelect = new EventEmitter<any>();
   rowSelected = output<any>();
@@ -287,6 +288,7 @@ export class TableComponent
       ?.replace('.png', '');
     if (event && ColumnTypeEnum.Icon && iconName) {
       this.onRowEvent.emit({ item, iconName });
+      this.rowClick.emit({ item, iconName });
       return;
     }
     if (
@@ -297,6 +299,7 @@ export class TableComponent
       return;
     }
     this.onRowEvent.emit(item);
+    this.rowClick.emit(item);
   }
 
   onSelectedRowIdChange(item: any) {

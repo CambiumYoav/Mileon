@@ -1,0 +1,14 @@
+<app-table
+  [data]="data()"
+  [columns]="columns()"
+  [total]="total()"
+  [form]="userForm()"
+  (rowClick)="emitRowData($event)"
+  [showPaginator]="showPaginator()"
+  (onFormChanges)="emitServerSort($event)"
+  [icons]="TicketStagesIcons"
+  [loader]="loader()"
+  (onRowEvent)="emitRowData($event)"
+  (onRowSelect)="emitRowData($event)"
+>
+</app-table>

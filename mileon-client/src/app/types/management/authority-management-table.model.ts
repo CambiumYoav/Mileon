@@ -49,11 +49,19 @@ export class AuthorityManagementTable {
   public DraftsAndLettersColumns: Column[] = [
     {
       displayName: ' ',
-      propertyName: 'gid',
-      canSort: true,
+      propertyName: 'selected',
+      canSort: false,
       type: ColumnTypeEnum.Radio,
-
       sortByServer: false,
+      radioConfig: {
+        // Single radio button per row; shared name across rows ensures single selection
+        name: 'draftsAndLettersRowSelect',
+        options: [
+          { value: 'selected', label: '' }
+        ],
+        type: 'default',
+        direction: 'horizontal',
+      },
     },
     {
       displayName: 'קוד ',
@@ -88,20 +96,24 @@ export class AuthorityManagementTable {
       sortByServer: false,
     },
     {
-      displayName: 'מחלקת וטרינריה מנהלי ',
-      propertyName: 'isActive',
-      canSort: true,
+      displayName: 'GUID',
+      propertyName: 'gid',
+      canSort: false,
       type: ColumnTypeEnum.Hidden,
-
       sortByServer: false,
     },
-
     {
-      displayName: 'מחלקת וטרינריה מנהלי ',
-      propertyName: 'typeId',
-      canSort: true,
+      displayName: 'Is Active',
+      propertyName: 'isActive',
+      canSort: false,
       type: ColumnTypeEnum.Hidden,
-
+      sortByServer: false,
+    },
+    {
+      displayName: 'Type ID',
+      propertyName: 'typeId',
+      canSort: false,
+      type: ColumnTypeEnum.Hidden,
       sortByServer: false,
     },
   ];

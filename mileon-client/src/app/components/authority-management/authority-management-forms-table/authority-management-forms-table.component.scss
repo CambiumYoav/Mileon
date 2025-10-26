@@ -1,0 +1,93 @@
+@import "../../../../styles/elements.scss";
+@import "../../../../styles/table.scss";
+
+.table {
+  background: white;
+  border: 0px solid #d8e4f1;
+  border-radius: 4px;
+  table-layout: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  color: #d8e4f1;
+}
+
+tbody tr {
+  cursor: pointer;
+}
+
+tbody tr:last-child {
+  border-bottom-style: hidden;
+}
+
+div.table-container {
+  border: 1px solid #d8e4f1;
+  overflow-y: auto;
+  border-radius: 14px;
+  transform: rotate(0deg);
+  // height: 824px !important; //715
+}
+
+table {
+  border-spacing: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+
+  td {
+    line-height: 35px;
+  }
+  thead {
+    background-color: $colorDarkBlue !important;
+    position: sticky;
+    .title {
+      background-color: $colorDarkBlue !important;
+      position: sticky;
+      color: white !important;
+    }
+  }
+}
+
+.fixedwidth {
+  width: 2rem !important;
+}
+
+.checkbox-td {
+  padding: 0.5rem 2.5rem 0.5rem 0.5rem !important;
+}
+
+th {
+  line-height: 25px;
+}
+
+tbody tr {
+  color: #606060;
+}
+
+.blue {
+  color: $colorDarkBlue;
+}
+
+.form-text {
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  border-radius: 4px;
+  width: 219px;
+  border: #b9c6d4 1px solid;
+  height: 36px;
+}
+:host ::ng-deep app-checkbox {
+  display: inline-table;
+}
+
+header {
+  background-color: $colorDarkBlue !important;
+  position: sticky;
+}
+.title-row {
+  font-weight: 600;
+  font-size: 18px;
+  // background-color: $colorDarkBlue !important;
+  // color: white;
+  // position: sticky;
+}

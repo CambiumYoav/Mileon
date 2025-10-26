@@ -1,7 +1,7 @@
 @if (form()) {
   <form [formGroup]="form()!" (ngSubmit)="triggerSubmit()" [class.page-disabled]="isDisable">
     <div class="form-rows">
-      @for (row of rows; track row) {
+      @for (row of rows; track $index) {
         <div class="form-row">
           @for (field of row.row; track field.name) {
             @if (!field.hide) {

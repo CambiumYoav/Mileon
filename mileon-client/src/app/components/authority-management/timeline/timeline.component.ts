@@ -5,13 +5,14 @@ import { RouterService } from '../../../services/router.service';
 import { ConstPath } from '../../../constants/const_path';
 import { RouterOutlet } from '@angular/router';
 import { SharedImports } from '../../../shared/shared-modules';
+import { TabsGroupComponent } from "../../shared/tabs-group/tabs-group.component";
 
 @Component({
   selector: 'app-timeline',
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, ...SharedImports],
+  imports: [RouterOutlet, ...SharedImports, TabsGroupComponent],
 })
 export class TimelineComponent implements OnInit {
   private readonly _tabs = signal<TabAttributes[]>(TimelineSettings.Tabs);

@@ -19,60 +19,50 @@
                 >
                   <!-- Field Content -->
                   @if (!field.hide) {
-                    <!-- Field Label -->
-                    <label class="title-placeholder" [for]="field.name">
-                      @if (field.isRequired) {
-                        <img
-                          class="required-icon"
-                          [src]="Icons.ASTERISK_RED"
-                        />
-                      }
-                      {{ field.label }}
-                    </label>
-
                     <!-- Field Types -->
                     @switch (field.type) {
                       @case ('text') {
                         <!-- Text Input -->
-                        <input
-                          class="form-control"
-                          [id]="field.name"
-                          [type]="field.type"
+                        <app-input-text
                           [formControlName]="field.name"
+                          [title]="field.label"
                           [placeholder]="field.placeholder || ''"
-                        />
+                          [isRequired]="field.isRequired"
+                          [isValid]="isFieldValid(field.name)"
+                          [disabled]="!!field.disabled || false" 
+                        ></app-input-text>
                       }
                       
                       @case ('checkbox') {
-                        <div class="checkbox-container">
-                          <div class="checkbox">
-                            <div class="inline">
-                              <input
-                                [id]="field.name"
-                                type="checkbox"
-                                class="check"
-                                [formControlName]="field.name"
-                                [title]="field.name"
-                                [value]="field.value"
-                              />
-                              <label class="label" [for]="field.name">
-                                {{ field.label }}
-                              </label>
-                            </div>
-                          </div>
-                        </div>
+                        <app-input-checkbox
+                          [formControlName]="field.name"
+                          [title]="field.label"
+                          [placeholder]="field.label"
+                        ></app-input-checkbox>
                       }
                       
                       @case ('selectWithLookup') {
+                        <!-- Field Label for select -->
+                        <label class="title-placeholder" [for]="field.name">
+                          @if (field.isRequired) {
+                            <img
+                              class="required-icon"
+                              [src]="Icons.ASTERISK_RED"
+                            />
+                          }
+                          {{ field.label }}
+                        </label>
                         <app-select
                           fxFill
                           appearance="fill"
+                          [title]="field.label"
+                          [isRequired]="field.isRequired"
+                          [isValid]="isFieldValid(field.name)"
                           [bindLabelKeys]="field.bindLabelKeys"
                           [formControlName]="field.name"
                           [dataFunction]="field.dataFunction"
                           searchPlaceholder="חיפוש"
                           bindLabelKey="value"
-                          [isValid]="isFieldValid(field.name)"
                           bindValueKey="id"
                           [isMultiSelect]="false"
                           [placeholder]="field.label"
@@ -80,6 +70,16 @@
                       }
                       
                       @case ('radio') {
+                        <!-- Field Label for radio -->
+                        <label class="title-placeholder" [for]="field.name">
+                          @if (field.isRequired) {
+                            <img
+                              class="required-icon"
+                              [src]="Icons.ASTERISK_RED"
+                            />
+                          }
+                          {{ field.label }}
+                        </label>
                         <!-- Radio Buttons -->
                         <div class="d-flex">
                           @for (option of field.options; track option.value) {
@@ -100,7 +100,9 @@
                       
                       @case ('checkboxOptions') {
                         <app-input-checkbox-option-group
+                          [title]="field.label"
                           [options]="optionsTicketTypes"
+                          [isRequired]="field.isRequired"
                           (selectionChange)="onSelectionChange($event, field.name)"
                           [isValid]="isFieldValid(field.name)"
                         ></app-input-checkbox-option-group>

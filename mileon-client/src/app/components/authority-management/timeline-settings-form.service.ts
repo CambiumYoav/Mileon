@@ -83,29 +83,32 @@ export class TimelineSettingsFormService {
   private trackFormChanges(): void {
     this.dynamicForm.valueChanges
       .pipe(startWith(this.dynamicForm.value), pairwise())
-      // .subscribe(([prev, curr]) => {
-      //   const changedFields = this.getChangedFields(prev, curr);
-      //   changedFields.forEach((field) => this.handleChangedData(field));
-      //   this.formDataSubject.next(this.dynamicForm);
-      // });
+      .subscribe(([prev, curr]) => {
+        const changedFields = this.getChangedFields(prev, curr);
+        changedFields.forEach((field) => this.handleChangedData(field));
+        this.formDataSubject.next(this.dynamicForm);
+      });
   }
 
-  // find which field of which category was changes so that a specific object can be build
-  // private getChangedFields(
-  //   prev: TableConfig,
-  //   curr: TableConfig
-  // ): NewSettingsFieldData[] {
-  //   return Object.keys(curr).flatMap((section) =>
-  //     Object.keys(curr[section] || {}).reduce((acc, field) => {
-  //       if (prev[section]?.[field] !== curr[section][field]) {
-  //         acc.push({ section, field, currValue: curr[section][field] });
-  //       }
-  //       return acc;
-  //     }, [] as NewSettingsFieldData[])
-  //   );
-  // }
+  // find which field of which category was changed so that a specific object can be built
+  private getChangedFields(
+    prev: TableConfig,
+    curr: TableConfig
+  ): NewSettingsFieldData[] {
+    return Object.keys(curr).flatMap((section) => {
+      const currSection = (curr as any)[section];
+      const prevSection = (prev as any)[section];
+      
+      return Object.keys(currSection || {}).reduce((acc, field) => {
+        if (prevSection?.[field] !== currSection[field]) {
+          acc.push({ section, field, currValue: currSection[field] });
+        }
+        return acc;
+      }, [] as NewSettingsFieldData[]);
+    });
+  }
 
-  //build an array in order to update the settings fields (server expects a curtain type of objects of id and value)
+  //build an array in order to update the settings fields (server expects a certain type of objects of id and value)
   handleChangedData(updatedField: {
     section: string;
     field: string;

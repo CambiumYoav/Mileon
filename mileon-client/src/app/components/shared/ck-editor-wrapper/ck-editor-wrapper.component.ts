@@ -32,7 +32,7 @@ export class CkEditorWrapperComponent implements OnDestroy, AfterViewInit, OnCha
   @Input() isSelecting: boolean = false;
   @Input() config: any = {};
   @Input() hasError: boolean = false;
-
+  
   @Output() valueChange = new EventEmitter<string>();
 
   @ViewChild('editorContainer', { static: false })
@@ -147,6 +147,7 @@ export class CkEditorWrapperComponent implements OnDestroy, AfterViewInit, OnCha
         console.log('Component destroyed while loading editor');
         return;
       }
+      
       const toolbarCfg = Array.isArray(this.config.toolbar)
         ? { items: this.config.toolbar }
         : { ...(this.config.toolbar || {}) };
@@ -167,14 +168,16 @@ export class CkEditorWrapperComponent implements OnDestroy, AfterViewInit, OnCha
 
       this.moveToolbarToContainer(toolbarContainer);
 
+      // Set initial value if provided
       if (this.value) {
         this.editorInstance.setData(this.value);
       }
 
       this.updateErrorStyling();
 
+      // Set up change listener
       this.editorInstance.model.document.on('change:data', () => {
-        if (!this.isDestroyed()) {
+        if (!this.isDestroyed() && this.editorInstance) {
           const data = this.editorInstance.getData();
           this.valueChange.emit(data);
         }
@@ -248,15 +251,16 @@ export class CkEditorWrapperComponent implements OnDestroy, AfterViewInit, OnCha
       this.updateErrorStyling();
     }
 
-    if (
-      changes['value'] &&
-      this.editorInstance &&
-      !changes['value'].firstChange
-    ) {
+    if (changes['value'] && this.editorInstance && !changes['value'].firstChange) {
       const currentData = this.editorInstance.getData();
       if (currentData !== this.value) {
         this.editorInstance.setData(this.value || '');
       }
+    }
+
+    // Handle config changes
+    if (changes['config'] && this.editorInstance && !changes['config'].firstChange) {
+      console.warn('Config changes after initialization are not supported. Editor needs to be reinitialized.');
     }
   }
 

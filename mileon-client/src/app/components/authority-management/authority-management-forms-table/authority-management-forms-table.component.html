@@ -1,0 +1,68 @@
+<div>
+  <app-red-line-error [errorMsg]="errorMsg()"></app-red-line-error>
+
+  <!-- Spinner outside table -->
+  @if (loader()) {
+    <div
+      class="d-flex justify-content-center align-items-center loader"
+    >
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  }
+
+  <div class="table-container">
+    <table class="table table-hover shadow-table w-100">
+      <thead>
+        <tr class="header">
+          <th class="title">שם השדה</th>
+          <th class="title">ערך</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of data(); track $index) {
+          <tr
+            class="user-select-none"
+            [ngClass]="{ 'title-row': row.type === 'title' }"
+            style="line-height: 8px; height: 8px"
+          >
+            @if (row.type == 'title') {
+              <td class="title-row">
+                {{ row.fieldNameValue }}
+              </td>
+            }
+            <td>{{ row.displayName }}</td>
+            @if (row.type !== 'title') {
+              <td>
+                @switch (row.type) {
+                  @case ('bool') {
+                    <!-- Checkbox -->
+                    <app-checkbox
+                      [isDisabled]="false"
+                      [checked]="row.isRequired"
+                      [ngClass]="{
+                        'input-fill-disable ': !row.isRequired,
+                        checkbox: row.isRequired
+                      }"
+                      (valueChanged)="onCheckboxChange(row, $event)"
+                    ></app-checkbox>
+                  }
+                  @case ('string') {
+                    <!-- Input -->
+                    <input
+                      type="text"
+                      class="form-text"
+                      [value]="row.fieldNameValue"
+                      (input)="onInputChange(row, $event)"
+                    />
+                  }
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

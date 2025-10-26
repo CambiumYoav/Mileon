@@ -1,0 +1,69 @@
+<div class="template-list-row" (click)="onClick($event)">
+  <div class="template-card">
+    @if (!isNew) {
+      <div class="template-header">
+        <span class="template-title">{{ template.templateTitle }}</span>
+      </div>
+      <div class="template-body">
+        <!-- Show text only if it's not a picture template or not base64 data -->
+        @if (!isPic || (!isPdf(template.templateBody) && !isImage(template.templateBody))) {
+          <div
+            class="template-text"
+            [innerHTML]="getSanitizedHtml(template.templateBody)"
+          >
+            <!-- {{ template.templateBody }} -->
+          </div>
+        }
+        <!-- <span
+          class="template-text"
+          *ngIf="
+            !isPic ||
+            (!isPdf(template.templateBody) && !isImage(template.templateBody))
+          "
+        >
+          {{ template.templateBody }}
+        </span>  -->
+        <!-- ck editor -->
+
+        <!-- PDF viewer -->
+        @if (isPic && isPdf(template.templateBody)) {
+          <iframe
+            [src]="getSafeUrl(template.templateBody)"
+            width="100%"
+            height="300"
+            type="application/pdf"
+            style="border: none"
+          ></iframe>
+
+          <!-- <pdf-viewer
+            [src]="template.templateBody"
+            [render-text]="false"
+            [fit-to-page]="true"
+            style="width: 100%; height: 200px; overflow: hidden"
+            [show-all]="false"
+            [original-size]="false"
+          ></pdf-viewer> -->
+        }
+
+        <!-- Image viewer -->
+        @if (isPic && isImage(template.templateBody)) {
+          <img
+            class="template-image"
+            [src]="getSafeUrl(template.templateBody)"
+            alt="Template image"
+            style="max-width: 100%; height: 100%"
+          />
+        }
+      </div>
+    }
+
+    @if (isNew) {
+      <div class="add-template-wrapper">
+        <div class="add-new">
+          {{ isPic ? "תבנית תמונה חדשה" : "תבנית טקסט חדשה" }}
+        </div>
+        <img class="add-icon" src="assets/icons/addCircle.svg" />
+      </div>
+    }
+  </div>
+</div>

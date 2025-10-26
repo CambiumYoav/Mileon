@@ -1,0 +1,27 @@
+<p>authority-management-text-templates works!</p>
+<div class="card">
+  <div class="card-content">
+    <div class="d-flex justify-content-between mt-4">
+      <app-button
+        [buttonClass]="'secondary-btn outline-btn'"
+        class="constant-btns mt-2"
+        (clickFunction)="back()"
+        [buttonText]="'חזור '"
+      ></app-button>
+      @if (!isEditMode) {
+        <app-button
+          class="constant-btns mt-2"
+          [buttonText]="' הבא'"
+          (clickFunction)="navigateToNextForm()"
+        ></app-button>
+      }
+      @if (isEditMode) {
+        <app-button
+          class="constant-btns mt-2"
+          [buttonText]="' שמור'"
+          (clickFunction)="navigateToNextForm()"
+        ></app-button>
+      }
+    </div>
+  </div>
+</div>

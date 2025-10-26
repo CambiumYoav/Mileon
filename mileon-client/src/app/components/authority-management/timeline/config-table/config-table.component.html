@@ -1,0 +1,143 @@
+@if (dynamicForm()) {
+  <div class="table-wrapper">
+    <form [formGroup]="dynamicForm()!">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th class="column-start">חניה</th>
+            <th class="column-middle">כללי</th>
+            <th class="column-end">מנהלי</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            @for (section of form(); track $index; let i = $index) {
+              <td
+                [ngStyle]="{ height: height + 'px' }"
+                [ngClass]="{ 'column-middle': i === 1 }"
+              >
+                <div class="components-wrapper">
+                  <ng-container>
+                    @for (field of getArrayOrEmpty(section); track field.name) {
+                      <div
+                        [class]="'form-field' + field.size"
+                        [ngClass]="{
+                        disabled: !!field.disabled,
+                        inputError: isFieldInvalid(i, field.name)
+                      }"
+                      >
+                        <!-- Field Content -->
+                        @if (!field.hide) {
+                          <div class="input-wrapper" [formGroupName]="formGroups()[i]">
+                            <!-- Field Types -->
+                            @switch (field.type) {
+                              @case ('text') {
+                                <!-- Text Input -->
+                                <app-input-text
+                                  [formControlName]="field.name"
+                                  [title]="field.label"
+                                  [placeholder]="field.placeholder"
+                                  [isRequired]="field?.validations?.required"
+                                  [isValid]="!isFieldInvalid(i, field.name)"
+                                  [errorMessage]="getFieldErrorMessage(i, field.name)"
+                                ></app-input-text>
+                              }
+                              @case ('number') {
+                                <!-- Number Input -->
+                                <app-input-text
+                                  [formControlName]="field.name"
+                                  [title]="field.label"
+                                  [placeholder]="field.placeholder"
+                                  [isRequired]="field?.validations?.required"
+                                  [isValid]="!isFieldInvalid(i, field.name)"
+                                  [errorMessage]="getFieldErrorMessage(i, field.name)"
+                                ></app-input-text>
+                              }
+                              @case ('date') {
+                                <!-- Date Input -->
+                                <app-input-date
+                                  [formControlName]="field.name"
+                                  [title]="field.label"
+                                  [placeholder]="field.placeholder"
+                                  [isRequired]="field?.validations?.required"
+                                  [isValid]="!isFieldInvalid(i, field.name)"
+                                  [isWeekendBlocked]="field.isWeekendBlocked || false"
+                                ></app-input-date>
+                              }
+                              @case ('checkbox') {
+                                <!-- Checkbox Input -->
+                                <app-input-checkbox
+                                  [formControlName]="field.name"
+                                  [title]="field.label"
+                                ></app-input-checkbox>
+                              }
+                              @case ('phone') {
+                                <!-- Phone Input -->
+                                <app-input-phone
+                                  [formControlName]="field.name"
+                                  [title]="field.label"
+                                  [placeholder]="field.placeholder"
+                                  [isRequired]="field?.validations?.required"
+                                  [isValid]="!isFieldInvalid(i, field.name)"
+                                  [errorMessage]="getFieldErrorMessage(i, field.name)"
+                                ></app-input-phone>
+                              }
+                              @case ('select') {
+                                <!-- Select Dropdown -->
+                                <div>
+                                  <label class="title-placeholder" [for]="field.name">
+                                    @if (field?.validations?.required) {
+                                      <span class="required">*</span>
+                                    }
+                                    {{ field.label }}
+                                  </label>
+                                  <mat-form-field appearance="fill">
+                                    <mat-select
+                                      [formControlName]="field.name"
+                                      [id]="field.name"
+                                      [value]="field.value"
+                                      [placeholder]="field.placeholder"
+                                    >
+                                      @for (option of getArrayOrEmpty(field.options); track option.value) {
+                                        <mat-option [value]="option.value">
+                                          {{ option.display }}
+                                        </mat-option>
+                                      }
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                              }
+                              @case ('selectWithLookup') {
+                                <div [class]="'field-' + field.size">
+                                  <app-select
+                                    fxFill
+                                    appearance="fill"
+                                    [title]="field.label"
+                                    [bindLabelKeys]="field.bindLabelKeys"
+                                    [formControlName]="field.name"
+                                    [dataFunction]="field.dataFunction"
+                                    searchPlaceholder="חיפוש"
+                                    bindLabelKey="value"
+                                    bindValueKey="id"
+                                    [isMultiSelect]="field.isMultiSelect"
+                                    [placeholder]="field.placeholder"
+                                    [isRequired]="field?.validations?.required"
+                                    [isValid]="!isFieldInvalid(i, field.name)"
+                                  ></app-select>
+                                </div>
+                              }
+                            }
+                          </div>
+                        }
+                      </div>
+                    }
+                  </ng-container>
+                </div>
+              </td>
+            }
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+}

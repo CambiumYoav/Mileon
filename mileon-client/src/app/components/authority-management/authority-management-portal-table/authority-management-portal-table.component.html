@@ -1,0 +1,92 @@
+<div class="mt-3">
+  <h3 class="table-title">{{ title() }}</h3>
+  <app-red-line-error [errorMsg]="errorMsg()"></app-red-line-error>
+
+  <div class="table-container">
+    <table class="table table-hover shadow-table w-100">
+      <thead>
+        <tr>
+          <th class="title">שם ההגדרה</th>
+          @for (column of allColumns(); track column.propertyName) {
+            <th class="title">
+              {{ column.displayName }}
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @if (loader()) {
+          <div
+            class="d-flex justify-content-center align-items-center loader"
+          >
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        }
+
+        @for (row of data(); track row.id; let i = $index) {
+          <tr
+            class="user-select-none"
+            style="line-height: 8px; height: 8px"
+          >
+            <td>
+              <div class="id-name-container">
+                <span class="row-id">{{ row.id }}</span>
+                <span class="justify-content-flex-start">{{ row.displayName }}</span>
+              </div>
+            </td>
+            <!-- Column 1: מחלקת חניה -->
+
+            @for (column of allColumns(); track column.propertyName) {
+              <td>
+                <!-- Show radio buttons only if column is active -->
+                @if (isColumnActiveForRow(row, column.propertyName)) {
+                  <div
+                    class="d-flex justify-content-flex-start"
+                  >
+                    <div class="radio-field">
+                      <input
+                        type="radio"
+                        [name]="tableId() + '_' + column.propertyName + '_' + i"
+                        [value]="'yes'"
+                        [id]="tableId() + '_' + column.propertyName + '_yes_' + i"
+                        [checked]="getCurrentValue(i, column.propertyName) === 'yes'"
+                        (change)="onRadioChange(i, column.propertyName, 'yes')"
+                      />
+                      <label [for]="tableId() + '_' + column.propertyName + '_yes_' + i"
+                        >פתוח</label
+                      >
+                    </div>
+                    <div class="radio-field">
+                      <input
+                        type="radio"
+                        [name]="tableId() + '_' + column.propertyName + '_' + i"
+                        [value]="'no'"
+                        [id]="tableId() + '_' + column.propertyName + '_no_' + i"
+                        [checked]="getCurrentValue(i, column.propertyName) === 'no'"
+                        (change)="onRadioChange(i, column.propertyName, 'no')"
+                      />
+                      <label [for]="tableId() + '_' + column.propertyName + '_no_' + i"
+                        >חסום</label
+                      >
+                    </div>
+                  </div>
+                }
+
+                <!-- Show dash or empty space if column is not active -->
+                @if (!isColumnActive(column.propertyName)) {
+                  <div
+                    class="inactive-column"
+                  >
+                    <span class="text-muted">—</span>
+                  </div>
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
