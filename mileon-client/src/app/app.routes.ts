@@ -46,7 +46,7 @@ export const childRoutes: Routes = [
         .then(m => m.authorityManagementRoutes),
   },
   {
-    path: `${ROUTE_PATH.InventoryManagement.Home}`,
+    path: `${ROUTE_PATH.InventoryManagement.Home}`, // 'inventory-management'
     loadChildren: () =>
       import(
         './components/inventory-management/inventory-management-routing'

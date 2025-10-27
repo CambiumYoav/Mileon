@@ -260,8 +260,14 @@ export const authorityManagementRoutes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: RP.Management.DetailsConfirmation,
+            redirectTo: RP.Management.AdminApprovedToEnforce,
             pathMatch: 'full',
+          },
+          {
+            path: RP.Management.AdminApprovedToEnforce,
+            loadComponent: () =>
+              import('./timeline/ticket-timeline/admin-approved-to-enforce/admin-approved-to-enforce.component')
+                .then(m => m.AdminApprovedToEnforceComponent),
           },
           {
             path: RP.Management.DetailsConfirmation,
