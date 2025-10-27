@@ -17,8 +17,12 @@
     border-color: transparent;
   }
   .heading {
-    font-weight: bold;
-    font-size: 1.25rem; /* Adjust size as necessary */
+    color: #000;
+    text-align: right;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
   }
   .send-btn {
     display: flex;

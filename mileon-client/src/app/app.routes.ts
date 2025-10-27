@@ -45,13 +45,13 @@ export const childRoutes: Routes = [
       import('./components/authority-management/authority-management-routing')
         .then(m => m.authorityManagementRoutes),
   },
-  // {
-  //   path: `${ROUTE_PATH.InventoryManagement.Home}`,
-  //   loadChildren: () =>
-  //     import(
-  //       './components/inventory-management/inventory-management-routing'
-  //     ).then((m) => m.InventoryManagementRoutes),
-  // },
+  {
+    path: `${ROUTE_PATH.InventoryManagement.Home}`,
+    loadChildren: () =>
+      import(
+        './components/inventory-management/inventory-management-routing'
+      ).then((m) => m.InventoryManagementRoutes),
+  },
 ];
 export const routes: Routes = [
   { path: ``, redirectTo: 'login', pathMatch: 'full' },
