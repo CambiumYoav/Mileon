@@ -105,7 +105,6 @@ export class AuthorityManagementDraftsAndLettersComponent implements OnInit, OnD
     this.authorityManagementForm = this.authorityManagementSearchService.searchForm;
   }
 
-  // Move effects to field initializers to ensure they run in injection context
   private readonly authorityEffect = effect(() => {
     const authorityID = this.authorityService.authorityId();
     if (authorityID) {
@@ -114,7 +113,6 @@ export class AuthorityManagementDraftsAndLettersComponent implements OnInit, OnD
     }
   });
 
-  // Handle selected data changes with effect (Angular 19 signals pattern)
   private readonly selectedDataEffect = effect(() => {
     const selectedData = this.selectedDraftAndLetter();
     if (selectedData) {
@@ -131,38 +129,32 @@ export class AuthorityManagementDraftsAndLettersComponent implements OnInit, OnD
   }
   
   ngOnDestroy(): void {
-    // Cancel any pending data load operations
     if (this.loadDataAbortController) {
       this.loadDataAbortController.abort();
     }
   }
     
   async loadData(filter: any): Promise<void> {
-    // Cancel any previous pending requests
     if (this.loadDataAbortController) {
       this.loadDataAbortController.abort();
     }
     
-    // Create new abort controller for this request
     this.loadDataAbortController = new AbortController();
     const currentController = this.loadDataAbortController;
     
     this._loader.set(true);
     
     try {
-      // Guard: Check if authority is set
       if (!this.currentAuthority()) {
         this._loader.set(false);
         return;
       }
       
-      // Extract the actual filter values
       const filterData = filter?.value || filter;
       this._filter.set({ ...filterData });
 
       const searchText = this.authorityManagementSearchService.form.value.searchText;
       
-      // Build the request filter with only the necessary fields
       const updatedFilter: DraftsAndLettersFilterOptions = {
         pageSize: 10,
         currentPage: filterData.currentPage || this.filter()?.currentPage || 1,
@@ -171,7 +163,6 @@ export class AuthorityManagementDraftsAndLettersComponent implements OnInit, OnD
         order: filterData.order || this.filter()?.order || 0,
       };
       
-      // Use searchText from filterData if available, otherwise from form
       const finalSearchText = filterData.searchText || searchText;
       if (finalSearchText) {
         updatedFilter.searchText = finalSearchText;
@@ -183,7 +174,6 @@ export class AuthorityManagementDraftsAndLettersComponent implements OnInit, OnD
       
       const response = await this.authorityManagementService.getDraftsAndLetters(updatedFilter);
 
-      // Check if this request was aborted
       if (currentController.signal.aborted) {
         return;
       }
@@ -194,13 +184,11 @@ export class AuthorityManagementDraftsAndLettersComponent implements OnInit, OnD
         this._count.set(response.count);
       }
     } catch (error: any) {
-      // Don't show error if request was aborted
       if (error?.name !== 'AbortError') {
         console.error('Error loading drafts and letters:', error);
         this.toaster.error(ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER);
       }
     } finally {
-      // Only set loader to false if this is still the current request
       if (!currentController.signal.aborted) {
         this._loader.set(false);
       }

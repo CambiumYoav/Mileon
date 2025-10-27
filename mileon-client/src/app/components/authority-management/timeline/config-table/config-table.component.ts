@@ -41,7 +41,6 @@ export class ConfigTableComponent implements OnInit {
   @Input() height?: number = 200;
   @Input() inputFields: any;
 
-  // Signals for reactive state management
   private formDataSignal = toSignal(
     this.fbService.formData$.pipe(distinctUntilChanged()),
     { initialValue: null }
@@ -51,7 +50,6 @@ export class ConfigTableComponent implements OnInit {
   isSubmitted = signal(false);
   formState = signal(false);
 
-  // Computed signals
   form = computed(() => {
     return this.inputFields ? Array.from(Object.values(this.inputFields)) : [];
   });
@@ -61,7 +59,6 @@ export class ConfigTableComponent implements OnInit {
   });
 
   constructor() {
-    // Effect to handle form data changes
     effect(() => {
       const data = this.formDataSignal();
       if (data && data.controls) {
@@ -73,13 +70,10 @@ export class ConfigTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialize form and form groups based on input fields
     if (this.inputFields) {
-      // The computed signals will automatically update when inputFields change
     }
   }
 
-  // Helper methods for template
   isArray(value: any): boolean {
     return Array.isArray(value);
   }

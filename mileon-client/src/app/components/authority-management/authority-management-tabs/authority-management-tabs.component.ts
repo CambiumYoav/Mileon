@@ -39,11 +39,9 @@ export class AuthorityManagementTabsComponent implements OnInit {
   }
 
   changeTab(tab: TabAttributes): void {
-    // Update active tab properties
     this._currentActive.set(tab.text);
     this._currentActiveTabID.set(tab.id!);
 
-    // Save active tab ID in session storage
     if (tab.id) {
       this.sessionService.set('currentActiveTabID', tab.id.toString());
     }

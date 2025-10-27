@@ -44,7 +44,6 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
   private readonly fbService = inject(TimelineSettingsFormService);
   private readonly timelineService = inject(TimelineService);
 
-  // Private signals
   private readonly _timeLinePath = signal<string>('');
   private readonly _selectedStep = signal<TimelineItem>({} as TimelineItem);
   private readonly _steps = signal<TimelineItem[]>([]);
@@ -53,13 +52,11 @@ export class TicketTimelineBarComponent implements OnInit, OnChanges {
   private readonly _switchStep = signal<TimelineItem | undefined>(undefined);
   private readonly _formSubmitted = signal<boolean>(false);
 
-  // Convert RxJS subscription to signal
   private readonly submitFormSignal = toSignal(
     this.fbService.submitForm,
     { initialValue: null }
   );
 
-  // Public computed signals
   readonly timeLinePath = computed(() => this._timeLinePath());
   readonly selectedStep = computed(() => this._selectedStep());
   readonly stepsSignal = computed(() => this._steps());

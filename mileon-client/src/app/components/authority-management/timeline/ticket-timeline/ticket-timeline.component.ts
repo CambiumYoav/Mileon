@@ -103,9 +103,9 @@ export class TicketTimelineComponent implements OnInit {
               ...serverItem,
             });
           } 
-          // else {
-          //   map.set(serverItem['enumName'], serverItem);
-          // }
+          else {
+            map.set(serverItem['enumName'], serverItem);
+          }
         });
 
         this.steps.set(Array.from(map.values()));

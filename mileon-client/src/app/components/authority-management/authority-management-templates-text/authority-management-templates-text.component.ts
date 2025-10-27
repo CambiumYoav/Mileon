@@ -61,8 +61,6 @@ export class AuthorityManagementTemplatesTextComponent extends AuthorityManageme
     this.modeDetectionService.detectAndSetMode(
       'AuthorityManagementTemplatesTextComponent'
     );
-    // Note: The subscription to createdAuthority$ is handled by the base component's effect
-    // The base component will automatically call fetchTemplates() when currentAuthority changes
   }
   protected override getFormDefinition(forms: TemplatesForms): DynamicRow[] {
     if (!this.isEditMode() || !this.isDialogEditSignal()) {

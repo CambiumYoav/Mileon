@@ -55,7 +55,6 @@ export class AuthorityManagementSearchComponent implements OnInit {
   ngOnInit(): void {}
 
   async sendFormValue(searchForm: FormGroup) {
-    this.authorityManagementSearchService.searchForm = searchForm;
     const formValue = searchForm.value;
     for (let key of Object.keys(formValue)) {
       if (formValue[key] && typeof formValue[key] === 'object') {

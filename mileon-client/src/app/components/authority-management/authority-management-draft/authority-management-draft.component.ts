@@ -68,7 +68,6 @@ export class AuthorityManagementDraftComponent
     try {
       super.ngOnInit();
       
-      // Subscribe to route parameter changes
       this.routeSubscription = this.route.paramMap.subscribe((params: ParamMap) => {
         const draftId = params.get('id');
         const name = params.get('name');

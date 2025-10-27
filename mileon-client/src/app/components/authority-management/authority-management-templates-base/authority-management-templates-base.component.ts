@@ -50,7 +50,6 @@ export abstract class AuthorityManagementTemplateBaseComponent implements OnInit
   
   dialogData: DynamicRow[] = [];
 
-  // Move effect to field initializer to ensure it runs in injection context
   private readonly authorityEffect = effect(() => {
     const authority = this.currentAuthority();
     if (authority) {

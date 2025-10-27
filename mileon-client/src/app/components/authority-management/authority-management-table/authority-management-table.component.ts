@@ -92,14 +92,11 @@ export class AuthorityManagementTableComponent implements OnInit, OnDestroy {
       this._originalData.set(JSON.parse(JSON.stringify(this.data())));
     });
 
-    // Subscribe to Subject in ngOnInit (Angular 19 pattern with proper lifecycle)
     const subject = this.selectedAuthorityData();
     if (subject) {
       this.subscription = subject.subscribe((data) => {
         if (data) {
           this._selectedData.set(data);
-          // Don't emit onRowClick here to avoid infinite loop
-          // The click event is already handled via (onRowClick) binding
         }
       });
     }

@@ -71,12 +71,10 @@ export class AuthorityManagementLetterComponent
     try {
       super.ngOnInit();
       
-      // Subscribe to route parameter changes
       this.routeSubscription = this.route.paramMap.subscribe((params: ParamMap) => {
         const letterId = params.get('id');
         const name = params.get('name');
         
-        // Validate ID is not a placeholder value
         if (letterId && (letterId === 'selected' || letterId === 'undefined' || letterId === 'null')) {
           console.error('Invalid letter ID:', letterId);
           this.toaster.error('מזהה מכתב לא תקין');

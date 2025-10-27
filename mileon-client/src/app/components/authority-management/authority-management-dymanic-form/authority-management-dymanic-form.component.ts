@@ -60,7 +60,6 @@ export class AuthorityManagementDymanicFormComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Watch for changes in isSubmitted flag
     if (changes['isSubmitted'] && changes['isSubmitted'].currentValue === true) {
       this.onSubmit();
     }

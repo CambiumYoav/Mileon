@@ -14,8 +14,8 @@ export class AuthorityManagementSearchService {
   private initSortOrder: SortOrder = SortOrder.asc;
   constructor(private baseFormService: BaseFormService) {
     this.form = this.baseFormService.createFormGroup(TicketFilterOptions);
-    //NOTE - if search not works check this line and remove it
-    this.searchForm = this.baseFormService.createFormGroup(TicketFilterOptions);
+    // Use the same form instance for both form and searchForm to ensure synchronization
+    this.searchForm = this.form;
     const violationDetailsFilterGroup = this.form.get(
       'violationDetailsFilter'
     ) as FormGroup;

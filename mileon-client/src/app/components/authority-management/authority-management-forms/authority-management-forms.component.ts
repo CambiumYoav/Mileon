@@ -77,7 +77,6 @@ export class AuthorityManagementFormsComponent implements OnInit {
   private readonly modeDetectionService = inject(ModeDetectionService);
   private readonly router = inject(Router);
 
-  // Move effects to field initializers to ensure they run in injection context
   private readonly createdAuthorityEffect = effect(() => {
     const createdId = this.sharedDataService.getCurrentCreatedAuthority();
     if (createdId) {

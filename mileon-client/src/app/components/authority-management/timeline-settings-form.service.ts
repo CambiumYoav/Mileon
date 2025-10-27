@@ -59,7 +59,6 @@ export class TimelineSettingsFormService {
     this.submitForm.emit();
   }
 
-  // receive all the settings fields and construct a form based on the fields.
   initializeForm(fields: SettingField[]): void {
     this.fields = fields;
     const formGroups: Record<string, FormGroup> = {};
