@@ -8,8 +8,10 @@
     "start:prod": "ng serve --configuration=local",
     "build": "ng build --configuration=development",
     "build:local": "ng build --configuration=local",
+    "build:preprod": "ng build --configuration=preprod",
     "build:dev": "ng build --configuration=development",
     "build:prod": "ng build --configuration=prod",
+    "build:coders": "ng build --configuration=coders",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

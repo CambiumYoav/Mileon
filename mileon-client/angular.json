@@ -40,6 +40,19 @@
             "scripts": []
           },
           "configurations": {
+            "preprod": {
+              "optimization": true,
+              "extractLicenses": false,
+              "sourceMap": false,
+              "namedChunks": true,
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.preprod.ts"
+                }
+              ]
+            },
             "production": {
               "budgets": [
                 {
@@ -84,10 +97,20 @@
                   "with": "src/environments/environment.local.ts"
                 }
               ]
+            },
+            "coders": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": false,
+              "namedChunks": true,
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.coders.ts"
+                }
+              ]
             }
-          
-         
-        
           },
           "defaultConfiguration": "production"
         },
@@ -102,6 +125,12 @@
             },
             "local": {
               "buildTarget": "mileon-client:build:local"
+            },
+            "preprod": {
+              "buildTarget": "mileon-client:build:preprod"
+            },
+            "coders": {
+              "buildTarget": "mileon-client:build:coders"
             }
           },
           "defaultConfiguration": "development"
