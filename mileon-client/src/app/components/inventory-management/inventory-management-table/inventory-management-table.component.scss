@@ -1,0 +1,140 @@
+@import "../../../../styles/elements.scss";
+
+:host {
+  .ticketsTable {
+    height: 100%;
+
+    .wrap-table {
+      height: 100%;
+      border: 1.01763px solid $colorLightBlueBorder;
+      background: $colorWhite;
+      padding: 0;
+      overflow-y: auto;
+
+      table {
+        margin: 0;
+        text-align: right;
+        color: $colorGray;
+        font-family: $fontOpenSans;
+        text-align: center;
+
+        background-color: $colorDarkBlue;
+
+        thead {
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 22px;
+        }
+
+        tbody {
+          font-weight: 300;
+          font-size: 15px;
+          line-height: 20px;
+          border-top: none;
+
+          tr {
+            cursor: pointer;
+
+            &:hover {
+              background-color: $colorLightBlue;
+            }
+          }
+        }
+
+        td {
+          padding: 1rem 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        th {
+          padding: 1.5rem 0;
+
+          // .sort {
+          //     color: white;
+
+          //     &.show {
+          //         color: black;
+          //     }
+          // }
+
+          &:hover {
+            cursor: pointer;
+
+            .sort {
+              color: black;
+            }
+          }
+        }
+
+        .checkbox {
+          padding: 1rem 0.5rem;
+        }
+
+        input[type="checkbox"]:before {
+          font-size: 11px;
+          width: 18px;
+          height: 18px;
+          border: 1px solid $colorDarkBlue;
+        }
+
+        // input[type=checkbox]:checked:before {
+        //     color: $colorDarkBlue !important;
+        // }
+      }
+    }
+
+    .paginator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row-reverse;
+      position: absolute;
+      right: 50%;
+      transform: translateX(50%);
+      bottom: 0;
+      height: 3rem;
+
+      .page {
+        font-family: $fontOpenSans;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 22px;
+        padding: 5px;
+        cursor: pointer;
+
+        &.current {
+          font-weight: 700;
+        }
+      }
+
+      .angle {
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: 600;
+        margin: 1rem;
+      }
+    }
+  }
+
+  @media (max-width: 1300px) {
+    th {
+      padding: 0.5rem 0 !important;
+      font-size: 14px !important; // to ask chana
+    }
+
+    .paginator {
+      height: 2.5rem !important;
+    }
+  }
+}
+
+::ng-deep .table thead th {
+  background-color: $colorDarkBlue !important;
+  position: sticky;
+}
+
+::ng-deep .table thead th .title {
+  color: white !important;
+}

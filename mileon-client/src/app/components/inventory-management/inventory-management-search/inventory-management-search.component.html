@@ -1,0 +1,14 @@
+<app-search-bar
+  [form]="inventoryManagementSearchForm"
+  [showFilters]="false"
+  (search)="sendFormValue($event)"
+  [submitOnKey]="true"
+  [resultData]="resultData"
+  [total]="total"
+  [searchTextValue]="searchText"
+  [showDatePicker]="false"
+  [hasResultsDropdown]="hasResultsDropdown"
+  searchBy="רשות,שם פקח,תפקיד,מחלקה משויכת..."
+  searchTitle="חיפוש"
+  [showPlaceholder]="true"
+></app-search-bar>

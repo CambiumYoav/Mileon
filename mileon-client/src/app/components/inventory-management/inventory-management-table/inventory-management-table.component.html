@@ -1,0 +1,16 @@
+<app-table
+  [data]="data"
+  [columns]="columns"
+  [total]="total"
+  [form]="userForm"
+  (onRowEvent)="onEditDevice($event)"
+  [showPaginator]="showPaginator"
+  (onFormChanges)="emitServerSort($event)"
+  [icons]="TicketStagesIcons"
+  [loader]="loader"
+  (onIconClick)="onEditDevice($event)"
+>
+</app-table>
+
+
+<!-- [selectedItemData]="selectedUserData" -->
