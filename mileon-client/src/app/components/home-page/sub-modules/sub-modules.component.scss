@@ -1,0 +1,64 @@
+::ng-deep .mat-bottom-sheet-container {
+  border-radius: 45px 45px 0 0;
+  padding: 24px;
+  background-color: white;
+  height: 300px;
+  width: 100vw;
+  max-width: 100vw;
+}
+.sub-modules {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 55px;
+  margin-left: auto;
+  //   align-items: flex-end;
+
+  .display-paragraph {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+}
+
+.my-swiper {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.slide-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 32px 0 0;
+  width: 100%;
+  height: 100%;
+  max-width: 185px;
+  max-height: 185px;
+  font-size: 20px;
+  background: #d0e5f9;
+  border-radius: 10px;
+  border: none;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: #0f65af;
+    color: #fff;
+  }
+}
+
+:host ::ng-deep .swiper-button-prev,
+:host ::ng-deep .swiper-button-next {
+  color: black;
+  background: #d0e5f9;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+:host ::ng-deep .swiper-button-prev::after,
+:host ::ng-deep .swiper-button-next::after {
+  font-size: 18px;
+ 
+}

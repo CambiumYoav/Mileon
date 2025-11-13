@@ -1,0 +1,36 @@
+<div class="header">
+  <app-header [sideNav]="main_menu"></app-header>
+</div>
+
+<div>
+  <app-main-menu #main_menu>
+    <div class="content">
+      <div class="container w-100 m-5">
+        <h1 class="qoute"></h1>
+        <div
+          class="modules-container"
+          *ngIf="menu && menu.menuItems.length > 0"
+        >
+          <ng-container *ngFor="let module of menu.menuItems">
+            <button
+              (click)="openBottomSheet(module)"
+              [disabled]="!module.active"
+              *ngIf="module.showItem"
+            >
+              <img
+                [src]="'../assets/icons/main-page/' + module.icon"
+                alt="icon"
+              />
+              <div class="description">
+                <h5 class="title">
+                  <span class="display-name">{{ module.displayName }}</span>
+                  {{ module.subDisplayName }}
+                </h5>
+              </div>
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </app-main-menu>
+</div>

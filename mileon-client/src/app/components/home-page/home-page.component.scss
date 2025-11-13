@@ -1,0 +1,64 @@
+@import "../../../styles/elements.scss";
+:host {
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .content {
+    height: 92vh;
+    background-color: $colorLightGray;
+    width: 100%;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0 30px;
+    .qoute {
+      font-size: 36px;
+    }
+    .modules-container {
+      width: 90%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 45px;
+      button {
+        width: calc(25% - 30px);
+        height: 100px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background-color: white;
+        border: 2px solid #e3e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        img {
+          height: 59px;
+          width: 59px;
+        }
+        .description {
+          margin-right: 10px;
+          padding-top: 5px;
+          display: flex;
+          flex-wrap: wrap;
+          width: 60%;
+          .title {
+            font-size: 20px;
+            margin: 0;
+            line-height: 25px;
+            text-align: right;
+            .display-name{
+              font-weight: 800;
+            }
+          }
+        }
+        &.disabled {
+          pointer-events: none;
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}
