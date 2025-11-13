@@ -1,4 +1,13 @@
-import { Component, OnInit, signal, computed, effect, inject, runInInjectionContext, Injector } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  computed,
+  effect,
+  inject,
+  runInInjectionContext,
+  Injector,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -39,7 +48,11 @@ import { RouterService } from '../../../services/router.service';
 import { InfrastructuresSearchComponent } from '../infrastructures-search/infrastructures-search.component';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
 import { ButtonComponent } from '../../shared/base/button/button.component';
-  import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import {
+  InfrastructureEnumDialogs,
+  InfrastructureEnumTitles,
+} from '../../../types/enum/infrastructure.enum';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-chips',
@@ -50,8 +63,8 @@ import { ButtonComponent } from '../../shared/base/button/button.component';
     CommonModule,
     InfrastructuresSearchComponent,
     InfrastructuresTableComponent,
-    ButtonComponent
-  ]
+    ButtonComponent,
+  ],
 })
 export class InfrastructuresChipsComponent implements OnInit {
   private infrastructureServer = inject(InfrastructureService);
@@ -95,9 +108,11 @@ export class InfrastructuresChipsComponent implements OnInit {
 
   constructor() {
     this.infrastructureForm = this.infrastructureSearchFormService.form;
-    
-    const authorityIDSignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
-    
+
+    const authorityIDSignal = toSignal(this.authorityService.authorityId$, {
+      initialValue: null,
+    });
+
     effect(() => {
       const authorityID = authorityIDSignal();
       if (authorityID) {
@@ -114,17 +129,15 @@ export class InfrastructuresChipsComponent implements OnInit {
     const form = new InfrastructureForms();
     this.ownerDialogData.set(form.InfrastructureChipsOwnerForm);
     this.petDialogData.set(form.InfrastructureChipsPetForm);
-    
-    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
-      this.searchText()
-    );
-    
+
+    const { searchData, filter } =
+      InfrastructuresUtils.initializeSearchAndFilters(this.searchText());
+
     this.searchData.set(searchData);
     this.filter.set(filter);
-    
+
     this.authorityService.setMunicipalsToNationalAdmin();
   }
-
 
   back() {
     this.routerService.back();
@@ -136,8 +149,7 @@ export class InfrastructuresChipsComponent implements OnInit {
       const dialogRef = this.dialog.open(dialogComponent, {
         autoFocus: false,
         data: {
-          description:
-            InfrastructureEnumDialogs.ChipsDialogDiscription,
+          description: InfrastructureEnumDialogs.ChipsDialogDiscription,
         },
       });
 
@@ -177,9 +189,11 @@ export class InfrastructuresChipsComponent implements OnInit {
         // height: '745px',
         autoFocus: false,
         data: {
-          mainTitle: isEdit ? InfrastructureEnumTitles.EditDialogTitle : InfrastructureEnumTitles.AddDialogTitle, // Dynamic title
+          mainTitle: isEdit
+            ? InfrastructureEnumTitles.EditDialogTitle
+            : InfrastructureEnumTitles.AddDialogTitle, // Dynamic title
           sections: [
-            { 
+            {
               title: InfrastructureEnumTitles.OwnerDialogTitle, // Title for the owner section
               rows: ownerDialogData, // Fields for the owner section
             },
@@ -218,22 +232,16 @@ export class InfrastructuresChipsComponent implements OnInit {
         height: '307px',
         autoFocus: false,
         data: {
-          description:  
-            InfrastructureEnumDialogs.ChipsDialogExportDiscription,
+          description: InfrastructureEnumDialogs.ChipsDialogExportDiscription,
         },
       });
-      
-      runInInjectionContext(this.injector, () => {
-        const afterClosedSignal = toSignal(dialogRef.afterClosed());
-        const dialogEffectRef = effect(() => {
-          const result = afterClosedSignal();
-          if (result) {
-            this.exportData();
-            this.dialog.closeAll();
-            dialogEffectRef.destroy();
-          }
+
+      dialogRef
+        .afterClosed()
+        .pipe(take(1))
+        .subscribe((res) => {
+          if (res?.confirmed) this.exportData();
         });
-      });
     }
   }
 
@@ -283,7 +291,7 @@ export class InfrastructuresChipsComponent implements OnInit {
             res.totalRows,
             res.successfulRows,
             res.failedRows,
-            InfrastructureEnumDialogs.ChipsDialogImportDiscription,
+            InfrastructureEnumDialogs.ChipsDialogImportDiscription
           );
           // if (res.success) {
           //   this.loadData(this.infrastructureSearchFormService.form);
@@ -377,7 +385,11 @@ export class InfrastructuresChipsComponent implements OnInit {
       );
       if (result && result?.success) {
         await this.loadData(this.infrastructureSearchFormService.form);
-        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
+        InfrastructuresUtils.handleInsertUpdateSuccess(
+          action,
+          this.toaster,
+          this.dialog
+        );
       }
     } catch (e) {
       InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
@@ -414,11 +426,12 @@ export class InfrastructuresChipsComponent implements OnInit {
       city: rowData.address?.cityID,
       streetID: rowData.address?.streetID,
     };
-    
-    const updatedOwnerDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
-      this.ownerDialogData(),
-      transformedData
-    );
+
+    const updatedOwnerDialogData =
+      InfrastructuresUtils.mapRowDataToDialogFields(
+        this.ownerDialogData(),
+        transformedData
+      );
     this.ownerDialogData.set(updatedOwnerDialogData);
 
     const updatedPetDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
@@ -426,7 +439,7 @@ export class InfrastructuresChipsComponent implements OnInit {
       transformedData
     );
     this.petDialogData.set(updatedPetDialogData);
-    
+
     this.obj = transformedData;
     this.openDialogForm(true);
   }
@@ -455,7 +468,7 @@ export class InfrastructuresChipsComponent implements OnInit {
 
   async loadData(filter: any) {
     this.loader.set(true);
-    
+
     filter = InfrastructuresUtils.normalizeFilter(filter);
 
     const startTime = Date.now();
@@ -466,7 +479,7 @@ export class InfrastructuresChipsComponent implements OnInit {
         this.infrastructureSearchFormService.form.value.searchText;
 
       const updatedFilter = {
-        ...currentFilter
+        ...currentFilter,
       };
       const response = await this.infrastructureServer.getInfrastructureTable(
         updatedFilter,
@@ -474,23 +487,25 @@ export class InfrastructuresChipsComponent implements OnInit {
       );
       if (response?.data) {
         // Map the response to manipulate the address object
-        this.data.set(response.data.map((item: any) => {
-          const streetName = item.address?.street?.streetName;
-          const houseNumber = item.address?.houseNumber;
-          const cityName = item.address?.city?.cityName;
-          const cityId = item.address?.cityID;
-          // Create a full address string
-          const fullAddress =
-            `${streetName} ${houseNumber}, ${cityName}`.trim();
+        this.data.set(
+          response.data.map((item: any) => {
+            const streetName = item.address?.street?.streetName;
+            const houseNumber = item.address?.houseNumber;
+            const cityName = item.address?.city?.cityName;
+            const cityId = item.address?.cityID;
+            // Create a full address string
+            const fullAddress =
+              `${streetName} ${houseNumber}, ${cityName}`.trim();
 
-          // Return the updated object
-          return {
-            ...item,
-            streetName, // Add streetName directly if needed
-            fullAddress, // Include the full address if necessary
-            cityId,
-          };
-        }));
+            // Return the updated object
+            return {
+              ...item,
+              streetName, // Add streetName directly if needed
+              fullAddress, // Include the full address if necessary
+              cityId,
+            };
+          })
+        );
 
         this.total.set(response.totalRecords);
         this.count.set(response.data.length);
@@ -498,7 +513,7 @@ export class InfrastructuresChipsComponent implements OnInit {
     } catch (e) {
       InfrastructuresUtils.handleError(e, 'loadData');
     }
-    
+
     await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }

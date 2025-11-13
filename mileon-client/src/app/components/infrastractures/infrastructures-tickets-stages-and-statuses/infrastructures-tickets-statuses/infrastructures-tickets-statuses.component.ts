@@ -42,7 +42,7 @@ export class InfrastructuresTicketsStatusesComponent implements OnInit {
   total = signal<number>(0);
   count = signal<number>(0);
   loader = signal<boolean>(false);
-  
+  exportDialogResult = signal<any>(null);
   infrastructureForm: FormGroup;
 
   constructor() {
@@ -69,11 +69,11 @@ export class InfrastructuresTicketsStatusesComponent implements OnInit {
       const dialogInstance = dialogRef.componentInstance;
       
       const dialogEffectRef = effect(() => {
-        const result = dialogInstance.dataSubject();
+        const result = this.exportDialogResult();
         if (result) {
           this.exportData();
           this.dialog.closeAll();
-          dialogEffectRef.destroy();
+          this.exportDialogResult.set(null); // Reset after handling
         }
       });
     }

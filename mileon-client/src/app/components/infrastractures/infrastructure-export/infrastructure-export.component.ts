@@ -1,50 +1,44 @@
-import { Component, Inject, signal, inject } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { Component, Inject, inject, signal } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { ConstPath } from '../../../constants/const_path';
-import { ButtonComponent } from "../../shared/base/button/button.component";
+import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructureEnumTexts } from '../../../types/enum/infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructure-export',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    ButtonComponent
-  ],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './infrastructure-export.component.html',
   styleUrls: ['./infrastructure-export.component.scss'],
 })
 export class InfrastructureExportComponent {
   private dialogRef = inject(MatDialogRef<InfrastructureExportComponent>);
-  private dialog = inject(MatDialog);
 
   Icons = ConstPath;
-  
   dataSubject = signal<any>(null);
-  title = signal<string>(InfrastructureEnumTexts.ExportFileTitle);
-  description = signal<string>('');
-  isSignsExport = signal<boolean>(false);
+  title = InfrastructureEnumTexts.ExportFileTitle;
+  description = '';
+  isSignsExport = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { description: string; isSignsExport?: boolean }
   ) {
-    this.description.set(data?.description || InfrastructureEnumTexts.ExportFileDescription); // Default value
-    this.isSignsExport.set(data?.isSignsExport || false);
+    this.description =
+      data?.description || InfrastructureEnumTexts.ExportFileDescription;
+    this.isSignsExport = !!data?.isSignsExport;
   }
 
   onSubmit() {
-    this.dataSubject.set('');
+    // Return whatever you need. Here a simple flag:
+    this.dialogRef.close({
+      confirmed: true,
+      isSignsExport: this.isSignsExport,
+    });
   }
 
   onNoClick(): void {
-    this.dialog.closeAll();
+    this.dialogRef.close(null);
   }
 }

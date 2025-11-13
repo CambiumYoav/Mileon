@@ -18,6 +18,7 @@ import { SearchFormService } from '../../../shared/search-bar/search-form.servic
 import { ToastrService } from 'ngx-toastr';
 import { ButtonComponent } from '../../../shared/base/button/button.component';
 import { InfrastructuresTableComponent } from '../../infrastructures-table/infrastructures-table.component';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-tickets-stages',
@@ -71,16 +72,15 @@ export class InfrastructuresTicketsStagesComponent implements OnInit {
           description: 'קוד,תיאור',
         },
       });
-      const dialogInstance = dialogRef.componentInstance;
+   
       
-      const dialogEffectRef = effect(() => {
-        const result = dialogInstance.dataSubject();
-        if (result) {
-          this.exportData();
-          this.dialog.closeAll();
-          dialogEffectRef.destroy();
-        }
+      dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((res) => {
+        if (res?.confirmed) this.exportData();
       });
+  
     }
   }
 

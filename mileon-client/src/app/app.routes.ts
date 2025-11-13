@@ -7,43 +7,50 @@ import { ROUTE_PATH } from './constants/routerPath';
 import { RoleGuard } from './guards/role.guard';
 import { RoleEnum } from './types/enum/moduleEnum';
 import { TicketsNewComponent } from './components/tickets-new/tickets-new.component';
+import { HomePageComponent } from './components/home-page/home-page.component';
 
 export const childRoutes: Routes = [
   {
     path: ROUTE_PATH.TicketsNew.Home, // 'tickets-new'
     loadChildren: () =>
-      import('./components/tickets-new/tickets-routes')
-        .then(m => m.ticketsRoutes),
+      import('./components/tickets-new/tickets-routes').then(
+        (m) => m.ticketsRoutes
+      ),
   },
   {
     path: ROUTE_PATH.Terminal.Home, // 'msofon'
     loadChildren: () =>
-      import('./components/terminal/terminal-routing')
-        .then(m => m.terminalRoutes),
+      import('./components/terminal/terminal-routing').then(
+        (m) => m.terminalRoutes
+      ),
   },
   {
     path: ROUTE_PATH.UsersPermissions.Home, // 'users-permissions'
     loadChildren: () =>
-      import('./components/users-premissions/users-permissions-routes')
-        .then(m => m.usersPermissionsRoutes),
+      import('./components/users-premissions/users-permissions-routes').then(
+        (m) => m.usersPermissionsRoutes
+      ),
   },
   {
     path: ROUTE_PATH.Infrastructure.Home, // 'infrastructure'
     loadChildren: () =>
-      import('./components/infrastractures/infrastructures-routing')
-        .then(m => m.infrastructuresRoutes),
+      import('./components/infrastractures/infrastructures-routing').then(
+        (m) => m.infrastructuresRoutes
+      ),
   },
   {
     path: ROUTE_PATH.Notices.Home, // 'notices'
     loadChildren: () =>
-      import('./components/notices/notices-routing')
-        .then(m => m.noticesRoutes),
+      import('./components/notices/notices-routing').then(
+        (m) => m.noticesRoutes
+      ),
   },
   {
     path: ROUTE_PATH.Management.Home, // 'management'
     loadChildren: () =>
-      import('./components/authority-management/authority-management-routing')
-        .then(m => m.authorityManagementRoutes),
+      import(
+        './components/authority-management/authority-management-routing'
+      ).then((m) => m.authorityManagementRoutes),
   },
   {
     path: `${ROUTE_PATH.InventoryManagement.Home}`, // 'inventory-management'
@@ -56,7 +63,7 @@ export const childRoutes: Routes = [
 export const routes: Routes = [
   { path: ``, redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: MainComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomePageComponent, canActivate: [AuthGuard] },
   {
     path: 'main',
     component: MainComponent,
@@ -64,7 +71,7 @@ export const routes: Routes = [
     children: [
       {
         path: RoleEnum.ADMIN,
-     
+
         children: [
           {
             path: '',

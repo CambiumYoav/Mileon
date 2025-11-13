@@ -1885,6 +1885,7 @@ export class InfrastructureForms {
           type: 'number',
           label: 'קוד',
           value: 0,
+          isRequired: false,
           // validations: { pattern: /^\d+$/ },
           disabled: true,
           hide: false,

@@ -38,6 +38,7 @@ import { CheckboxComponent } from '../../shared/base/checkbox/checkbox.component
 import { InfrastructuresSearchComponent } from '../infrastructures-search/infrastructures-search.component';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
 import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-plaintiffs-causes',
@@ -206,17 +207,14 @@ export class InfrastructuresPlaintiffsCausesComponent {
       },
     });
 
-    // Handle export dialog result using runInInjectionContext for proper effect usage
-    runInInjectionContext(this.injector, () => {
-      const dialogResult = toSignal(dialogRef.afterClosed());
-      effect(() => {
-        const result = dialogResult();
-        if (result) {
-          this.exportData();
-          this.dialog.closeAll();
-        }
-      });
+    
+    dialogRef
+    .afterClosed()
+    .pipe(take(1))
+    .subscribe((res) => {
+      if (res?.confirmed) this.exportData();
     });
+
   }
 
   async loadData(filter: any): Promise<void> {

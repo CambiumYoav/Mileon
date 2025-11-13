@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, inject, signal, computed, effect, ChangeDetectionStrategy } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -238,11 +238,13 @@ export class InfrastructuresTicketsSourceComponent implements OnInit, OnDestroy 
         },
       });
       
-      const result = await firstValueFrom(dialogRef.afterClosed());
-      
-      if (result) {
-        await this.exportData();
-      }
+      dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((res) => {
+        if (res?.confirmed) this.exportData();
+      });
+  
     }
   }
 

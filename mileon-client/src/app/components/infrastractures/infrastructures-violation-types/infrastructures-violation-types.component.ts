@@ -73,7 +73,7 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
   readonly dialogData = signal<DynamicRow[]>([]);
   readonly infrastructureForm = signal<FormGroup>(this.infrastructureSearchFormService.form);
   readonly loader = signal<boolean>(false);
-
+  exportDialogResult = signal<any>(null);
   readonly Icons = ConstPath;
   readonly SearchByTextEnum = SearchByTextEnum;
 
@@ -190,10 +190,11 @@ export class InfrastructuresViolationTypesComponent implements OnInit, OnDestroy
     });
 
     effect(() => {
-      const result = dialogRef.componentInstance.dataSubject();
+      const result = this.exportDialogResult();
       if (result) {
         this.exportData();
         this.dialog.closeAll();
+        this.exportDialogResult.set(null); // Reset after handling
       }
     });
   }

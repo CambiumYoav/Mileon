@@ -35,6 +35,7 @@ import { InfrastructuresSearchComponent } from '../infrastructures-search/infras
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-citizens',
@@ -201,17 +202,13 @@ export class InfrastructuresCitizensComponent implements OnInit {
         },
       });
       
-      runInInjectionContext(this.injector, () => {
-        const afterClosedSignal = toSignal(dialogRef.afterClosed());
-        const dialogEffectRef = effect(() => {
-          const result = afterClosedSignal();
-          if (result) {
-            this.exportData();
-            this.dialog.closeAll();
-            dialogEffectRef.destroy();
-          }
-        });
+      dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((res) => {
+        if (res?.confirmed) this.exportData();
       });
+  
     }
   }
 

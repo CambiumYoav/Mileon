@@ -1,10 +1,20 @@
-import { Component, signal, computed, effect, inject, OnInit, OnDestroy, runInInjectionContext, Injector } from '@angular/core';
+import {
+  Component,
+  signal,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  OnDestroy,
+  runInInjectionContext,
+  Injector,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
-import { ConstPath } from '../../../constants/const_path'; 
-import { TitlesEnum } from '../../../types/enum/titlesEnum'; 
+import { ConstPath } from '../../../constants/const_path';
+import { TitlesEnum } from '../../../types/enum/titlesEnum';
 import { Column } from '../../../types/table';
 import {
   InfrastructureForms,
@@ -36,7 +46,11 @@ import { ButtonComponent } from '../../shared/base/button/button.component';
 import { CheckboxComponent } from '../../shared/base/checkbox/checkbox.component';
 import { InfrastructuresSearchComponent } from '../infrastructures-search/infrastructures-search.component';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
-import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import {
+  InfrastructureEnumDialogs,
+  InfrastructureEnumTitles,
+} from '../../../types/enum/infrastructure.enum';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-sub-stages',
@@ -49,8 +63,8 @@ import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../ty
     ButtonComponent,
     CheckboxComponent,
     InfrastructuresSearchComponent,
-    InfrastructuresTableComponent
-  ]
+    InfrastructuresTableComponent,
+  ],
 })
 export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
   private infrastructureServer = inject(InfrastructureService);
@@ -64,7 +78,7 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
   title = signal<string>(TitlesEnum.InfrastructureSubStageTitle);
   Icons = ConstPath;
   SearchByTextEnum = SearchByTextEnum;
-  
+
   columns = signal<Column[]>([]);
   data = signal<any[]>([]);
   total = signal<number>(0);
@@ -87,12 +101,12 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
   ticketStatusData = signal<any[]>([]);
   currentAuthority = signal<string | null>(null);
   loader = signal<boolean>(false);
-  
+
   authorityID = toSignal(this.authorityService.authorityId$);
 
   constructor() {
     this.infrastructureForm = this.infrastructureSearchFormService.form;
-    
+
     effect(() => {
       const authorityID = this.authorityID();
       if (authorityID) {
@@ -104,11 +118,10 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeComponent();
-    
-    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
-      this.searchText()
-    );
-    
+
+    const { searchData, filter } =
+      InfrastructuresUtils.initializeSearchAndFilters(this.searchText());
+
     this.searchData.set(searchData);
     this.filter.set(filter);
   }
@@ -138,27 +151,25 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: {
         form: dialogData,
-        title: isEdit ? InfrastructureEnumTitles.EditDialogTitle : InfrastructureEnumTitles.AddDialogTitle,
+        title: isEdit
+          ? InfrastructureEnumTitles.EditDialogTitle
+          : InfrastructureEnumTitles.AddDialogTitle,
         isEdit,
       },
     });
 
     runInInjectionContext(this.injector, () => {
-      const dialogInstance = dialogRef.componentInstance;
-      const dataSubject = dialogInstance.dataSubject();
-      if (dataSubject) {
-        const dialogResult = toSignal(dataSubject);
-        effect(() => {
-          const result = dialogResult();
-          if (result && typeof result === 'object' && result !== null && 
-              'form' in result && 'isEdit' in result) {
-            const action = (result as any).isEdit
-              ? InfrastructureTableAction.Update
-              : InfrastructureTableAction.Add;
-            this.handleInsertOrUpdate((result as any).form, action);
-          }
-        });
-      }
+      const afterClosedSignal = toSignal(dialogRef.afterClosed());
+      const dialogEffectRef = effect(() => {
+        const result = afterClosedSignal();
+        if (result) {
+          const action = result.isEdit
+            ? InfrastructureTableAction.Update
+            : InfrastructureTableAction.Add;
+          this.handleInsertOrUpdate(result.form, action);
+          dialogEffectRef.destroy();
+        }
+      });
     });
   }
 
@@ -195,7 +206,7 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
           ? typeMapping[rowData.type!]
           : rowData.type, // Use the name for dropdown display
     };
-    
+
     const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
       this.dialogData(),
       transformedData
@@ -216,20 +227,12 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
       },
     });
 
-    runInInjectionContext(this.injector, () => {
-      const dialogInstance = dialogRef.componentInstance;
-      const dataSubject = dialogInstance.dataSubject();
-      if (dataSubject) {
-        const dialogResult = toSignal(dataSubject);
-        effect(() => {
-          const result = dialogResult();
-          if (result) {
-            this.exportData();
-            this.dialog.closeAll();
-          }
-        });
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((res) => {
+        if (res?.confirmed) this.exportData();
+      });
   }
 
   async exportData(): Promise<void> {
@@ -287,7 +290,11 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
 
       if (result && result?.success) {
         await this.loadData(this.infrastructureSearchFormService.form);
-        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
+        InfrastructuresUtils.handleInsertUpdateSuccess(
+          action,
+          this.toaster,
+          this.dialog
+        );
       }
     } catch (error) {
       InfrastructuresUtils.handleInsertUpdateError(error, this.toaster);
@@ -300,13 +307,13 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
         { currentPage: 1 },
         InfrastructureTablesTypes.TicketStatus
       );
-      
+
       if (response && Array.isArray(response.data)) {
         const options = response.data.map((item: any) => ({
           value: item.ticketStatusID,
           display: item.ticketStatusName,
         }));
-        
+
         this.ticketStatusOptions.set(options);
         this.ticketStatusData.set(response.data);
       }
@@ -325,7 +332,7 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
       const currentFilter = { ...filter };
       currentFilter.searchText =
         this.infrastructureSearchFormService.form.value.searchText;
-      
+
       this.filter.set(currentFilter);
 
       const updatedFilter = {
@@ -348,7 +355,7 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
                 item.type
             ) || item.type,
         }));
-        
+
         this.data.set(processedData);
         this.total.set(response.totalRecords);
         this.count.set(response.data.length);
@@ -356,14 +363,14 @@ export class InfrastructuresSubStagesComponent implements OnInit, OnDestroy {
     } catch (error) {
       InfrastructuresUtils.handleError(error, 'loadData');
     }
-    
+
     await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 
   async onCheckboxChange(includeInactive: boolean) {
     this.includeInactive.set(includeInactive);
-    
+
     await InfrastructuresUtils.handleIncludeInactiveChange(
       includeInactive,
       this.filter,

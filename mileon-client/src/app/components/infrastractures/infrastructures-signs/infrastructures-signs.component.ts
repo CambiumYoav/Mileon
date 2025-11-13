@@ -1,4 +1,13 @@
-import { Component, signal, effect, inject, OnInit, OnDestroy, runInInjectionContext, Injector } from '@angular/core';
+import {
+  Component,
+  signal,
+  effect,
+  inject,
+  OnInit,
+  OnDestroy,
+  runInInjectionContext,
+  Injector,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
@@ -29,7 +38,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
 import { AuthorityService } from '../../../services/authority.service ';
 import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
-import { SearchByTextEnum } from '../../../types/enum/searchByTextEnum';  
+import { SearchByTextEnum } from '../../../types/enum/searchByTextEnum';
 import { SearchFormService } from '../../shared/search-bar/search-form.service';
 import { RouterService } from '../../../services/router.service';
 import { ButtonComponent } from '../../shared/base/button/button.component';
@@ -37,6 +46,7 @@ import { CheckboxComponent } from '../../shared/base/checkbox/checkbox.component
 import { InfrastructuresSearchComponent } from '../infrastructures-search/infrastructures-search.component';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
 import { InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-signs',
@@ -49,8 +59,8 @@ import { InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enu
     ButtonComponent,
     CheckboxComponent,
     InfrastructuresSearchComponent,
-    InfrastructuresTableComponent
-  ]
+    InfrastructuresTableComponent,
+  ],
 })
 export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
   private infrastructureServer = inject(InfrastructureService);
@@ -85,14 +95,14 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
   loader = signal<boolean>(false);
   currentAuthority = signal<string | null>(null);
   includeInactive = signal<boolean>(false);
-  
+
   authorityID = toSignal(this.authorityService.authorityId$);
-  
+
   infrastructureForm: FormGroup;
 
   constructor() {
     this.infrastructureForm = this.infrastructureSearchFormService.form;
-    
+
     effect(() => {
       const authorityID = this.authorityID();
       if (authorityID) {
@@ -107,14 +117,13 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
     this.columns.set(tableColumns.SignsTable);
     const form = new InfrastructureForms();
     this.dialogData.set(form.InfrastructureSignsForm);
-    
-    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
-      this.searchText()
-    );
-    
+
+    const { searchData, filter } =
+      InfrastructuresUtils.initializeSearchAndFilters(this.searchText());
+
     this.searchData.set(searchData);
     this.filter.set(filter);
-    
+
     this.authorityService.setMunicipalsToNationalRegional();
   }
 
@@ -174,7 +183,9 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
         autoFocus: false,
         data: {
           form: dialogData,
-          title: isEdit ? InfrastructureEnumTitles.EditDialogTitle : InfrastructureEnumTitles.AddDialogTitle,
+          title: isEdit
+            ? InfrastructureEnumTitles.EditDialogTitle
+            : InfrastructureEnumTitles.AddDialogTitle,
           isSigns: true,
           isEdit: isEdit,
         },
@@ -186,9 +197,18 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
           const dialogResult = toSignal(dataSubject);
           effect(() => {
             const result = dialogResult();
-            if (result && typeof result === 'object' && result !== null && 
-                'form' in result && 'uploadedFiles' in result && 'isEdit' in result) {
-              const updatedForm = { ...(result as any).form, imagePath: (result as any).uploadedFiles };
+            if (
+              result &&
+              typeof result === 'object' &&
+              result !== null &&
+              'form' in result &&
+              'uploadedFiles' in result &&
+              'isEdit' in result
+            ) {
+              const updatedForm = {
+                ...(result as any).form,
+                imagePath: (result as any).uploadedFiles,
+              };
               const action = (result as any).isEdit
                 ? InfrastructureTableAction.Update
                 : InfrastructureTableAction.Add;
@@ -208,30 +228,23 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
           isSignsExport: true,
         },
       });
-      
-      runInInjectionContext(this.injector, () => {
-        const dialogInstance = dialogRef.componentInstance;
-        const dataSubject = dialogInstance.dataSubject();
-        if (dataSubject) {
-          const dialogResult = toSignal(dataSubject);
-          effect(() => {
-            const result = dialogResult();
-            if (result) {
-              this.exportData();
-              this.dialog.closeAll();
-            }
-          });
-        }
-      });
+
+      dialogRef
+        .afterClosed()
+        .pipe(take(1))
+        .subscribe((res) => {
+          if (res?.confirmed) this.exportData();
+        });
     }
   }
   async importData() {
     await InfrastructuresUtils.handleImportData(
-      () => this.infrastructureServer.importDataByTableType(
-        InfrastructureTablesTypes.Signs,
-        this.filesToUpload(),
-        this.currentAuthority()!
-      ),
+      () =>
+        this.infrastructureServer.importDataByTableType(
+          InfrastructureTablesTypes.Signs,
+          this.filesToUpload(),
+          this.currentAuthority()!
+        ),
       this.toaster,
       () => this.loadData(this.infrastructureSearchFormService.form)
     );
@@ -242,7 +255,7 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
       this.infrastructureSearchFormService.form.value.searchText,
       {
         authorityID: this.currentAuthority(),
-        includeInactive: this.includeInactive()
+        includeInactive: this.includeInactive(),
       }
     );
 
@@ -271,7 +284,11 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
       );
       if (result && result?.success) {
         await this.loadData(this.infrastructureSearchFormService.form);
-        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
+        InfrastructuresUtils.handleInsertUpdateSuccess(
+          action,
+          this.toaster,
+          this.dialog
+        );
       }
     } catch (e) {
       InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
@@ -407,7 +424,7 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
 
   async loadData(filter: any) {
     this.loader.set(true);
-    
+
     filter = InfrastructuresUtils.normalizeFilter(filter);
 
     const startTime = Date.now();
@@ -415,7 +432,7 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
       const currentFilter = { ...filter };
       currentFilter.searchText =
         this.infrastructureSearchFormService.form.value.searchText;
-      
+
       this.filter.set(currentFilter);
 
       const updatedFilter = {
@@ -449,7 +466,7 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
             streetID,
           };
         });
-        
+
         this.data.set(processedData);
         this.total.set(response.totalRecords);
         this.count.set(response.data.length);
@@ -457,14 +474,14 @@ export class InfrastructuresSignsComponent implements OnInit, OnDestroy {
     } catch (e) {
       InfrastructuresUtils.handleError(e, 'loadData');
     }
-    
+
     await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
 
   async onCheckboxChange(includeInactive: boolean) {
     this.includeInactive.set(includeInactive);
-    
+
     await InfrastructuresUtils.handleIncludeInactiveChange(
       includeInactive,
       this.filter,

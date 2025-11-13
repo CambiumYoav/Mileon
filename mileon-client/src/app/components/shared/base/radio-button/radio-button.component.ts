@@ -1,12 +1,12 @@
-import { 
-  Component, 
-  input, 
-  output, 
-  forwardRef, 
-  signal, 
+import {
+  Component,
+  input,
+  output,
+  forwardRef,
+  signal,
   computed,
   ChangeDetectionStrategy,
-  effect
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
@@ -29,9 +29,9 @@ export interface RadioOption {
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => RadioButtonComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class RadioButtonComponent implements ControlValueAccessor {
   options = input<RadioOption[]>([]);
@@ -41,25 +41,27 @@ export class RadioButtonComponent implements ControlValueAccessor {
   type = input<'default' | 'colored'>('default');
   direction = input<'horizontal' | 'vertical'>('horizontal');
   allowDeselect = input<boolean>(false); // Allow deselecting current option
-  
+
   valueChange = output<string>();
-  selectionState = output<{[key: string]: boolean}>();
+  selectionState = output<{ [key: string]: boolean }>();
 
   private internalValue = signal<string>('');
   private onChange = (value: string) => {};
   private onTouched = () => {};
 
   currentValue = computed(() => this.internalValue());
-  
+
   selectionStateMap = computed(() => {
-    const state: {[key: string]: boolean} = {};
-    this.options().forEach(option => {
+    const state: { [key: string]: boolean } = {};
+    this.options().forEach((option) => {
       state[option.value] = option.value === this.currentValue();
     });
     return state;
   });
 
-  containerClass = computed(() => `radio-options-container ${this.direction()}`);
+  containerClass = computed(
+    () => `radio-options-container ${this.direction()}`
+  );
 
   constructor() {
     effect(() => {
@@ -79,17 +81,16 @@ export class RadioButtonComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-  }
+  setDisabledState(isDisabled: boolean): void {}
 
   onRadioChange(value: string): void {
     let newValue = value;
-    
+
     // Handle deselection if allowDeselect is true and same option is clicked
     if (this.allowDeselect() && this.currentValue() === value) {
       newValue = '';
     }
-    
+
     this.internalValue.set(newValue);
     this.onChange(newValue);
     this.onTouched();
@@ -100,7 +101,7 @@ export class RadioButtonComponent implements ControlValueAccessor {
     return this.currentValue() === optionValue;
   }
 
-  getOptionBooleanState(): {[key: string]: boolean} {
+  getOptionBooleanState(): { [key: string]: boolean } {
     return this.selectionStateMap();
   }
 

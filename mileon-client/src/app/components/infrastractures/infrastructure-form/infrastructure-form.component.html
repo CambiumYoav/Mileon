@@ -2,19 +2,18 @@
   <div class="inline-header">
     <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
     <h5 class="title">{{ title() }}</h5>
-    
   </div>
   <!-- Form -->
   <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
     <div class="form-container">
       <!-- Loop through rows -->
       @for (row of rows(); track row) {
-        <div class="form-row">
-          <!-- Loop through fields within a row -->
-          @for (field of row.row; track field) {
-            <div
-              [class]="'form-field' + field.size"
-              [ngClass]="{
+      <div class="form-row">
+        <!-- Loop through fields within a row -->
+        @for (field of row.row; track field) {
+        <div
+          [class]="'form-field' + field.size"
+          [ngClass]="{
                 disabled: !!field.disabled,
                 'has-checkbox': field.type === 'checkbox',
                 'has-radio': field.type === 'radio',
@@ -31,188 +30,183 @@
                   )) ||
                   (isSubmitted() && dynamicForm.get(field.name)?.errors?.['required'])
               }"
-            >
-              <!-- Field Content -->
-              @if (!field.hide) {
-                <!-- Field Label -->
-                <label class="title-placeholder" [for]="field.name">
-                  @if (field.isRequired) {
-                    <img
-                      class="required-icon"
-                      [src]="Icons.ASTERISK_RED"
-                    />
-                  }
-                  {{ field.label }}
-                </label>
-
-            <!-- Field Types -->
-            @switch (field.type) {
-              @case ('text') {
-                <!-- Text Input -->
-                <app-input-text
-                  [id]="field.name"
-                  [placeholder]="field.label"
-                  [title]="field.label"
-                  [isRequired]="field.isRequired"
-                  [formControlName]="field.name"
-                ></app-input-text>
-              }
-              @case ('number') {
-                <!-- Number Input -->
-                <app-input-text
-                  [id]="field.name"
-                  [placeholder]="field.label"
-                  [title]="field.label"
-                  [isRequired]="field.isRequired"
-                  [formControlName]="field.name"
-                ></app-input-text>
-              }
-              @case ('date') {
-                <!-- Date Input -->
-                <app-input-date
-                  [title]="field.label"
-                  [placeholder]="field.label"
-                  [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
-                  [formControlName]="field.name"
-                ></app-input-date>
-              }
-              @case ('phone') {
-                <!-- Phone Input -->
-                <app-input-phone
-                  [title]="field.label"
-                  [placeholder]="field.label"
-                  [isRequired]="field.isRequired"
-                  [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
-                  [formControlName]="field.name"
-                ></app-input-phone>
-              }
-              @case ('checkbox') {
-                <!-- Checkbox -->
-                @if (field.name !== 'isActive') {
-                  <div class="checkbox-container">
-                    <app-input-checkbox
-                      [placeholder]="field.label"
-                      [formControlName]="field.name"
-                    ></app-input-checkbox>
-                  </div>
-                }
-                @if (field.name === 'isActive') {
-                  <app-input-checkbox-option-group
-                    [options]="optionsApps"
-                    [isDisabled]="field.name === 'isActive' && !isEdit()"
-                  ></app-input-checkbox-option-group>
-                }
-              }
-              @case ('radio') {
-                <!-- Radio Buttons -->
-                <app-radio-button
-                  [options]="transformRadioOptions(field.options)"
-                  [name]="field.name"
-                  [formControlName]="field.name"
-                  direction="horizontal"
-                ></app-radio-button>
-              }
-             
-              @case ('select') {
-                <!-- Select Dropdown -->
-                <app-select
-                  appearance="outline"
-                  [placeholder]="field.label || ''"
-                  [bindLabelKeys]="field.bindLabelKeys"
-                  [formControlName]="field.name"
-                  [dataFunction]="field.dataFunction"
-                  [options]="field.options && field.options.length > 0 ? field.options : []"
-                  searchPlaceholder="חיפוש"
-                  [bindLabelKey]="field.options && field.options.length > 0 ? 'display' : 'value'"
-                  [bindValueKey]="field.options && field.options.length > 0 ? 'value' : 'id'"
-                  [isMultiSelect]="field.isMultiSelect || false"
-                  [title]="field.label || ''"
-                  [isRequired]="field.isRequired"
-                  [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
-                ></app-select>
-              }
-              @case ('selectWithLookup') {
-                <app-select
-                  appearance="outline"
-                  [placeholder]="field.label || ''"
-                  [bindLabelKeys]="field.bindLabelKeys"
-                  [formControlName]="field.name"
-                  [dataFunction]="field.dataFunction"
-                  [options]="field.options && field.options.length > 0 ? field.options : []"
-                  searchPlaceholder="חיפוש"
-                  [bindLabelKey]="field.bindLabelKey !== undefined ? field.bindLabelKey : (field.options && field.options.length > 0 ? 'display' : 'value')"
-                  [bindValueKey]="field.bindValueKey !== undefined ? field.bindValueKey : (field.options && field.options.length > 0 ? 'value' : 'id')"
-                  [isMultiSelect]="field.isMultiSelect || false"
-                  [title]="field.label || ''"
-                  [isRequired]="field.isRequired"
-                  [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
-                ></app-select>
-              }
-              @case ('fromTo') {
-                <!-- From-To Input -->
-                <div class="fromTo-wrapper">
-                  <label class="fromTo-main-label">{{ field.label }}</label>
-                  <div class="fromTo-container" formGroupName="{{ field.name }}">
-                    @for (fromToField of field.fields; track fromToField) {
-                      <div class="fromTo-field">
-                        <app-input-text
-                          [id]="fromToField.name"
-                          [placeholder]="fromToField.placeholder || ''"
-                          [isRequired]="field.isRequired"
-                          [isValid]="dynamicForm.get(field.name + '.' + fromToField.name)?.valid || !isSubmitted()"
-                          [formControlName]="fromToField.name"
-                        ></app-input-text>
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-
-              @case ('texts') {
-                <div [class]="'field-' + field.type">
-                  @for (input of field.nestedInputs; track input) {
-                    <app-input-text
-                      [id]="input.name"
-                      [placeholder]="input.placeholder || ''"
-                      [isRequired]="field.isRequired"
-                      [isValid]="dynamicForm.get(input.name)?.valid || !isSubmitted()"
-                      [formControlName]="input.name"
-                    ></app-input-text>
-                  }
-                </div>
-              }
+        >
+          <!-- Field Content -->
+          @if (!field.hide) {
+          <!-- Field Label -->
+          <label class="title-placeholder" [for]="field.name">
+            @if (field.isRequired) {
+            <img class="required-icon" [src]="Icons.ASTERISK_RED" />
             }
+            {{ field.label }}
+          </label>
 
-            <!-- Validation Errors -->
-            <!-- <div
-              *ngIf="
-                dynamicForm.get(field.name)?.invalid &&
-                dynamicForm.get(field.name)?.touched
-              "
-              class="validation-errors"
-            >
-              <small *ngIf="dynamicForm.get(field.name)?.errors?.['required']">
-                שדה חובה
-              </small>
-            </div> -->
+          <!-- Field Types -->
+          @switch (field.type) { @case ('text') {
+          <!-- Text Input -->
+          <app-input-text
+            [id]="field.name"
+            [placeholder]="field.label"
+            [title]="field.label"
+            [isRequired]="field.isRequired"
+            [formControlName]="field.name"
+            [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
+          ></app-input-text>
+          } @case ('number') {
+          <!-- Number Input -->
+          <app-input-text
+            [id]="field.name"
+            [placeholder]="field.label"
+            [title]="field.label"
+            [isRequired]="field.isRequired"
+            [formControlName]="field.name"
+            [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
+          ></app-input-text>
+          } @case ('date') {
+          <!-- Date Input -->
+          <app-input-date
+            [title]="field.label"
+            [placeholder]="field.label"
+            [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
+            [formControlName]="field.name"
+          ></app-input-date>
+          } @case ('phone') {
+          <!-- Phone Input -->
+          <app-input-phone
+            [title]="field.label"
+            [placeholder]="field.label"
+            [isRequired]="field.isRequired"
+            [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
+            [formControlName]="field.name"
+          ></app-input-phone>
+          } @case ('checkbox') {
+          <!-- Checkbox -->
+          @if (field.name !== 'isActive') {
+          <div class="checkbox-container">
+            <app-input-checkbox
+              [placeholder]="field.label"
+              [formControlName]="field.name"
+            ></app-input-checkbox>
+          </div>
+          } @if (field.name === 'isActive') {
+          <app-input-checkbox-option-group
+            [options]="optionsApps"
+            [isDisabled]="field.name === 'isActive' && !isEdit()"
+          ></app-input-checkbox-option-group>
+          } } @case ('radio') {
+          <!-- Radio Buttons -->
+          <app-radio-button
+            [options]="transformRadioOptions(field.options)"
+            [name]="field.name"
+            [formControlName]="field.name"
+            direction="horizontal"
+          ></app-radio-button>
+          } @case ('select') {
+          <!-- Select Dropdown -->
+          <app-select
+            appearance="outline"
+            [placeholder]="field.label || ''"
+            [bindLabelKeys]="field.bindLabelKeys"
+            [formControlName]="field.name"
+            [dataFunction]="field.dataFunction"
+            [options]="
+              field.options && field.options.length > 0 ? field.options : []
+            "
+            searchPlaceholder="חיפוש"
+            [bindLabelKey]="
+              field.options && field.options.length > 0 ? 'display' : 'value'
+            "
+            [bindValueKey]="
+              field.options && field.options.length > 0 ? 'value' : 'id'
+            "
+            [isMultiSelect]="field.isMultiSelect || false"
+            [title]="field.label || ''"
+            [isRequired]="field.isRequired"
+            [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
+          ></app-select>
+          } @case ('selectWithLookup') {
+          <app-select
+            appearance="outline"
+            [placeholder]="field.label || ''"
+            [bindLabelKeys]="field.bindLabelKeys"
+            [formControlName]="field.name"
+            [dataFunction]="field.dataFunction"
+            [options]="
+              field.options && field.options.length > 0 ? field.options : []
+            "
+            searchPlaceholder="חיפוש"
+            [bindLabelKey]="
+              field.bindLabelKey !== undefined
+                ? field.bindLabelKey
+                : field.options && field.options.length > 0
+                ? 'display'
+                : 'value'
+            "
+            [bindValueKey]="
+              field.bindValueKey !== undefined
+                ? field.bindValueKey
+                : field.options && field.options.length > 0
+                ? 'value'
+                : 'id'
+            "
+            [isMultiSelect]="field.isMultiSelect || false"
+            [title]="field.label || ''"
+            [isRequired]="field.isRequired"
+            [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
+          ></app-select>
+          } @case ('fromTo') {
+          <!-- From-To Input -->
+          <div class="fromTo-wrapper">
+            <label class="fromTo-main-label">{{ field.label }}</label>
+            <div class="fromTo-container" formGroupName="{{ field.name }}">
+              @for (fromToField of field.fields; track fromToField) {
+              <div class="fromTo-field">
+                <app-input-text
+                  [id]="fromToField.name"
+                  [placeholder]="fromToField.placeholder || ''"
+                  [isRequired]="field.isRequired"
+                  [isValid]="
+                    dynamicForm.get(field.name + '.' + fromToField.name)
+                      ?.valid || !isSubmitted()
+                  "
+                  [formControlName]="fromToField.name"
+                ></app-input-text>
+              </div>
               }
             </div>
+          </div>
+          } @case ('texts') {
+          <div [class]="'field-' + field.type">
+            @for (input of field.nestedInputs; track input) {
+            <app-input-text
+              [id]="input.name"
+              [placeholder]="input.placeholder || ''"
+              [isRequired]="field.isRequired"
+              [isValid]="dynamicForm.get(input.name)?.valid || !isSubmitted()"
+              [formControlName]="input.name"
+            ></app-input-text>
+            }
+          </div>
+          } }
+
           }
         </div>
+        }
+      </div>
 
       }
 
       <!-- File Upload Section - Only for Signs -->
       @if (isSigns()) {
-        <div class="file-upload-wrapper">
-          <app-file-upload-new
-            [title]="'העלאת מסמכים'"
-            [allowedFileTypes]="allowedFileTypes"
-            [maxFileSizeMB]="maxFileSizeMB"
-            [containerSize]="'lg'"
-            (fileSelected)="onFileSelected($event)"
-          ></app-file-upload-new>
-        </div>
+      <div class="file-upload-wrapper">
+        <app-file-upload-new
+          [title]="'העלאת מסמכים'"
+          [allowedFileTypes]="allowedFileTypes"
+          [maxFileSizeMB]="maxFileSizeMB"
+          [containerSize]="'lg'"
+          (fileSelected)="onFileSelected($event)"
+        ></app-file-upload-new>
+      </div>
       }
 
       <!-- Buttons -->

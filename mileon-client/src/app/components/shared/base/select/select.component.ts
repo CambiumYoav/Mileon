@@ -28,19 +28,32 @@ import {
 } from '@angular/forms';
 import { FormControlValueAccessorConnector } from '../../abstract/form-control-value-accessor-connector.component';
 import { of } from 'rxjs/internal/observable/of';
-import { Observable, BehaviorSubject, takeUntil, debounceTime, take } from 'rxjs';
+import {
+  Observable,
+  BehaviorSubject,
+  takeUntil,
+  debounceTime,
+  take,
+} from 'rxjs';
 import { SelectParams } from '../../../../types/advanced-search/select-option.model';
 import { ConstPath } from '../../../../constants/const_path';
 import { SharedImports } from '../../../../shared/shared-modules';
 import { MaterialModule } from '../../../../shared/material-module';
 import { CommonModule } from '@angular/common';
+import { InfiniteScrollDirective } from '../../../../directives/infinite-scroll.directive';
 
 @Component({
   selector: 'app-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
   standalone: true,
-  imports: [MaterialModule,FormsModule,CommonModule,ReactiveFormsModule],
+  imports: [
+    MaterialModule,
+    FormsModule,
+    CommonModule,
+    ReactiveFormsModule,
+    InfiniteScrollDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -97,7 +110,11 @@ export class SelectComponent
   private isServerSide: boolean = true;
   private currentStaticItems: Array<any> = [];
 
-  constructor(injector: Injector, private selectService: SelectService, private eRef: ElementRef) {
+  constructor(
+    injector: Injector,
+    private selectService: SelectService,
+    private eRef: ElementRef
+  ) {
     super(injector);
   }
 
@@ -114,7 +131,10 @@ export class SelectComponent
   }
 
   private filterStaticList(value: string) {
-    const currentItems = this.options && this.options.length > 0 ? this.options : this.currentStaticItems;
+    const currentItems =
+      this.options && this.options.length > 0
+        ? this.options
+        : this.currentStaticItems;
     const filterValue = this._normalizeValue(value);
     this.items$ = of(
       currentItems.filter((item) =>
@@ -130,7 +150,13 @@ export class SelectComponent
         return '';
       }
       // Try different possible label properties
-      const labelValue = value[this.bindLabelKey] || value.display || value.label || value.name || value.value || '';
+      const labelValue =
+        value[this.bindLabelKey] ||
+        value.display ||
+        value.label ||
+        value.name ||
+        value.value ||
+        '';
       value = labelValue;
     }
     return (value || '').toLowerCase().replace(/\s/g, '');
@@ -138,41 +164,48 @@ export class SelectComponent
 
   ngOnInit(): void {
     // Ensure there is always a control instance to bind to
-    const parentControl = this.formControl || this.controlContainer.control?.get(this.formControlName);
+    const parentControl =
+      this.formControl ||
+      this.controlContainer.control?.get(this.formControlName);
     if (!parentControl) {
       this.formControl = new FormControl('');
     }
 
     // Initialize listObj$ after constructor
     this.listObj$ = this.selectService.listsObj.asObservable();
-    
-    
+
     // Ensure multi-select controls always have array values
     if (this.isMultiSelect && this.control) {
       if (!this.control.value || !Array.isArray(this.control.value)) {
         this.control.setValue([]);
       }
     }
-    
+
     if (this.control.value) {
       if (this.isMultiSelect) {
         // For multi-select, ensure we have full objects, not just IDs
         // Check if the value is an array before calling map
         if (Array.isArray(this.control.value)) {
-        this.selectParams.ids = this.control.value.map((item: any) => 
-          (typeof item === 'object' && item !== null) ? item[this.bindValueKey || 'id'] : item
-        );
+          this.selectParams.ids = this.control.value.map((item: any) =>
+            typeof item === 'object' && item !== null
+              ? item[this.bindValueKey || 'id']
+              : item
+          );
         } else {
           // If it's not an array but multi-select is enabled, wrap it in an array
           const value = this.control.value;
           this.selectParams.ids = [
-            (typeof value === 'object' && value !== null) ? value[this.bindValueKey || 'id'] : value
+            typeof value === 'object' && value !== null
+              ? value[this.bindValueKey || 'id']
+              : value,
           ];
         }
       } else {
         const value = this.control.value;
         this.selectParams.ids = [
-          (typeof value === 'object' && value !== null) ? value[this.bindValueKey || 'id'] : value
+          typeof value === 'object' && value !== null
+            ? value[this.bindValueKey || 'id']
+            : value,
         ];
       }
     }
@@ -213,24 +246,37 @@ export class SelectComponent
       if (this.options && this.options.length > 0) {
         return;
       }
-      
+
       // Don't override static dataFunction results if they are provided
-      if (this.dataFunction && this.dataFunction.function && !this.isServerSide) {
+      if (
+        this.dataFunction &&
+        this.dataFunction.function &&
+        !this.isServerSide
+      ) {
         return;
       }
-      
+
       if (this.dataFunction && this.dataFunction.name !== undefined) {
         if (
           res[this.dataFunction.name as keyof typeof res] &&
-          res[this.dataFunction.name as keyof typeof res][this.formControlName] &&
-          res[this.dataFunction.name as keyof typeof res][this.formControlName]?.length
+          res[this.dataFunction.name as keyof typeof res][
+            this.formControlName
+          ] &&
+          res[this.dataFunction.name as keyof typeof res][this.formControlName]
+            ?.length
         ) {
-          this.items$ = of(res[this.dataFunction.name as keyof typeof res][this.formControlName] as any[]);
+          this.items$ = of(
+            res[this.dataFunction.name as keyof typeof res][
+              this.formControlName
+            ] as any[]
+          );
         }
       } else {
-        this.items$ = of((res[this.formControlName as keyof typeof res] as any[]) || []);
+        this.items$ = of(
+          (res[this.formControlName as keyof typeof res] as any[]) || []
+        );
       }
-      
+
       // Convert existing control values from IDs to full objects for multi-select
       // Use setTimeout to ensure items$ has been updated
       setTimeout(() => {
@@ -275,7 +321,7 @@ export class SelectComponent
           this.selectParams.searchText = term;
         }
       }
-      
+
       // If we have static options, don't make server calls
       if (this.options && this.options.length > 0) {
         if (term) {
@@ -283,7 +329,7 @@ export class SelectComponent
         }
         return;
       }
-      
+
       // If we have a static function, don't make server calls
       if (this.dataFunction.function && !this.isServerSide) {
         if (term) {
@@ -291,7 +337,7 @@ export class SelectComponent
         }
         return;
       }
-      
+
       if (this.filterFormControl.enabled && !isControlDisabled)
         this.getDataList(this.selectParams);
     }
@@ -437,22 +483,33 @@ export class SelectComponent
     // Handle null/undefined cases first
     if (option1 === null && option2 === null) return true;
     if (option1 === undefined && option2 === undefined) return true;
-    if (option1 === null || option1 === undefined || option2 === null || option2 === undefined) return false;
+    if (
+      option1 === null ||
+      option1 === undefined ||
+      option2 === null ||
+      option2 === undefined
+    )
+      return false;
 
     // Both are objects - compare by bindValueKey
-    if (typeof option1 === 'object' && option1 !== null && typeof option2 === 'object' && option2 !== null) {
+    if (
+      typeof option1 === 'object' &&
+      option1 !== null &&
+      typeof option2 === 'object' &&
+      option2 !== null
+    ) {
       return option1[bindValueKey] === option2[bindValueKey];
     }
-    
+
     // One is object, one is primitive - extract value from object and compare
     if (typeof option1 === 'object' && option1 !== null) {
       return option1[bindValueKey] === option2;
     }
-    
+
     if (typeof option2 === 'object' && option2 !== null) {
       return option1 === option2[bindValueKey];
     }
-    
+
     // Both are primitives - direct comparison
     return option1 === option2;
   }
@@ -464,15 +521,17 @@ export class SelectComponent
         return this.constructLabel(selectedValue, this.bindLabelKeys);
       } else {
         // Try different possible label properties
-        return selectedValue[this.bindLabelKey] || 
-               selectedValue.display || 
-               selectedValue.label || 
-               selectedValue.name || 
-               selectedValue.value || 
-               'Unknown';
+        return (
+          selectedValue[this.bindLabelKey] ||
+          selectedValue.display ||
+          selectedValue.label ||
+          selectedValue.name ||
+          selectedValue.value ||
+          'Unknown'
+        );
       }
     }
-    
+
     // Fallback for single select or edge cases
     return selectedValue?.toString() || 'Unknown';
   }
@@ -481,22 +540,24 @@ export class SelectComponent
     // Prevent the event from bubbling up and closing the select
     event.stopPropagation();
     event.preventDefault();
-    
+
     if (this.isMultiSelect && this.control.value) {
       // Ensure the control value is an array before spreading
-      const controlValue = Array.isArray(this.control.value) ? this.control.value : [this.control.value];
+      const controlValue = Array.isArray(this.control.value)
+        ? this.control.value
+        : [this.control.value];
       const currentValue = [...controlValue];
       currentValue.splice(index, 1);
       this.control.setValue(currentValue);
-      
+
       // Update the selectParams.ids if needed - extract IDs from full objects
       if (this.selectParams.ids && this.selectParams.ids.length > 0) {
         const bindValueKey = this.bindValueKey || 'id';
-        this.selectParams.ids = currentValue.map((item: any) => 
-          (typeof item === 'object' && item !== null) ? item[bindValueKey] : item
+        this.selectParams.ids = currentValue.map((item: any) =>
+          typeof item === 'object' && item !== null ? item[bindValueKey] : item
         );
       }
-      
+
       // If we have static options, update the currentStaticItems
       if (this.options && this.options.length > 0) {
         this.currentStaticItems = this.options;
@@ -511,7 +572,9 @@ export class SelectComponent
       this.filterFormControl.setValue('');
       // Focus the search input after a short delay to ensure it's rendered
       setTimeout(() => {
-        const searchInput = document.querySelector('.search-input-overlay') as HTMLInputElement;
+        const searchInput = document.querySelector(
+          '.search-input-overlay'
+        ) as HTMLInputElement;
         if (searchInput) {
           searchInput.focus();
         }
@@ -553,7 +616,9 @@ export class SelectComponent
       this.items$ = of(this.options);
     }
     // Focus back to the select
-    const selectElement = document.querySelector('.mat-mdc-select-trigger') as HTMLElement;
+    const selectElement = document.querySelector(
+      '.mat-mdc-select-trigger'
+    ) as HTMLElement;
     if (selectElement) {
       selectElement.focus();
     }
@@ -562,11 +627,15 @@ export class SelectComponent
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     // Only handle click outside if search is visible and displaySearch is enabled
-    if (this.displaySearch && this.isSearchVisible() && !this.eRef.nativeElement.contains(event.target as Node)) {
+    if (
+      this.displaySearch &&
+      this.isSearchVisible() &&
+      !this.eRef.nativeElement.contains(event.target as Node)
+    ) {
       // Check if click is not on the mat-select panel
       const target = event.target as Element;
       const isClickOnSelectPanel = target.closest('.mat-mdc-select-panel');
-      
+
       if (!isClickOnSelectPanel) {
         this._isSearchVisible.set(false);
         this.filterFormControl.setValue('');
@@ -588,7 +657,9 @@ export class SelectComponent
     const bindValueKey = this.bindValueKey || 'id';
     // Prefer a stable identifier, but append index to avoid NG0955 on duplicate keys
     const stableId = item?.[bindValueKey] ?? item?.id ?? item?.value;
-    return stableId !== undefined && stableId !== null ? `${stableId}__${index}` : index;
+    return stableId !== undefined && stableId !== null
+      ? `${stableId}__${index}`
+      : index;
   }
 
   /**
@@ -627,13 +698,13 @@ export class SelectComponent
         return id;
       }
       // If no unique id found, create one from multiple properties
-      const label = item[bindLabelKey] ?? item.display ?? item.label ?? item.name;
+      const label =
+        item[bindLabelKey] ?? item.display ?? item.label ?? item.name;
       return `${index}_${JSON.stringify(item)}_${label}`;
     }
     // For primitive values, combine with index to ensure uniqueness
     return `${index}_${item}`;
   }
-
 
   /**
    * Convert existing control values from IDs to full objects for multi-select
@@ -655,18 +726,19 @@ export class SelectComponent
           if (typeof value === 'object' && value !== null) {
             return value;
           }
-          
+
           // If it's a primitive value, find the corresponding object
           const bindValueKey = this.bindValueKey || 'id';
-          const foundItem = items.find(item => 
-            item[bindValueKey] === value || 
-            item.id === value || 
-            item.value === value
+          const foundItem = items.find(
+            (item) =>
+              item[bindValueKey] === value ||
+              item.id === value ||
+              item.value === value
           );
-          
+
           return foundItem || value;
         });
-        
+
         // Only update if there were changes
         if (JSON.stringify(convertedValues) !== JSON.stringify(currentValue)) {
           this.control.setValue(convertedValues);
@@ -676,14 +748,15 @@ export class SelectComponent
         if (typeof currentValue === 'object' && currentValue !== null) {
           return; // Already an object
         }
-        
+
         const bindValueKey = this.bindValueKey || 'id';
-        const foundItem = items.find(item => 
-          item[bindValueKey] === currentValue || 
-          item.id === currentValue || 
-          item.value === currentValue
+        const foundItem = items.find(
+          (item) =>
+            item[bindValueKey] === currentValue ||
+            item.id === currentValue ||
+            item.value === currentValue
         );
-        
+
         if (foundItem) {
           this.control.setValue(foundItem);
         }
@@ -691,5 +764,3 @@ export class SelectComponent
     });
   }
 }
-
-

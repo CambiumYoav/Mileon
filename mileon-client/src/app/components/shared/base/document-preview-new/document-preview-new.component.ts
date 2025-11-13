@@ -23,6 +23,7 @@ import { UploadStatus } from '../../../../types/enum/uploadStatus.enum';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+//NOTE -  need to fix it by the old code 
 @Component({
   selector: 'app-document-preview-new',
   templateUrl: './document-preview-new.component.html',

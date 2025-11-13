@@ -6,7 +6,7 @@ import {
   effect,
   inject,
   ChangeDetectorRef,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import {
   FormGroup,
@@ -17,14 +17,20 @@ import {
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
-import { ConstPath } from '../../../constants/const_path';   
+import { ConstPath } from '../../../constants/const_path';
 import { InfrastructureFormComponent } from '../infrastructure-form/infrastructure-form.component';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
-import { DynamicRow, FieldOption } from '../../../types/infrastructure/InfrastructureTypes';
+import {
+  DynamicRow,
+  FieldOption,
+} from '../../../types/infrastructure/InfrastructureTypes';
 import { BaseComponents, SharedImports } from '../../../shared/shared-modules';
 import { FieldTypeEnum } from '../../../types/advanced-search/form-tab.model';
-import { RadioButtonComponent, RadioOption } from '../../shared/base/radio-button/radio-button.component';
+import {
+  RadioButtonComponent,
+  RadioOption,
+} from '../../shared/base/radio-button/radio-button.component';
 
 @Component({
   selector: 'app-infrastructures-form-wrapper',
@@ -36,8 +42,8 @@ import { RadioButtonComponent, RadioOption } from '../../shared/base/radio-butto
     ReactiveFormsModule,
     ...SharedImports,
     ...BaseComponents,
-    RadioButtonComponent
-  ]
+    RadioButtonComponent,
+  ],
 })
 export class InfrastructuresFormWrapperComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -53,7 +59,9 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
   readonly Icons = ConstPath;
   readonly FieldTypeEnum = FieldTypeEnum;
   mainTitle = signal<string>(this.data.mainTitle);
-  formSections = signal<{ title: string; rows: DynamicRow[] }[]>(this.data.sections);
+  formSections = signal<{ title: string; rows: DynamicRow[] }[]>(
+    this.data.sections
+  );
   sectionsFormGroup = signal<FormGroup>(this.fb.group({}));
   isSubmitted = signal<boolean>(false);
   private _skipFormValidation = signal<boolean>(false);
@@ -66,12 +74,13 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    console.log(this.formSections());
   }
 
   // private formValidationEffect = effect(() => {
   //   const isSubmitted = this.isSubmitted();
   //   const formGroup = this.sectionsFormGroup();
-    
+
   //   // React to form submission state changes
   //   if (isSubmitted && formGroup) {
   //     // Could add additional validation logic here if needed
@@ -112,7 +121,11 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
             validations.push(Validators.max(field.validations.max));
         }
 
-        if (field.type === 'fromTo' && field.fields && field.fields.length > 0) {
+        if (
+          field.type === 'fromTo' &&
+          field.fields &&
+          field.fields.length > 0
+        ) {
           const fromToGroup = this.fb.group({
             from: [field.fields[0]?.value || '', validations],
             to: [field.fields[1]?.value || '', validations],
@@ -124,7 +137,7 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
           if (field.type === 'radio') {
             controlValue = this.getRadioButtonValue(field.value);
           }
-          
+
           formGroup.addControl(
             field.name,
             this.fb.control(
@@ -181,9 +194,7 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
   combineFormData(): any {
     const formGroup = this.sectionsFormGroup();
     return Object.keys(formGroup.controls).reduce((acc: any, key) => {
-      const sectionValue = (
-        formGroup.get(key) as FormGroup
-      )?.getRawValue();
+      const sectionValue = (formGroup.get(key) as FormGroup)?.getRawValue();
 
       if (sectionValue) {
         Object.entries(sectionValue).forEach(([fieldKey, fieldValue]) => {
@@ -212,9 +223,7 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
 
   isDateFieldValid(fieldName: string): boolean {
     const formGroup = this.sectionsFormGroup();
-    const dateControl = formGroup.get(
-      `פרטי בעל חיים.${fieldName}`
-    );
+    const dateControl = formGroup.get(`פרטי בעל חיים.${fieldName}`);
 
     if (!dateControl || !dateControl.value) {
       return this.isFieldValid(`פרטי בעל חיים.${fieldName}`);
@@ -230,13 +239,15 @@ export class InfrastructuresFormWrapperComponent implements OnInit {
     return this.isFieldValid(`פרטי בעל חיים.${fieldName}`);
   }
 
-  convertToRadioOptions(fieldOptions: FieldOption[] | undefined): RadioOption[] {
+  convertToRadioOptions(
+    fieldOptions: FieldOption[] | undefined
+  ): RadioOption[] {
     if (!fieldOptions) {
       return [];
     }
-    return fieldOptions.map(option => ({
+    return fieldOptions.map((option) => ({
       value: String(option.value),
-      label: option.display
+      label: option.display,
     }));
   }
 

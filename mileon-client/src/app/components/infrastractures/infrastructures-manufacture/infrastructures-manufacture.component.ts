@@ -35,6 +35,7 @@ import { CheckboxComponent } from '../../shared/base/checkbox/checkbox.component
 import { InfrastructuresSearchComponent } from '../infrastructures-search/infrastructures-search.component';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
 import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-manufacture',
@@ -171,20 +172,13 @@ export class InfrastructuresManufactureComponent {
         },
       });
 
-      runInInjectionContext(this.injector, () => {
-        const dialogInstance = dialogRef.componentInstance;
-        const dataSubject = dialogInstance.dataSubject();
-        if (dataSubject) {
-          const dialogResult = toSignal(dataSubject);
-          effect(() => {
-            const result = dialogResult();
-            if (result) {
-              this.exportData();
-              this.dialog.closeAll();
-            }
-          });
-        }
+      dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((res) => {
+        if (res?.confirmed) this.exportData();
       });
+  
     }
   }
 

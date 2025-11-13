@@ -159,10 +159,12 @@ export class InfrastructureFormComponent {
       // Only set a value if we're in edit mode and have a valid value
       if (this.isEdit() && field.value !== undefined && field.value !== null) {
         controlValue = this.getRadioButtonValue(field.value);
+        console.log(`Field: ${field.name}, Value: ${controlValue}`);
       }
     } else {
       // For non-radio fields, use the field value or empty string
       controlValue = field.value || '';
+      console.log(`Field: ${field.name}, Value: ${controlValue}`);
     }
 
     // Create FormControl with proper disabled state
@@ -215,6 +217,7 @@ export class InfrastructureFormComponent {
 
   /** Handles form submission */
   onSubmit(): void {
+    console.log('Form Submitted', this.dynamicForm.value);
     if (this.dynamicForm.valid) {
       const result = {
         form: this.dynamicForm.value,
@@ -286,7 +289,7 @@ export class InfrastructureFormComponent {
     if (fieldValue === false) {
       return 'false';
     }
-    
+    console.log(fieldValue)
     // Special handling for boolean-like numbers (0/1) for radio buttons
     // This ensures consistency if options are defined as true/false booleans
     if (fieldValue === 1) {

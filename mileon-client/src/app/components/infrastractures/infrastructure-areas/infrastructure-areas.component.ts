@@ -39,6 +39,7 @@ import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructuresTableComponent } from "../infrastructures-table/infrastructures-table.component";
 import { InfrastructuresSearchComponent } from "../infrastructures-search/infrastructures-search.component";
 import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructure-areas',
@@ -232,19 +233,8 @@ export class InfrastructureAreasComponent {
         },
       });
 
-      runInInjectionContext(this.injector, () => {
-        const dialogInstance = dialogRef.componentInstance;
-        const dataSubject = dialogInstance.dataSubject();
-        if (dataSubject) {
-          const dialogResult = toSignal(dataSubject);
-          effect(() => {
-            const result = dialogResult();
-            if (result !== null) {
-              this.exportData();
-              this.dialog.closeAll();
-            }
-          });
-        }
+      dialogRef.afterClosed().pipe(take(1)).subscribe(res => {
+        if (res?.confirmed) this.exportData();
       });
     }
   }

@@ -1,9 +1,16 @@
-import { Component, signal, inject, effect, runInInjectionContext, Injector } from '@angular/core';
+import {
+  Component,
+  signal,
+  inject,
+  effect,
+  runInInjectionContext,
+  Injector,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ConstPath } from '../../../constants/const_path'; 
+import { ConstPath } from '../../../constants/const_path';
 import {
   InfrastructureTableAction,
   InfrastructureTablesTypes,
@@ -36,8 +43,12 @@ import { RouterService } from '../../../services/router.service';
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructuresSearchComponent } from '../infrastructures-search/infrastructures-search.component';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
-import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import {
+  InfrastructureEnumDialogs,
+  InfrastructureEnumTitles,
+} from '../../../types/enum/infrastructure.enum';
 import { Citizen } from '../../../types/citizen';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-business',
@@ -47,7 +58,7 @@ import { Citizen } from '../../../types/citizen';
     MatDialogModule,
     ButtonComponent,
     InfrastructuresSearchComponent,
-    InfrastructuresTableComponent
+    InfrastructuresTableComponent,
   ],
   templateUrl: './infrastructures-business.component.html',
   styleUrls: ['./infrastructures-business.component.scss'],
@@ -96,13 +107,14 @@ export class InfrastructuresBusinessComponent {
   private authorityEffectRef: any;
   private dialogEffectRef: any;
   private importDialogEffectRef: any;
-  private exportDialogEffectRef: any;
 
   constructor() {
     this.infrastructureForm = this.infrastructureSearchFormService.form;
-    
-    const authoritySignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
-    
+
+    const authoritySignal = toSignal(this.authorityService.authorityId$, {
+      initialValue: null,
+    });
+
     // Store effect reference for cleanup
     this.authorityEffectRef = effect(() => {
       const authorityID = authoritySignal();
@@ -132,29 +144,19 @@ export class InfrastructuresBusinessComponent {
         this.importDialogResult.set(null); // Reset after handling
       }
     });
-
-    this.exportDialogEffectRef = effect(() => {
-      const result = this.exportDialogResult();
-      if (result) {
-        this.exportData();
-        this.dialog.closeAll();
-        this.exportDialogResult.set(null); // Reset after handling
-      }
-    });
   }
 
   ngOnInit(): void {
     const tableColumns = new InfrastructureTable();
     this.columns.set(tableColumns.BusinessTable);
-    
+
     const form = new InfrastructureForms();
     this.dialogData.set(form.InfrastructureBusinessForm);
-    
+
     // Initialize search and filters using utility
-    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
-      this.searchText()
-    );
-    
+    const { searchData, filter } =
+      InfrastructuresUtils.initializeSearchAndFilters(this.searchText());
+
     this.searchData.set({
       ...searchData,
       authorityID: this.currentAuthority() || undefined,
@@ -200,9 +202,15 @@ export class InfrastructuresBusinessComponent {
         dialogData = form.InfrastructureBusinessForm;
       }
       const dialogRef = this.dialog.open(dialogComponent, {
-        data: { form: dialogData, title: isEdit ? InfrastructureEnumTitles.EditDialogTitle : InfrastructureEnumTitles.AddDialogTitle, isEdit: isEdit },
+        data: {
+          form: dialogData,
+          title: isEdit
+            ? InfrastructureEnumTitles.EditDialogTitle
+            : InfrastructureEnumTitles.AddDialogTitle,
+          isEdit: isEdit,
+        },
       });
-      
+
       runInInjectionContext(this.injector, () => {
         const afterClosedSignal = toSignal(dialogRef.afterClosed());
         const dialogEffectRef = effect(() => {
@@ -225,27 +233,24 @@ export class InfrastructuresBusinessComponent {
             InfrastructureEnumDialogs.BusinessDialogExportDiscription,
         },
       });
-      
-      runInInjectionContext(this.injector, () => {
-        const afterClosedSignal = toSignal(dialogRef.afterClosed());
-        const dialogEffectRef = effect(() => {
-          const result = afterClosedSignal();
-          if (result) {
-            this.exportDialogResult.set(result);
-            dialogEffectRef.destroy();
-          }
+
+      dialogRef
+        .afterClosed()
+        .pipe(take(1))
+        .subscribe((res) => {
+          if (res?.confirmed) this.exportData();
         });
-      });
     }
   }
 
   async importData() {
     await InfrastructuresUtils.handleImportData(
-      () => this.infrastructureServer.importDataByTableType(
-        InfrastructureTablesTypes.Business,
-        this.filesToUpload(),
-        this.currentAuthority()!
-      ),
+      () =>
+        this.infrastructureServer.importDataByTableType(
+          InfrastructureTablesTypes.Business,
+          this.filesToUpload(),
+          this.currentAuthority()!
+        ),
       this.toaster,
       () => this.loadData(this.infrastructureSearchFormService.form)
     );
@@ -270,21 +275,28 @@ export class InfrastructuresBusinessComponent {
     action: InfrastructureTableAction
   ) {
     try {
-      const updatedObject = { 
-        ...newType, 
+      const updatedObject = {
+        ...newType,
         authorityID: this.currentAuthority(),
-        businessID: action === InfrastructureTableAction.Update ? this.businessID() : undefined
+        businessID:
+          action === InfrastructureTableAction.Update
+            ? this.businessID()
+            : undefined,
       };
-      
+
       const result = await this.infrastructureServer.insertToTypeTableDynamic(
         updatedObject,
         InfrastructureTablesTypes.Business,
         action
       );
-      
+
       if (result && result?.success) {
         await this.loadData(this.infrastructureSearchFormService.form);
-        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
+        InfrastructuresUtils.handleInsertUpdateSuccess(
+          action,
+          this.toaster,
+          this.dialog
+        );
       }
     } catch (error) {
       InfrastructuresUtils.handleInsertUpdateError(error, this.toaster);
@@ -297,13 +309,13 @@ export class InfrastructuresBusinessComponent {
 
   openEdit(rowData: BusinessType) {
     this.businessID.set(rowData.id || null);
-    
+
     const updatedDialogData = InfrastructuresUtils.mapRowDataToDialogFields(
       this.dialogData(),
       rowData
     );
     this.dialogData.set(updatedDialogData);
-    
+
     this.openDialogForm(true);
   }
 
@@ -320,38 +332,42 @@ export class InfrastructuresBusinessComponent {
     this.lastLoadTime = Date.now();
 
     this.loader.set(true);
-    
+
     filter = InfrastructuresUtils.normalizeFilter(filter);
-    
+
     const startTime = Date.now();
-    
+
     try {
-      const searchText = this.infrastructureSearchFormService.form.value.searchText;
-      
+      const searchText =
+        this.infrastructureSearchFormService.form.value.searchText;
+
       const updatedFilter = InfrastructuresUtils.prepareLoadDataFilters(
         this.filter(),
         filter,
         searchText
       );
-      
+
       this.filter.set(updatedFilter);
-      
+
       const response = await this.infrastructureServer.getInfrastructureTable(
         updatedFilter,
         InfrastructureTablesTypes.Business,
         this.currentAuthority()
       );
-      
+
       if (response?.data) {
-        const processedData = InfrastructuresUtils.processDataWithFormattedAddress(
-          response.data,
-          (item: any) => {
-            const street = item.street || '';
-            const houseNumber = item.houseNumber || '';
-            const apartment = item.apartment ? `, דירה ${item.apartment}` : '';
-            return `${street} ${houseNumber}${apartment}`.trim();
-          }
-        );
+        const processedData =
+          InfrastructuresUtils.processDataWithFormattedAddress(
+            response.data,
+            (item: any) => {
+              const street = item.street || '';
+              const houseNumber = item.houseNumber || '';
+              const apartment = item.apartment
+                ? `, דירה ${item.apartment}`
+                : '';
+              return `${street} ${houseNumber}${apartment}`.trim();
+            }
+          );
 
         this.data.set(processedData);
         this.total.set(response.totalRecords);
@@ -360,9 +376,8 @@ export class InfrastructuresBusinessComponent {
     } catch (error) {
       InfrastructuresUtils.handleError(error, 'loadData');
     }
-    
+
     await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
-
 }

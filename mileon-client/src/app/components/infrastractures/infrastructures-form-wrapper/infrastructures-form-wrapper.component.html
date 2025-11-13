@@ -2,7 +2,6 @@
   <div class="inline-header">
     <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
     <h5 class="title">{{ mainTitle() }}</h5>
-    
   </div>
   <form [formGroup]="sectionsFormGroup()" (ngSubmit)="onSubmit()">
     <!-- Loop through sections -->
@@ -13,135 +12,126 @@
         <div class="form-container" [formGroupName]="formSections()[0].title">
           <!-- Loop through rows in the section -->
           @for (row of formSections()[0].rows; track row) {
-            <div class="form-row">
-              <!-- Loop through fields in each row -->
-              @for (field of row.row; track field.name) {
-                <div
-                  [class]="'form-field' + field.size"
-                  [ngClass]="{
+          <div class="form-row">
+            <!-- Loop through fields in each row -->
+            @for (field of row.row; track field.name) {
+            <div
+              [class]="'form-field' + field.size"
+              [ngClass]="{
                     disabled: !!field.disabled,
                     inputError: ((sectionsFormGroup().get(formSections()[0].title)?.get(field.name)?.invalid || false) &&
                                 (sectionsFormGroup().get(formSections()[0].title)?.get(field.name)?.touched || false)) ||
                                (isSubmitted() && (sectionsFormGroup().get(formSections()[0].title)?.get(field.name)?.errors?.['required'] || false))
                   }"
-                >
-                @if (!field.hide) {
-                  <label class="title-placeholder" [for]="field.name">
-                    @if (field.isRequired) {
-                      <img
-                        class="required-icon"
-                        [src]="Icons.ASTERISK_RED"
-                      />
-                    }
-                    {{ field.label }}
-                  </label>
-                  @switch (field.type) {
-                    @case ('text') {
-                      <!-- Text Input -->
-                      <app-input-text
-                        [id]="field.name"
-                        [placeholder]="field.label"
-                        [title]="field.label"
-                        [formControlName]="field.name"/>
-                    }
-                    @case ('number') {
-                      <!-- Number Input -->
-                      <app-input-text
-                        [id]="field.name"
-                        [placeholder]="field.label"
-                        [title]="field.label"
-                        [formControlName]="field.name"
-                      />
-                    }
-                    @case ('date') {
-                      <app-input-date
-                        [ngStyle]="{ height: '40px', width: '180px' }"
-                        [placeholder]="field.label"
-                        [title]="field.label"
-                        [isValid]="isFieldValid(field.name, formSections()[0].title)"
-                        [formControlName]="field.name"
-                      ></app-input-date>
-                    }
-                    @case ('select') {
-                      <!-- Select Dropdown -->
-                      <app-select
-                        fxFill
-                        appearance="outline"
-                        [placeholder]="field.label || ''"
-                        [bindLabelKeys]="field.bindLabelKeys"
-                        [formControlName]="field.name || ''"
-                        [dataFunction]="field.dataFunction"
-                        [options]="field.options || []"
-                        searchPlaceholder="חיפוש"
-                        [bindLabelKey]="field.bindLabelKey || 'display'"
-                        [bindValueKey]="field.bindValueKey || 'value'"
-                        [isMultiSelect]="field.isMultiSelect || false"
-                        [title]="field.label || ''"
-                        [isValid]="isFieldValid(field.name, formSections()[0].title)"
-                      ></app-select>
-                    }
-                    @case ('selectWithLookup') {
-                      <app-select
-                        [ngStyle]="{ height: '40px', width: '180px' }"
-                        fxFill
-                        appearance="outline"
-                        [placeholder]="field.label || ''"
-                        [bindLabelKeys]="field.bindLabelKeys"
-                        [formControlName]="field.name || ''"
-                        [dataFunction]="field.dataFunction"
-                        [options]="field.options || []"
-                        searchPlaceholder="חיפוש"
-                        [bindLabelKey]="field.bindLabelKey || 'value'"
-                        [bindValueKey]="field.bindValueKey || 'id'"
-                        [isMultiSelect]="field.isMultiSelect || false"
-                        [title]="field.label || ''"
-                        [isValid]="isFieldValid(field.name, formSections()[0].title)"
-                      ></app-select>
-                    }
-                    @case ('checkbox') {
-                      <!-- Checkbox -->
-                      <app-input-checkbox
-                        [title]="field.label"
-                        [formControlName]="field.name"
-                      ></app-input-checkbox>
-                    }
-                    @case ('fromTo') {
-                      <!-- From-To Input -->
-                      <div class="fromTo-container" formGroupName="{{ field.name }}">
-                        @for (fromToField of field.fields; track fromToField.name) {
-                          <input
-                            [id]="fromToField.name"
-                            type="text"
-                            [formControlName]="fromToField.name"
-                            [name]="fromToField.name"
-                            [placeholder]="fromToField.placeholder"
-                          />
-                        }
-                      </div>
-                    }
-                    @case ('phone') {
-                      <!-- Phone Input -->
-                      <app-input-phone
-                        [title]="field.label" 
-                        [placeholder]="field.label"
-                        [isRequired]="field.isRequired"
-                        [isValid]="isFieldValid(field.name, formSections()[0].title)"
-                        [formControlName]="field.name"
-                      ></app-input-phone>
-                    }
-                    @case ('radio') {
-                      <app-radio-button
-                        [options]="convertToRadioOptions(field.options)"
-                        [name]="field.name"
-                        [formControlName]="field.name"
-                        direction="horizontal"
-                      ></app-radio-button>
-                    }
-                  }
+            >
+              @if (!field.hide) {
+                
+              <label class="title-placeholder" [for]="field.name">
+                <!-- @if (field.isRequired) {
+                  {{field.label}} -->
+                <img class="required-icon" [src]="Icons.ASTERISK_RED" />
+                <!-- } -->
+                {{ field.label }}
+              </label>
+              @switch (field.type) { @case ('text') {
+              <!-- Text Input -->
+              <app-input-text
+                [id]="field.name"
+                [placeholder]="field.label"
+                [title]="field.label"
+                [isValid]="isFieldValid(field.name, formSections()[0].title)"
+                [formControlName]="field.name"
+              />
+              } @case ('number') {
+              <!-- Number Input -->
+              <app-input-text
+                [id]="field.name"
+                [placeholder]="field.label"
+                [title]="field.label"
+                [formControlName]="field.name"
+                [isValid]="isFieldValid(field.name, formSections()[0].title)"
+              />
+              } @case ('date') {
+              <app-input-date
+                [ngStyle]="{ height: '40px', width: '180px' }"
+                [placeholder]="field.label"
+                [title]="field.label"
+                [isValid]="isFieldValid(field.name, formSections()[0].title)"
+                [formControlName]="field.name"
+              ></app-input-date>
+              } @case ('select') {
+              <!-- Select Dropdown -->
+              <app-select
+                fxFill
+                appearance="outline"
+                [placeholder]="field.label || ''"
+                [bindLabelKeys]="field.bindLabelKeys"
+                [formControlName]="field.name || ''"
+                [dataFunction]="field.dataFunction"
+                [options]="field.options || []"
+                searchPlaceholder="חיפוש"
+                [bindLabelKey]="field.bindLabelKey || 'display'"
+                [bindValueKey]="field.bindValueKey || 'value'"
+                [isMultiSelect]="field.isMultiSelect || false"
+                [title]="field.label || ''"
+                [isValid]="isFieldValid(field.name, formSections()[0].title)"
+              ></app-select>
+              } @case ('selectWithLookup') {
+              <app-select
+                [ngStyle]="{ height: '40px', width: '180px' }"
+                fxFill
+                appearance="outline"
+                [placeholder]="field.label || ''"
+                [bindLabelKeys]="field.bindLabelKeys"
+                [formControlName]="field.name || ''"
+                [dataFunction]="field.dataFunction"
+                [options]="field.options || []"
+                searchPlaceholder="חיפוש"
+                [bindLabelKey]="field.bindLabelKey || 'value'"
+                [bindValueKey]="field.bindValueKey || 'id'"
+                [isMultiSelect]="field.isMultiSelect || false"
+                [title]="field.label || ''"
+                [isValid]="isFieldValid(field.name, formSections()[0].title)"
+              ></app-select>
+              } @case ('checkbox') {
+              <!-- Checkbox -->
+              <app-input-checkbox
+                [title]="field.label"
+                [formControlName]="field.name"
+              ></app-input-checkbox>
+              } @case ('fromTo') {
+              <!-- From-To Input -->
+              <div class="fromTo-container" formGroupName="{{ field.name }}">
+                @for (fromToField of field.fields; track fromToField.name) {
+                <input
+                  [id]="fromToField.name"
+                  type="text"
+                  [formControlName]="fromToField.name"
+                  [name]="fromToField.name"
+                  [placeholder]="fromToField.placeholder"
+                />
                 }
-                </div>
-              }
+              </div>
+              } @case ('phone') {
+              <!-- Phone Input -->
+              <app-input-phone
+                [title]="field.label"
+                [placeholder]="field.label"
+                [isRequired]="field.isRequired"
+                [isValid]="isFieldValid(field.name, formSections()[0].title)"
+                [formControlName]="field.name"
+              ></app-input-phone>
+              } @case ('radio') {
+              <app-radio-button
+                [options]="convertToRadioOptions(field.options)"
+                [name]="field.name"
+                [formControlName]="field.name"
+                direction="horizontal"
+              ></app-radio-button>
+              } } }
             </div>
+            }
+          </div>
           }
         </div>
       </fieldset>
@@ -154,137 +144,125 @@
         <div class="form-container" [formGroupName]="formSections()[1].title">
           <!-- Loop through rows in the section -->
           @for (row of formSections()[1].rows; track row) {
-            <div class="form-row">
-              <!-- Loop through fields in each row -->
-              @for (field of row.row; track field.name) {
-                <div
-                  [class]="'form-field' + field.size"
-                  [ngClass]="{
+          <div class="form-row">
+            <!-- Loop through fields in each row -->
+            @for (field of row.row; track field.name) {
+            <div
+              [class]="'form-field' + field.size"
+              [ngClass]="{
                     disabled: !!field.disabled,
                     inputError: ((sectionsFormGroup().get(formSections()[1].title)?.get(field.name)?.invalid || false) &&
                                 (sectionsFormGroup().get(formSections()[1].title)?.get(field.name)?.touched || false)) ||
                                (isSubmitted() && (sectionsFormGroup().get(formSections()[1].title)?.get(field.name)?.errors?.['required'] || false))
                   }"
-                >
-                @if (!field.hide) {
-                  <label class="title-placeholder" [for]="field.name">
-                    @if (field.isRequired) {
-                      <img
-                        class="required-icon"
-                        [src]="Icons.ASTERISK_RED"
-                      />
-                    }
-                    {{ field.label }}
-                  </label>
-                  @switch (field.type) {
-                    @case ('text') {
-                      <!-- Text Input -->
-                      <app-input-text
-                        class="input"
-                        [placeholder]="field.label"
-                        [id]="field.name"
-                        [title]="field.label"
-                        [formControlName]="field.name"
-                      />
-                    }
-                    @case ('number') {
-                      <!-- Number Input -->
-                      <app-input-text 
-                        class="input"
-                        [id]="field.name"
-                        [placeholder]="field.label"
-                        [title]="field.label"
-                        [formControlName]="field.name"
-                      />
-                    }
-                    @case ('date') {
-                      <app-input-date
-                        [title]="field.label"
-                        [isValid]="isFieldValid(field.name, formSections()[1].title)"
-                        [formControlName]="field.name"
-                      ></app-input-date>
-                    }
-                    @case ('select') {
-                      <!-- Select Dropdown -->
-                      <app-select
-                        [ngStyle]="{ height: '40px', width: '180px' }"
-                        fxFill
-                        appearance="outline"
-                        [placeholder]="field.label || ''"
-                        [bindLabelKeys]="field.bindLabelKeys"
-                        [formControlName]="field.name || ''"
-                        [dataFunction]="field.dataFunction"
-                        [options]="field.options || []"
-                        searchPlaceholder="חיפוש"
-                        [bindLabelKey]="field.bindLabelKey || 'display'"
-                        [bindValueKey]="field.bindValueKey || 'value'"
-                        [isMultiSelect]="field.isMultiSelect || false"
-                        [title]="field.label || ''"
-                        [isValid]="isFieldValid(field.name, formSections()[1].title)"
-                      ></app-select>
-                    }
-                    @case ('selectWithLookup') {
-                      <app-select
-                        [ngStyle]="{ height: '40px', width: '180px' }"
-                        fxFill
-                        appearance="outline"
-                        [placeholder]="field.label || ''"
-                        [bindLabelKeys]="field.bindLabelKeys"
-                        [formControlName]="field.name || ''"
-                        [dataFunction]="field.dataFunction"
-                        [options]="field.options || []"
-                        searchPlaceholder="חיפוש"
-                        [bindLabelKey]="field.bindLabelKey || 'value'"
-                        [bindValueKey]="field.bindValueKey || 'id'"
-                        [isMultiSelect]="field.isMultiSelect || false"
-                        [title]="field.label || ''"
-                        [isValid]="isFieldValid(field.name, formSections()[1].title)"
-                      ></app-select>
-                    }
-                    @case ('checkbox') {
-                      <!-- Checkbox -->
-                      <app-input-checkbox
-                        [title]="field.label"
-                        [formControlName]="field.name"
-                      ></app-input-checkbox>
-                    }
-                    @case ('fromTo') {
-                      <!-- From-To Input -->
-                      <div class="fromTo-container" formGroupName="{{ field.name }}">
-                        @for (fromToField of field.fields; track fromToField.name) {
-                          <input
-                            [id]="fromToField.name"
-                            type="text"
-                            [formControlName]="fromToField.name"
-                            [name]="fromToField.name"
-                            [placeholder]="fromToField.placeholder"
-                          />
-                        }
-                      </div>
-                    }
-                    @case ('phone') {
-                      <!-- Phone Input -->
-                      <app-input-phone
-                        [title]="field.label"
-                        [placeholder]="field.label"
-                        [isRequired]="field.isRequired"
-                        [isValid]="isFieldValid(field.name, formSections()[1].title)"
-                        [formControlName]="field.name"
-                      ></app-input-phone>
-                    }
-                    @case ('radio') {
-                      <app-radio-button
-                        [options]="convertToRadioOptions(field.options)"
-                        [name]="field.name"
-                        [formControlName]="field.name"
-                        direction="horizontal"
-                      ></app-radio-button>
-                    }
-                  }
+            >
+              @if (!field.hide) {
+              <label class="title-placeholder" [for]="field.name">
+                @if (field.isRequired) {
+                <img class="required-icon" [src]="Icons.ASTERISK_RED" />
                 }
-                </div>
-              }
+                {{ field.label }}
+              </label>
+              @switch (field.type) { @case ('text') {
+              <!-- Text Input -->
+              <app-input-text
+                class="input"
+                [placeholder]="field.label"
+                [id]="field.name"
+                [title]="field.label"
+                [formControlName]="field.name"
+                 [isValid]="isFieldValid(field.name, formSections()[1].title)"
+              />
+              } @case ('number') {
+              <!-- Number Input -->
+              <app-input-text
+                class="input"
+                [id]="field.name"
+                [placeholder]="field.label"
+                [title]="field.label"
+                [formControlName]="field.name"
+                [isValid]="isFieldValid(field.name, formSections()[1].title)"
+              />
+              } @case ('date') {
+              <app-input-date
+                [title]="field.label"
+                [isValid]="isFieldValid(field.name, formSections()[1].title)"
+                [formControlName]="field.name"
+              ></app-input-date>
+              } @case ('select') {
+              <!-- Select Dropdown -->
+              <app-select
+                [ngStyle]="{ height: '40px', width: '180px' }"
+                fxFill
+                appearance="outline"
+                [placeholder]="field.label || ''"
+                [bindLabelKeys]="field.bindLabelKeys"
+                [formControlName]="field.name || ''"
+                [dataFunction]="field.dataFunction"
+                [options]="field.options || []"
+                searchPlaceholder="חיפוש"
+                [bindLabelKey]="field.bindLabelKey || 'display'"
+                [bindValueKey]="field.bindValueKey || 'value'"
+                [isMultiSelect]="field.isMultiSelect || false"
+                [title]="field.label || ''"
+                [isValid]="isFieldValid(field.name, formSections()[1].title)"
+              ></app-select>
+              } @case ('selectWithLookup') {
+              <app-select
+                [ngStyle]="{ height: '40px', width: '180px' }"
+                fxFill
+                appearance="outline"
+                [placeholder]="field.label || ''"
+                [bindLabelKeys]="field.bindLabelKeys"
+                [formControlName]="field.name || ''"
+                [dataFunction]="field.dataFunction"
+                [options]="field.options || []"
+                searchPlaceholder="חיפוש"
+                [bindLabelKey]="field.bindLabelKey || 'value'"
+                [bindValueKey]="field.bindValueKey || 'id'"
+                [isMultiSelect]="field.isMultiSelect || false"
+                [title]="field.label || ''"
+                [isValid]="isFieldValid(field.name, formSections()[1].title)"
+              ></app-select>
+              } @case ('checkbox') {
+              <!-- Checkbox -->
+              <app-input-checkbox
+                [title]="field.label"
+                [formControlName]="field.name"
+              ></app-input-checkbox>
+              } @case ('fromTo') {
+              <!-- From-To Input -->
+              <div class="fromTo-container" formGroupName="{{ field.name }}">
+                @for (fromToField of field.fields; track fromToField.name) {
+                <input
+                  [id]="fromToField.name"
+                  type="text"
+                  [formControlName]="fromToField.name"
+                  [name]="fromToField.name"
+                  [placeholder]="fromToField.placeholder"
+                />
+                }
+              </div>
+              } @case ('phone') {
+              <!-- Phone Input -->
+              <app-input-phone
+                [title]="field.label"
+                [placeholder]="field.label"
+                [isRequired]="field.isRequired"
+                [isValid]="isFieldValid(field.name, formSections()[1].title)"
+                [formControlName]="field.name"
+              ></app-input-phone>
+              } @case ('radio') {
+              <app-radio-button
+                [options]="convertToRadioOptions(field.options)"
+                [name]="field.name"
+                [formControlName]="field.name"
+                direction="horizontal"
+              ></app-radio-button>
+              } } }
             </div>
+            }
+          </div>
           }
         </div>
       </fieldset>

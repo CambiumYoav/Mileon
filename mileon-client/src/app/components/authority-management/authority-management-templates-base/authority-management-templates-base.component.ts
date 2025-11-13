@@ -1,4 +1,4 @@
-import { Directive, OnInit, computed, inject, signal, effect, runInInjectionContext, Injector } from '@angular/core';
+import { Directive, OnInit, computed, inject, signal, effect, runInInjectionContext, Injector, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -50,13 +50,16 @@ export abstract class AuthorityManagementTemplateBaseComponent implements OnInit
   
   dialogData: DynamicRow[] = [];
 
+
   private readonly authorityEffect = effect(() => {
     const authority = this.currentAuthority();
     if (authority) {
-      this.fetchTemplates();
+      // Use untracked to prevent reading other signals from triggering this effect
+      untracked(() => {
+        this.fetchTemplates();
+      });
     }
-  });
-
+  }, { allowSignalWrites: true });
   ngOnInit(): void {
     const form = new TemplatesForms();
     this.dialogData = this.getFormDefinition(form);

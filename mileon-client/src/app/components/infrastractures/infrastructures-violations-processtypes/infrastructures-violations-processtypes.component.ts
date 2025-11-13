@@ -83,7 +83,7 @@ export class InfrastructuresViolationsProcessTypesComponent implements OnInit, O
   currentAuthority = signal<string | null>(null);
   loader = signal<boolean>(false);
   violationID = signal<any>('');
-  
+  exportDialogResult = signal<any>(null);
   authorityID = toSignal(this.authorityService.authorityId$);
   
   infrastructureForm: FormGroup;
@@ -182,11 +182,12 @@ export class InfrastructuresViolationsProcessTypesComponent implements OnInit, O
 
       const dialogInstance = dialogRef.componentInstance;
       effect(() => {
-        const result = dialogInstance.dataSubject();
-        if (result) {
-          this.exportData();
-          this.dialog.closeAll();
-        }
+        const result = this.exportDialogResult();
+      if (result) {
+        this.exportData();
+        this.dialog.closeAll();
+        this.exportDialogResult.set(null); // Reset after handling
+      }
       });
     }
   }

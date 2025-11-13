@@ -36,6 +36,7 @@ import { InfrastructuresTableComponent } from '../infrastructures-table/infrastr
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { CheckboxComponent } from '../../shared/base/checkbox/checkbox.component';
 import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-colors',
@@ -168,20 +169,13 @@ export class InfrastructuresColorsComponent implements OnInit {
           description: InfrastructureEnumDialogs.ColorsDialogDiscription,
         },
       });
-      runInInjectionContext(this.injector, () => {
-        const dialogInstance = dialogRef.componentInstance;
-        const dataSubject = dialogInstance.dataSubject();
-        if (dataSubject) {
-          const dialogResult = toSignal(dataSubject);
-          effect(() => {
-            const result = dialogResult();
-            if (result !== null) {
-              this.exportData();
-              this.dialog.closeAll();
-            }
-          });
-        }
+      dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((res) => {
+        if (res?.confirmed) this.exportData();
       });
+  
     }
   }
 

@@ -5,6 +5,12 @@
 @use "bootstrap/scss/bootstrap" as *;
 @import "./elements.scss";
 @import "./mats.scss";
+
+/* styles.scss (גלובלי) */
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+
 // @import "./inputs.scss";
 
 // @import "./search.scss";
@@ -35,13 +41,12 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 ::-webkit-scrollbar-thumb {
   background: #b0b0b0 !important;
   border-radius: 30px !important;
-
 }
 
 ::-webkit-scrollbar-button {
-  display: none !important; 
-  height: 0 !important;  
-  width: 0 !important;   
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
 }
 
 /* Reusable scrollbar class for specific elements */
@@ -60,9 +65,9 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   }
 
   &::-webkit-scrollbar-button {
-    display: none !important; 
-    height: 0 !important;  
-    width: 0 !important;   
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
   }
 }
 
@@ -170,7 +175,7 @@ body {
 }
 
 .cdk-overlay-dark-backdrop {
-  background: rgba(0, 0, 0, 0.40);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 th[sortable] {
@@ -178,8 +183,6 @@ th[sortable] {
   user-select: none;
   -webkit-user-select: none;
 }
-
-
 
 @mixin hide() {
   display: none !important;
@@ -309,21 +312,17 @@ span {
   margin: 0 0 0 5px;
 }
 
-
-input[type="time"]{
+input[type="time"] {
   border-radius: 4px;
-border: 1px solid var(--strok_color, #B9C6D4);
-background: var(--white, #FFF);
-height: 40px;
-padding: 10px 16px;
+  border: 1px solid var(--strok_color, #b9c6d4);
+  background: var(--white, #fff);
+  height: 40px;
+  padding: 10px 16px;
 
-
-
-  &:focus{
-    border-color: var(--primary_color, #387EC4);
+  &:focus {
+    border-color: var(--primary_color, #387ec4);
   }
-  }
-
+}
 
 .mat-drawer-inner-container,
 .mat-drawer-content {
@@ -332,5 +331,3 @@ padding: 10px 16px;
     display: none;
   }
 }
-
-

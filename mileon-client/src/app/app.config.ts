@@ -55,7 +55,8 @@ export const appConfig: ApplicationConfig = {
       }),
       NgbModule,
       NgbNavModule,
-      NgbPopoverModule
+      NgbPopoverModule,
+      
     ),
     // provideAuth(() => getAuth()),
   ],

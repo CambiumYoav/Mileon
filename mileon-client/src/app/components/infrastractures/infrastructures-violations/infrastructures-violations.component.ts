@@ -1,9 +1,19 @@
-import { Component, signal, computed, effect, inject, OnInit, DestroyRef, runInInjectionContext, Injector } from '@angular/core';
+import {
+  Component,
+  signal,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  DestroyRef,
+  runInInjectionContext,
+  Injector,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ConstPath } from '../../../constants/const_path'; 
+import { ConstPath } from '../../../constants/const_path';
 import {
   InfrastructureTableAction,
   InfrastructureTablesTypes,
@@ -28,7 +38,7 @@ import { InfrastructureService } from '../infrastructure.service';
 import { InfrastructureImportComponent } from '../infrastructure-import/infrastructure-import.component';
 import { UploadedFile } from '../../../types/uploadedFile';
 import { ToastrService } from 'ngx-toastr';
-import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages'; 
+import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
 import { AuthorityService } from '../../../services/authority.service ';
 import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
 import { SearchByTextEnum } from '../../../types/enum/searchByTextEnum';
@@ -37,7 +47,11 @@ import { RouterService } from '../../../services/router.service';
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructuresSearchComponent } from '../infrastructures-search/infrastructures-search.component';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
-import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import {
+  InfrastructureEnumDialogs,
+  InfrastructureEnumTitles,
+} from '../../../types/enum/infrastructure.enum';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-violations',
@@ -49,8 +63,8 @@ import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../ty
     MatDialogModule,
     ButtonComponent,
     InfrastructuresSearchComponent,
-    InfrastructuresTableComponent
-  ]
+    InfrastructuresTableComponent,
+  ],
 })
 export class InfrastructuresViolationsComponent implements OnInit {
   private infrastructureServer = inject(InfrastructureService);
@@ -87,9 +101,9 @@ export class InfrastructuresViolationsComponent implements OnInit {
   violationID = signal<any>('');
   dialogResult = signal<any>(null);
   importDialogResult = signal<any>(null);
-  
+
   authorityID = toSignal(this.authorityService.authorityId$);
-  
+
   infrastructureForm: FormGroup;
 
   private destroyRef = inject(DestroyRef);
@@ -98,7 +112,7 @@ export class InfrastructuresViolationsComponent implements OnInit {
 
   constructor() {
     this.infrastructureForm = this.infrastructureSearchFormService.form;
-    
+
     effect(() => {
       const authorityID = this.authorityID();
       if (authorityID) {
@@ -133,21 +147,19 @@ export class InfrastructuresViolationsComponent implements OnInit {
     this.columns.set(tableColumns.ViolationsTable);
     const form = new InfrastructureForms();
     this.dialogData.set(form.InfrastructureViolationForm);
-    
-    const { searchData, filter } = InfrastructuresUtils.initializeSearchAndFilters(
-      this.searchText()
-    );
-    
+
+    const { searchData, filter } =
+      InfrastructuresUtils.initializeSearchAndFilters(this.searchText());
+
     this.searchData.set(searchData);
     this.filter.set(filter);
-    
+
     this.authorityService.setMunicipalsToNationalRegional();
   }
 
   back() {
     this.routerService.back();
   }
-
 
   async openDialogForm(isEdit: boolean) {
     let dialogComponent = InfrastructureFormComponent;
@@ -162,7 +174,9 @@ export class InfrastructuresViolationsComponent implements OnInit {
         autoFocus: false,
         data: {
           form: dialogData,
-          title: isEdit ? InfrastructureEnumTitles.EditDialogTitle : InfrastructureEnumTitles.AddDialogTitle,
+          title: isEdit
+            ? InfrastructureEnumTitles.EditDialogTitle
+            : InfrastructureEnumTitles.AddDialogTitle,
           isEdit: isEdit,
         },
       });
@@ -184,30 +198,23 @@ export class InfrastructuresViolationsComponent implements OnInit {
     let dialogComponent = InfrastructureExportComponent;
     if (dialogComponent) {
       const dialogRef = this.dialog.open(dialogComponent, {
-        // width: '835px',
-        // height: '300px',
         autoFocus: false,
         data: {
-          description: InfrastructureEnumDialogs.ViolationsDialogExportDiscription,
+          description:
+            InfrastructureEnumDialogs.ViolationsDialogExportDiscription,
         },
       });
 
-      runInInjectionContext(this.injector, () => {
-        const dialogInstance = dialogRef.componentInstance;
-        const dataSubject = dialogInstance.dataSubject();
-        if (dataSubject) {
-          const dialogResult = toSignal(dataSubject);
-          effect(() => {
-            const result = dialogResult();
-            if (result) {
-              this.exportData();
-              this.dialog.closeAll();
-            }
-          });
-        }
-      });
+      dialogRef
+        .afterClosed()
+        .pipe(take(1))
+        .subscribe((res) => {
+          if (res?.confirmed) this.exportData();
+        });
     }
   }
+
+  
   async openDialogImport() {
     let dialogComponent = InfrastructureImportComponent;
     if (dialogComponent) {
@@ -216,10 +223,11 @@ export class InfrastructuresViolationsComponent implements OnInit {
         autoFocus: false,
         data: {
           isSignsImport: false,
-          description: InfrastructureEnumDialogs.ViolationsDialogImportDiscription,
+          description:
+            InfrastructureEnumDialogs.ViolationsDialogImportDiscription,
         },
       });
-      
+
       runInInjectionContext(this.injector, () => {
         const afterClosedSignal = toSignal(dialogRef.afterClosed());
         const dialogEffectRef = effect(() => {
@@ -255,7 +263,11 @@ export class InfrastructuresViolationsComponent implements OnInit {
       );
       if (result && result?.success) {
         await this.loadData(this.infrastructureSearchFormService.form);
-        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
+        InfrastructuresUtils.handleInsertUpdateSuccess(
+          action,
+          this.toaster,
+          this.dialog
+        );
       }
     } catch (e) {
       InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
@@ -264,11 +276,12 @@ export class InfrastructuresViolationsComponent implements OnInit {
 
   async importData() {
     await InfrastructuresUtils.handleImportData(
-      () => this.infrastructureServer.importDataByTableType(
-        InfrastructureTablesTypes.Violation,
-        this.filesToUpload(),
-        this.currentAuthority()!
-      ),
+      () =>
+        this.infrastructureServer.importDataByTableType(
+          InfrastructureTablesTypes.Violation,
+          this.filesToUpload(),
+          this.currentAuthority()!
+        ),
       this.toaster,
       () => this.loadData(this.infrastructureSearchFormService.form)
     );
@@ -289,7 +302,7 @@ export class InfrastructuresViolationsComponent implements OnInit {
 
   async loadData(filter: any) {
     this.loader.set(true);
-    
+
     filter = InfrastructuresUtils.normalizeFilter(filter);
 
     const startTime = Date.now();
@@ -297,7 +310,7 @@ export class InfrastructuresViolationsComponent implements OnInit {
       const currentFilter = { ...filter };
       currentFilter.searchText =
         this.infrastructureSearchFormService.form.value.searchText;
-      
+
       this.filter.set(currentFilter);
 
       const updatedFilter = {
@@ -308,13 +321,13 @@ export class InfrastructuresViolationsComponent implements OnInit {
         InfrastructureTablesTypes.Violation,
         this.currentAuthority()
       );
-      
+
       const processedData = result.data.map((v: any) => ({
         ...v,
         photoRequiredDisplay: v.photoRequired ? 'כן' : 'לא',
         ticketTypeName: v.ticketType?.ticketTypeName,
       }));
-      
+
       this.data.set(processedData);
       this.total.set(result.totalRecords);
       this.count.set(result.data.length);
@@ -329,7 +342,7 @@ export class InfrastructuresViolationsComponent implements OnInit {
     } catch (e) {
       InfrastructuresUtils.handleError(e, 'loadData');
     }
-    
+
     await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }

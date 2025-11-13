@@ -1,8 +1,19 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed, effect, ChangeDetectionStrategy, runInInjectionContext, Injector } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject,
+  signal,
+  computed,
+  effect,
+  ChangeDetectionStrategy,
+  runInInjectionContext,
+  Injector,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   InfrastructureForms,
@@ -37,7 +48,10 @@ import { InfrastructuresSearchComponent } from '../infrastructures-search/infras
 import { CheckboxComponent } from '../../shared/base/checkbox/checkbox.component';
 import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InfrastructuresTableComponent } from '../infrastructures-table/infrastructures-table.component';
-import { InfrastructureEnumDialogs, InfrastructureEnumTitles } from '../../../types/enum/infrastructure.enum';
+import {
+  InfrastructureEnumDialogs,
+  InfrastructureEnumTitles,
+} from '../../../types/enum/infrastructure.enum';
 
 @Component({
   selector: 'app-infrastructures-type',
@@ -70,23 +84,29 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
   readonly total = signal<number>(0);
   readonly count = signal<number>(0);
   readonly searchText = signal<string>('');
-  readonly searchData = signal<InfrastructureFilterOptions | undefined>(undefined);
+  readonly searchData = signal<InfrastructureFilterOptions | undefined>(
+    undefined
+  );
   readonly filter = signal<InfrastructureFilterOptions | undefined>(undefined);
   readonly list = signal<VehicleType[]>([]);
   readonly dialogData = signal<DynamicRow[]>([]);
-  readonly infrastructureForm = signal<FormGroup>(this.infrastructureSearchFormService.form);
+  readonly infrastructureForm = signal<FormGroup>(
+    this.infrastructureSearchFormService.form
+  );
   readonly filesToUpload = signal<UploadedFile[]>([]);
   readonly loader = signal<boolean>(false);
   readonly includeInactive = signal<boolean>(false);
   readonly currentAuthority = signal<string | null>(null);
-
+  exportDialogResult = signal<any>(null);
   readonly Icons = ConstPath;
   readonly SearchByTextEnum = SearchByTextEnum;
   readonly mviewAuthority = '11111111-1111-1111-1111-111111111111';
 
   constructor() {
-    const authoritySignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
-    
+    const authoritySignal = toSignal(this.authorityService.authorityId$, {
+      initialValue: null,
+    });
+
     effect(() => {
       const authorityID = authoritySignal();
       if (authorityID) {
@@ -124,7 +144,9 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
         autoFocus: false,
         data: {
           form: dialogData,
-          title: isEdit ? InfrastructureEnumTitles.EditDialogTitle : InfrastructureEnumTitles.AddDialogTitle,
+          title: isEdit
+            ? InfrastructureEnumTitles.EditDialogTitle
+            : InfrastructureEnumTitles.AddDialogTitle,
           isEdit: isEdit,
         },
       });
@@ -135,8 +157,13 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
           const dialogResult = toSignal(dataSubject);
           effect(() => {
             const result = dialogResult();
-            if (result && typeof result === 'object' && result !== null && 
-                'form' in result && 'isEdit' in result) {
+            if (
+              result &&
+              typeof result === 'object' &&
+              result !== null &&
+              'form' in result &&
+              'isEdit' in result
+            ) {
               const action = (result as any).isEdit
                 ? InfrastructureTableAction.Update
                 : InfrastructureTableAction.Add;
@@ -158,20 +185,12 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
           description: InfrastructureEnumDialogs.TypesDialogExportDiscription,
         },
       });
-      runInInjectionContext(this.injector, () => {
-        const dialogInstance = dialogRef.componentInstance;
-        const dataSubject = dialogInstance.dataSubject();
-        if (dataSubject) {
-          const dialogResult = toSignal(dataSubject);
-          effect(() => {
-            const result = dialogResult();
-            if (result) {
-              this.exportData();
-              this.dialog.closeAll();
-            }
-          });
-        }
-      });
+      dialogRef
+        .afterClosed()
+        .pipe(take(1))
+        .subscribe((res) => {
+          if (res?.confirmed) this.exportData();
+        });
     }
   }
 
@@ -191,7 +210,11 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
 
       if (result && result?.success) {
         await this.loadData(this.infrastructureSearchFormService.form);
-        InfrastructuresUtils.handleInsertUpdateSuccess(action, this.toaster, this.dialog);
+        InfrastructuresUtils.handleInsertUpdateSuccess(
+          action,
+          this.toaster,
+          this.dialog
+        );
       }
     } catch (e) {
       InfrastructuresUtils.handleInsertUpdateError(e, this.toaster);
@@ -220,11 +243,12 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
 
   async importData(): Promise<void> {
     await InfrastructuresUtils.handleImportData(
-      () => this.infrastructureServer.importDataByTableType(
-        InfrastructureTablesTypes.VehicleType,
-        this.filesToUpload(),
-        this.mviewAuthority
-      ),
+      () =>
+        this.infrastructureServer.importDataByTableType(
+          InfrastructureTablesTypes.VehicleType,
+          this.filesToUpload(),
+          this.mviewAuthority
+        ),
       this.toaster,
       () => this.loadData(this.infrastructureSearchFormService.form)
     );
@@ -241,21 +265,22 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
 
   async loadData(filter: any): Promise<void> {
     this.loader.set(true);
-    
+
     filter = InfrastructuresUtils.normalizeFilter(filter);
 
     const startTime = Date.now();
     try {
       const currentFilter = { ...filter };
-      currentFilter.searchText = this.infrastructureSearchFormService.form.value.searchText;
+      currentFilter.searchText =
+        this.infrastructureSearchFormService.form.value.searchText;
 
       const updatedFilter = {
         ...currentFilter,
         includeInactive: this.includeInactive(),
       };
-      
+
       this.filter.set(updatedFilter);
-      
+
       const result = await this.infrastructureServer.getInfrastructureTable(
         updatedFilter,
         InfrastructureTablesTypes.VehicleType
@@ -266,7 +291,7 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
     } catch (e) {
       InfrastructuresUtils.handleError(e, 'loadData');
     }
-    
+
     await InfrastructuresUtils.ensureMinimumLoaderTime(startTime);
     this.loader.set(false);
   }
@@ -287,7 +312,7 @@ export class InfrastructuresTypeComponent implements OnInit, OnDestroy {
 
   async onCheckboxChange(includeInactive: boolean): Promise<void> {
     this.includeInactive.set(includeInactive);
-    
+
     await InfrastructuresUtils.handleIncludeInactiveChange(
       includeInactive,
       this.filter,
