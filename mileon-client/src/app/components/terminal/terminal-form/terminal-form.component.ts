@@ -20,19 +20,19 @@ import { DynamicFieldSize } from '../../../types/enum/infrastructureTablesEnum';
 import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
 import { IdValuePair } from '../../../types/legalRequest/legal-request-file-type-response';
 import { UploadedFile } from '../../../types/uploadedFile';
-import { ButtonComponent } from "../../shared/base/button/button.component";
-import { SelectComponent } from "../../shared/base/select/select.component";
-import { InputTextComponent } from "../../shared/base/inputs/input-text/input-text.component";
-import { InputDateComponent } from "../../shared/base/inputs/input-date/input-date.component";
-import { InputPhoneComponent } from "../../shared/base/inputs/input-phone/input-phone.component";
-import { InputCheckboxComponent } from "../../shared/base/inputs/input-checkbox/input-checkbox.component";
-import { InputCheckboxOptionGroupComponent } from "../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component";
-import { RadioButtonComponent } from "../../shared/base/radio-button/radio-button.component";
-import { CheckboxOption } from "../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component";
-import { RadioOption } from "../../shared/base/radio-button/radio-button.component";
-import { TextareaCommentsComponent } from "../../shared/base/inputs/textarea-comments/textarea-comments.component";
+import { ButtonComponent } from '../../shared/base/button/button.component';
+import { SelectComponent } from '../../shared/base/select/select.component';
+import { InputTextComponent } from '../../shared/base/inputs/input-text/input-text.component';
+import { InputDateComponent } from '../../shared/base/inputs/input-date/input-date.component';
+import { InputPhoneComponent } from '../../shared/base/inputs/input-phone/input-phone.component';
+import { InputCheckboxComponent } from '../../shared/base/inputs/input-checkbox/input-checkbox.component';
+import { InputCheckboxOptionGroupComponent } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
+import { RadioButtonComponent } from '../../shared/base/radio-button/radio-button.component';
+import { CheckboxOption } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
+import { RadioOption } from '../../shared/base/radio-button/radio-button.component';
+import { TextareaCommentsComponent } from '../../shared/base/inputs/textarea-comments/textarea-comments.component';
 import { MaterialModule } from '../../../shared/material-module';
-import { InputNumberComponent } from "../../shared/base/inputs/input-number/input-number.component";
+import { InputNumberComponent } from '../../shared/base/inputs/input-number/input-number.component';
 
 @Component({
   selector: 'app-terminal-form',
@@ -53,16 +53,16 @@ import { InputNumberComponent } from "../../shared/base/inputs/input-number/inpu
     InputCheckboxOptionGroupComponent,
     RadioButtonComponent,
     TextareaCommentsComponent,
-    InputNumberComponent
-],
+    InputNumberComponent,
+  ],
 })
 export class TerminalFormComponent {
-  readonly Icons = ConstPath; 
+  readonly Icons = ConstPath;
   DynamicFieldSize = DynamicFieldSize;
-  title = signal<string>(''); 
-  rows = signal<DynamicRow[]>([]); 
-  dynamicForm!: FormGroup; 
-  isSubmitted = signal(false); 
+  title = signal<string>('');
+  rows = signal<DynamicRow[]>([]);
+  dynamicForm!: FormGroup;
+  isSubmitted = signal(false);
   isSigns: boolean = false;
   selectedFiles: File | null = null;
   base64File: any;
@@ -93,13 +93,12 @@ export class TerminalFormComponent {
   }
 
   ngOnInit(): void {
-    this.createForm(); 
+    this.createForm();
   }
 
   onNoClick(): void {
     this.dialog.closeAll();
   }
-
 
   private createForm(): void {
     const formGroup = this.rows().reduce((group, dynamicRow) => {
@@ -158,9 +157,9 @@ export class TerminalFormComponent {
   /** Handles form submission */
   onSubmit(): void {
     if (this.dynamicForm.valid) {
-      // this.dialogRef.close({
-      //   form: this.dynamicForm.value,
-      // }); // Close dialog with form data if valid
+      this.dialogRef.close({
+        form: this.dynamicForm.value,
+      });
       this.dataSubject.set(this.dynamicForm.value);
     } else {
       this.isSubmitted.set(true);
@@ -171,13 +170,20 @@ export class TerminalFormComponent {
   }
 
   // Map dynamic options to checkbox group options
-  toCheckboxOptions(options: Array<{ value: any; display: string }> | undefined): CheckboxOption[] {
+  toCheckboxOptions(
+    options: Array<{ value: any; display: string }> | undefined
+  ): CheckboxOption[] {
     return (options || []).map((o) => ({ value: o.value, label: o.display }));
   }
 
   // Map dynamic options to radio options
-  toRadioOptions(options: Array<{ value: any; display: string }> | undefined): RadioOption[] {
-    return (options || []).map((o) => ({ value: String(o.value), label: o.display }));
+  toRadioOptions(
+    options: Array<{ value: any; display: string }> | undefined
+  ): RadioOption[] {
+    return (options || []).map((o) => ({
+      value: String(o.value),
+      label: o.display,
+    }));
   }
 
   // Get current radio value as string for RadioButtonComponent

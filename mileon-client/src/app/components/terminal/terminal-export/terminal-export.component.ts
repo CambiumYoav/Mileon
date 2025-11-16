@@ -52,16 +52,11 @@ export class TerminalExportComponent {
   ngOnInit(): void {}
 
   onSubmit() {
-    // Set exporting state
     this._isExporting.set(true);
     
-    // Set export data (you can modify this to include actual export data)
-    this._exportData.set('');
+    // Just close with true
+    this.dialogRef.close(true);
     
-    // Close dialog with result
-    this.dialogRef.close(this.exportData);
-    
-    // Reset exporting state
     this._isExporting.set(false);
   }
 

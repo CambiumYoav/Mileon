@@ -1,18 +1,18 @@
-import { 
-  Component, 
-  signal, 
-  computed, 
-  inject, 
-  effect, 
+import {
+  Component,
+  signal,
+  computed,
+  inject,
+  effect,
   untracked,
   OnInit,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { ConstPath } from '../../../constants/const_path';
-import { ModalButton } from '../../../constants/modalButtons';    
+import { ModalButton } from '../../../constants/modalButtons';
 import { ModalMessages } from '../../../constants/modalMessages';
 import { AuthorityService } from '../../../services/authority.service ';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
@@ -24,7 +24,7 @@ import { DynamicRow } from '../../../types/infrastructure/InfrastructureTypes';
 import { Column } from '../../../types/table';
 import { Utils } from '../../../utils/utils';
 import { TerminalService } from '../terminal.service';
-import { TerminalExportComponent } from '../../../components/terminal/terminal-export/terminal-export.component';      
+import { TerminalExportComponent } from '../../../components/terminal/terminal-export/terminal-export.component';
 import { TerminalTicketBooksFormComponent } from '../../../components/terminal/terminal-ticket-books-form/terminal-ticket-books-form.component';
 import { TerminalTicketBooksAssignedComponent } from '../../../components/terminal/terminal-ticket-books-assigned/terminal-ticket-books-assigned.component';
 import { MsofonForms } from '../../../types/terminal/terminal-form';
@@ -33,10 +33,10 @@ import { TicketBook } from '../../../types/ticketBook';
 import { SortOrder } from '../../../types/enum/sort-order.enum';
 import { CORE_IMPORTS } from '../../../shared/shared-modules';
 import { ButtonComponent } from '../../shared/base/button/button.component';
-import { AppModalComponent } from "../../shared/app-modal/app-modal.component";
+import { AppModalComponent } from '../../shared/app-modal/app-modal.component';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { TerminalSearchComponent } from "../terminal-search/terminal-search.component";
-import { TerminalTableComponent } from "../terminal-table/terminal-table.component";
+import { TerminalSearchComponent } from '../terminal-search/terminal-search.component';
+import { TerminalTableComponent } from '../terminal-table/terminal-table.component';
 
 @Component({
   selector: 'app-terminal-ticket-books',
@@ -49,8 +49,8 @@ import { TerminalTableComponent } from "../terminal-table/terminal-table.compone
     ButtonComponent,
     AppModalComponent,
     TerminalSearchComponent,
-    TerminalTableComponent
-],
+    TerminalTableComponent,
+  ],
 })
 export class TerminalTicketBooksComponent implements OnInit {
   private terminalSearchFormService = inject(TerminalSearchService);
@@ -60,8 +60,9 @@ export class TerminalTicketBooksComponent implements OnInit {
   private terminalService = inject(TerminalService);
 
   // Convert authority service to signal
-  private authorityIdSignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
-  
+  private authorityIdSignal = toSignal(this.authorityService.authorityId$, {
+    initialValue: null,
+  });
 
   readonly title = TitlesEnum.TicketBooksTitle;
   readonly TicketBookAction = TicketBookAction;
@@ -73,18 +74,22 @@ export class TerminalTicketBooksComponent implements OnInit {
   total = signal<number>(0);
   count = signal<number>(0);
   searchText = signal<string>('');
-  searchData = signal<TicketBookFilterOptions>(new TicketBookFilterOptions({
-    currentPage: 1,
-    pageSize: 100,
-    order: 1,
-    searchText: ''
-  }));
-  filter = signal<TicketBookFilterOptions>(new TicketBookFilterOptions({
-    currentPage: 1,
-    pageSize: 100,
-    order: 1,
-    searchText: ''
-  }));
+  searchData = signal<TicketBookFilterOptions>(
+    new TicketBookFilterOptions({
+      currentPage: 1,
+      pageSize: 100,
+      order: 1,
+      searchText: '',
+    })
+  );
+  filter = signal<TicketBookFilterOptions>(
+    new TicketBookFilterOptions({
+      currentPage: 1,
+      pageSize: 100,
+      order: 1,
+      searchText: '',
+    })
+  );
   list = signal<TicketBook[]>([]);
   dialogData = signal<DynamicRow[]>([]);
   currentAuthority = signal<string | null>(null);
@@ -95,20 +100,26 @@ export class TerminalTicketBooksComponent implements OnInit {
   isModalOpen = signal<boolean>(false);
   assignedTickets = signal<any[]>([]);
   selectedBookNumber = signal<string>('');
-  
+
   // Dialog result signals
   exportDialogResult = signal<any>(null);
   formDialogResult = signal<any>(null);
   assignedTicketsDialogResult = signal<any>(null);
 
   modalButtons = computed<ModalButton[]>(() => this.createModalButtons());
-  terminalForm = computed<FormGroup>(() => this.terminalSearchFormService.searchForm);
-  
+  terminalForm = computed<FormGroup>(
+    () => this.terminalSearchFormService.searchForm
+  );
+
   // Computed signals for better performance
   readonly isLoading = computed(() => this.loader());
   readonly hasData = computed(() => this.data().length > 0);
-  readonly hasSelectedTicketBook = computed(() => this.selectedTicketBook() !== null);
-  readonly canExport = computed(() => this.hasSelectedTicketBook() && !this.isLoading());
+  readonly hasSelectedTicketBook = computed(
+    () => this.selectedTicketBook() !== null
+  );
+  readonly canExport = computed(
+    () => this.hasSelectedTicketBook() && !this.isLoading()
+  );
 
   getSearchData() {
     return this.searchData() as any;
@@ -116,7 +127,7 @@ export class TerminalTicketBooksComponent implements OnInit {
 
   constructor() {
     this.terminalSearchFormService.setFormsOrderDirection(SortOrder.desc);
-    
+
     effect(() => {
       const selectedBook = this.selectedTicketBook();
       if (selectedBook) {
@@ -135,14 +146,6 @@ export class TerminalTicketBooksComponent implements OnInit {
       });
     });
 
-    // Effect to handle export dialog results
-    effect(() => {
-      const result = this.exportDialogResult();
-      if (result) {
-        this.exportData();
-        this.exportDialogResult.set(null); // Reset after processing
-      }
-    });
 
     // Effect to handle form dialog results
     effect(() => {
@@ -164,60 +167,23 @@ export class TerminalTicketBooksComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.searchData.set(new TicketBookFilterOptions({
-      searchText: this.searchText(),
-      order: 1,
-      currentPage: 1,
-      pageSize: 100,
-    }));
-    this.filter.set(new TicketBookFilterOptions({
-      order: 1,
-      searchText: '',
-      currentPage: 1,
-      pageSize: 100,
-    }));
+    this.searchData.set(
+      new TicketBookFilterOptions({
+        searchText: this.searchText(),
+        order: 1,
+        currentPage: 1,
+        pageSize: 100,
+      })
+    );
+    this.filter.set(
+      new TicketBookFilterOptions({
+        order: 1,
+        searchText: '',
+        currentPage: 1,
+        pageSize: 100,
+      })
+    );
   }
-
-
-  // async loadData(filter: TicketBookFilterOptions) {
-  //   this.loader = true;
-
-  //   console.log(filter);
-  //   const MIN_LOADER_TIME = 1500;
-  //   const startTime = Date.now();
-  //   try {
-  //     this.searchText = filter.searchText ?? '';
-  //     filter.pageSize = 10;
-  //     filter.orderByField =
-  //       filter.orderByField && filter.orderByField != ''
-  //         ? filter.orderByField
-  //         : 'CreationDate'; //set default to creation date
-  //     console.log(this.searchText);
-  //     filter.searchText = this.searchText;
-  //     // filter.searchText = this.searchText;
-  //     console.log(filter); //this value does not get updated in the input
-  //     this.filter = { ...filter, authorityID: this.currentAuthority! };
-  //     console.log(this.filter);
-  //     const res = await this.terminalService.getTicketBooks(this.filter);
-  //     if (res) {
-  //       this.data = res.list;
-  //       this.total = res.total; //overall server data
-  //       this.count = res.count; //response current count
-  //     }
-  //   } catch (e) {
-  //     this.toaster.error(ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER);
-  //     console.error(e);
-  //   }
-
-  //   const elapsedTime = Date.now() - startTime;
-  //   const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-  //   if (remainingTime > 0) {
-  //     //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-  //     await new Promise((resolve) => setTimeout(resolve, remainingTime));
-  //   }
-  //   this.loader = false;
-  // }
 
   async loadData(filter: TicketBookFilterOptions) {
     this.loader.set(true);
@@ -257,13 +223,14 @@ export class TerminalTicketBooksComponent implements OnInit {
   }
 
   async openDialogExport() {
-    let dialogComponent = TerminalExportComponent;
+    const dialogComponent = TerminalExportComponent;
     if (dialogComponent) {
       const dialogRef = this.dialog.open(dialogComponent, {});
-      
-      // Handle dialog result using signal
+  
       dialogRef.afterClosed().subscribe((result) => {
-        this.exportDialogResult.set(result);
+        if (result) {
+          this.exportData();
+        }
       });
     }
   }
@@ -437,9 +404,11 @@ export class TerminalTicketBooksComponent implements OnInit {
 
   createModalButtons(): ModalButton[] {
     return [
-      { label: 'ביטול', action: () => this.closeModal(),
+      {
+        label: 'ביטול',
+        action: () => this.closeModal(),
         buttonClass: 'outline-btn button-base',
-       },
+      },
       {
         label: 'אישור',
         action: () => this.closeTicketBook(),
@@ -471,7 +440,7 @@ export class TerminalTicketBooksComponent implements OnInit {
   async getAssignedTickets(event: any) {
     // Update selected ticket book
     this.updateSelectedTicketBook(event);
-    
+
     this.selectedBookID.set(event.bookID);
     this.selectedBookNumber.set(event.bookNumber);
     if (this.selectedBookID()) {
@@ -493,7 +462,7 @@ export class TerminalTicketBooksComponent implements OnInit {
     try {
       const selectedBook = this.selectedTicketBook();
       if (!selectedBook) return;
-      
+
       const res = await this.terminalService.deleteTicketBook(
         selectedBook.bookID
       );

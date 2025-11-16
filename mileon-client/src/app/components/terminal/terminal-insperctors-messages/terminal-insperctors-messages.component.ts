@@ -71,39 +71,7 @@ export class TerminalInsperctorsMessagesComponent {
     });
   }
 
-  // async loadData(filter?: any) {
-  //   this.loader = true;
-  //   const MIN_LOADER_TIME = 1000;
-  //   const startTime = Date.now();
-  //   try {
-  //     filter = {
-  //       ...filter,
-  //       authorityId: this.currentAuthority!,
-  //       pageSize: 10,
-  //       orderByField: 'taskCreationDate',
-  //       order: 1,
-  //     };
-
-  //     const res = await this.terminalService.getInspectorsTasks(filter);
-  //     if (res) {
-  //       this.data = res.data;
-  //       this.total = res.totalRecords;
-  //       this.count = res.totalRecords;
-  //     }
-  //   } catch (e) {
-  //     console.error(e);
-  //     this.toaster.error(ErrorSuccessMessages.SOMETHING_WENT_WRONG_TRY_LATER);
-  //   }
-
-  //   const elapsedTime = Date.now() - startTime;
-  //   const remainingTime = MIN_LOADER_TIME - elapsedTime;
-
-  //   if (remainingTime > 0) {
-  //     //  Ensure the loader stays visible for at least `MIN_LOADER_TIME`
-  //     await new Promise((resolve) => setTimeout(resolve, remainingTime));
-  //   }
-  //   this.loader = false;
-  // }
+  
 
   async loadData(filter?: any, append = false) {
     this.loader.set(true);
@@ -152,17 +120,10 @@ export class TerminalInsperctorsMessagesComponent {
       },
     });
 
-    const resultSig = runInInjectionContext(this.injector, () =>
-      toSignal<any | null>(dialogRef.afterClosed(), { initialValue: null })
-    );
-
-    runInInjectionContext(this.injector, () => {
-      effect(() => {
-        const result = resultSig();
-        if (result && result.form) {
-          this.createTask(result.form as InspectorTask);
-        }
-      });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.form) {
+        this.createTask(result.form as InspectorTask);
+      }
     });
   }
 
