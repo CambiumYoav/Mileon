@@ -34,6 +34,7 @@ import { InputDateComponent } from '../../shared/base/inputs/input-date/input-da
 import { InputCheckboxOptionGroupComponent } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
 import { InputTextComponent } from '../../shared/base/inputs/input-text/input-text.component';
 import { InputPhoneComponent } from '../../shared/base/inputs/input-phone/input-phone.component';
+import { InputNumberComponent } from '../../shared/base/inputs/input-number/input-number.component';
 
 @Component({
   selector: 'app-inventory-management-add',
@@ -52,6 +53,7 @@ import { InputPhoneComponent } from '../../shared/base/inputs/input-phone/input-
     InputCheckboxOptionGroupComponent,
     InputTextComponent,
     InputPhoneComponent,
+    InputNumberComponent
   ],
 })
 export class InventoryManagementAddComponent {

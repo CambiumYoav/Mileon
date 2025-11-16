@@ -72,7 +72,9 @@ export class InventoryManagementMainComponent {
   readonly count = signal<number>(0);
   readonly searchText = signal<string>('');
   readonly list = signal<User[]>([]);
-  readonly dialogData = signal<DynamicRow[]>(new InventoryForms().InventoryForm);
+  readonly dialogData = signal<DynamicRow[]>(
+    new InventoryForms().InventoryForm
+  );
   readonly loader = signal<boolean>(true);
   readonly isExportModalOpen = signal<boolean>(false);
   readonly isDialogOpen = signal<boolean>(false);
@@ -86,6 +88,7 @@ export class InventoryManagementMainComponent {
     searchText: this.searchText(),
     order: 1,
     currentPage: 1,
+    pageSize: 100,
   };
 
   filter: FilterOptions = { currentPage: 1 };
@@ -114,13 +117,11 @@ export class InventoryManagementMainComponent {
       this.filter = { ...filter };
       this.filter.searchText =
         this.inventoryManagementSearchFormService.form.value.searchText;
-
       const updatedFilter = {
         ...this.filter,
         ...filter.value,
         authorityID: this.currentAuthority(),
       };
-
       const response = await this.inventoryManagementService.getDevices(
         updatedFilter
       );

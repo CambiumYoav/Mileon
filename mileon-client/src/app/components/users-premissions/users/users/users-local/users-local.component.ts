@@ -1,10 +1,19 @@
-import { Component, OnInit, inject, signal, computed, effect, runInInjectionContext, Injector } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  effect,
+  runInInjectionContext,
+  Injector,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
-  import { ConstPath } from '../../../../../constants/const_path';
+import { ConstPath } from '../../../../../constants/const_path';
 import { AuthorityService } from '../../../../../services/authority.service ';
 import { TitlesEnum } from '../../../../../types/enum/titlesEnum';
 import { InfrastructureForms } from '../../../../../types/infrastructure/infrastructure-table.model';
@@ -23,17 +32,22 @@ import { UploadedFile } from '../../../../../types/uploadedFile';
 import { ErrorSuccessMessages } from '../../../../../types/enum/error-success-messages';
 import { UsersAfterImportComponent } from '../../users-after-import/users-after-import.component';
 import { PermissionService } from '../../../../../services/permission.service';
-import { ButtonComponent } from "../../../../shared/base/button/button.component";
-import { CheckboxComponent } from "../../../../shared/base/checkbox/checkbox.component";
-import { UsersTableComponent } from "../../users-table/users-table.component";
-import { UsersSearchComponent } from "../../users-search/users-search.component";
+import { ButtonComponent } from '../../../../shared/base/button/button.component';
+import { CheckboxComponent } from '../../../../shared/base/checkbox/checkbox.component';
+import { UsersTableComponent } from '../../users-table/users-table.component';
+import { UsersSearchComponent } from '../../users-search/users-search.component';
 
 @Component({
   selector: 'app-users-local',
   templateUrl: './users-local.component.html',
   styleUrls: ['./users-local.component.scss'],
   standalone: true,
-  imports: [ButtonComponent, CheckboxComponent, UsersTableComponent, UsersSearchComponent],
+  imports: [
+    ButtonComponent,
+    CheckboxComponent,
+    UsersTableComponent,
+    UsersSearchComponent,
+  ],
 })
 export class UsersLocalComponent implements OnInit {
   private readonly usersSearchFormService = inject(UsersSearchFormService);
@@ -62,7 +76,7 @@ export class UsersLocalComponent implements OnInit {
   readonly fileNameForFailedUsers = signal<string>('');
 
   private readonly authorityID = toSignal(this.authorityService.authorityId$);
-  
+
   readonly currentAuthority = computed(() => this.authorityID() || null);
 
   columns: Column[] = [];
@@ -87,12 +101,12 @@ export class UsersLocalComponent implements OnInit {
   ngOnInit(): void {
     const form = new InfrastructureForms(); // users form
     this.dialogData = form.InfrastructureColorForm;
-    
+
     this.searchData = {
       ...this.searchData,
       searchText: this.searchText,
     };
-
+    this.authorityService.setMunicipalsToNationalRegional();
     this.setupAuthorityEffect();
   }
 
@@ -109,7 +123,6 @@ export class UsersLocalComponent implements OnInit {
       });
     });
   }
-
 
   async loadData(filter: UsersFilterOptions) {
     this.loader.set(true);
@@ -152,7 +165,9 @@ export class UsersLocalComponent implements OnInit {
   redirectToCreateUser() {
     const role = this.permissionsService.role();
     if (role) {
-      this.router.navigate([`/main/${role}/users-permissions/users/create-user`]);
+      this.router.navigate([
+        `/main/${role}/users-permissions/users/create-user`,
+      ]);
     } else {
       console.error('No role found, redirecting to login');
       this.router.navigate(['/login']);
@@ -163,7 +178,7 @@ export class UsersLocalComponent implements OnInit {
     let dialogComponent = UsersExportComponent;
     if (dialogComponent) {
       const dialogRef = this.dialog.open(dialogComponent, {});
-      
+
       // Use async/await instead of subscription
       const result = await firstValueFrom(dialogRef.afterClosed());
       if (result) {
@@ -176,7 +191,7 @@ export class UsersLocalComponent implements OnInit {
     let dialogComponent = UsersImportComponent;
     if (dialogComponent) {
       const dialogRef = this.dialog.open(dialogComponent, {});
-      
+
       // Use async/await instead of subscription
       const result = await firstValueFrom(dialogRef.afterClosed());
       if (result && result.uploadedFiles) {
@@ -229,10 +244,10 @@ export class UsersLocalComponent implements OnInit {
     try {
       const currentAuth = this.currentAuthority();
       if (!currentAuth) return;
-      
+
       const uploadedFiles = this.filesToUpload();
       if (uploadedFiles.length === 0) return;
-      
+
       const res = await this.usersService.importUsersLocal(
         uploadedFiles[0].file, // Extract the File object from UploadedFile
         currentAuth
@@ -285,7 +300,7 @@ export class UsersLocalComponent implements OnInit {
           this.fileNameForFailedUsers()
         );
       }
-      
+
       this.dialog.closeAll();
     }
   }

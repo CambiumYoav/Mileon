@@ -133,6 +133,7 @@ export class RouterService implements OnDestroy {
   }
 
   navigateToPageURL(pageRoute: string): void {
+    console.log('Navigating to page route:', pageRoute);
     const role = this.getRole();
     if (role) {
       const fullPath = `/main/${role}/${pageRoute}`;

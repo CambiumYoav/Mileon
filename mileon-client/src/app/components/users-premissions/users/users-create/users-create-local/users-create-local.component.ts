@@ -88,6 +88,7 @@ export class UsersCreateLocalComponent implements OnInit {
 
     if (this.userForm.valid) {
       try {
+        console.log('Form Data:', this.userForm.value);
         const formData = { ...this.userForm.value };
 
         let groupAccess = formData['groupAccess'];
@@ -232,6 +233,7 @@ export class UsersCreateLocalComponent implements OnInit {
     const password = passwordControl.value;
     const email = emailControl?.value;
     const phone = phoneControl?.value;
+    
 
     // Check if the password contains the email
     if (email && password.includes(email)) {

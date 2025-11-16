@@ -95,8 +95,22 @@ export class InputTextComponent
   @Input()
   set disabled(value: boolean) {
     this._disabled.set(value);
-    this.setDisabledState(value);
+  
+    // If the form control exists, update it,
+    // BUT don't re-trigger events unnecessarily
+    if (this.control) {
+      if (value && !this.control.disabled) {
+        this.control.disable({ emitEvent: false });
+      } else if (!value && this.control.disabled) {
+        this.control.enable({ emitEvent: false });
+      }
+    }
+    // Do NOT call setDisabledState() from here – Angular will call it for you
   }
+  // set disabled(value: boolean) {
+  //   this._disabled.set(value);
+  //   this.setDisabledState(value);
+  // }
 
   get disabled(): boolean {
     return this._disabled();
@@ -166,12 +180,12 @@ export class InputTextComponent
 
   override setDisabledState(isDisabled: boolean): void {
     this._disabled.set(isDisabled);
-    if (this.control) {
-      if (isDisabled) {
-        this.control.disable();
-      } else {
-        this.control.enable();
-      }
-    }
+    // if (this.control) {
+    //   if (isDisabled) {
+    //     this.control.disable();
+    //   } else {
+    //     this.control.enable();
+    //   }
+    // }
   }
 }

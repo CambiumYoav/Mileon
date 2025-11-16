@@ -118,28 +118,106 @@ export class AuthorityService {
     this.setSuperAdminMunicipal();
   }
 
+  // setMunicipalsToNationalRegional() {
+  //   this._nationalAdminMode.set(false);
+
+  //   const userAuthority =
+  //     this.permission.authority?.() ?? this.permission.authority?.() ?? '';
+
+  //   const filtered = this._municipals().filter((m) =>
+  //     userAuthority !== this.SUPER_ID
+  //       ? m.authorityID === userAuthority
+  //       : m.authorityID !== this.superAdminMunicipal.authorityID
+  //   );
+
+  //   const selectedId =
+  //     userAuthority !== this.SUPER_ID ? userAuthority : this._authorityId();
+  //   this._municipals.set(filtered);
+
+  //   const selected =
+  //     filtered.find((m) => m.authorityID === selectedId) ?? filtered[0];
+
+  //   if (selected) this.saveSelectedAuthority(selected);
+  // }
+  // setMunicipalsToNationalRegional() {
+  //   this._nationalAdminMode.set(false);
+
+  //   // Get user authority - fix the double call
+  //   const userAuthority = this.permission.authority?.() ?? '';
+
+  //   // Get current municipals list
+  //   const allMunicipals = this._municipals();
+
+  //   // Filter logic:
+  //   // - If NOT super admin: show only their authority
+  //   // - If super admin: show all EXCEPT the super admin municipal
+  //   const filtered = allMunicipals.filter((m) => {
+  //     if (userAuthority !== this.SUPER_ID) {
+  //       // Regular user: only show their authority
+  //       return m.authorityID === userAuthority;
+  //     } else {
+  //       // Super admin: show all except super admin municipal
+  //       return m.authorityID !== this.superAdminMunicipal.authorityID;
+  //     }
+  //   });
+
+  //   // Determine which authority to select
+  //   const selectedId =
+  //     userAuthority !== this.SUPER_ID
+  //       ? userAuthority
+  //       : this._authorityId() ?? filtered[0]?.authorityID;
+
+  //   console.log('Filtered Municipals:', filtered[0]);
+  //   // Update municipals list
+  //   this._municipals.set(filtered);
+
+  //   // Find and set the selected municipal
+  //   const selected =
+  //     filtered.find((m) => m.authorityID === selectedId) ?? filtered[0];
+
+  //   if (selected) {
+  //     this.saveSelectedAuthority(selected);
+  //   }
+  // }
   setMunicipalsToNationalRegional() {
     this._nationalAdminMode.set(false);
-
-    const userAuthority =
-      this.permission.authority?.() ?? this.permission.authority?.() ?? '';
-
-    const filtered = this._municipals().filter((m) =>
-      userAuthority !== this.SUPER_ID
-        ? m.authorityID === userAuthority
-        : m.authorityID !== this.superAdminMunicipal.authorityID
-    );
-
-    const selectedId =
-      userAuthority !== this.SUPER_ID ? userAuthority : this._authorityId();
+  
+    // Get user authority
+    const userAuthority = this.permission.authority?.() ?? '';
+    const isSpecificAuthority = userAuthority !== this.SUPER_ID;
+  
+    // Get current municipals list
+    const allMunicipals = this._municipals();
+    
+    console.log('All Municipals before filter:', allMunicipals);
+    console.log('User Authority:', userAuthority);
+    console.log('Is Specific Authority:', isSpecificAuthority);
+    
+    // Filter logic matching your old Angular 13 code:
+    // - If user has specific authority: show only that authority
+    // - If user is super admin: show all EXCEPT super admin municipal (Mview)
+    const filtered = isSpecificAuthority
+      ? allMunicipals.filter((m) => m.authorityID === userAuthority)
+      : allMunicipals.filter((m) => m.authorityID !== this.superAdminMunicipal.authorityID);
+  
+    console.log('Filtered Municipals:', filtered);
+  
+    // Update the municipals list
     this._municipals.set(filtered);
-
-    const selected =
-      filtered.find((m) => m.authorityID === selectedId) ?? filtered[0];
-
-    if (selected) this.saveSelectedAuthority(selected);
+  
+    // Determine which to select
+    const currentStoredId = this._authorityId();
+    const idToSelect = isSpecificAuthority ? userAuthority : currentStoredId;
+    
+    // Find the selected municipal
+    const selected = filtered.find((m) => m.authorityID === idToSelect) ?? filtered[0];
+  
+    console.log('Selected Municipal:', selected);
+  
+    if (selected) {
+      this.saveSelectedAuthority(selected);
+    }
   }
-
   // ---------- queries ----------
   /** Fetch + enrich municipals and update signal.
    *  Returns the enriched list for imperative callers. */

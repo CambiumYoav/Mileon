@@ -13,16 +13,18 @@ export const authorityManagementRoutes: Routes = [
   {
     path: RP.Management.Main,
     loadComponent: () =>
-      import('./authority-management-main/authority-management-main.component')
-        .then(m => m.AuthorityManagementMainComponent),
+      import(
+        './authority-management-main/authority-management-main.component'
+      ).then((m) => m.AuthorityManagementMainComponent),
   },
 
   // Authority Management create flow
   {
     path: 'create',
     loadComponent: () =>
-      import('./authority-management-main/authority-management-main.component')
-        .then(m => m.AuthorityManagementMainComponent),
+      import(
+        './authority-management-main/authority-management-main.component'
+      ).then((m) => m.AuthorityManagementMainComponent),
     children: [
       {
         path: '',
@@ -32,20 +34,23 @@ export const authorityManagementRoutes: Routes = [
       {
         path: RP.Management.Authority,
         loadComponent: () =>
-          import('./authority-management-details/authority-management-details.component')
-            .then(m => m.AuthorityManagementDetailsComponent),
+          import(
+            './authority-management-details/authority-management-details.component'
+          ).then((m) => m.AuthorityManagementDetailsComponent),
       },
       {
         path: RP.Management.Portal,
         loadComponent: () =>
-          import('./authority-management-portal/authority-management-portal.component')
-            .then(m => m.AuthorityManagementPortalComponent),
+          import(
+            './authority-management-portal/authority-management-portal.component'
+          ).then((m) => m.AuthorityManagementPortalComponent),
       },
       {
         path: RP.Management.TextTemplates,
         loadComponent: () =>
-          import('./authority-management-templates/authority-management-templates.component')
-            .then(m => m.AuthorityManagementTemplatesComponent),
+          import(
+            './authority-management-templates/authority-management-templates.component'
+          ).then((m) => m.AuthorityManagementTemplatesComponent),
         children: [
           {
             path: '',
@@ -55,28 +60,32 @@ export const authorityManagementRoutes: Routes = [
           {
             path: 'text',
             loadComponent: () =>
-              import('./authority-management-templates-text/authority-management-templates-text.component')
-                .then(m => m.AuthorityManagementTemplatesTextComponent),
+              import(
+                './authority-management-templates-text/authority-management-templates-text.component'
+              ).then((m) => m.AuthorityManagementTemplatesTextComponent),
           },
           {
             path: 'logo',
             loadComponent: () =>
-              import('./authority-management-templates-logo/authority-management-templates-logo.component')
-                .then(m => m.AuthorityManagementTemplatesLogoComponent),
+              import(
+                './authority-management-templates-logo/authority-management-templates-logo.component'
+              ).then((m) => m.AuthorityManagementTemplatesLogoComponent),
           },
           {
             path: 'signature',
             loadComponent: () =>
-              import('./authority-management-templates-signature/authority-management-templates-signature.component')
-                .then(m => m.AuthorityManagementTemplatesSignatureComponent),
+              import(
+                './authority-management-templates-signature/authority-management-templates-signature.component'
+              ).then((m) => m.AuthorityManagementTemplatesSignatureComponent),
           },
         ],
       },
       {
         path: RP.Management.FormsManagement,
         loadComponent: () =>
-          import('./authority-management-forms/authority-management-forms.component')
-            .then(m => m.AuthorityManagementFormsComponent),
+          import(
+            './authority-management-forms/authority-management-forms.component'
+          ).then((m) => m.AuthorityManagementFormsComponent),
       },
     ],
   },
@@ -85,31 +94,41 @@ export const authorityManagementRoutes: Routes = [
   {
     path: 'edit',
     loadComponent: () =>
-      import('./authority-management-main/authority-management-main.component')
-        .then(m => m.AuthorityManagementMainComponent),
+      import(
+        './authority-management-main/authority-management-main.component'
+      ).then((m) => m.AuthorityManagementMainComponent),
     children: [
+      // {
+      //   path: '',
+      //   redirectTo: RP.Management.Authority,
+      //   pathMatch: 'full',
+      // },
       {
-        path: '',
-        redirectTo: RP.Management.Authority,
-        pathMatch: 'full',
-      },
-      {
-        path: RP.Management.Authority,
+        path: '', // Empty path to load default child
         loadComponent: () =>
           import('./authority-management-details/authority-management-details.component')
             .then(m => m.AuthorityManagementDetailsComponent),
       },
       {
+        path: RP.Management.Authority,
+        loadComponent: () =>
+          import(
+            './authority-management-details/authority-management-details.component'
+          ).then((m) => m.AuthorityManagementDetailsComponent),
+      },
+      {
         path: RP.Management.Portal,
         loadComponent: () =>
-          import('./authority-management-portal/authority-management-portal.component')
-            .then(m => m.AuthorityManagementPortalComponent),
+          import(
+            './authority-management-portal/authority-management-portal.component'
+          ).then((m) => m.AuthorityManagementPortalComponent),
       },
       {
         path: RP.Management.TextTemplates,
         loadComponent: () =>
-          import('./authority-management-templates/authority-management-templates.component')
-            .then(m => m.AuthorityManagementTemplatesComponent),
+          import(
+            './authority-management-templates/authority-management-templates.component'
+          ).then((m) => m.AuthorityManagementTemplatesComponent),
         children: [
           {
             path: '',
@@ -119,34 +138,39 @@ export const authorityManagementRoutes: Routes = [
           {
             path: 'text',
             loadComponent: () =>
-              import('./authority-management-templates-text/authority-management-templates-text.component')
-                .then(m => m.AuthorityManagementTemplatesTextComponent),
+              import(
+                './authority-management-templates-text/authority-management-templates-text.component'
+              ).then((m) => m.AuthorityManagementTemplatesTextComponent),
           },
           {
             path: 'logo',
             loadComponent: () =>
-              import('./authority-management-templates-logo/authority-management-templates-logo.component')
-                .then(m => m.AuthorityManagementTemplatesLogoComponent),
+              import(
+                './authority-management-templates-logo/authority-management-templates-logo.component'
+              ).then((m) => m.AuthorityManagementTemplatesLogoComponent),
           },
           {
             path: 'signature',
             loadComponent: () =>
-              import('./authority-management-templates-signature/authority-management-templates-signature.component')
-                .then(m => m.AuthorityManagementTemplatesSignatureComponent),
+              import(
+                './authority-management-templates-signature/authority-management-templates-signature.component'
+              ).then((m) => m.AuthorityManagementTemplatesSignatureComponent),
           },
         ],
       },
       {
         path: RP.Management.ImagesTemplates,
         loadComponent: () =>
-          import('./authority-management-image-templates/authority-management-image-templates.component')
-            .then(m => m.AuthorityManagementImageTemplatesComponent),
+          import(
+            './authority-management-image-templates/authority-management-image-templates.component'
+          ).then((m) => m.AuthorityManagementImageTemplatesComponent),
       },
       {
         path: RP.Management.FormsManagement,
         loadComponent: () =>
-          import('./authority-management-forms/authority-management-forms.component')
-            .then(m => m.AuthorityManagementFormsComponent),
+          import(
+            './authority-management-forms/authority-management-forms.component'
+          ).then((m) => m.AuthorityManagementFormsComponent),
       },
     ],
   },
@@ -155,48 +179,52 @@ export const authorityManagementRoutes: Routes = [
   {
     path: RP.Management.DraftsAndLetters,
     loadComponent: () =>
-      import('./authority-management-drafts-and-letters/authority-management-drafts-and-letters.component')
-        .then(m => m.AuthorityManagementDraftsAndLettersComponent),
+      import(
+        './authority-management-drafts-and-letters/authority-management-drafts-and-letters.component'
+      ).then((m) => m.AuthorityManagementDraftsAndLettersComponent),
   },
 
   // Create Letter
   {
     path: `${RP.Management.DraftsAndLetters}/${RP.Management.CreateLetter}`,
     loadComponent: () =>
-      import('./authority-management-letter/authority-management-letter.component')
-        .then(m => m.AuthorityManagementLetterComponent),
+      import(
+        './authority-management-letter/authority-management-letter.component'
+      ).then((m) => m.AuthorityManagementLetterComponent),
   },
 
   // Update Letter
   {
     path: `${RP.Management.DraftsAndLetters}/${RP.Management.UpdateLetter}/:id/:name`,
     loadComponent: () =>
-      import('./authority-management-letter/authority-management-letter.component')
-        .then(m => m.AuthorityManagementLetterComponent),
+      import(
+        './authority-management-letter/authority-management-letter.component'
+      ).then((m) => m.AuthorityManagementLetterComponent),
   },
 
   // Create Draft
   {
     path: `${RP.Management.DraftsAndLetters}/${RP.Management.CreateDraft}`,
     loadComponent: () =>
-      import('./authority-management-draft/authority-management-draft.component')
-        .then(m => m.AuthorityManagementDraftComponent),
+      import(
+        './authority-management-draft/authority-management-draft.component'
+      ).then((m) => m.AuthorityManagementDraftComponent),
   },
 
   // Update Draft
   {
     path: `${RP.Management.DraftsAndLetters}/${RP.Management.UpdateDraft}/:id/:name`,
     loadComponent: () =>
-      import('./authority-management-draft/authority-management-draft.component')
-        .then(m => m.AuthorityManagementDraftComponent),
+      import(
+        './authority-management-draft/authority-management-draft.component'
+      ).then((m) => m.AuthorityManagementDraftComponent),
   },
 
   // Timeline Settings
   {
     path: RP.Management.TimelineSettings,
     loadComponent: () =>
-      import('./timeline/timeline.component')
-        .then(m => m.TimelineComponent),
+      import('./timeline/timeline.component').then((m) => m.TimelineComponent),
     children: [
       {
         path: '',
@@ -206,8 +234,9 @@ export const authorityManagementRoutes: Routes = [
       {
         path: RP.Management.Tickets,
         loadComponent: () =>
-          import('./timeline/ticket-timeline/ticket-timeline.component')
-            .then(m => m.TicketTimelineComponent),
+          import('./timeline/ticket-timeline/ticket-timeline.component').then(
+            (m) => m.TicketTimelineComponent
+          ),
         children: [
           {
             path: '',
@@ -217,46 +246,53 @@ export const authorityManagementRoutes: Routes = [
           {
             path: RP.Management.TicketsWindow,
             loadComponent: () =>
-              import('./timeline/ticket-timeline/ticket-window/ticket-window.component')
-                .then(m => m.TicketWindowComponent),
+              import(
+                './timeline/ticket-timeline/ticket-window/ticket-window.component'
+              ).then((m) => m.TicketWindowComponent),
           },
           {
             path: RP.Management.TransportOffice,
             loadComponent: () =>
-              import('./timeline/ticket-timeline/transport-office/transport-office.component')
-                .then(m => m.TransportOfficeComponent),
+              import(
+                './timeline/ticket-timeline/transport-office/transport-office.component'
+              ).then((m) => m.TransportOfficeComponent),
           },
           {
             path: RP.Management.InformationAuth,
             loadComponent: () =>
-              import('./timeline/ticket-timeline/information-auth/information-auth.component')
-                .then(m => m.InformationAuthComponent),
+              import(
+                './timeline/ticket-timeline/information-auth/information-auth.component'
+              ).then((m) => m.InformationAuthComponent),
           },
           {
             path: RP.Management.EarlyNotice,
             loadComponent: () =>
-              import('./timeline/ticket-timeline/early-notice/early-notice.component')
-                .then(m => m.EarlyNoticeComponent),
+              import(
+                './timeline/ticket-timeline/early-notice/early-notice.component'
+              ).then((m) => m.EarlyNoticeComponent),
           },
           {
             path: RP.Management.PaymentNotice,
             loadComponent: () =>
-              import('./timeline/ticket-timeline/payment-notice/payment-notice.component')
-                .then(m => m.PaymentNoticeComponent),
+              import(
+                './timeline/ticket-timeline/payment-notice/payment-notice.component'
+              ).then((m) => m.PaymentNoticeComponent),
           },
           {
             path: RP.Management.AdminApprovedToEnforce,
             loadComponent: () =>
-              import('./timeline/ticket-timeline/admin-approved-to-enforce/admin-approved-to-enforce.component')
-                .then(m => m.AdminApprovedToEnforceComponent),
+              import(
+                './timeline/ticket-timeline/admin-approved-to-enforce/admin-approved-to-enforce.component'
+              ).then((m) => m.AdminApprovedToEnforceComponent),
           },
         ],
       },
       {
         path: RP.Management.Enforcement,
         loadComponent: () =>
-          import('./timeline/enforcement/enforcement.component')
-            .then(m => m.EnforcementComponent),
+          import('./timeline/enforcement/enforcement.component').then(
+            (m) => m.EnforcementComponent
+          ),
         children: [
           {
             path: '',
@@ -266,68 +302,79 @@ export const authorityManagementRoutes: Routes = [
           {
             path: RP.Management.AdminApprovedToEnforce,
             loadComponent: () =>
-              import('./timeline/ticket-timeline/admin-approved-to-enforce/admin-approved-to-enforce.component')
-                .then(m => m.AdminApprovedToEnforceComponent),
+              import(
+                './timeline/ticket-timeline/admin-approved-to-enforce/admin-approved-to-enforce.component'
+              ).then((m) => m.AdminApprovedToEnforceComponent),
           },
           {
             path: RP.Management.DetailsConfirmation,
             loadComponent: () =>
-              import('./timeline/enforcement/details-confirmation/details-confirmation.component')
-                .then(m => m.DetailsConfirmationComponent),
+              import(
+                './timeline/enforcement/details-confirmation/details-confirmation.component'
+              ).then((m) => m.DetailsConfirmationComponent),
           },
           {
             path: RP.Management.OrderMessage,
             loadComponent: () =>
-              import('./timeline/enforcement/order-message/order-message.component')
-                .then(m => m.OrderMessageComponent),
+              import(
+                './timeline/enforcement/order-message/order-message.component'
+              ).then((m) => m.OrderMessageComponent),
           },
           {
             path: RP.Management.FormThree,
             loadComponent: () =>
-              import('./timeline/enforcement/form-three/form-three.component')
-                .then(m => m.FormThreeComponent),
+              import(
+                './timeline/enforcement/form-three/form-three.component'
+              ).then((m) => m.FormThreeComponent),
           },
           {
             path: RP.Management.DebtReminder,
             loadComponent: () =>
-              import('./timeline/enforcement/debt-reminder/debt-reminder.component')
-                .then(m => m.DebtReminderComponent),
+              import(
+                './timeline/enforcement/debt-reminder/debt-reminder.component'
+              ).then((m) => m.DebtReminderComponent),
           },
           {
             path: RP.Management.BankForeclosure,
             loadComponent: () =>
-              import('./timeline/enforcement/bank-foreclosure/bank-foreclosure.component')
-                .then(m => m.BankForeclosureComponent),
+              import(
+                './timeline/enforcement/bank-foreclosure/bank-foreclosure.component'
+              ).then((m) => m.BankForeclosureComponent),
           },
           {
             path: RP.Management.TaltalinForeclosureSignUp,
             loadComponent: () =>
-              import('./timeline/enforcement/taltalin-foreclosure-sign-up/taltalin-foreclosure-sign-up.component')
-                .then(m => m.TaltalinForeclosureSignUpComponent),
+              import(
+                './timeline/enforcement/taltalin-foreclosure-sign-up/taltalin-foreclosure-sign-up.component'
+              ).then((m) => m.TaltalinForeclosureSignUpComponent),
           },
           {
             path: RP.Management.TaltalinForeclosureOnGoing,
             loadComponent: () =>
-              import('./timeline/enforcement/taltalin-foreclosure-on-going/taltalin-foreclosure-on-going.component')
-                .then(m => m.TaltalinForeclosureOnGoingComponent),
+              import(
+                './timeline/enforcement/taltalin-foreclosure-on-going/taltalin-foreclosure-on-going.component'
+              ).then((m) => m.TaltalinForeclosureOnGoingComponent),
           },
           {
             path: RP.Management.VehicleForeclosureSignUp,
             loadComponent: () =>
-              import('./timeline/enforcement/vehicle-foreclosure-sign-up/vehicle-foreclosure-sign-up.component')
-                .then(m => m.VehicleForeclosureSignUpComponent),
+              import(
+                './timeline/enforcement/vehicle-foreclosure-sign-up/vehicle-foreclosure-sign-up.component'
+              ).then((m) => m.VehicleForeclosureSignUpComponent),
           },
           {
             path: RP.Management.VehicleForeclosureOnGoing,
             loadComponent: () =>
-              import('./timeline/enforcement/vehicle-foreclosure-on-going/vehicle-foreclosure-on-going.component')
-                .then(m => m.VehicleForeclosureOnGoingComponent),
+              import(
+                './timeline/enforcement/vehicle-foreclosure-on-going/vehicle-foreclosure-on-going.component'
+              ).then((m) => m.VehicleForeclosureOnGoingComponent),
           },
           {
             path: RP.Management.ThirdSideForeclosure,
             loadComponent: () =>
-              import('./timeline/enforcement/third-side-foreclosure/third-side-foreclosure.component')
-                .then(m => m.ThirdSideForeclosureComponent),
+              import(
+                './timeline/enforcement/third-side-foreclosure/third-side-foreclosure.component'
+              ).then((m) => m.ThirdSideForeclosureComponent),
           },
         ],
       },

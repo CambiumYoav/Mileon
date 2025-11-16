@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, Input, OnInit, ChangeDetectionStrategy, signal, inject, effect } from '@angular/core';
+import { Component, forwardRef, Injector, Input, OnInit, ChangeDetectionStrategy, signal, inject, computed } from '@angular/core';
 import { FormControlValueAccessorConnector } from '../../../abstract/form-control-value-accessor-connector.component';
 import {
   ControlValueAccessor,
@@ -68,8 +68,6 @@ export class InputPhoneComponent
 
   readonly Icons = ConstPath;
 
-  combinedPhoneControl = new FormControl('');
-
   @Input() set placeholderCountryCode(value: string) {
     this._placeholderCountryCode.set(value);
   }
@@ -98,54 +96,61 @@ export class InputPhoneComponent
     this._disabled.set(value);
   }
 
+  combinedPhoneControl = new FormControl('');
+  
+  // Computed signal for combined placeholder - with dash for display
+  combinedPlaceholder = computed(() => 
+    this._placeholderCountryCode() + '-' + this._placeholderPhoneNumber()
+  );
+
+  private isInternalUpdate = false;
+
   constructor() {
     super(inject(Injector));
-    
-    effect(() => {
-      const value = this.combinedPhoneControl.value;
-      if (value) {
-        // Format the input to ensure proper structure
-        const formattedValue = this.formatPhoneNumber(value);
-        if (formattedValue !== value) {
-          this.combinedPhoneControl.setValue(formattedValue, { emitEvent: false });
-        }
-        this.control.setValue(formattedValue);
-      } else {
-        this.control.setValue('');
-      }
-    });
   }
 
   ngOnInit(): void {
     this.checkConnectedField();
+
+    // Subscribe to combined phone control changes
+    this.combinedPhoneControl.valueChanges.subscribe((value) => {
+      if (!this.isInternalUpdate) {
+        // Store only digits, no formatting
+        const digitsOnly = this.getDigitsOnly(value || '');
+        
+        if (digitsOnly !== value) {
+          this.isInternalUpdate = true;
+          this.combinedPhoneControl.setValue(digitsOnly, { emitEvent: false });
+          this.isInternalUpdate = false;
+        }
+        
+        // Update parent form control with digits only
+        this.control.setValue(digitsOnly);
+      }
+    });
   }
 
-  private formatPhoneNumber(value: string): string {
+  private getDigitsOnly(value: string): string {
     // Remove all non-digit characters
     const digitsOnly = value.replace(/\D/g, '');
     
-    // If we have at least 3 digits, format as country code + dash + phone number
-    if (digitsOnly.length >= 3) {
-      const countryCode = digitsOnly.substring(0, 3);
-      const phoneNumber = digitsOnly.substring(3);
-      return countryCode + '-' + phoneNumber;
-    }
-    
-    return digitsOnly;
+    // Limit to 10 digits maximum
+    return digitsOnly.substring(0, 10);
   }
 
   override writeValue(value: string): void {
     if (!value) {
-      this.combinedPhoneControl.setValue('');
+      this.isInternalUpdate = true;
+      this.combinedPhoneControl.setValue('', { emitEvent: false });
+      this.isInternalUpdate = false;
       return;
     }
 
-    // Set the combined value
-    this.combinedPhoneControl.setValue(value);
-  }
-
-  // Getter for the placeholder that combines both parts
-  get combinedPlaceholder(): string {
-    return this.placeholderCountryCode + '-' + this.placeholderPhoneNumber;
+    // Always store as digits only
+    const digitsOnly = this.getDigitsOnly(value);
+    
+    this.isInternalUpdate = true;
+    this.combinedPhoneControl.setValue(digitsOnly, { emitEvent: false });
+    this.isInternalUpdate = false;
   }
 }

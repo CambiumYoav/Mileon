@@ -1,9 +1,18 @@
-import { Directive, OnInit, computed, inject, signal, effect, runInInjectionContext, Injector, untracked } from '@angular/core';
+import {
+  Directive,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  effect,
+  Injector,
+  untracked,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { AuthorityService } from '../../../services/authority.service ';  
+import { AuthorityService } from '../../../services/authority.service ';
 import { ModeDetectionService } from '../../../services/mode-detection.service';
 import { SessionService } from '../../../services/session.service';
 import { SharedDataService } from '../../../services/shared-data.service';
@@ -18,7 +27,9 @@ interface DialogResult {
 }
 
 @Directive() // use @Directive to allow extension without rendering
-export abstract class AuthorityManagementTemplateBaseComponent implements OnInit {
+export abstract class AuthorityManagementTemplateBaseComponent
+  implements OnInit
+{
   protected readonly dialog = inject(MatDialog);
   protected readonly toaster = inject(ToastrService);
   protected readonly sharedDataService = inject(SharedDataService);
@@ -27,7 +38,10 @@ export abstract class AuthorityManagementTemplateBaseComponent implements OnInit
   protected readonly sessionService = inject(SessionService);
   private readonly injector = inject(Injector);
 
-  private readonly authorityIDSignal = toSignal(this.authorityService.authorityId$, { initialValue: null });
+  private readonly authorityIDSignal = toSignal(
+    this.authorityService.authorityId$,
+    { initialValue: null }
+  );
 
   private readonly templatesSignal = signal<Template[]>([]);
   private readonly selectedTemplateSignal = signal<Template | null>(null);
@@ -42,24 +56,28 @@ export abstract class AuthorityManagementTemplateBaseComponent implements OnInit
   readonly isLoading = computed(() => this.isLoadingSignal());
   readonly hasMore = computed(() => this.hasMoreSignal());
   readonly pageNumber = computed(() => this.pageNumberSignal());
-  readonly isEditMode = computed(() => this.modeDetectionService.getCurrentMode());
+  readonly isEditMode = computed(() =>
+    this.modeDetectionService.getCurrentMode()
+  );
 
   abstract templatesForm: FormGroup;
   abstract templateTypeId: number;
   abstract requiredTemplates: Template[];
-  
+
   dialogData: DynamicRow[] = [];
 
-
-  private readonly authorityEffect = effect(() => {
-    const authority = this.currentAuthority();
-    if (authority) {
-      // Use untracked to prevent reading other signals from triggering this effect
-      untracked(() => {
-        this.fetchTemplates();
-      });
-    }
-  }, { allowSignalWrites: true });
+  private readonly authorityEffect = effect(
+    () => {
+      const authority = this.currentAuthority();
+      if (authority) {
+        // Use untracked to prevent reading other signals from triggering this effect
+        untracked(() => {
+          this.fetchTemplates();
+        });
+      }
+    },
+    { allowSignalWrites: true }
+  );
   ngOnInit(): void {
     const form = new TemplatesForms();
     this.dialogData = this.getFormDefinition(form);
@@ -142,38 +160,31 @@ export abstract class AuthorityManagementTemplateBaseComponent implements OnInit
       }
     );
 
-    // Use effect to handle dialog result within injection context
-    runInInjectionContext(this.injector, () => {
-      // Convert subscription to signal-based approach
-      const dialogDataSignal = toSignal((dialogRef.componentInstance as any).dataSubject, { 
-        initialValue: null as DialogResult | null 
-      });
-      
-      effect(() => {
-        const result = dialogDataSignal() as DialogResult | null;
-        if (result) {
-          const isEditingExisting =
-            result.isEdit &&
-            this.selectedTemplate() &&
-            this.selectedTemplate()!.templateID &&
-            this.selectedTemplate()!.templateID !== '';
+   
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const isEditingExisting =
+          result.isEdit &&
+          this.selectedTemplate() &&
+          this.selectedTemplate()!.templateID &&
+          this.selectedTemplate()!.templateID !== '';
 
-          if (result.isDelete) {
-            this.editTemplate({ ...result.form, isActive: false });
-          } else if (isEditingExisting) {
-            const fullTemplate: Template = {
-              ...this.selectedTemplate()!, //include־templateID
-              ...result.form,
-            };
-            this.editTemplate(fullTemplate);
-            // this.editTemplate(result.form);
-          } else {
-            // this.addOrUpdateTemplateInSession(result.form);
-            this.createTemplate(result.form);
-          }
+        if (result.isDelete) {
+          this.editTemplate({ ...result.form, isActive: false });
+        } else if (isEditingExisting) {
+          const fullTemplate: Template = {
+            ...this.selectedTemplate()!, //include־templateID
+            ...result.form,
+          };
+          this.editTemplate(fullTemplate);
+          // this.editTemplate(result.form);
+        } else {
+          // this.addOrUpdateTemplateInSession(result.form);
+          this.createTemplate(result.form);
         }
-      });
+      }
     });
+    // });
   }
   addOrUpdateTemplateInSession(template: any) {
     const templates: any[] =
@@ -196,7 +207,9 @@ export abstract class AuthorityManagementTemplateBaseComponent implements OnInit
 
   protected updateTemplateIdByTitle(newTemplate: Template): void {
     const currentTemplates = this.templatesSignal();
-    const index = currentTemplates.findIndex((t) => t.name === newTemplate.name);
+    const index = currentTemplates.findIndex(
+      (t) => t.name === newTemplate.name
+    );
 
     if (index !== -1) {
       const updatedTemplates = [...currentTemplates];

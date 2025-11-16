@@ -1,4 +1,16 @@
-import { Component, ViewChild, OnInit, OnDestroy, inject, ChangeDetectionStrategy, signal, computed, effect } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  OnInit,
+  OnDestroy,
+  inject,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+  effect,
+  DestroyRef,
+  AfterViewInit,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ConstPath } from '../../../constants/const_path';
 import { SessionService } from '../../../services/session.service';
@@ -18,16 +30,16 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./authority-management-main.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    AuthorityManagementTabsComponent,
-  ],
+  imports: [CommonModule, RouterOutlet, AuthorityManagementTabsComponent],
 })
-export class AuthorityManagementMainComponent implements OnInit, OnDestroy {
+export class AuthorityManagementMainComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   private readonly _title = signal<string>(TitlesEnum.ManagementTitle);
   private readonly _editTitle = signal<string>(TitlesEnum.EditAuthorityTitle);
-  private readonly _createTitle = signal<string>(TitlesEnum.CreateAuthorityTitle);
+  private readonly _createTitle = signal<string>(
+    TitlesEnum.CreateAuthorityTitle
+  );
   private readonly _authorityForms = signal<any[] | null>([]);
   private readonly _authorityDetails = signal<any[] | null>([]);
   private readonly _authorityPortal = signal<any>(null);
@@ -55,8 +67,11 @@ export class AuthorityManagementMainComponent implements OnInit, OnDestroy {
   private readonly authorityService = inject(AuthorityService);
   private readonly routerService = inject(RouterService);
 
-  private readonly sharedData = toSignal(this.sharedDataService.data$, { initialValue: null });
-
+  private readonly sharedData = toSignal(this.sharedDataService.data$, {
+    initialValue: null,
+  });  
+  private viewInitialized = signal(false);
+  private destroyRef = inject(DestroyRef);
   constructor() {
     // Initialize effects in constructor (injection context)
     // Use effect to reactively respond to shared data changes
@@ -66,13 +81,12 @@ export class AuthorityManagementMainComponent implements OnInit, OnDestroy {
         this.getDataFromSession(); // Fetch authority from session
       }
     });
-
-    // Use effect to reactively respond to authority ID changes
-    // This effect will only trigger when in edit mode and authority ID changes
+    //FIXME - not working 
     effect(() => {
-      const authorityID = this.authorityService.authorityId();
-      // Only navigate if we're in edit mode and have an authority ID
-      if (authorityID && this.isEditMode) {
+      const authorityID = this.authorityService.authorityId();;
+      const viewReady = this.viewInitialized();
+      
+      if (this.isEditMode && authorityID && viewReady) {
         this.sessionService.set('currentActiveTabID', 1);
         setTimeout(() => {
           this.tabsComponent?.setActiveTabById(1);
@@ -81,14 +95,68 @@ export class AuthorityManagementMainComponent implements OnInit, OnDestroy {
         });
       }
     });
-  }
 
+    // Use effect to reactively respond to authority ID changes
+    // This effect will only trigger when in edit mode and authority ID changes
+    // effect(() => {
+    //   const authorityID = this.authorityService.authorityId();
+    //   // Only navigate if we're in edit mode and have an authority ID
+    //   if (authorityID && this.isEditMode) {
+    //     this.sessionService.set('currentActiveTabID', 1);
+    //     console.log('Authority ID changed:', authorityID);
+    //     console.log('Is Edit Mode:', this.isEditMode);
+    //     console.log('Tab component exists:', !!this.tabsComponent);
+    //     setTimeout(() => {
+    //       if (this.tabsComponent) {
+    //         console.log('Setting active tab to 1');
+    //         this.tabsComponent.setActiveTabById(1);
+    //       } else {
+    //         console.error('Tab component not available!');
+    //       }
+
+    //       const baseRoute = RP.Management.Home;
+    //       const url = `${baseRoute}/edit/authority`;
+    //       console.log('Navigating to:', url);
+    //       this.routerService.navigateToPageURL(url);
+    //     }, 0);
+    //   }
+    // });
+  }
+  // ngAfterViewInit(): void {
+  //   // Subscribe to authority ID changes AFTER view is initialized
+  //   this.authorityService.authorityId$
+  //     .pipe(takeUntilDestroyed(this.destroyRef))
+  //     .subscribe((authorityID) => {
+  //       if (authorityID && this.isEditMode) {
+  //         this.sessionService.set('currentActiveTabID', 1);
+  //         console.log('Authority ID changed:', authorityID);
+  //         console.log('Is Edit Mode:', this.isEditMode);
+  //         console.log('Tab component exists:', !!this.tabsComponent);
+  //         setTimeout(() => {
+  //           if (this.tabsComponent) {
+  //             console.log('Setting active tab to 1');
+  //             this.tabsComponent.setActiveTabById(1);
+  //           } else {
+  //             console.error('Tab component not available!');
+  //           }
+
+  //           const baseRoute = RP.Management.Home;
+  //           const url = `${baseRoute}/edit/authority`;
+  //           console.log('Navigating to:', url);
+  //           this.routerService.navigateToPageURL(url);
+  //         }, 0);
+  //       }
+  //     });
+  // }
   ngOnInit() {
     this.modeDetectionService.detectAndSetMode(
       'AuthorityManagementMainComponent'
     );
   }
-
+  ngAfterViewInit(): void {
+    // Subscribe after view is initialized - matching your old working code
+    this.viewInitialized.set(true);
+  }
   ngOnDestroy() {
     // console.log('AuthorityManagementMainComponent destroyed');
     this.removeDataFromSession(); // Clear session data on destroy
@@ -105,7 +173,9 @@ export class AuthorityManagementMainComponent implements OnInit, OnDestroy {
     this._authorityForms.set(this.sessionService.get('authorityForms'));
     this._authorityDetails.set(this.sessionService.get('authorityData'));
     this._authorityTemplates.set(this.sessionService.get('authorityTemplates'));
-    this._authoritySubDomain.set(this.sessionService.get('authorityPortalSubDomain'));
+    this._authoritySubDomain.set(
+      this.sessionService.get('authorityPortalSubDomain')
+    );
     this._authorityPortal.set(this.sessionService.get('authorityPortalData'));
   }
 
@@ -115,4 +185,9 @@ export class AuthorityManagementMainComponent implements OnInit, OnDestroy {
     this.sessionService.remove('authorityPortalSubDomain');
     this.sessionService.remove('authorityPortalData');
   }
+}
+function takeUntilDestroyed(
+  destroyRef: any
+): import('rxjs').OperatorFunction<string | null, unknown> {
+  throw new Error('Function not implemented.');
 }

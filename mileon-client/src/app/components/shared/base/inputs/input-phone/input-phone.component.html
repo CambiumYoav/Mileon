@@ -1,7 +1,7 @@
 <div [class.disabled]="disabled">
   <div class="inline-header">
     @if (isRequired) {
-      <img class="exit-icon" [src]="Icons.ASTERISK_RED" />
+    <img class="exit-icon" [src]="Icons.ASTERISK_RED" />
     }
     <div class="title-placeholder">{{ title }}</div>
   </div>
@@ -19,6 +19,6 @@
     </div>
   </div>
   @if (!isValid) {
-    <span class="error">{{ errorMessage }}</span>
+  <span class="error">{{ errorMessage }}</span>
   }
 </div>

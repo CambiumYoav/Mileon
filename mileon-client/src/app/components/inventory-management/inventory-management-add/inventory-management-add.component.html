@@ -41,14 +41,14 @@
                   }
                   @case ('number') {
                     <!-- Number Input -->
-                    <app-input-text
+                    <app-input-number
                       [formControlName]="field.name"
                       [title]="field.label"
                       [placeholder]="field.placeholder || ''"
                       [isRequired]="field.isRequired"
                       [isValid]="isFieldValid(field.name)"
                       [disabled]="!!field.disabled || dynamicForm().get(field.name)?.disabled || false"
-                    ></app-input-text>
+                    ></app-input-number>
                   }
                   @case ('phone') {
                     <!-- Phone Input -->

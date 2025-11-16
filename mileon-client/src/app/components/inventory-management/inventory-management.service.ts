@@ -25,7 +25,7 @@ export class InventoryManagementService {
   async getDevices(filters: InventoryFilterOptions) {
     try {
       const query = this.buildQueryParams({
-        size: 10,
+        size: filters.pageSize,
         page: filters.currentPage,
         search: filters.searchText,
         authorityID: filters.authorityID,

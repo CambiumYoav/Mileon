@@ -1,80 +1,77 @@
-
 <div class="wrap-header d-flex align-items-center justify-content-between">
-    <div class="user">
-      <button
-        mat-icon-button
-        (click)="toggleSideNav($event)"
-        [disableRipple]="true"
-      >
-        <mat-icon>menu</mat-icon>
-      </button>
-      <div
-        class="user-logo logo"
-        (click)="openUser = !openUser; openMunicipals = false"
-      >
-        <span>{{ firstLetter }}</span>
-      </div>
-      <div *ngIf="openUser" class="user-details">
-        <div class="user">
-          <div class="user-logo logo">
-            <span>{{ firstLetter }}</span>
-          </div>
-          <span class="username">{{ username }}</span>
-          <span class="email">{{ email }}</span>
+  <div class="user">
+    <button
+      mat-icon-button
+      (click)="toggleSideNav($event)"
+      [disableRipple]="true"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <div class="user-logo logo" (click)="toggleUserMenu($event)">
+      <span>{{ firstLetter }}</span>
+    </div>
+
+    @if (openUser) {
+    <div class="user-details">
+      <div class="user">
+        <div class="user-logo logo">
+          <span>{{ firstLetter }}</span>
         </div>
-        <div class="logout">
-          <button class="logout-btn" (click)="logout()">התנתק</button>
-          <span class="password">החלפת סיסמה</span>
-        </div>
+        <span class="username">{{ username }}</span>
+        <span class="email">{{ email }}</span>
       </div>
-      <div></div>
-      <div
-        (click)="openMunicipals = !openMunicipals; openUser = false"
-        class="municipal-logo logo main"
-      >
-        <div class="tasks">{{ currentMunicipal?.tasks }}</div>
-        <img [src]="currentMunicipal?.logo" />
-      </div>
-  
-      <div
-        *ngIf="openMunicipals"
-        class="wrap-municipals"
-        (scroll)="onScrollMunicipals($event)"
-      >
-        <div *ngFor="let munucipal of municipals">
-          <div
-            class="municipal-list"
-            (click)="setAuthority(munucipal); openMunicipals = false"
-          >
-            <div class="municipal-logo logo">
-              <div class="tasks">{{ munucipal.tasks }}</div>
-              <img [src]="munucipal.logo" />
-            </div>
-            <div class="wrap-name">
-              <span class="name">{{ munucipal.name }}</span>
-              <span class="task">{{ munucipal.tasks }} משימות לטיפול</span>
-            </div>
-            <!-- checkbox indicator for current municipal only -->
-            <div
-              class="ok"
-              [ngClass]="munucipal === currentMunicipal ? 'current' : ''"
-            >
-              <app-checkbox
-                *ngIf="munucipal === currentMunicipal"
-                [checked]="true"
-                [isDisabled]="false">
-              </app-checkbox>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="municipal-name">
-        <span>עיריית {{ currentMunicipal?.name }}</span>
+      <div class="logout">
+        <button class="logout-btn" (click)="logout()">התנתק</button>
+        <span class="password">החלפת סיסמה</span>
       </div>
     </div>
-    <div style="flex-grow: 1"></div>
-    <div class="d-flex flex-row-reverse">
-      <img (click)="goToHomePage()" class="mileon-logo" [src]="mileonLogo" />
+    }
+
+    <div (click)="toggleMunicipalMenu($event)" class="municipal-logo logo main">
+      <div class="tasks">{{ currentMunicipalSig()?.tasks }}</div>
+      <img [src]="currentMunicipalSig()?.logo" />
+    </div>
+
+    @if (openMunicipals) {
+    <div class="wrap-municipals" (scroll)="onScrollMunicipals($event)">
+      <!-- Use displayMunicipalsSig() instead of municipalsSig() -->
+      @for (municipal of displayMunicipalsSig(); track municipal.authorityID) {
+      <div
+        class="municipal-list"
+        (click)="setAuthority(municipal); openMunicipals = false"
+      >
+        <div class="municipal-logo logo">
+          <div class="tasks">{{ municipal.tasks }}</div>
+          <img [src]="municipal.logo" />
+        </div>
+        <div class="wrap-name">
+          <span class="name">{{ municipal.name }}</span>
+          <span class="task">{{ municipal.tasks }} משימות לטיפול</span>
+        </div>
+        <div
+          class="ok"
+          [ngClass]="
+            municipal.authorityID === currentMunicipalSig()?.authorityID
+              ? 'current'
+              : ''
+          "
+        >
+          @if (municipal.authorityID === currentMunicipalSig()?.authorityID) {
+          <app-checkbox [checked]="true" [isDisabled]="false"></app-checkbox>
+          }
+        </div>
+      </div>
+      }
+    </div>
+    }
+
+    <div class="municipal-name">
+      <span>עיריית {{ currentMunicipalSig()?.name }}</span>
     </div>
   </div>
-  
+  <div style="flex-grow: 1"></div>
+  <div class="d-flex flex-row-reverse">
+    <img (click)="goToHomePage()" class="mileon-logo" [src]="mileonLogo" />
+  </div>
+</div>
