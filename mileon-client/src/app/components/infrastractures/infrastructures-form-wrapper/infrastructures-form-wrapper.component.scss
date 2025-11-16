@@ -107,16 +107,42 @@
     }
 
     //  check this
-    // .form-field:has(app-input-text) .title-placeholder {
-    //   display: block !important;
-    //   font-size: 14px;
-    //   font-weight: 700;
-    //   color: #000;
-    //   margin-bottom: 5px;
-    //   text-align: right;
-    //   direction: rtl;
-    // }
-
+    .form-field:has(app-input-text) .title-placeholder {
+      display: block !important;
+      font-size: 14px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 5px;
+      text-align: right;
+      direction: rtl;
+    }
+    .form-field:has(app-select) .title-placeholder {
+      display: block !important;
+      font-size: 14px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 5px;
+      text-align: right;
+      direction: rtl;
+    }
+    .form-field:has(app-input-date) .title-placeholder {
+      display: block !important;
+      font-size: 14px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 5px;
+      text-align: right;
+      direction: rtl;
+    }
+    .form-field:has(app-input-number) .title-placeholder {
+      display: block !important;
+      font-size: 14px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 5px;
+      text-align: right;
+      direction: rtl;
+    }
     .radio-container {
       display: flex;
       min-width: 30px;

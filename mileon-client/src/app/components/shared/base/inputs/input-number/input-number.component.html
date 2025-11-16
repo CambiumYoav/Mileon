@@ -1,0 +1,45 @@
+<div [class.disabled]="disabled" [ngClass]="sizeClass">
+  <div class="title-container">
+    <div class="inline-header">
+      @if (isRequired) {
+      <img class="exit-icon" [src]="Icons.ASTERISK_RED" />
+      }
+      <div class="title-placeholder">{{ title }}</div>
+    </div>
+    @if (isTooltip) {
+    <img
+      [src]="Icons.TOOL_TIP"
+      class="tooltip-icon"
+      [matTooltip]="tooltipText"
+      [matTooltipClass]="['custom-tooltip', 'users-tooltip']"
+      matTooltipPosition="left"
+      aria-label="Info"
+      alt="Info"
+      text-align="right"
+      appTruncatedTextTooltip
+      [tooltipText]="tooltipText"
+      [maxWidth]="tooltipMaxWidth"
+    />
+    }
+  </div>
+
+  <div
+    [class]="className || 'input-fill'"
+    [ngClass]="!isValid ? 'invalidInput' : ''"
+  >
+    <input
+      [placeholder]="placeholder"
+      type="number"
+      [formControl]="control"
+      class="hide-border-input input-text"
+    />
+    @if (icon) {
+    <div class="icon">
+      <img [src]="icon" alt="icon" />
+    </div>
+    }
+  </div>
+  @if (!isValid) {
+  <span class="error">{{ errorMessage }}</span>
+  }
+</div>

@@ -28,16 +28,12 @@
   <mat-datepicker #picker></mat-datepicker>
 </div> -->
 
-
 <div
   class="title-placeholder"
   [ngStyle]="{ 'margin-bottom': title ? '0.5rem' : '0' }"
 >
   @if (isRequired) {
-    <img
-      class="required-icon"
-      [src]="Icons.ASTERISK_RED"
-    />
+  <img class="required-icon" [src]="Icons.ASTERISK_RED" />
   }
   {{ title }}
 </div>
@@ -50,8 +46,8 @@
     [formControl]="control"
     matInput
     [matDatepicker]="picker"
-    style="border: none;"
-    [placeholder]="placeholder || 'dd/mm/yyyy, ddmmyy, dd.mm.yy'"
+    style="border: none"
+    [placeholder]="placeholder || 'dd/mm/yyyy'"
     [matDatepickerFilter]="isWeekendBlocked ? noFriSat : allowAllDates"
   />
   <div>
@@ -60,7 +56,10 @@
         <img class="calendarImg" [src]="calendarImg" />
       </mat-icon>
     </mat-datepicker-toggle>
-    <mat-datepicker #picker [dateClass]="dateClass" [startAt]="startAt"></mat-datepicker>
-
+    <mat-datepicker
+      #picker
+      [dateClass]="dateClass"
+      [startAt]="startAt"
+    ></mat-datepicker>
   </div>
 </div>

@@ -25,12 +25,12 @@
                   }"
             >
               @if (!field.hide) {
-                
+
               <label class="title-placeholder" [for]="field.name">
-                <!-- @if (field.isRequired) {
-                  {{field.label}} -->
+                @if (field.isRequired) {
+
                 <img class="required-icon" [src]="Icons.ASTERISK_RED" />
-                <!-- } -->
+                }
                 {{ field.label }}
               </label>
               @switch (field.type) { @case ('text') {
@@ -38,16 +38,14 @@
               <app-input-text
                 [id]="field.name"
                 [placeholder]="field.label"
-                [title]="field.label"
                 [isValid]="isFieldValid(field.name, formSections()[0].title)"
                 [formControlName]="field.name"
               />
               } @case ('number') {
               <!-- Number Input -->
-              <app-input-text
+              <app-input-number
                 [id]="field.name"
                 [placeholder]="field.label"
-                [title]="field.label"
                 [formControlName]="field.name"
                 [isValid]="isFieldValid(field.name, formSections()[0].title)"
               />
@@ -73,7 +71,6 @@
                 [bindLabelKey]="field.bindLabelKey || 'display'"
                 [bindValueKey]="field.bindValueKey || 'value'"
                 [isMultiSelect]="field.isMultiSelect || false"
-                [title]="field.label || ''"
                 [isValid]="isFieldValid(field.name, formSections()[0].title)"
               ></app-select>
               } @case ('selectWithLookup') {
@@ -90,7 +87,6 @@
                 [bindLabelKey]="field.bindLabelKey || 'value'"
                 [bindValueKey]="field.bindValueKey || 'id'"
                 [isMultiSelect]="field.isMultiSelect || false"
-                [title]="field.label || ''"
                 [isValid]="isFieldValid(field.name, formSections()[0].title)"
               ></app-select>
               } @case ('checkbox') {
@@ -121,13 +117,6 @@
                 [isValid]="isFieldValid(field.name, formSections()[0].title)"
                 [formControlName]="field.name"
               ></app-input-phone>
-              } @case ('radio') {
-              <app-radio-button
-                [options]="convertToRadioOptions(field.options)"
-                [name]="field.name"
-                [formControlName]="field.name"
-                direction="horizontal"
-              ></app-radio-button>
               } } }
             </div>
             }
@@ -169,23 +158,20 @@
                 class="input"
                 [placeholder]="field.label"
                 [id]="field.name"
-                [title]="field.label"
                 [formControlName]="field.name"
-                 [isValid]="isFieldValid(field.name, formSections()[1].title)"
+                [isValid]="isFieldValid(field.name, formSections()[1].title)"
               />
               } @case ('number') {
               <!-- Number Input -->
-              <app-input-text
+              <app-input-number
                 class="input"
                 [id]="field.name"
                 [placeholder]="field.label"
-                [title]="field.label"
                 [formControlName]="field.name"
                 [isValid]="isFieldValid(field.name, formSections()[1].title)"
               />
               } @case ('date') {
               <app-input-date
-                [title]="field.label"
                 [isValid]="isFieldValid(field.name, formSections()[1].title)"
                 [formControlName]="field.name"
               ></app-input-date>
@@ -204,7 +190,6 @@
                 [bindLabelKey]="field.bindLabelKey || 'display'"
                 [bindValueKey]="field.bindValueKey || 'value'"
                 [isMultiSelect]="field.isMultiSelect || false"
-                [title]="field.label || ''"
                 [isValid]="isFieldValid(field.name, formSections()[1].title)"
               ></app-select>
               } @case ('selectWithLookup') {
@@ -221,43 +206,15 @@
                 [bindLabelKey]="field.bindLabelKey || 'value'"
                 [bindValueKey]="field.bindValueKey || 'id'"
                 [isMultiSelect]="field.isMultiSelect || false"
-                [title]="field.label || ''"
                 [isValid]="isFieldValid(field.name, formSections()[1].title)"
               ></app-select>
-              } @case ('checkbox') {
-              <!-- Checkbox -->
-              <app-input-checkbox
-                [title]="field.label"
-                [formControlName]="field.name"
-              ></app-input-checkbox>
-              } @case ('fromTo') {
-              <!-- From-To Input -->
-              <div class="fromTo-container" formGroupName="{{ field.name }}">
-                @for (fromToField of field.fields; track fromToField.name) {
-                <input
-                  [id]="fromToField.name"
-                  type="text"
-                  [formControlName]="fromToField.name"
-                  [name]="fromToField.name"
-                  [placeholder]="fromToField.placeholder"
-                />
-                }
-              </div>
-              } @case ('phone') {
-              <!-- Phone Input -->
-              <app-input-phone
-                [title]="field.label"
-                [placeholder]="field.label"
-                [isRequired]="field.isRequired"
-                [isValid]="isFieldValid(field.name, formSections()[1].title)"
-                [formControlName]="field.name"
-              ></app-input-phone>
-              } @case ('radio') {
+              }@case ('radio') {
               <app-radio-button
                 [options]="convertToRadioOptions(field.options)"
                 [name]="field.name"
                 [formControlName]="field.name"
                 direction="horizontal"
+                [isValid]="isFieldValid(field.name, formSections()[0].title)"
               ></app-radio-button>
               } } }
             </div>

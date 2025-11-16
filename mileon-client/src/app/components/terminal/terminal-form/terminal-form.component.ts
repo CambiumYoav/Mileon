@@ -32,6 +32,7 @@ import { CheckboxOption } from "../../shared/base/inputs/input-checkbox-option-g
 import { RadioOption } from "../../shared/base/radio-button/radio-button.component";
 import { TextareaCommentsComponent } from "../../shared/base/inputs/textarea-comments/textarea-comments.component";
 import { MaterialModule } from '../../../shared/material-module';
+import { InputNumberComponent } from "../../shared/base/inputs/input-number/input-number.component";
 
 @Component({
   selector: 'app-terminal-form',
@@ -52,7 +53,8 @@ import { MaterialModule } from '../../../shared/material-module';
     InputCheckboxOptionGroupComponent,
     RadioButtonComponent,
     TextareaCommentsComponent,
-  ],
+    InputNumberComponent
+],
 })
 export class TerminalFormComponent {
   readonly Icons = ConstPath; 

@@ -131,7 +131,7 @@ export class InfrastructuresBusinessComponent {
         const action = result.isEdit
           ? InfrastructureTableAction.Update
           : InfrastructureTableAction.Add;
-        this.handleInsertOrUpdate(result, action);
+        this.handleInsertOrUpdate(result.form, action);
         this.dialogResult.set(null); // Reset after handling
       }
     });

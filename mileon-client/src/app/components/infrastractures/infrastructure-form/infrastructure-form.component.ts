@@ -21,7 +21,10 @@ import {
   FileType,
   FileUploadComponenetType,
 } from '../../../types/enum/fileType.enum';
-import { DynamicRow, FieldOption } from '../../../types/infrastructure/InfrastructureTypes';
+import {
+  DynamicRow,
+  FieldOption,
+} from '../../../types/infrastructure/InfrastructureTypes';
 import { IdValuePair } from '../../../types/legalRequest/legal-request-file-type-response';
 import { UploadedFile } from '../../../types/uploadedFile';
 import { CheckboxOption } from '../../shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
@@ -40,6 +43,7 @@ import { SelectService } from '../../shared/base/select/select.service';
 import { LookupNewService } from '../../../services/lookup-new.service';
 import { FileUploadNewComponent } from '../../shared/base/upload-files/upload-files.component';
 import { RadioButtonComponent } from '../../shared/base/radio-button/radio-button.component';
+import { InputNumberComponent } from '../../shared/base/inputs/input-number/input-number.component';
 
 @Component({
   selector: 'app-infrastructure-form',
@@ -58,7 +62,8 @@ import { RadioButtonComponent } from '../../shared/base/radio-button/radio-butto
     InputCheckboxComponent,
     SelectComponent,
     FileUploadNewComponent,
-    RadioButtonComponent
+    RadioButtonComponent,
+    InputNumberComponent,
   ],
   templateUrl: './infrastructure-form.component.html',
   styleUrls: ['./infrastructure-form.component.scss'],
@@ -89,8 +94,14 @@ export class InfrastructureFormComponent {
   filesToUpload = signal<UploadedFile[]>([]);
   isEdit = signal<boolean>(false);
 
-  allowedFileTypes: FileType[] = [FileType.DOCX, FileType.PDF, FileType.JPG, FileType.DOC, FileType.PNG];
-  maxFileSizeMB = 10; 
+  allowedFileTypes: FileType[] = [
+    FileType.DOCX,
+    FileType.PDF,
+    FileType.JPG,
+    FileType.DOC,
+    FileType.PNG,
+  ];
+  maxFileSizeMB = 10;
 
   optionsApps: CheckboxOption[] = [
     { value: true, label: 'פעיל', checked: true },
@@ -110,7 +121,7 @@ export class InfrastructureFormComponent {
     this.isSigns.set(data.isSigns);
     this.isEdit.set(data.isEdit);
     this.createForm();
-    
+
     this.loadInspectorData();
   }
 
@@ -121,14 +132,14 @@ export class InfrastructureFormComponent {
   private async loadInspectorData(): Promise<void> {
     try {
       const inspectorData = await this.lookupService.getAllInspectors();
-      
+
       // Update SelectService with the loaded data
       const currentData = this.selectService.listsObj.value;
       this.selectService.listsObj.next({
         ...currentData,
         getAllInspectors: {
-          linkedInspectors: inspectorData
-        }
+          linkedInspectors: inspectorData,
+        },
       });
     } catch (error) {
       console.error('Error loading inspector data:', error);
@@ -136,12 +147,15 @@ export class InfrastructureFormComponent {
   }
 
   private createForm(): void {
-    const formGroup = this.rows().reduce((group: { [key: string]: any }, dynamicRow: any) => {
-      dynamicRow.row.forEach((field: any) => {
-        group[field.name] = this.createFieldControl(field);
-      });
-      return group;
-    }, {} as { [key: string]: any });
+    const formGroup = this.rows().reduce(
+      (group: { [key: string]: any }, dynamicRow: any) => {
+        dynamicRow.row.forEach((field: any) => {
+          group[field.name] = this.createFieldControl(field);
+        });
+        return group;
+      },
+      {} as { [key: string]: any }
+    );
 
     this.dynamicForm = this.fb.group(formGroup);
   }
@@ -168,10 +182,13 @@ export class InfrastructureFormComponent {
     }
 
     // Create FormControl with proper disabled state
-    const control = this.fb.control({
-      value: controlValue,
-      disabled: field.disabled || false
-    }, validations);
+    const control = this.fb.control(
+      {
+        value: controlValue,
+        disabled: field.disabled || false,
+      },
+      validations
+    );
 
     return control;
   }
@@ -182,14 +199,20 @@ export class InfrastructureFormComponent {
 
   private createFromToGroup(field: any, validations: ValidatorFn[]): any {
     return this.fb.group({
-      from: this.fb.control({
-        value: field.fields[0]?.value || '',
-        disabled: field.disabled || false
-      }, validations),
-      to: this.fb.control({
-        value: field.fields[1]?.value || '',
-        disabled: field.disabled || false
-      }, validations),
+      from: this.fb.control(
+        {
+          value: field.fields[0]?.value || '',
+          disabled: field.disabled || false,
+        },
+        validations
+      ),
+      to: this.fb.control(
+        {
+          value: field.fields[1]?.value || '',
+          disabled: field.disabled || false,
+        },
+        validations
+      ),
     });
   }
 
@@ -224,7 +247,7 @@ export class InfrastructureFormComponent {
         isEdit: this.data.isEdit,
         uploadedFiles: this.base64File(),
       };
-      
+
       // Close dialog with result
       this.dialogRef.close(result);
     } else {
@@ -241,7 +264,7 @@ export class InfrastructureFormComponent {
     }
 
     this.selectedFiles.set(file);
-    
+
     Utils.convertFileToBase64(file)
       .then((base64: string) => {
         this.base64File.set(base64);
@@ -260,9 +283,9 @@ export class InfrastructureFormComponent {
    */
   transformRadioOptions(options: FieldOption[] | undefined): any[] {
     if (!options || !Array.isArray(options)) return [];
-    return options.map(option => ({
+    return options.map((option) => ({
       value: String(option.value),
-      label: option.display
+      label: option.display,
     }));
   }
 
@@ -289,7 +312,7 @@ export class InfrastructureFormComponent {
     if (fieldValue === false) {
       return 'false';
     }
-    console.log(fieldValue)
+    console.log(fieldValue);
     // Special handling for boolean-like numbers (0/1) for radio buttons
     // This ensures consistency if options are defined as true/false booleans
     if (fieldValue === 1) {
@@ -298,7 +321,7 @@ export class InfrastructureFormComponent {
     if (fieldValue === 0) {
       return 'false';
     }
-    
+
     // Handle other common boolean patterns
     if (fieldValue === 'Y' || fieldValue === 'y') {
       return 'true';
@@ -312,7 +335,7 @@ export class InfrastructureFormComponent {
     if (fieldValue === 'No' || fieldValue === 'no') {
       return 'false';
     }
-    
+
     // If it's a primitive value, convert to string
     return String(fieldValue || '');
   }

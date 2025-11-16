@@ -47,14 +47,14 @@
                   }
                   @case ('number') {
                     <!-- Number Input -->
-                    <app-input-text
+                    <app-input-number
                       [formControlName]="field.name"
                       [title]="field.label"
                       [isRequired]="field.isRequired"
                       [placeholder]="field.placeholder || ''"
                       [isValid]="!(dynamicForm.get(field.name)?.invalid && (dynamicForm.get(field.name)?.touched || isSubmitted))"
                       [errorMessage]="getFieldErrorMessage(field.name)"
-                      type="number"
+                   
                     />
                   }
                   @case ('date') {

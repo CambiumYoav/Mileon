@@ -29,6 +29,7 @@ import { ButtonComponent } from '../../shared/base/button/button.component';
 import { InputTextComponent } from '../../shared/base/inputs/input-text/input-text.component';
 import { InputDateComponent } from '../../shared/base/inputs/input-date/input-date.component';
 import { TerminalErrorsMessages } from '../../../types/enum/terminalEnum';
+import { InputNumberComponent } from '../../shared/base/inputs/input-number/input-number.component';
 
 
 @Component({
@@ -46,7 +47,8 @@ import { TerminalErrorsMessages } from '../../../types/enum/terminalEnum';
     MatOptionModule,
     ButtonComponent,
     InputTextComponent,
-    InputDateComponent
+    InputDateComponent,
+    InputNumberComponent
   ],
 })
 export class TerminalTicketBooksFormComponent {

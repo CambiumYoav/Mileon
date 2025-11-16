@@ -41,7 +41,7 @@ export class RadioButtonComponent implements ControlValueAccessor {
   type = input<'default' | 'colored'>('default');
   direction = input<'horizontal' | 'vertical'>('horizontal');
   allowDeselect = input<boolean>(false); // Allow deselecting current option
-
+  isValid = input<boolean | undefined>(true);
   valueChange = output<string>();
   selectionState = output<{ [key: string]: boolean }>();
 
@@ -64,9 +64,19 @@ export class RadioButtonComponent implements ControlValueAccessor {
   );
 
   constructor() {
-    effect(() => {
-      this.selectionState.emit(this.selectionStateMap());
-    });
+    // effect(() => {
+    //   this.selectionState.emit(this.selectionStateMap());
+    // });
+    effect(
+      () => {
+        const state = this.selectionStateMap();
+        // Only emit if there's actually a change
+        if (Object.keys(state).length > 0) {
+          this.selectionState.emit(state);
+        }
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   writeValue(value: string): void {
@@ -86,17 +96,16 @@ export class RadioButtonComponent implements ControlValueAccessor {
   onRadioChange(value: string): void {
     let newValue = value;
 
-    // Handle deselection if allowDeselect is true and same option is clicked
     if (this.allowDeselect() && this.currentValue() === value) {
       newValue = '';
     }
 
     this.internalValue.set(newValue);
+
     this.onChange(newValue);
     this.onTouched();
     this.valueChange.emit(newValue);
   }
-
   isOptionSelected(optionValue: string): boolean {
     return this.currentValue() === optionValue;
   }

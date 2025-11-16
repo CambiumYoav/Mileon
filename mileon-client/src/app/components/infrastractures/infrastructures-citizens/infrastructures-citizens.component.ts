@@ -184,7 +184,7 @@ export class InfrastructuresCitizensComponent implements OnInit {
             const action = isEdit
               ? InfrastructureTableAction.Update
               : InfrastructureTableAction.Add;
-            this.handleInsertOrUpdate(result, action);
+            this.handleInsertOrUpdate(result.form, action);
             dialogEffectRef.destroy();
           }
         });

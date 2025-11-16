@@ -60,13 +60,13 @@
                   }
 
                   @case ('number') {
-                    <app-input-text
+                    <app-input-number
                       [id]="field.name"
                       [placeholder]="field.label"
                       [title]="field.label"
                       [isRequired]="field.isRequired"
                       [formControlName]="field.name"
-                    ></app-input-text>
+                    ></app-input-number>
                   }
 
                   @case ('date') {

@@ -1,4 +1,12 @@
-import { Component, signal, computed, effect, inject, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  signal,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -36,6 +44,7 @@ import { InfrastructuresPublicComponent } from '../infrastructures-public/infras
 import { InputDateComponent } from '../../shared/base/inputs/input-date/input-date.component';
 import { SelectComponent } from '../../shared/base/select/select.component';
 import { InfrastructureEnumDialogs } from '../../../types/enum/infrastructure.enum';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-infrastructures-special',
@@ -52,8 +61,8 @@ import { InfrastructureEnumDialogs } from '../../../types/enum/infrastructure.en
     InfrastructuresDisabledComponent,
     InfrastructuresPublicComponent,
     InputDateComponent,
-    SelectComponent
-  ]
+    SelectComponent,
+  ],
 })
 export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
   private infrastructureServer = inject(InfrastructureService);
@@ -91,12 +100,12 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
   isImported = signal<boolean>(false);
   isImportDisabled = signal<boolean>(true);
   dateValue = signal<string | Date>('');
-  
+
   infrastructureForm: FormGroup;
   lastUpdate: FormControl;
   type: FormControl;
   form: FormGroup;
-  
+
   lastUpdateValue!: any;
 
   constructor() {
@@ -107,10 +116,10 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
       lastUpdate: this.lastUpdate,
       type: this.type,
     });
-    
+
     this.lastUpdateValue = toSignal(this.lastUpdate.valueChanges);
     const typeValue = toSignal(this.type.valueChanges);
-    
+
     effect(() => {
       const value = this.lastUpdateValue();
       if (value) {
@@ -157,22 +166,18 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
       : InfrastructureEnumDialogs.SpecialDialogExportPublicDiscription;
     if (dialogComponent) {
       const dialogRef = this.dialog.open(dialogComponent, {
-        // width: '835px',
-        // height: '300px',
         autoFocus: false,
         data: {
           description: description,
         },
       });
-      const dialogInstance = dialogRef.componentInstance;
 
-      effect(() => {
-        const result = dialogInstance.dataSubject();
-        if (result) {
-          this.exportData();
-          this.dialog.closeAll();
-        }
-      });
+      dialogRef
+        .afterClosed()
+        .pipe(take(1))
+        .subscribe((res) => {
+          if (res?.confirmed) this.exportData();
+        });
     }
   }
 
@@ -213,7 +218,9 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
 
     this.selectedType.set(event.value);
 
-    this.isDisabled.set(this.selectedType() === InfrastructureTablesTypes.Disabled);
+    this.isDisabled.set(
+      this.selectedType() === InfrastructureTablesTypes.Disabled
+    );
     this.isPublic.set(this.selectedType() === InfrastructureTablesTypes.Public);
     this.isSelected.set(this.isPublic() || this.isDisabled());
   }
@@ -251,8 +258,9 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
 
   getTotalRecords(total: number) {
     this.totalRecords.set(total);
-    
-    const searchText = this.infrastructureSearchFormService.form.value.searchText?.trim() || '';
+
+    const searchText =
+      this.infrastructureSearchFormService.form.value.searchText?.trim() || '';
     this.isImportDisabled.set(
       !InfrastructuresUtils.shouldDisableImport(total, searchText)
     );
@@ -261,14 +269,17 @@ export class InfrastructuresSpecialComponent implements OnInit, OnDestroy {
   async importData() {
     const vehicleType = this.vehicleType();
     if (!vehicleType) return;
-    
+
     await InfrastructuresUtils.handleImportData(
-      () => this.infrastructureServer.importDataByTableType(
-        vehicleType,
-        this.filesToUpload()
-      ),
+      () =>
+        this.infrastructureServer.importDataByTableType(
+          vehicleType,
+          this.filesToUpload()
+        ),
       this.toaster,
-      () => { this.isImported.set(true); }
+      () => {
+        this.isImported.set(true);
+      }
     );
   }
 }

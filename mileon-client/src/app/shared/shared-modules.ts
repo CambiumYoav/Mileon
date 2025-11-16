@@ -25,6 +25,8 @@ import { InputCheckboxComponent } from '../components/shared/base/inputs/input-c
 import { BaseFormComponent } from '../components/shared/base-form/base-form.component';
 import { ActionButtonsComponent } from '../components/shared/action-buttons/action-buttons.component';
 import { RenderIdentityPipe } from '../pipes/identity.pipe';
+import { Input } from '@angular/core';
+import { InputNumberComponent } from '../components/shared/base/inputs/input-number/input-number.component';
 
 export const SharedModules = [CommonModule];
 
@@ -62,6 +64,7 @@ export const BaseComponents = [
   FileUploadNewComponent,
   DocumentPreviewNewComponent,
   InputTextComponent,
+  InputNumberComponent,
   SearchBarComponent,
   SelectComponent,
   AdvancedSearchComponent,

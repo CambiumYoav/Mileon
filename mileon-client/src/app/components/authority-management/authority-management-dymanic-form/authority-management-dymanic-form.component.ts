@@ -17,6 +17,7 @@ import { ConstPath } from '../../../constants/const_path';
 import { CommonModule } from '@angular/common';
 import { InputDateComponent } from '../../shared/base/inputs/input-date/input-date.component';
 import { InputTextComponent } from '../../shared/base/inputs/input-text/input-text.component';
+import { InputNumberComponent } from '../../shared/base/inputs/input-number/input-number.component';
 
 @Component({
   selector: 'app-authority-management-dymanic-form',
@@ -29,6 +30,7 @@ import { InputTextComponent } from '../../shared/base/inputs/input-text/input-te
     ReactiveFormsModule,
     InputDateComponent,
     InputTextComponent,
+    InputNumberComponent
   ],
 })
 export class AuthorityManagementDymanicFormComponent implements OnChanges {

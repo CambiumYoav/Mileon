@@ -54,14 +54,14 @@
           ></app-input-text>
           } @case ('number') {
           <!-- Number Input -->
-          <app-input-text
+          <app-input-number
             [id]="field.name"
             [placeholder]="field.label"
             [title]="field.label"
             [isRequired]="field.isRequired"
             [formControlName]="field.name"
             [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
-          ></app-input-text>
+          ></app-input-number>
           } @case ('date') {
           <!-- Date Input -->
           <app-input-date
@@ -100,6 +100,7 @@
             [name]="field.name"
             [formControlName]="field.name"
             direction="horizontal"
+            [isValid]="dynamicForm.get(field.name)?.valid || !isSubmitted()"
           ></app-radio-button>
           } @case ('select') {
           <!-- Select Dropdown -->
@@ -187,9 +188,7 @@
             ></app-input-text>
             }
           </div>
-          } }
-
-          }
+          } } }
         </div>
         }
       </div>
