@@ -129,6 +129,35 @@ export class ActionService {
       tooltipClass: '',
       disabled: true,
     },
+    RenewParkingPermits: {
+      text: Buttons.RenewParkingPermits,
+      imgSrc: '',
+      cssClass: '',
+      tooltipText: '',
+      tooltipClass: '',
+      disabled: false,
+      alwaysEnabled: true,
+    },
+    ExportToExcel: {
+      text: Buttons.ExportToExcel,
+      imgSrc: this.Icons.EXCEL_DOWN,
+      cssClass: '',
+      tooltipText: '',
+      tooltipClass: '',
+      disabled: false,
+      alwaysEnabled: true,
+      isDisabled: false,
+    },
+    ImportFromExcel: {
+      text: Buttons.ImportFromExcel,
+      imgSrc: this.Icons.EXCEL_UP,
+      cssClass: '',
+      tooltipText: '',
+      tooltipClass: '',
+      disabled: false,
+      alwaysEnabled: true,
+      isDisabled: false,
+    },
   };
 
   private noteSignal = signal<any>({});

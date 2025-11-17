@@ -1,0 +1,14 @@
+<app-table
+  [data]="data()"
+  [columns]="columns()"
+  [total]="total()"
+  [form]="parkingPermitForm()"
+  [showPaginator]="showPaginator()"
+  (onFormChanges)="emitServerSort($event)"
+  [icons]="TicketStagesIcons"
+  [loader]="loader()"
+  (onRowEvent)="emitRowData($event)"
+  (onRowSelect)="emitRowData($event)"
+  (rowSelected)="emitOnRowChange($event)"
+>
+</app-table>

@@ -11,7 +11,7 @@
       <img class="call-icon" [src]="Icons.CALL" alt="phone icon" />
       <input
         class="hide-border-input input-text"
-        [placeholder]="combinedPlaceholder"
+        [placeholder]="combinedPlaceholder()"
         [formControl]="combinedPhoneControl"
         maxlength="14"
         type="text"

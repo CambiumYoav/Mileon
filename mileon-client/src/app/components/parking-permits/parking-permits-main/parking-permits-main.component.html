@@ -1,0 +1,88 @@
+<div class="container-lg p-4">
+  <div class="row pb-4 align-items-center position-relative">
+    <div class="arrow-container">
+      <img
+        class="back-icon"
+        [src]="Icons.ARROW_LEFT"
+        (click)="goBackToPreviousPage()"
+      />
+    </div>
+    <span class="d-flex align-items-center heading col-5">{{ title() }} </span>
+  </div>
+  <div class="row pb-4">
+    <div class="header col-6">
+      <app-parking-permits-search
+        [resultData]="list()"
+        [total]="total()"
+        (onSearch)="loadData($event)"
+        [authorityId]="currentAuthority()!"
+        [searchByText]="SearchByTextEnum.ParkingPermitsSearch"
+      ></app-parking-permits-search>
+    </div>
+    <div class="col-6">
+      <app-action-buttons
+        #actionButtonsComponent
+        [buttonsList]="actionButtonsList()"
+        [recordId]="parkingPermitID()"
+        [recordData]="currentParkingPermitData"
+        [moduleEnum]="moduleEnum.ParkingPermitsModule"
+        [emailAddress]="emailAddress"
+        [phoneNumber]="phoneNumber"
+        [disableUntilSet]="disableButtons()"
+        (action)="handleAction($event)"
+      ></app-action-buttons>
+    </div>
+  </div>
+  <div class="row">
+    <app-parking-permits-table
+      [data]="list()"
+      [total]="total()"
+      [count]="count()"
+      (onFormChanges)="loadData($event)"
+      [selectedParkingPermitData]="selectedParkingPermitData$"
+      tableColumns="ParkingPermitColumns"
+      [loader]="loader()"
+      (onRowClick)="goToDetails($event)"
+      (onRowEvent)="toggleButtonsByRecord($event)"
+    ></app-parking-permits-table>
+  </div>
+</div>
+
+<app-modal
+  [title]="exportModalTitle"
+  [isModalOpen]="isExportModalOpen()"
+  [modalSize]="'full'"
+  [buttons]="modalButtons"
+  (isModalClosed)="closeExportModal()"
+>
+  <div>
+    <img [src]="Icons.ARROW_DIRECTION" />
+    <span class="text-bold-modal"> A </span>
+    <p class="text-modal">
+      סוג תו, שם פרטי, שם משפחה,תעודת זהות, תאריך לידה, טלפון נייד, דואר
+      אלקטרוני, ישוב, רחוב,מספר בית, דירה ,כניסה ,מיקוד ,ת.ד. , מספר רישוי, סוג
+      רכב, צבע רכב, יצרן רכב, הערות, אישור הצהרה , אישור פרטים , קבלת תזכורות ,
+      מספר תו, בתוקף מ, פג תוקף, סטטוס, תאריך קליטה.
+
+      <br />
+    </p>
+  </div>
+</app-modal>
+
+<app-modal
+  [title]="renewModalTitle"
+  [isModalOpen]="isRenewModalOpen()"
+  [modalSize]="'full'"
+  [buttons]="renewModalButtons"
+  (isModalClosed)="closeRenewModal()"
+>
+  <div>
+    <p class="text-modal">
+      שימו לב! פעולת חידוש התווים תתבצע על סמך הרשומות המוצגות כרגע בטבלה (בהתאם
+      לסינון ולחיפוש שביצעתם).
+      <br />
+      לביצוע החידוש, אנא לחצו על כפתור "חידוש"
+      <br />
+    </p>
+  </div>
+</app-modal>

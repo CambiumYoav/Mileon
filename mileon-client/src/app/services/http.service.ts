@@ -12,13 +12,16 @@ import { Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ErrorSuccessMessages } from '../types/enum/error-success-messages';
 import { ErrorResponse } from '../types/errorResponse';
+import { BaseFormService } from '../components/shared/base-form/base-form.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpService {
   apiUrl = environment.apiUrl;
+  lambdaApiUrl = environment.mediaUrl;
   private httpClient = inject(HttpClient);
+  private formService= inject(BaseFormService);
   toastr = inject(ToastrService);
 
   public getRequest<T>(type: string, params?: any): Observable<T | any> {
@@ -119,6 +122,49 @@ export class HttpService {
       );
   }
 
+  formDataPostRequest<T>(
+    type: string,
+    data: { [key: string]: any },
+    isSuccessToastRequired: boolean = true
+  ): Observable<T | any | ErrorResponse> {
+    const formData = new FormData();
+    this.formService.objectToFormData(data, formData); // it handles nested objects and build from it a formData
+ 
+    return this.httpClient
+      .post<T>(`${this.apiUrl}/${type}`, formData, {
+        headers: this.buildHeaders(true),
+        reportProgress: true,
+        observe: 'events',
+      })
+      .pipe(
+        tap((event: any) => {
+          if (event.type === HttpEventType.Response && isSuccessToastRequired) {
+            this.toastr.success(ErrorSuccessMessages.SUCCESS);
+          }
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+
+  postRequestForLambda<T>(
+    type: string,
+    body: Object,
+    successMessage?: string
+  ): Observable<T | any | ErrorResponse> {
+    return this.httpClient
+      .post<T>(`${this.lambdaApiUrl}/${type}`, body, {
+        headers: this.buildHeaders(),
+      })
+      .pipe(
+        tap(() => {
+          if (successMessage) {
+            this.toastr.success(successMessage);
+          }
+        }),
+        catchError(this.handleError)
+      );
+  }
   postRequestWithHeaders<T>(
     type: string,
     body: Object,

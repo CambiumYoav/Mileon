@@ -1,6 +1,10 @@
 import { SearchFormService } from './../search-bar/search-form.service';
 import { TableService } from './table.service';
-import { Column, ColumnTypeEnum, RadioButtonConfig } from './../../../types/table';
+import {
+  Column,
+  ColumnTypeEnum,
+  RadioButtonConfig,
+} from './../../../types/table';
 import {
   ChangeDetectorRef,
   EventEmitter,
@@ -39,9 +43,9 @@ import { CheckboxComponent } from '../base/checkbox/checkbox.component';
 import { RadioButtonComponent } from '../base/radio-button/radio-button.component';
 import { ActiveComponent } from '../base/active/active.component';
 // import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
-import { IconComponent } from "../base/icon/icon.component";
+import { IconComponent } from '../base/icon/icon.component';
 import { TruncatedTextTooltipDirective } from '../../../directives/truncated-text-tooltip.directive';
-import { RedLineErrorComponent } from "../errors/red-line-error/red-line-error.component";
+import { RedLineErrorComponent } from '../errors/red-line-error/red-line-error.component';
 
 @Component({
   selector: 'app-table',
@@ -60,15 +64,14 @@ import { RedLineErrorComponent } from "../errors/red-line-error/red-line-error.c
     ActiveComponent,
     IconComponent,
     TruncatedTextTooltipDirective,
-    RedLineErrorComponent
-],
+    RedLineErrorComponent,
+  ],
   providers: [TableService],
 })
 export class TableComponent
   extends BaseFormComponent
   implements OnInit, OnChanges, OnDestroy
 {
-  
   private readonly _columns = signal<Column[]>([]);
   private readonly _icon = signal<Icon | string | undefined>(undefined);
   private readonly _data = signal<any[]>([]);
@@ -205,8 +208,7 @@ export class TableComponent
     super();
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     // Check if 'data' exists and has a valid value before accessing its properties
@@ -303,6 +305,7 @@ export class TableComponent
   }
 
   onSelectedRowIdChange(item: any) {
+    console.log(item);
     this.rowSelected.emit(item);
   }
   resetTable() {
@@ -366,20 +369,24 @@ export class TableComponent
 
   onRadioChange(item: any, propertyName: string, value: string): void {
     // Update the item's property value
-    item[propertyName] = value;
-    
+    // item[propertyName] = value;
+
     // Update boolean state for each option
-    const column = this._columns().find(col => col.propertyName === propertyName);
+    const column = this._columns().find(
+      (col) => col.propertyName === propertyName
+    );
     if (column?.radioConfig?.options) {
       // Store boolean state for each option
       const booleanStateProperty = `${propertyName}_booleanState`;
+
       item[booleanStateProperty] = {};
-      
-      column.radioConfig.options.forEach(option => {
+
+      column.radioConfig.options.forEach((option) => {
         item[booleanStateProperty][option.value] = option.value === value;
+        // item[propertyName] = propertyName;
       });
     }
-    
+
     // Emit the change event
     this.onSelectedRowIdChange(item);
 
@@ -390,11 +397,15 @@ export class TableComponent
     }
   }
 
-  onRadioSelectionState(item: any, propertyName: string, state: {[key: string]: boolean}): void {
+  onRadioSelectionState(
+    item: any,
+    propertyName: string,
+    state: { [key: string]: boolean }
+  ): void {
     // Store the boolean state for each option
     const booleanStateProperty = `${propertyName}_booleanState`;
     item[booleanStateProperty] = state;
-    
+
     // Emit the change event
     this.onSelectedRowIdChange(item);
   }
@@ -428,28 +439,33 @@ export class TableComponent
     this.onRowEvent.emit({ item, action: 'edit' });
   }
 
-  getRadioOptions(column: Column, item: any): { value: string; label: string; colorClass?: string }[] {
+  getRadioOptions(
+    column: Column,
+    item: any
+  ): { value: string; label: string; colorClass?: string }[] {
     if (column.radioConfig?.options) {
       // Use configured options, processing dynamic values if needed
-      return column.radioConfig.options.map(option => {
+      return column.radioConfig.options.map((option) => {
         let colorClass = option.colorClass;
-        
+
         // Handle dynamic color class based on special function calls
         if (colorClass === 'getRadioColorClassByLastTicketTime()') {
-          colorClass = this.getRadioColorClassByLastTicketTime(item.lastTicketTime);
+          colorClass = this.getRadioColorClassByLastTicketTime(
+            item.lastTicketTime
+          );
         }
-        
+
         return {
           ...option,
-          colorClass
+          colorClass,
         };
       });
     }
-    
+
     // Fallback to default yes/no options for backward compatibility
     return [
       { value: 'כן', label: 'כן' },
-      { value: 'לא', label: 'לא' }
+      { value: 'לא', label: 'לא' },
     ];
   }
 
@@ -468,12 +484,19 @@ export class TableComponent
     return column.radioConfig?.direction || 'horizontal';
   }
 
-  getRadioBooleanState(item: any, propertyName: string): {[key: string]: boolean} {
+  getRadioBooleanState(
+    item: any,
+    propertyName: string
+  ): { [key: string]: boolean } {
     const booleanStateProperty = `${propertyName}_booleanState`;
     return item[booleanStateProperty] || {};
   }
 
-  isRadioOptionSelected(item: any, propertyName: string, optionValue: string): boolean {
+  isRadioOptionSelected(
+    item: any,
+    propertyName: string,
+    optionValue: string
+  ): boolean {
     const booleanState = this.getRadioBooleanState(item, propertyName);
     return booleanState[optionValue] || false;
   }
@@ -481,7 +504,6 @@ export class TableComponent
   getAllowDeselect(column: Column): boolean {
     return column.radioConfig?.allowDeselect || false;
   }
-
 
   /**
    * Calculate content width based on actual data
@@ -514,16 +536,21 @@ export class TableComponent
   private getDisplayValue(item: any, column: Column): any {
     switch (column.type) {
       case ColumnTypeEnum.Currency:
-        return item[column.propertyName] ? `₪ ${item[column.propertyName]}` : '';
+        return item[column.propertyName]
+          ? `₪ ${item[column.propertyName]}`
+          : '';
       case ColumnTypeEnum.Date:
-        return item[column.propertyName] ? new Date(item[column.propertyName]).toLocaleDateString('he-IL') : '';
+        return item[column.propertyName]
+          ? new Date(item[column.propertyName]).toLocaleDateString('he-IL')
+          : '';
       case ColumnTypeEnum.DateTime:
-        return item[column.propertyName] ? new Date(item[column.propertyName]).toLocaleString('he-IL') : '';
+        return item[column.propertyName]
+          ? new Date(item[column.propertyName]).toLocaleString('he-IL')
+          : '';
       default:
         return item[column.propertyName] || '';
     }
   }
-
 
   getColumnWidth(column: Column): string {
     if (!this.columnWidths || !this.columnWidths[column.propertyName]) {

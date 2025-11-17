@@ -23,4 +23,6 @@ export enum SearchByTextEnum {
 
   TemplatesSearch = 'כותרת תבנית,תוכן התבנית...',
   LogosSearch = 'כותרת תבנית...',
+  ParkingPermitsTypesSearch = 'קוד תו,תיאור, כמות תווים פעילים, מחיר...',
+  ParkingPermitsSearch = 'מספר תו, מספר רכב, מספר זהות, שם מלא, כתובת, אזור/רחוב, סוג תו, ...',
 }

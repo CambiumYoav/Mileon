@@ -59,6 +59,14 @@ export const childRoutes: Routes = [
         './components/inventory-management/inventory-management-routing'
       ).then((m) => m.InventoryManagementRoutes),
   },
+
+  {
+    path: `${ROUTE_PATH.ParkingPermits.Home}`, // 'parking-permits'
+    loadChildren: () =>
+      import('./components/parking-permits/parking-permits-routes').then(
+        (m) => m.parkingPermitsRoutes
+      ),
+  },
 ];
 export const routes: Routes = [
   { path: ``, redirectTo: 'login', pathMatch: 'full' },

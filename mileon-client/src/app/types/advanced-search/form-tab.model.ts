@@ -1,3 +1,5 @@
+import { FieldOption } from '../infrastructure/InfrastructureTypes';
+
 // Modern TypeScript interfaces with better type safety
 export interface AdvancedForm {
   readonly tabs: readonly Tab[];
@@ -28,6 +30,7 @@ export interface Field {
   readonly bindLabelKeys?: readonly string[];
   readonly disabled?: boolean;
   readonly isRequired?: boolean;
+  readonly radioOptions?: FieldOption[];
 }
 
 export interface IdValue {

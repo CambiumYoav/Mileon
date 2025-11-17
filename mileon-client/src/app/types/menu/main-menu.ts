@@ -69,15 +69,9 @@ export class Menus {
             route: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.TypesMain}`,
             icon: 'productions-menu.svg',
           },
+
           {
             id: '2',
-            path: `${ROUTE_PATH.ParkingPermits.Home}/create/${ROUTE_PATH.ParkingPermits.CreateUpdateMain}`,
-            displayName: ModuleNames.ParkingPemitsTypesCreate,
-            route: `${ROUTE_PATH.ParkingPermits.Home}/create/${ROUTE_PATH.ParkingPermits.CreateUpdateMain}`,
-            icon: 'productions-menu.svg',
-          },
-          {
-            id: '3',
             path: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.CreateNew}`,
             displayName: ModuleNames.ParkingPermitsCreate,
             route: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.CreateNew}`,
@@ -352,16 +346,7 @@ export class Menus {
             },
             icon: ConstPath.INFRASTRUCTURE_VEHICLES,
           },
-          // {
-          //   id: '1',
-          //   path: `${ROUTE_PATH.Infrastructure.Home}/${ROUTE_PATH.Infrastructure.VehiclesType}`,
-          //   displayName: ModuleNames.VehiclesInfrastructure,
-          //   route: `${ROUTE_PATH.Infrastructure.Home}/${ROUTE_PATH.Infrastructure.VehiclesType}`,
-          //   state: {
-          //     name: InfrastructuresFiltersEnum.Vehicles,
-          //   },
-          //   icon: ConstPath.INFRASTRUCTURE_VEHICLES,
-          // },
+
           {
             id: '2',
             path: `${ROUTE_PATH.Infrastructure.Home}/${ROUTE_PATH.Infrastructure.SubStages}`,

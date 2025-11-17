@@ -1,0 +1,29 @@
+@import "../../../../styles/elements.scss";
+.action-dialog-container {
+  min-width: 45vw;
+  max-height: 95vh;
+}
+form {
+  direction: rtl;
+}
+
+.title {
+  color: black;
+  font-weight: 800;
+  font-family: $fontOpenSans;
+  direction: rtl;
+  font-size: 18px;
+  line-height: 25px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.top-inputs-wrapper {
+  background: #f7f9fc;
+  border: 1px solid #b9c6d4;
+  border-radius: 8px;
+}
+
+.exit-icon {
+  cursor: pointer;
+}

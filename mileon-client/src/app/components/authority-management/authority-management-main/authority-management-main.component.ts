@@ -83,7 +83,7 @@ export class AuthorityManagementMainComponent
     });
     //FIXME - not working 
     effect(() => {
-      const authorityID = this.authorityService.authorityId();;
+      const authorityID = this.authorityService.authorityId();
       const viewReady = this.viewInitialized();
       
       if (this.isEditMode && authorityID && viewReady) {

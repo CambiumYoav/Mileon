@@ -4,14 +4,14 @@
 </div>
 
 <div *ngIf="!ticketIDFromExternalModule" class="action-btns">
-  <app-action-buttons
+  <!-- <app-action-buttons
     #actionButtonsComponent
     [buttonsList]="actionButtonsList"
     [recordId]="ticketID"
     [phoneNumber]="mainPhoneNumber"
     [moduleEnum]="moduleEnum.TicketsNewModule"
     [emailAddress]="emailAddress"
-  ></app-action-buttons>
+  ></app-action-buttons> -->
 </div>
 
 <ng-container *ngIf="ticketDetails && formReady">

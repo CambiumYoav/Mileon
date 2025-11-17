@@ -11,7 +11,7 @@
     />
   </div>
   <div class="app-modal modal-message-container">
-    <p class="app-modal modal-message" *ngIf="message()">{{ message() }}</p> 
+    <p class="app-modal modal-message" *ngIf="message()">{{ message() }}</p>
   </div>
   <div class="app-modal modal-body">
     <ng-content class="content-scroll"></ng-content>
@@ -20,7 +20,6 @@
     class="app-modal modal-footer"
     [ngClass]="{ 'no-amount-data': !amountData() }"
   >
-     
     <div *ngIf="amountData()" class="amount-data-label">
       <div class="data-item">
         <span class="data-label">סה"כ לתשלום: </span>

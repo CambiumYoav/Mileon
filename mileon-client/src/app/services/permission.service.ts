@@ -216,6 +216,7 @@ export class PermissionService {
   private _isActive = signal<boolean>(false);
 
   private _userName = signal<string>('');
+  private _userId = signal<string>('');
   private _email = signal<string>('');
   private _authority = signal<string>('');
   private _isSuperAdmin = signal<boolean>(false);
@@ -230,6 +231,7 @@ export class PermissionService {
   isActive = this._isActive.asReadonly();
 
   userName = this._userName.asReadonly();
+  userId = this._userId.asReadonly();
   email = this._email.asReadonly();
   authority = this._authority.asReadonly();
   isAdmin = computed(() => this._isSuperAdmin());
@@ -256,8 +258,16 @@ export class PermissionService {
     const permission = this.getPermissionFromSession();
 
     if (decoded && permission) {
-      const { role, IsAdmin, exp, firstName, lastName, email, authority } =
-        decoded;
+      const {
+        role,
+        IsAdmin,
+        exp,
+        firstName,
+        lastName,
+        email,
+        authority,
+        UserId,
+      } = decoded;
       console.log(role);
       this._tokenExp.set(exp);
       this.setPermission({ role, ...permission }); // also parses modules/routes/options
@@ -266,6 +276,7 @@ export class PermissionService {
       this._userName.set(`${firstName ?? ''} ${lastName ?? ''}`.trim());
       this._email.set(email ?? '');
       this._authority.set(authority ?? '');
+      this._userId.set(UserId ?? '');
     } else {
       this.session.remove('token');
       this.reset();
@@ -288,6 +299,7 @@ export class PermissionService {
     this._routes.set({});
     this._options.set(null);
     this._isActive.set(false);
+    this._userId.set('');
   }
 
   // ------- session / token helpers -------
@@ -358,7 +370,7 @@ export class PermissionService {
 
   setTokenAfterRefresh(token: string, exp: number) {
     this.session.set('token', token);
-    this._tokenExp.set(exp);   // private signal from the refactor
+    this._tokenExp.set(exp); // private signal from the refactor
     // if you also keep parsed permission in storage, refresh it here as needed
   }
 }

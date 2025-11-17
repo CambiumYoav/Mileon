@@ -6,6 +6,8 @@ export interface ActionAttributes {
   tooltipText: string;
   tooltipClass: string;
   disabled: boolean | null;
+  isDisabled?: boolean;
+  alwaysEnabled?: boolean;
 }
 
 export type ActionButtons = {
@@ -26,4 +28,7 @@ export type ActionButtonNames =
   | 'ViewMana'
   | 'RestoreMana'
   | 'PostApprove'
-  | 'CopyReport';
+  | 'CopyReport'
+  | 'RenewParkingPermits'
+  | 'ExportToExcel'
+  | 'ImportFromExcel';

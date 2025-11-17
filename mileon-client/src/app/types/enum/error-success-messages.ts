@@ -73,4 +73,7 @@ export enum ErrorSuccessMessages {
   PERMIT_TYPE_FORMS_CREATED_SUCCESSFULY = 'הטפסים לסוג תו נוצרו בהצלחה',
   PERMIT_TYPE_FORMS_EDITED_SUCCESSFULY = 'הטפסים לסוג תו עודכנו בהצלחה',
   PARKING_PERMIT_REQUEST_CREATED_SUCCESSFULLY = 'בקשתך התקבלה, פרטי הבקשה יבדקו. עדכונים יתקבלו בסמס / מייל ',
+
+  SMS_PHONE_INVALID= '*מספר הטלפון לא תקין, אנה נסה שנית'
+
 }

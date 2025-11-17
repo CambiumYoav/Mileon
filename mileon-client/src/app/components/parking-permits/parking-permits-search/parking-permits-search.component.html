@@ -1,0 +1,15 @@
+
+<app-search-bar
+  [form]="parkingPermitsSearchForm()"
+  [showFilters]="false"
+  (search)="sendFormValue($event)"
+  [submitOnKey]="true"
+  [resultData]="resultData()"
+  [total]="total()"
+  [searchTextValue]="searchText()"
+  [showDatePicker]="false"
+  [hasResultsDropdown]="hasResultsDropdown()"
+  searchTitle="חיפוש"
+  [showPlaceholder]="true"
+  [searchBy]="searchByText()"
+></app-search-bar>

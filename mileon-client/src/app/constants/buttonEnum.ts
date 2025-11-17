@@ -13,6 +13,9 @@ export enum Buttons {
   RestoreMana = 'שחזור מנה',
   PostApprove = 'אישור משלוח - דואר ישראל',
   CopyReport = 'העתק דוח',
+  RenewParkingPermits = 'חידוש תווים',
+  ExportToExcel = 'ייצוא לאקסל',
+  ImportFromExcel = 'ייבוא מאקסל',
 }
 
 export enum GeneralButtons {

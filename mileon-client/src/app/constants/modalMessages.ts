@@ -5,6 +5,7 @@ export enum ModalMessages {
   ARE_YOU_SURE_YOU_WANT_TO_MOVE_DOCUMENT_COMPLETION = 'האם אתה בטוח שברצונך להעביר לסטטוס השלמת מסמכים?',
   NO_FILE_ATTACHED_TO_REQUEST = 'לא צירפת קבצים לבקשה, האם אתה בטוח שברצונך ליצור את הבקשה?',
   EXPORT_FILE = 'יצוא מבנה קובץ',
+  EXPORT_WARNING = 'שימו לב, יצוא הקובץ בהתאם לחיפוש/פלטור שבוצע במסך זה.',
   SEND_FILE = 'שליחת קובץ למשרד התחבורה',
   SEND_FILE_INTERIOR = 'שליחת קובץ למשרד הפנים',
   CONFIG = 'עדכון קובץ קונפיג',
@@ -22,4 +23,19 @@ export enum ModalMessages {
   COPY_DRAFTS_AND_LETTERS = 'יצירת העתק  ',
 
   ARE_YOU_SURE_GO_BACK = 'שים לב ! השינוים לא ישמרו. האם ברצונך לעזוב את המסך ?',
+  UPDATE_TIMLINE = 'עדכון  ניהול חיי דוח',
+  ARE_YOU_SURE_TIMELINE = 'שים לב בוצעו שינויים בניהול חיי דוח,האם להמשיך?',
+  UPDATE_TIMLINE_ENFORCMENT = 'עדכון ניהול אכיפה',
+  ARE_YOU_SURE_TIMELINE_ENFORCMENT = 'שים לב בוצעו שינויים בניהול סרגל האכיפה,האם להמשיך?',
+
+  UPDATE_PERMIT_TYPE = 'עדכון סוג תו',
+  ARE_YOU_SURE_IS_ACTIVE_PERMIT_TYPE = 'שים לב! שינוי סטטוס לפעיל יחזיר באופן אוטומטי את כל ההטבות המוצמדות לסוג תו זה.',
+  ARE_YOU_SURE_IS_INACTIVE_PERMIT_TYPE = 'שים לב ! שינוי סטטוס ללא פעיל תבטל את כל הטבות התו.',
+
+  CREATE_PARKING_PERMIT = 'יצירת תו דייר',
+  EXIT_PARKING_PERMIT = 'שים לב ! יציאה מהעמוד תמחק את כל פרטי הבקשה',
+
+  DELETE_FILE_PARKING_PERMIT = 'מחיקת קובץ תו חניה',
+  ARE_YOU_SURE_DELETE_FILE_PARKING_PERMIT = 'האם אתה בטוח שברצונך למחוק את הקובץ?',
+  RENEW_PARKING_PERMITS = 'חידוש תווים',
 }

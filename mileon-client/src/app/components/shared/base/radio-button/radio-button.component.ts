@@ -74,8 +74,8 @@ export class RadioButtonComponent implements ControlValueAccessor {
         if (Object.keys(state).length > 0) {
           this.selectionState.emit(state);
         }
-      },
-      { allowSignalWrites: true }
+      }
+      // { allowSignalWrites: true }
     );
   }
 
