@@ -192,6 +192,7 @@ export class FieldDynamicComponent implements OnInit, OnChanges {
     }
   }
   onIsIndictmentChanged(event: any) {
+    console.log(event)
     this.indictmentChanged.emit(event);
     setTimeout(() => {
       this.fieldDetailsRef.setIsIndictment(event);

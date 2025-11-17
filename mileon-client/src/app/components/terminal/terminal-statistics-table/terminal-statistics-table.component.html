@@ -5,95 +5,86 @@
         <span class="secondary-heading">{{ secondaryTitle }}</span>
       </div>
 
-      @if (chartForm()) {
-        <form
-          [formGroup]="chartForm()!"
-          class="inputs-container-form"
-        >
+      @if (chartForm) {
+      <form [formGroup]="chartForm" class="inputs-container-form">
         <div class="inputs-container xl-w-1200px xxl-w-1400px">
           @for (field of chartFields; track field.name) {
+          <div class="input-item">
+            <div class="wrap-field" [class]="'field-' + field.length">
+              @switch (field.type) { @case (FieldTypeEnum.Select) { @if
+              (field.options) {
+              <!-- Static options -->
+              <app-select
+                [options]="getMutableOptions(field.options)"
+                bindLabelKey="value"
+                bindValueKey="id"
+                [title]="field.displayName"
+                [placeholder]="field.displayName"
+                [formControlName]="field.name"
+                [isMultiSelect]="field.multipleSelect || false"
+              ></app-select>
+              } @else {
+              <!-- Dynamic options with dataFunction -->
+              <app-select
+                [dataFunction]="field.dataFunction"
+                bindLabelKey="value"
+                bindValueKey="id"
+                [title]="field.displayName"
+                [placeholder]="field.displayName"
+                [formControlName]="field.name"
+                [isMultiSelect]="field.multipleSelect || false"
+              ></app-select>
+              } } }
+            </div>
+          </div>
+          }
+
+          <!-- Date mode fields -->
+          @let dateMode = selectedDateModeNumber();
+
+          <div class="wrap-field" [class]="'field-' + 'long'">
+            @switch (dateMode) { @case (0) {
+            <!-- יומי -->
+            <app-input-date
+              [title]="'בחירת תאריך'"
+              [placeholder]="'בחירת תאריך'"
+              [formControlName]="'day'"
+            ></app-input-date>
+            } @case (1) {
+            <!-- טווח -->
             <div class="input-item">
-              <div
-                class="wrap-field"
-                [class]="'field-' + field.length"
-              >
-                @switch (field.type) {
-                  @case (FieldTypeEnum.Select) {
-                    @if (field.options) {
-                      <!-- Static options -->
-                      <app-select
-                        [options]="getMutableOptions(field.options)"
-                        bindLabelKey="value"
-                        bindValueKey="id"
-                        [title]="field.displayName"
-                        [placeholder]="field.displayName"
-                        [formControlName]="field.name"
-                        [isMultiSelect]="field.multipleSelect || false"
-                      ></app-select>
-                    } @else {
-                      <!-- Dynamic options with dataFunction -->
-                      <app-select
-                        [dataFunction]="field.dataFunction"
-                        bindLabelKey="value"
-                        bindValueKey="id"
-                        [title]="field.displayName"
-                        [placeholder]="field.displayName"
-                        [formControlName]="field.name"
-                        [isMultiSelect]="field.multipleSelect || false"
-                      ></app-select>
-                    }
-                  }
-                }
+              <div style="display: ruby-text; width: 100%">
+                <div class="wrap-field field-long">
+                  <app-input-date
+                    [title]="'מתאריך'"
+                    [placeholder]="'בחירת תאריך'"
+                    [formControlName]="'fromDate'"
+                  ></app-input-date>
+                </div>
+                <div class="wrap-field field-long mr-2">
+                  <app-input-date
+                    [title]="'עד תאריך'"
+                    [placeholder]="'בחירת תאריך'"
+                    [formControlName]="'toDate'"
+                  ></app-input-date>
+                </div>
               </div>
             </div>
-          }
-          <div class="wrap-field" [class]="'field-' + 'long'">
-            @switch (selectedDateMode()) {
-              @case (DateModeEnum.Daily) {
-                <!-- יומי -->
-                <app-input-date
-                  [title]="'בחירת תאריך'"
-                  [placeholder]="'בחירת תאריך'"
-                  [formControlName]="'day'"
-                ></app-input-date>
-              }
-              @case (DateModeEnum.DateRange) {
-                <!-- טווח -->
-                <div class="input-item">
-                  <div style="display: ruby-text; width: 100%">
-                    <div class="wrap-field field-long">
-                      <app-input-date
-                        [title]="'מתאריך'"
-                        [placeholder]="'בחירת תאריך'"
-                        [formControlName]="'fromDate'"
-                      ></app-input-date>
-                    </div>
-                    <div class="wrap-field field-long mr-2">
-                      <app-input-date
-                        [title]="'עד תאריך'"
-                        [placeholder]="'בחירת תאריך'"
-                        [formControlName]="'toDate'"
-                      ></app-input-date>
-                    </div>
-                  </div>
-                </div>
-              }
-              @case (DateModeEnum.Year) {
-                <!-- שנתי -->
-                <app-select
-                  [options]="yearsOptions()"
-                  bindLabelKey="value"
-                  bindValueKey="id"
-                  [title]="'שנה'"
-                  [placeholder]="'בחירת שנה'"
-                  [formControlName]="'year'"
-                  [isMultiSelect]="false"
-                ></app-select>
-              }
-            }
+            } @case (2) {
+            <!-- שנתי -->
+            <app-select
+              [options]="yearsOptions()"
+              bindLabelKey="value"
+              bindValueKey="id"
+              [title]="'שנה'"
+              [placeholder]="'בחירת שנה'"
+              [formControlName]="'year'"
+              [isMultiSelect]="false"
+            ></app-select>
+            } }
           </div>
         </div>
-        </form>
+      </form>
       }
     </div>
 

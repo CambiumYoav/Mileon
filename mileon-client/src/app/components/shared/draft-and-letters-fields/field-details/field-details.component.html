@@ -2,127 +2,108 @@
   <div class="form-card-content">
     <!-- Form -->
     @if (dynamicForm) {
-      <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
-        <div class="form-container">
-          <!-- Loop through rows -->
-          @for (row of rows(); track row) {
-            <div class="form-row">
-              <!-- Loop through fields within a row -->
-              @for (field of row.row; track field.name) {
-                <div
-                  [class]="'form-field' + field.size"
-                  [ngClass]="{
+    <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
+      <div class="form-container">
+        <!-- Loop through rows -->
+        @for (row of rows(); track row) {
+        <div class="form-row">
+          <!-- Loop through fields within a row -->
+          @for (field of row.row; track field.name) {
+          <div
+            [class]="'form-field' + field.size"
+            [ngClass]="{
                       disabled: !!field.disabled,
                       inputError:
                         (isSubmitted() && dynamicForm.get(field.name)?.errors?.['required'])
                     }"
-                >
-                  <!-- Field Content -->
-                  @if (!field.hide) {
-                    <!-- Field Types -->
-                    @switch (field.type) {
-                      @case ('text') {
-                        <!-- Text Input -->
-                        <app-input-text
-                          [formControlName]="field.name"
-                          [title]="field.label"
-                          [placeholder]="field.placeholder || ''"
-                          [isRequired]="field.isRequired"
-                          [isValid]="isFieldValid(field.name)"
-                          [disabled]="!!field.disabled || false" 
-                        ></app-input-text>
-                      }
-                      
-                      @case ('checkbox') {
-                        <app-input-checkbox
-                          [formControlName]="field.name"
-                          [title]="field.label"
-                          [placeholder]="field.label"
-                        ></app-input-checkbox>
-                      }
-                      
-                      @case ('selectWithLookup') {
-                        <!-- Field Label for select -->
-                        <label class="title-placeholder" [for]="field.name">
-                          @if (field.isRequired) {
-                            <img
-                              class="required-icon"
-                              [src]="Icons.ASTERISK_RED"
-                            />
-                          }
-                          {{ field.label }}
-                        </label>
-                        <app-select
-                          fxFill
-                          appearance="fill"
-                          [title]="field.label"
-                          [isRequired]="field.isRequired"
-                          [isValid]="isFieldValid(field.name)"
-                          [bindLabelKeys]="field.bindLabelKeys"
-                          [formControlName]="field.name"
-                          [dataFunction]="field.dataFunction"
-                          searchPlaceholder="חיפוש"
-                          bindLabelKey="value"
-                          bindValueKey="id"
-                          [isMultiSelect]="false"
-                          [placeholder]="field.label"
-                        ></app-select>
-                      }
-                      
-                      @case ('radio') {
-                        <!-- Field Label for radio -->
-                        <label class="title-placeholder" [for]="field.name">
-                          @if (field.isRequired) {
-                            <img
-                              class="required-icon"
-                              [src]="Icons.ASTERISK_RED"
-                            />
-                          }
-                          {{ field.label }}
-                        </label>
-                        <!-- Radio Buttons -->
-                        <div class="d-flex">
-                          @for (option of field.options; track option.value) {
-                            <div class="radio-container">
-                              <input
-                                [id]="field.name + '-' + option.value"
-                                type="radio"
-                                [formControlName]="field.name"
-                                [name]="field.name"
-                                [value]="option.value"
-                                class="form-radio"
-                              />
-                              <p>{{ option.display }}</p>
-                            </div>
-                          }
-                        </div>
-                      }
-                      
-                      @case ('checkboxOptions') {
-                        <app-input-checkbox-option-group
-                          [title]="field.label"
-                          [options]="optionsTicketTypes"
-                          [isRequired]="field.isRequired"
-                          (selectionChange)="onSelectionChange($event, field.name)"
-                          [isValid]="isFieldValid(field.name)"
-                        ></app-input-checkbox-option-group>
-                      }
-                    }
-
-                    <!-- Validation Errors -->
-                    @if (
-                      dynamicForm.get(field.name)?.invalid &&
-                      dynamicForm.get(field.name)?.touched
-                    ) {
-                      <div class="validation-errors"></div>
-                    }
-                  }
-                </div>
+          >
+            <!-- Field Content -->
+            @if (!field.hide) {
+            <!-- Field Types -->
+            @switch (field.type) { @case ('text') {
+            <!-- Text Input -->
+            <app-input-text
+              [formControlName]="field.name"
+              [title]="field.label"
+              [placeholder]="field.placeholder || ''"
+              [isRequired]="field.isRequired"
+              [isValid]="isFieldValid(field.name)"
+              [disabled]="!!field.disabled || false"
+            ></app-input-text>
+            } @case ('checkbox') {
+            <app-input-checkbox
+              [formControlName]="field.name"
+              [title]="field.label"
+              [placeholder]="field.label"
+            ></app-input-checkbox>
+            } @case ('selectWithLookup') {
+            <!-- Field Label for select -->
+            <label class="title-placeholder" [for]="field.name">
+              @if (field.isRequired) {
+              <img class="required-icon" [src]="Icons.ASTERISK_RED" />
+              }
+              {{ field.label }}
+            </label>
+            <app-select
+              fxFill
+              appearance="fill"
+              [title]="field.label"
+              [isRequired]="field.isRequired"
+              [isValid]="isFieldValid(field.name)"
+              [bindLabelKeys]="field.bindLabelKeys"
+              [formControlName]="field.name"
+              [dataFunction]="field.dataFunction"
+              searchPlaceholder="חיפוש"
+              bindLabelKey="value"
+              bindValueKey="id"
+              [isMultiSelect]="false"
+              [placeholder]="field.label"
+            ></app-select>
+            } @case ('radio') {
+            <!-- Field Label for radio -->
+            <label class="title-placeholder" [for]="field.name">
+              @if (field.isRequired) {
+              <img class="required-icon" [src]="Icons.ASTERISK_RED" />
+              }
+              {{ field.label }}
+            </label>
+            <!-- Radio Buttons -->
+            <div class="d-flex">
+              @for (option of field.options; track option.value) {
+              <div class="radio-container">
+                <input
+                  [id]="field.name + '-' + option.value"
+                  type="radio"
+                  [formControlName]="field.name"
+                  [name]="field.name"
+                  [value]="option.value"
+                  class="form-radio"
+                />
+                <p>{{ option.display }}</p>
+              </div>
               }
             </div>
+            } @case ('checkboxOptions') {
+            <app-input-checkbox-option-group
+              [title]="field.label"
+              [options]="optionsTicketTypes"
+              [isRequired]="field.isRequired"
+              (selectionChange)="onSelectionChange($event, field.name)"
+              [isValid]="isFieldValid(field.name)"
+            ></app-input-checkbox-option-group>
+            } }
+
+            <!-- Validation Errors -->
+            @if ( dynamicForm.get(field.name)?.invalid &&
+            dynamicForm.get(field.name)?.touched ) {
+            <div class="validation-errors"></div>
+            } }
+          </div>
           }
         </div>
-      </form>
+        }
+      </div>
+    </form>
     }
   </div>
 </div>
