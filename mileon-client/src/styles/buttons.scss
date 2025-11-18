@@ -1,4 +1,4 @@
-@import "./elements.scss";  
+@import "./elements.scss";
 
 @mixin base-btn($bg, $color, $border: none, $shadow: none) {
   display: inline-flex;
@@ -103,7 +103,7 @@
 }
 
 .outline-btn {
-  @include base-btn(#ffffff, #21527D, 1px solid #21527D);
+  @include base-btn(#ffffff, #21527d, 1px solid #21527d);
 }
 
 .disabled-btn {
@@ -130,7 +130,7 @@
   font-size: 16px;
   // width: 78px !important;
   height: 37px !important;
-  padding: 7.5px 20px;
+  padding: 7.5px 15px;
   border-radius: 4px;
 }
 

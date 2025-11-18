@@ -94,7 +94,7 @@ export class ParkingPermitsTableComponent implements OnInit, OnDestroy {
     });
 
     const subject = this.selectedParkingPermitData();
-    console.log(this.selectedParkingPermitData());
+
     if (subject) {
       this.subscription = subject.subscribe((data) => {
         if (data) {
@@ -141,7 +141,6 @@ export class ParkingPermitsTableComponent implements OnInit, OnDestroy {
 
   // radio
   emitOnRowChange(e: any) {
-    console.log(e);
     this.onRowEvent.emit(e);
   }
 }

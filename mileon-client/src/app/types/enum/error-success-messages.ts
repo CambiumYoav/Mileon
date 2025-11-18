@@ -42,7 +42,7 @@ export enum ErrorSuccessMessages {
   TICKET_BOOK__ADDED_SUCCESSFULY = 'הפנקס נוסף בהצלחה',
   TICKET_BOOK__NOT_ADDED_SUCCESSFULY = 'שגיאה בהוספת פנקס',
   TICKET_BOOK__ERROR_TICKET_NUMBER = 'מספר פנקס לא תקין או בשימוש',
-  SEARCH_FAILED='לא ניתן לבצע את החיפוש, אנא נסה שנית מאוחר יותר',
+  SEARCH_FAILED = 'לא ניתן לבצע את החיפוש, אנא נסה שנית מאוחר יותר',
 
   TICKET_BOOKED_CLOSED_SUCCESSFULY = 'הפנקס נסגר בהצלחה',
   TICKET_BOOKED_ASSIGNED_SUCCESSFULY = 'הפנקס הועבר בהצלחה',
@@ -74,6 +74,6 @@ export enum ErrorSuccessMessages {
   PERMIT_TYPE_FORMS_EDITED_SUCCESSFULY = 'הטפסים לסוג תו עודכנו בהצלחה',
   PARKING_PERMIT_REQUEST_CREATED_SUCCESSFULLY = 'בקשתך התקבלה, פרטי הבקשה יבדקו. עדכונים יתקבלו בסמס / מייל ',
 
-  SMS_PHONE_INVALID= '*מספר הטלפון לא תקין, אנה נסה שנית'
-
+  SMS_PHONE_INVALID = '*מספר הטלפון לא תקין, אנה נסה שנית',
+  EMAIL_INVALID = '*כתובת המייל אינה תקינה, אנה נסה שנית',
 }

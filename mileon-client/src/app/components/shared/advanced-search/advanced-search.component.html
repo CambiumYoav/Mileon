@@ -1,146 +1,131 @@
 @if (advancedForm && form) {
-  <div [ngClass]="{ 'header-less-tabs': (advancedForm.tabs || []).length === 1 }">
-    <mat-tab-group 
-      mat-stretch-tabs="false" 
-      mat-align-tabs="start"
-      [disableRipple]="true"
-      [animationDuration]="0"
-      dir="rtl">
-      <form [formGroup]="form">
-        @for (tab of advancedForm.tabs || []; track $index) {
-          <mat-tab
-            [label]="(tab.displayName || '') + getSum(tab.name || '')"
-          >
-            <div class="p-2" [formGroupName]="tab.name || ''">
-              @for (row of tab.rows || []; track trackByRow($index, row)) {
-                <div class="input-group g-3">
-                  @for (field of row.group || []; track trackByField($index, field)) {
-                    <div
-                      class="p-2 d-flex flex-column justify-content-end"
-                      [ngClass]="{ 'mb-2': field.type === FieldTypeEnum.Checkbox }"
-                    >
-                      <div
-                        class="wrap-field"
-                        [class]="'field-' + (field.length || '')"
-                        [ngSwitch]="field.type"
-                      >
-                        @switch (field.type) {
-                          @case (FieldTypeEnum.Select) {
-                            <app-select
-                              fxFill
-                              appearance="outline"
-                              [placeholder]="field.displayName || ''"
-                              [bindLabelKeys]="getBindLabelKeys(field.bindLabelKeys)"
-                              [formControlName]="field.name || ''"
-                              [dataFunction]="field.dataFunction"
-                              searchPlaceholder="חיפוש"
-                              (itemFilterServerSide)="waitForFilterResponse($event)"
-                              bindLabelKey="value"
-                              bindValueKey="id"
-                              [isMultiSelect]="field.multipleSelect || false"
-                              [title]="field.displayName || ''"
-                            ></app-select>
-                          }
-                          @case (FieldTypeEnum.Text) {
-                            <app-input-text
-                              [placeholder]="field.displayName || ''"
-                              [formControlName]="field.name || ''"
-                              [connectedField]="field.connectedField"
-                              [title]="field.displayName || ''"
-                              [size]="getInputSize(field.size)"
-                            ></app-input-text>
-                          }
-                          @case (FieldTypeEnum.Checkbox) {
-                            <app-input-checkbox
-                              [placeholder]="field.displayName || ''"
-                              [formControlName]="field.name || ''"
-                            ></app-input-checkbox>
-                          }
-                          @case (FieldTypeEnum.Date) {
-                            <app-input-date
-                              [title]="field.displayName || ''"
-                              [formControlName]="field.name || ''"
-                              [placeholder]="field.displayName || ''"
-                            ></app-input-date>
-                          }
-                          @case (FieldTypeEnum.DateTime) {
-                            <app-date-time
-                              [placeholder]="field.displayName || ''"
-                              [title]="field.displayName || ''"
-                              [formControlName]="field.name || ''"
-                            ></app-date-time>
-                          }
-                          @case (FieldTypeEnum.Phone) {
-                            <app-input-phone
-                              [title]="field.displayName || ''"
-                              [formControlName]="field.name || ''"
-                              [isValid]="true"
-                            ></app-input-phone>
-                          }
-                          @case (FieldTypeEnum.Time) {
-                            <app-input-time
-                              [title]="field.displayName || ''"
-                              [formControlName]="field.name || ''"
-                            ></app-input-time>
-                          }
-                          @case (FieldTypeEnum.Textarea) {
-                            <div class="textarea-container">
-                              <div class="title-placeholder">{{ field.displayName || '' }}</div>
-                              <textarea
-                                [formControlName]="field.name || ''"
-                                [placeholder]="field.displayName || ''"
-                                class="textarea-input"
-                                rows="3"
-                              ></textarea>
-                            </div>
-                          }
-                        }
-                      </div>
-                    </div>
-                  }
+<div [ngClass]="{ 'header-less-tabs': (advancedForm.tabs || []).length === 1 }">
+  <mat-tab-group
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+    [disableRipple]="true"
+    [animationDuration]="0"
+    dir="rtl"
+  >
+    <form [formGroup]="form">
+      @for (tab of advancedForm.tabs || []; track $index) {
+      <mat-tab [label]="(tab.displayName || '') + getSum(tab.name || '')">
+        <div class="p-2" [formGroupName]="tab.name || ''">
+          @for (row of tab.rows || []; track trackByRow($index, row)) {
+          <div class="input-group g-3">
+            @for (field of row.group || []; track trackByField($index, field)) {
+            <div
+              class="p-2 d-flex flex-column justify-content-end"
+              [ngClass]="{ 'mb-2': field.type === FieldTypeEnum.Checkbox }"
+            >
+              <div
+                class="wrap-field"
+                [class]="'field-' + (field.length || '')"
+                [ngSwitch]="field.type"
+              >
+                @switch (field.type) { @case (FieldTypeEnum.Select) {
+                <app-select
+                  fxFill
+                  appearance="outline"
+                  [placeholder]="field.displayName || ''"
+                  [bindLabelKeys]="getBindLabelKeys(field.bindLabelKeys)"
+                  [formControlName]="field.name || ''"
+                  [dataFunction]="field.dataFunction"
+                  searchPlaceholder="חיפוש"
+                  (itemFilterServerSide)="waitForFilterResponse($event)"
+                  bindLabelKey="value"
+                  bindValueKey="id"
+                  [isMultiSelect]="field.multipleSelect || false"
+                  [title]="field.displayName || ''"
+                ></app-select>
+                } @case (FieldTypeEnum.Text) {
+                <app-input-text
+                  [placeholder]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
+                  [connectedField]="field.connectedField"
+                  [title]="field.displayName || ''"
+                  [size]="getInputSize(field.size)"
+                ></app-input-text>
+                } @case (FieldTypeEnum.Checkbox) {
+                <app-input-checkbox
+                  [placeholder]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
+                ></app-input-checkbox>
+                } @case (FieldTypeEnum.Date) {
+                <app-input-date
+                  [title]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
+                  [placeholder]="field.displayName || ''"
+                ></app-input-date>
+                } @case (FieldTypeEnum.DateTime) {
+                <app-date-time
+                  [placeholder]="field.displayName || ''"
+                  [title]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
+                ></app-date-time>
+                } @case (FieldTypeEnum.Phone) {
+                <app-input-phone
+                  [title]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
+                  [isValid]="true"
+                ></app-input-phone>
+                } @case (FieldTypeEnum.Time) {
+                <app-input-time
+                  [title]="field.displayName || ''"
+                  [formControlName]="field.name || ''"
+                ></app-input-time>
+                } @case (FieldTypeEnum.Textarea) {
+                <div class="textarea-container">
+                  <div class="title-placeholder">
+                    {{ field.displayName || "" }}
+                  </div>
+                  <textarea
+                    [formControlName]="field.name || ''"
+                    [placeholder]="field.displayName || ''"
+                    class="textarea-input"
+                    rows="3"
+                  ></textarea>
                 </div>
-              }
-            </div>
-            <div class="wrap-end-btns">
-              <div class="d-flex justify-content-end">
-                <button
-                  class="outline-btn button-base"
-                  (click)="resetForm(tab.name || '')"
-                >
-                  נקה
-                </button>
-                <button
-                  class="primary-btn button-base"
-                  [disabled]="!form || form.invalid"
-                  [ngClass]="
-                    !form || form.invalid ? 'primary-btn-disabled' : 'primary-btn-fill'
-                  "
-                  (click)="search()"
-                >
-                  חפש
-                </button>
+                } }
               </div>
             </div>
-          </mat-tab>
-        }
-        <mat-tab [disabled]="!hasAnyFilledFieldsSignal()" class="reset-all-tab">
-          <ng-template mat-tab-label class="reset-all-tab">
-            <button 
-              (click)="resetForm()" 
-              class="link-btn button-base"
+            }
+          </div>
+          }
+        </div>
+        <div class="wrap-end-btns">
+          <div class="d-flex justify-content-end">
+            <app-button
+              (clickFunction)="resetForm(tab.name || '')"
+              [buttonText]="'נקה'"
+              [buttonClass]="'tertiary-btn'"
             >
-              נקה הכל
-            </button>
-          </ng-template>
-        </mat-tab>
-      </form>
-    </mat-tab-group>
-  </div>
+            </app-button>
+            <app-button
+              (clickFunction)="search()"
+              [buttonText]="'חפש'"
+              [isDisabled]="!form || form.invalid"
+            >
+            </app-button>
+          </div>
+        </div>
+      </mat-tab>
+      }
+      <mat-tab [disabled]="!hasAnyFilledFieldsSignal()" class="reset-all-tab">
+        <ng-template mat-tab-label class="reset-all-tab">
+          <button (click)="resetForm()" class="link-btn button-base">
+            נקה הכל
+          </button>
+        </ng-template>
+      </mat-tab>
+    </form>
+  </mat-tab-group>
+</div>
 }
 
 <!-- Show message when advancedForm or form is not available -->
 @if (!advancedForm || !form) {
-  <div class="p-4 text-center">
-    <p>טוען חיפוש מתקדם...</p>
-  </div>
+<div class="p-4 text-center">
+  <p>טוען חיפוש מתקדם...</p>
+</div>
 }

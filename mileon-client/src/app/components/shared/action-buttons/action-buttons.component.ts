@@ -30,6 +30,7 @@ import { MyRef } from '../../../types/myRef';
 import { Buttons as ActionButtonsEnum } from '../../../constants/buttonEnum';
 import { ButtonComponent } from '../base/button/button.component';
 import { SmsDialogComponent } from '../sms-dialog/sms-dialog.component';
+import { EmailDialogComponent } from '../email-dialog/email-dialog.component';
 
 @Component({
   selector: 'app-action-buttons',
@@ -92,7 +93,7 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
     if (changes['recordId'] && !changes['recordId'].firstChange) {
       this.recordId = changes['recordId'].currentValue;
     }
-    
+
     // Re-initialize buttons when buttonsList changes
     if (changes['buttonsList'] && !changes['buttonsList'].firstChange) {
       this.initButtons();
@@ -113,7 +114,7 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
 
   toggleDisabled(buttonKeys: string[], btnStatus: boolean = false): void {
     const btns = this.actionService.buttons;
-    
+
     for (const key in btns) {
       if (buttonKeys.includes(key)) {
         btns[key as keyof typeof btns].disabled = btnStatus;
@@ -177,7 +178,7 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
           break;
       }
     }
-    
+
     // Update allowed buttons signal after permission checks
     this.initButtons();
   }
@@ -191,14 +192,14 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
     let dialogData;
 
     switch (action) {
-      // case ActionButtonsEnum.SendEmail:
-      //   dialogComponent = SendEmailDialogComponent;
-      //   dialogData = {
-      //     recordId: this.recordId,
-      //     moduleEnum: this.moduleEnum,
-      //     emailAddress: this.emailAddress.current,
-      //   };
-      //   break;
+      case ActionButtonsEnum.SendEmail:
+        dialogComponent = EmailDialogComponent;
+        dialogData = {
+          recordId: this.recordId,
+          moduleEnum: this.moduleEnum,
+          emailAddress: this.emailAddress.current,
+        };
+        break;
 
       case ActionButtonsEnum.SendToPhone:
         dialogComponent = SmsDialogComponent;
@@ -220,7 +221,7 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
     }
 
     this.dialog
-      .open(dialogComponent, {
+      .open(dialogComponent as any, {
         data: dialogData,
       })
       .afterClosed()
@@ -296,7 +297,7 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
     const options = Object.entries(LegalRequestTypeMappingToString).map(
       ([id, value]) => ({ id, value })
     );
-    
+
     this.LegalRequestTypeOptions.set(options);
     this.legalRequestModalButtons.set([]);
     this.isNewLegalRequestModalOpen.set(true);
@@ -309,7 +310,7 @@ export class ActionButtonsComponent implements OnInit, OnChanges {
       records: [recordData],
       module: moduleEnum,
     };
-    
+
     const currentUrl = _router.url;
     const parkingPermitsBasePath = `main/${this.role()}/${ParkingPermits.Home}`;
 

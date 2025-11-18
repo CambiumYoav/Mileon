@@ -1,0 +1,23 @@
+<div class="toggle-checkbox-wrapper">
+  <div
+    class="checkbox-wrapper"
+    [class.checked]="isAllCheckboxesChecked.current"
+  >
+    <app-checkbox
+      (valueChanged)="handleAllDocsCheckboxChange($event)"
+      [label]="'כל המסמכים'"
+    ></app-checkbox>
+  </div>
+  @if (field.type === FieldTypeEnum.CheckboxGroup) {
+  <app-input-checkbox-group
+    [formControlName]="field.name"
+    [value]="checkboxesValues"
+    [isAllCheckboxesChecked]="isAllCheckboxesChecked"
+  >
+    @for (option of field.options; track option.id) {
+    <app-checkbox-group-item [value]="option.id" [placeholder]="option.value">
+    </app-checkbox-group-item>
+    }
+  </app-input-checkbox-group>
+  }
+</div>

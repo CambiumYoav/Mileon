@@ -1,3 +1,4 @@
+import { ButtonComponent } from './../base/button/button.component';
 import {
   AdvancedForm,
   FieldTypeEnum,
@@ -44,7 +45,7 @@ import { FieldSize } from '../../../types/advanced-search/form-tab.model';
   styleUrls: ['./advanced-search.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SelectComponent, InputTextComponent, InputCheckboxComponent, InputDateComponent, DateTimeComponent, InputPhoneComponent, MatTabsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatDatepickerModule, MatIconModule, MatButtonModule, CommonModule, ReactiveFormsModule],
+  imports: [ButtonComponent,SelectComponent, InputTextComponent, InputCheckboxComponent, InputDateComponent, DateTimeComponent, InputPhoneComponent, MatTabsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatDatepickerModule, MatIconModule, MatButtonModule, CommonModule, ReactiveFormsModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

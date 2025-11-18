@@ -223,7 +223,7 @@ export class ParkingPermitsMainComponent implements OnInit, AfterViewInit {
       const updatedFilter = {
         ...filter,
         orderByField: 'requestDate',
-
+        pageSize: 100,
         parkingPermitsOptionsFilter: {
           ...filter.parkingPermitsOptionsFilter,
           authorityIDs: [this.currentAuthority()],

@@ -51,7 +51,7 @@ export class ParkingPermitsSearchComponent implements OnInit {
   private readonly _searchText = signal<string>('');
   private readonly _filterHasValue = signal<boolean>(true);
   private readonly _filterAdvanceHasValue = signal<boolean>(false);
-  private advancedSearch: AdvancedForm = ParkingPermitTabs.ParkingPermitTabs;
+  advancedSearch: AdvancedForm = ParkingPermitTabs.ParkingPermitTabs;
 
   readonly parkingPermitsSearchForm = computed(
     () => this._parkingPermitsSearchForm()!

@@ -10,7 +10,7 @@ export class ParkingPermitTabs {
     tabs: [
       {
         name: 'parkingPermitsOptionsFilter',
-        displayName: 'פרטי עבירה',
+        displayName: 'פרטי תו דייר',
         rows: [
           {
             group: [
@@ -19,6 +19,7 @@ export class ParkingPermitTabs {
                 displayName: 'סטטוס תו',
                 type: FieldTypeEnum.Select,
                 length: FieldLengthEnum.Medium,
+                multipleSelect:true,
                 dataFunction: {
                   name: 'getParkingPermitLookups',
                   objName: 'parkingPermitStatuses',
@@ -38,6 +39,7 @@ export class ParkingPermitTabs {
                 displayName: 'סוג תו',
                 type: FieldTypeEnum.Select,
                 length: FieldLengthEnum.Medium,
+                multipleSelect:true,
                 dataFunction: {
                   name: 'getParkingPermitTypesByAuthority',
                   extraParams: [
@@ -57,6 +59,7 @@ export class ParkingPermitTabs {
                 displayName: 'אזור',
                 type: FieldTypeEnum.Select,
                 length: FieldLengthEnum.Medium,
+                multipleSelect:true,
                 dataFunction: {
                   name: 'getAreas',
                   extraParams: [
@@ -72,6 +75,7 @@ export class ParkingPermitTabs {
                 displayName: 'רחוב',
                 type: FieldTypeEnum.Select,
                 length: FieldLengthEnum.Medium,
+                multipleSelect:true,
                 dataFunction: {
                   name: 'getStreets',
                   extraParams: [
@@ -560,7 +564,7 @@ export class ParkingPermitTabs {
       type: FieldTypeEnum.Select,
       length: FieldLengthEnum.Long,
       disabled: true,
-      connectedField:'authorityID',
+      connectedField: 'authorityID',
       dataFunction: {
         name: 'getAreas',
         extraParams: [
@@ -571,8 +575,6 @@ export class ParkingPermitTabs {
         ],
       },
     },
-
-    
   ];
 
   // delete it

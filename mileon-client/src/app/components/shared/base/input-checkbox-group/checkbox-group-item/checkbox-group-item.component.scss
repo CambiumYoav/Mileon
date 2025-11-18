@@ -1,0 +1,19 @@
+@import "../../../../../../styles/elements.scss";
+.checkbox-wrapper {
+  height: 50px;
+  background: $colorLightGray;
+  border: 1px solid $colorBorder;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-right: 10px;
+  margin-bottom: 9px;
+  padding-top: 10px;
+  width: 100%;
+
+  &.checked {
+    background: $colorLightBluePrimary;
+    border-color: $colorBorder;
+  }
+}

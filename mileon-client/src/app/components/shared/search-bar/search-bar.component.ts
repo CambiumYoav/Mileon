@@ -413,7 +413,7 @@ export class SearchBarComponent
     this._loader.set(false);
   }
 
-  // NOTE It's ugly due to lack of time - needs refactor:
+
 
   openAdvancedSearch() {
     this.toggleDropdownWindow();

@@ -1,1 +1,71 @@
-<p>email-dialog works!</p>
+<div class="action-dialog-container">
+  <form class="container-xl p-3 position-relative" [formGroup]="sendEmailForm">
+    <div class="d-flex flex-lg-row-reverse justify-content-between">
+      <div>
+        <img class="exit-icon" [src]="Icons.EXIT" (click)="onNoClick()" />
+      </div>
+      <div>
+        <h5 class="title">{{ sendEmailFields.title }}</h5>
+      </div>
+    </div>
+    <div class="top-inputs-wrapper">
+      @for (field of sendEmailFields.fields; track field.name) {
+      <div class="p-1 d-flex flex-column justify-content-end">
+        <div class="wrap-field" [class]="'field-' + field.length">
+          @switch (field.type) { @case (FieldTypeEnum.Text) {
+
+          <app-input-text
+            [placeholder]="field.displayName"
+            [formControlName]="field.name"
+            [isValid]="
+              !(
+                this.sendEmailForm.get(field.name)?.touched &&
+                this.sendEmailForm.get(field.name)?.invalid
+              )
+            "
+            [errorMessage]="this.errorMessage"
+          >
+          </app-input-text>
+
+          } @case (FieldTypeEnum.Checkbox) {
+          <app-input-checkbox
+            [placeholder]="field.displayName"
+            [formControlName]="field.name"
+          ></app-input-checkbox>
+          } @case (FieldTypeEnum.Textarea) {
+          <div class="textarea-wrapper">
+            <app-textarea-comments
+              [title]="field.displayName"
+              [placeholder]="field.displayName"
+              [formControlName]="field.name"
+              [maxlength]="1000"
+              [rows]="5"
+            ></app-textarea-comments>
+          </div>
+          } }
+        </div>
+      </div>
+      }
+    </div>
+
+    @for (field of sendEmailFields.fields; track field.name) {
+    <div class="bottom-wrapper">
+      @if (field.type === FieldTypeEnum.CheckboxGroup) {
+      <app-toggle-checkbox-group
+        [field]="field"
+        [isAllCheckboxesChecked]="isAllDocsChecked"
+        [form]="sendEmailForm"
+      ></app-toggle-checkbox-group>
+      }
+    </div>
+    }
+
+    <div class="d-flex justify-content-end mt-3">
+      <app-button
+        [isDisabled]="sendEmailForm.invalid"
+        (clickFunction)="onSendEmailAction()"
+        [buttonText]="buttonEnum.Confirm"
+      ></app-button>
+    </div>
+  </form>
+</div>

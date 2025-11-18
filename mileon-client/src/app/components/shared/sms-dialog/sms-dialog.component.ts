@@ -1,10 +1,8 @@
 import {
   Component,
-  Inject,
   OnInit,
   inject,
   signal,
-  computed,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -12,12 +10,10 @@ import { GeneralButtons } from '../../../constants/buttonEnum';
 import { ConstPath } from '../../../constants/const_path';
 import { FieldTypeEnum } from '../../../types/advanced-search/form-tab.model';
 import { SendEmailDialogEnum } from '../../../types/dialog/sendSmsDialogEnum';
-import { ModuleEnum } from '../../../types/enum/moduleEnum';
 import { ActionButtonsComponent } from '../action-buttons/action-buttons.component';
 import { SmsDialogService } from './sms-dialog.service';
 import { SmsDialogType } from '../../../types/dialogs/sms-dialog';
 import { ErrorSuccessMessages } from '../../../types/enum/error-success-messages';
-import { InputTextComponent } from '../base/inputs/input-text/input-text.component';
 import { InputCheckboxComponent } from '../base/inputs/input-checkbox/input-checkbox.component';
 import { ButtonComponent } from '../base/button/button.component';
 import { SharedImports } from '../../../shared/shared-modules';
