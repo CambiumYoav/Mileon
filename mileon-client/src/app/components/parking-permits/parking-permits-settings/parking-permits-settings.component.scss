@@ -1,0 +1,107 @@
+@import "../../../../styles/buttons.scss";
+@import "../../../../styles/form.scss";
+@import "../../../../styles/elements.scss";
+.users-container {
+  height: 100%;
+  width: 95%;
+  .arrow-container {
+    width: auto;
+    padding-left: 0;
+    align-items: center;
+    cursor: pointer;
+    img {
+      height: 20px;
+      cursor: pointer;
+      padding-left: 12px;
+    }
+  }
+  .heading {
+    font-size: 24px;
+    font-weight: 800;
+    position: relative;
+    display: inline-block;
+  }
+  form {
+    height: 90%;
+    .form-container {
+      display: flex;
+      width: 75%;
+      height: 90%;
+      flex-wrap: wrap;
+      margin-bottom: 50px;
+      flex-direction: column;
+    }
+  }
+
+  .Medium-size {
+    width: 250px !important;
+
+    input {
+      width: inherit !important;
+    }
+  }
+
+  .inputError {
+    input,
+    select,
+    ::ng-deep mat-form-field .mat-form-field-flex {
+      border-color: crimson !important;
+      border: 1px solid;
+      border-radius: 4px;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: row;
+    direction: rtl;
+    justify-content: space-between;
+
+    label {
+      position: absolute;
+      top: -25px;
+      width: max-content;
+    }
+
+    input {
+      background-color: white !important;
+      height: 40px;
+      width: 180px;
+      border-radius: 4px;
+      border: 1px solid #e3e7eb;
+      padding-right: 10px;
+    }
+  }
+  .form-field {
+    position: relative;
+    margin-top: 30px;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: end;
+    width: 100%;
+
+    ::ng-deep app-button {
+      margin: 2px;
+      button {
+        margin: 0 !important;
+        padding: 0 35px;
+      }
+    }
+  }
+
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .required-icon {
+    margin-bottom: 5px;
+  }
+}

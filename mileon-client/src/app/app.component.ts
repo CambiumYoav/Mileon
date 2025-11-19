@@ -1,5 +1,18 @@
-import { Component, ElementRef, ViewChild, inject, effect } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  inject,
+  effect,
+} from '@angular/core';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  RouterOutlet,
+} from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs/operators';
 
@@ -11,9 +24,9 @@ import { filter, map } from 'rxjs/operators';
 })
 export class AppComponent {
   @ViewChild('innerScrollContainer') innerScrollContainer!: ElementRef;
-  
+
   private router = inject(Router);
-  
+
   // Convert router events to signal
   private navigationEnd = toSignal(
     this.router.events.pipe(
@@ -22,6 +35,35 @@ export class AppComponent {
   );
 
   constructor() {
+    let navigationCount = 0;
+
+    // this.router.events.subscribe((event) => {
+    //   if (event instanceof NavigationEnd) {
+    //     navigationCount++;
+    //     console.log(`🔄 Navigation #${navigationCount}:`, event.url);
+
+    //     // Detect infinite loop
+    //     if (navigationCount > 10) {
+    //       console.error('⚠️ POSSIBLE INFINITE LOOP DETECTED!');
+    //       console.error('Last URL:', event.url);
+    //     }
+    //   }
+
+    //   if (event instanceof NavigationError) {
+    //     console.error('❌ Navigation error:', event.error);
+    //   }
+    // });
+    this.router.events.subscribe((e) => {
+      if (e instanceof NavigationStart) {
+        console.log('NAV START:', e.url);
+      }
+      if (e instanceof NavigationEnd) {
+        console.log('NAV END:', e.url);
+      }
+      if (e instanceof NavigationError) {
+        console.error('NAV ERROR:', e.error);
+      }
+    });
     // Use effect to react to navigation changes
     effect(() => {
       const event = this.navigationEnd();
@@ -36,6 +78,6 @@ export class AppComponent {
       }
     });
   }
-  
+
   title = 'mileon-client';
 }

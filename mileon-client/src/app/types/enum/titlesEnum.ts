@@ -62,4 +62,10 @@ export enum TitlesEnum {
   LetterCreateTitle = 'מכתב חדש  ',
   LetterUpdateTitle = 'עריכת מכתב  ',
   TicketsSearch='חיפוש דוחות',
+  ParkingPermitsTypesTitle = 'הגדרות תווים',
+  ParkingPermitsTypesMainTitle = 'ניהול הגדרות סוגי תווים',
+  ParkingPermitsTypesCreateTitle = 'הוספת הגדרת סוג תו ',
+  ParkingPermitsTypesUpdateTitle = 'עריכת הגדרת סוג תו',
+  ParkingPermitCreateTitle = 'יצירת תו דייר',
+  ParkingPermitUpdateTitle = 'חידוש/עדכון תו חניה',
 }

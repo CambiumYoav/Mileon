@@ -19,27 +19,19 @@ export class ParkingPermitTabs {
                 displayName: 'סטטוס תו',
                 type: FieldTypeEnum.Select,
                 length: FieldLengthEnum.Medium,
-                multipleSelect:true,
+                multipleSelect: true,
                 dataFunction: {
                   name: 'getParkingPermitLookups',
                   objName: 'parkingPermitStatuses',
                 },
               },
-              // {
-              //   name: 'authorityIDs',
-              //   displayName: 'רשות',
-              //   type: FieldTypeEnum.Select,
-              //   length: FieldLengthEnum.Medium,
-              //   dataFunction: {
-              //     name: 'getAuthorities',
-              //   },
-              // },
+
               {
                 name: 'permitTypeIDs',
                 displayName: 'סוג תו',
                 type: FieldTypeEnum.Select,
                 length: FieldLengthEnum.Medium,
-                multipleSelect:true,
+                multipleSelect: true,
                 dataFunction: {
                   name: 'getParkingPermitTypesByAuthority',
                   extraParams: [
@@ -59,7 +51,7 @@ export class ParkingPermitTabs {
                 displayName: 'אזור',
                 type: FieldTypeEnum.Select,
                 length: FieldLengthEnum.Medium,
-                multipleSelect:true,
+                multipleSelect: true,
                 dataFunction: {
                   name: 'getAreas',
                   extraParams: [
@@ -75,7 +67,7 @@ export class ParkingPermitTabs {
                 displayName: 'רחוב',
                 type: FieldTypeEnum.Select,
                 length: FieldLengthEnum.Medium,
-                multipleSelect:true,
+                multipleSelect: true,
                 dataFunction: {
                   name: 'getStreets',
                   extraParams: [
@@ -95,67 +87,9 @@ export class ParkingPermitTabs {
               },
             ],
           },
-          // {
-          //   group: [
-          //     {
-          //       name: 'vehicleNumber',
-          //       displayName: 'מספר רכב',
-          //       type: FieldTypeEnum.Text,
-          //       length: FieldLengthEnum.Medium,
-          //     },
-          //     {
-          //       name: 'vehicleManufacturerIDs',
-          //       displayName: 'יצרן רכב',
-          //       type: FieldTypeEnum.Select,
-          //       length: FieldLengthEnum.Medium,
-          //       dataFunction: {
-          //         name: 'getVehicleLookups',
-          //         objName: 'vehicleManufacturers',
-          //       },
-          //     },
-          //     {
-          //       name: 'vehicleColorIDs',
-          //       displayName: 'צבע רכב',
-          //       type: FieldTypeEnum.Select,
-          //       length: FieldLengthEnum.Medium,
-          //       dataFunction: {
-          //         name: 'getVehicleLookups',
-          //         objName: 'vehicleColors',
-          //       },
-          //     },
-          //   ],
-          // },
+
           {
             group: [
-              // {
-              //   name: 'payMethodId',
-              //   displayName: 'צורת תשלום',
-              //   type: FieldTypeEnum.Select,
-              //   length: FieldLengthEnum.Medium,
-              //   dataFunction: {
-              //     name: 'getParkingPermitLookups',
-              //     objName: 'paymentMethods',
-              //   },
-              // },
-              // {
-              //   name: 'isReturningResident',
-              //   displayName: 'ת.ח',
-              //   type: FieldTypeEnum.Select,
-              //   length: FieldLengthEnum.Medium,
-              //   dataFunction: {
-              //     name: 'getYesNoOptions',
-              //   },
-              //   multipleSelect: false,
-              // },
-              // {
-              //   name: 'days',
-              //   displayName: 'יום',
-              //   type: FieldTypeEnum.Select,
-              //   length: FieldLengthEnum.Short,
-              //   dataFunction: {
-              //     name: 'getDays',
-              //   },
-              // },
               {
                 name: 'fromExpirationDate',
                 displayName: 'תוקף מתאריך',
@@ -177,38 +111,6 @@ export class ParkingPermitTabs {
               },
             ],
           },
-          // {
-          //   group: [
-          //     {
-          //       name: 'time',
-          //       displayName: 'שעת קליטה',
-          //       type: FieldTypeEnum.DateTime,
-          //       length: FieldLengthEnum.Short,
-          //     },
-          //     {
-          //       name: 'fromTime',
-          //       displayName: 'מ-',
-          //       type: FieldTypeEnum.DateTime,
-          //       length: FieldLengthEnum.Short,
-          //     },
-          //     {
-          //       name: 'toTime',
-          //       displayName: 'עד',
-          //       type: FieldTypeEnum.DateTime,
-          //       length: FieldLengthEnum.Short,
-          //     },
-          //     {
-          //       name: 'requestSourceIDs',
-          //       displayName: 'מקור',
-          //       type: FieldTypeEnum.Select,
-          //       length: FieldLengthEnum.Medium,
-          //       dataFunction: {
-          //         name: 'getParkingPermitLookups',
-          //         objName: 'requestSources',
-          //       },
-          //     },
-          //   ],
-          // },
         ],
       },
     ],

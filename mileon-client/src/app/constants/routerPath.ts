@@ -1,4 +1,3 @@
-
 export namespace ROUTE_PATH {
   export enum Tickets {
     Details = 'details',
@@ -33,16 +32,17 @@ export namespace ROUTE_PATH {
     Types = 'types',
     TypesMain = 'types-main',
     TypesManagement = 'permits-types',
-    CreateUpdateMain = 'create-update-main',  
+    CreateUpdateMain = 'create-update-main',
     CreateType = 'create-type',
     EditType = 'edit-type',
     PermitsTypesSettings = 'types-settings',
     PermitsTypesDocumnents = 'types-documents',
     PersonalDetails = 'personal-details',
     VehicleDetails = 'vehicle-details',
-    Scans= 'scans',
-    CreateNew='create-new',
+    Scans = 'scans',
+    CreateNew = 'create',
     Summary = 'summary',
+    Edit = 'edit',
   }
 
   export enum LegalRequests {

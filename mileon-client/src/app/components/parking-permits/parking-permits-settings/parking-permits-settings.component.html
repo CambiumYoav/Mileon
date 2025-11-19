@@ -1,0 +1,63 @@
+<div class="users-container p-4">
+  <div class="row pb-4 align-items-center position-relative">
+    <div class="col d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center col-5">
+        <div class="arrow-container" (click)="back()">
+          <img [src]="Icons.ARROW_LEFT" />
+        </div>
+        <span class="heading">{{ title }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form class="form" [formGroup]="permitsSettingsForm" (ngSubmit)="onSubmit()">
+    <div class="form-container">
+      @for (field of fields(); track $index) {
+      <!-- Loop through fields -->
+      <div
+        class="form-field"
+        *ngFor="let field of fields()"
+        [class]="field.size"
+        [ngClass]="{
+                disabled: !!field.disabled,
+                inputError:
+                  (permitsSettingsForm.get(field.name)?.invalid &&
+                  permitsSettingsForm.get(field.name)?.touched &&
+                    !!permitsSettingsForm.get(field.name)?.errors) ||
+                  (isSubmitted() && permitsSettingsForm.get(field.name)?.errors?.['required'])
+              }"
+      >
+        <!-- Field Label -->
+        <label class="title-placeholder" [for]="field.name">
+          <img
+            *ngIf="field.isRequired"
+            class="required-icon"
+            [src]="Icons.ASTERISK_RED"
+          />
+          {{ field.label }}
+        </label>
+
+        <!-- Field Types -->
+        <ng-container [ngSwitch]="field.type">
+          <!-- Text Input -->
+          <input
+            *ngSwitchCase="'text'"
+            [id]="field.name"
+            [type]="field.type"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder || field.label"
+          />
+        </ng-container>
+      </div>
+      }
+    </div>
+
+    <div class="button-container">
+      <app-button
+        [buttonText]="'שמור שינויים'"
+        (clickFunction)="onSubmit()"
+      ></app-button>
+    </div>
+  </form>
+</div>

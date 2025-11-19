@@ -19,7 +19,7 @@ export class ParkingPermitOptionsFilter {
   vehicleNumber?: string;
   vehicleManufacturerIDs?: number[];
   vehicleColorIDs?: number[];
-  isReturningResident?: boolean; 
+  isReturningResident?: boolean;
   payMethodId?: number;
   days?: number[];
   fromExpirationDate?: Date;
@@ -28,7 +28,8 @@ export class ParkingPermitOptionsFilter {
   fromTime?: Date;
   toTime?: Date;
   requestSourceIDs?: number;
-
+  isActive?: boolean;
+  requestDate?: Date;
   constructor(args: ParkingPermitOptionsFilter) {
     this.parkingPermitStatusIDs = args?.parkingPermitStatusIDs;
     this.permitTypeIDs = args?.permitTypeIDs;
@@ -48,5 +49,7 @@ export class ParkingPermitOptionsFilter {
     this.fromTime = args?.fromTime;
     this.toTime = args?.toTime;
     this.requestSourceIDs = args?.requestSourceIDs;
+    this.isActive = args?.isActive;
+    this.requestDate = args?.requestDate;
   }
 }

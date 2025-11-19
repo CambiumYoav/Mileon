@@ -42,7 +42,8 @@ export class ParkingPermitsSearchComponent implements OnInit {
     SearchByTextEnum.ParkingPermitsSearch
   );
   readonly authorityId = input<string>('');
-
+  readonly showFilters = input<boolean>(true);
+  
   @Output() search = new EventEmitter();
   @Output() onSearch = new EventEmitter<ParkingPermitFilterOptions>();
   @Output() resetTable = new EventEmitter();

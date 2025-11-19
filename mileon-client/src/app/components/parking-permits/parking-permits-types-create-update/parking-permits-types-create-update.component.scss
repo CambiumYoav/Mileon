@@ -1,0 +1,200 @@
+@import "../../../../styles/elements.scss";
+.checkbox-wrapper {
+  width: 180px;
+}
+.card {
+  height: 100%;
+  border-radius: 8px;
+  background-color: white;
+  direction: rtl;
+  width: auto;
+
+  .card-content {
+    display: flex;
+    height: 100%;
+  }
+
+  .menu-card {
+    width: 20%;
+    min-width: 240px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: 0px 0px 12px -1px #d2dbe8;
+    overflow-y: auto;
+  }
+
+  .table-card {
+    flex: 1 1 auto;
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+  }
+  .title-card {
+    flex: 1 1 auto;
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+    .title {
+      font-family: $fontOpenSans;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      text-align: center;
+    }
+  }
+}
+.title-section {
+  padding: 20px 20px 0 20px;
+
+  .title {
+    font-family: $fontOpenSans;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+}
+.custom-sidenav-card {
+  height: 600px;
+  position: relative;
+  overflow: hidden;
+}
+
+.embedded-sidenav {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+:host {
+  .example-container {
+    width: 500px;
+    height: 300px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+  }
+
+  .example-sidenav-content {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-sidenav {
+    width: 320px;
+    padding: 25px 28px 20px 44px;
+    background: $colorLightGray;
+  }
+
+  .menu-button {
+    transition: 300ms ease-in-out;
+    transform: rotate(0deg);
+  }
+  .menu-button.rotated {
+    transform: rotate(180deg);
+  }
+  .submenu {
+    overflow-y: hidden;
+    display: none;
+    margin-top: -100%;
+    transition: margin-top 300ms ease;
+  }
+  .submenu.expanded {
+    margin-top: 0;
+    animation: fadeIn 200ms;
+    display: block;
+  }
+
+  ::ng-deep .mat-drawer-container {
+    overflow: visible !important;
+  }
+
+  .icon {
+    display: block;
+    width: fit-content;
+    height: 21px;
+  }
+
+  .menu-item {
+    color: $colorDarkBlueOther;
+  }
+
+  .disabled {
+    pointer-events: none !important;
+    opacity: 0.5;
+  }
+  .menu-item-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .icon-wrapper {
+    flex: 0 0 auto;
+    margin-inline-end: 12px;
+  }
+
+  .label-wrapper {
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .menu-item-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    display: block;
+    width: 100%;
+    color: $colorDarkBlueOther;
+  }
+
+  .sub-menu-item-title {
+    font-size: 12px;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  ::ng-deep .mat-list-item:hover {
+    background: $colorLightBlue !important;
+  }
+
+  ::ng-deep .mat-drawer-backdrop {
+    background: transparent;
+  }
+}
+.constant-btns {
+  display: flex;
+  justify-content: end;
+  ::ng-deep app-button {
+    button {
+      margin: 0;
+      margin-right: 10px;
+    }
+  }
+}
+.text-bolder-modal {
+  font-family: $fontOpenSans;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 25px;
+  text-align: right;
+}
+// .title {
+//   font-family: $fontOpenSans;
+//   font-weight: 700;
+//   font-size: 22px;
+//   line-height: 100%;
+//   letter-spacing: 0%;
+//   text-align: center;
+// }

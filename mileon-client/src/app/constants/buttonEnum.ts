@@ -16,6 +16,8 @@ export enum Buttons {
   RenewParkingPermits = 'חידוש תווים',
   ExportToExcel = 'ייצוא לאקסל',
   ImportFromExcel = 'ייבוא מאקסל',
+  NewPemitType='סוג תו חדש',
+  
 }
 
 export enum GeneralButtons {

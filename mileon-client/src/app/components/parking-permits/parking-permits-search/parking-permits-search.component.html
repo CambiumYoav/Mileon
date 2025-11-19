@@ -1,7 +1,7 @@
 <app-search-bar
   [form]="parkingPermitsSearchForm()"
   [advancedSearch]="advancedSearch"
-  [showFilters]="true"
+  [showFilters]="showFilters()"
   (search)="sendFormValue($event)"
   [submitOnKey]="true"
   [resultData]="resultData()"

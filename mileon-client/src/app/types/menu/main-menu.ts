@@ -64,9 +64,9 @@ export class Menus {
           },
           {
             id: '1',
-            path: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.TypesMain}`,
+            path: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.TypesMain}/${ROUTE_PATH.ParkingPermits.Types}`,
             displayName: ModuleNames.ParkingPermitsTypes,
-            route: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.TypesMain}`,
+            route: `${ROUTE_PATH.ParkingPermits.Home}/${ROUTE_PATH.ParkingPermits.TypesMain}/${ROUTE_PATH.ParkingPermits.Types}`,
             icon: 'productions-menu.svg',
           },
 

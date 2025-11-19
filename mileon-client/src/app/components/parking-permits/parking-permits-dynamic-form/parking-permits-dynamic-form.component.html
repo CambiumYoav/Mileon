@@ -1,0 +1,250 @@
+<div class="form-card-header">
+  <h3 class="form-title">{{ title() }}</h3>
+</div>
+<div class="form-card">
+  <div class="form-card-content">
+    <!-- Form -->
+    @if(dynamicForm){
+    <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
+      <div class="form-container">
+        <!-- Loop through rows -->
+        @for (row of rows(); track $index) {
+        <div class="form-row">
+          <!-- Loop through fields within a row -->
+          @for(field of row.row; track $index){
+          <ng-container>
+            @if(!field.hide){
+            <div
+              [class]="'form-field' + field.size"
+              [ngClass]="{
+                  disabled: !!field.disabled,
+                  inputError:
+                  (field.type === 'fromTo' && (
+                    dynamicForm.get(field.name + '.fromTime')?.invalid && (dynamicForm.get(field.name + '.fromTime')?.touched || isSubmitted) ||
+                    dynamicForm.get(field.name + '.toTime')?.invalid && (dynamicForm.get(field.name + '.toTime')?.touched || isSubmitted)
+                  )) ||
+                    (field.type !== 'fromTo' && (
+                      dynamicForm.get(field.name)?.invalid &&
+                      dynamicForm.get(field.name)?.touched &&
+                      !!dynamicForm.get(field.name)?.errors
+                    )) ||
+                    (isSubmitted && dynamicForm.get(field.name)?.errors?.['required'])
+                }"
+            >
+              <!-- Field Content -->
+              <ng-container *ngIf="!field.hide">
+                <!-- Field Label -->
+                <label class="title-placeholder" [for]="field.name">
+                  @if (field.isRequired) {
+                  <img class="required-icon" [src]="Icons.ASTERISK_RED" />
+
+                  }
+                  {{ field.label }}
+                </label>
+
+                <!-- Field Types -->
+                @switch (field.type) { @case ('text') {
+
+                <!-- Text Input -->
+                <app-input-text
+                  [formControlName]="field.name"
+                  [isValid]="isFieldValid(field.name)"
+                  [placeholder]="field.placeholder || ''"
+                />
+
+                } @case ('number') {
+                <!-- Number Input -->
+                <app-input-number
+                  [formControlName]="field.name"
+                  [isValid]="isFieldValid(field.name)"
+                  [placeholder]="field.placeholder || ''"
+                />
+
+                } @case ('date') {
+
+                <app-input-date
+                  [formControlName]="field.name"
+                  [placeholder]="'dd-mm-yyyy'"
+                  [isValid]="isFieldValid(field.name)"
+                >
+                </app-input-date>
+
+                } @case ('checkbox') { @if (field.name !== 'isActive') {
+                <div class="checkbox-container">
+                  <app-input-checkbox
+                    [placeholder]="field.label"
+                    [formControlName]="field.name"
+                  ></app-input-checkbox>
+                </div>
+                } @if (field.name === 'isActive') {
+                <app-input-checkbox-option-group
+                  [options]="field.checkBoxOptions!"
+                  [isDisabled]="field.name === 'isActive'"
+                ></app-input-checkbox-option-group>
+                } } @case ('radio') {
+     
+                <app-radio-button
+                [value]="getRadioValue(field.name)"
+                  [options]="field.radioOptions!"
+                  [name]="field.name"
+                  [formControlName]="field.name"
+                  direction="horizontal"
+                  [isValid]="isFieldValid(field.name)"
+                ></app-radio-button>
+                }@case ('select') {
+                <!-- Select Dropdown -->
+                <app-select
+                  appearance="outline"
+                  [placeholder]="field.label || ''"
+                  [bindLabelKeys]="field.bindLabelKeys"
+                  [formControlName]="field.name"
+                  [dataFunction]="field.dataFunction"
+                  [options]="
+                    field.options && field.options.length > 0
+                      ? field.options
+                      : []
+                  "
+                  searchPlaceholder="חיפוש"
+                  [bindLabelKey]="
+                    field.options && field.options.length > 0
+                      ? 'display'
+                      : 'value'
+                  "
+                  [bindValueKey]="
+                    field.options && field.options.length > 0 ? 'value' : 'id'
+                  "
+                  [isMultiSelect]="field.isMultiSelect || false"
+                  [isValid]="isFieldValid(field.name)"
+                ></app-select>
+                } @case ('selectWithLookup') {
+                <app-select
+                  appearance="outline"
+                  [placeholder]="field.label || ''"
+                  [bindLabelKeys]="field.bindLabelKeys"
+                  [formControlName]="field.name"
+                  [dataFunction]="field.dataFunction"
+                  [options]="
+                    field.options && field.options.length > 0
+                      ? field.options
+                      : []
+                  "
+                  searchPlaceholder="חיפוש"
+                  [bindLabelKey]="
+                    field.bindLabelKey !== undefined
+                      ? field.bindLabelKey
+                      : field.options && field.options.length > 0
+                      ? 'display'
+                      : 'value'
+                  "
+                  [bindValueKey]="
+                    field.bindValueKey !== undefined
+                      ? field.bindValueKey
+                      : field.options && field.options.length > 0
+                      ? 'value'
+                      : 'id'
+                  "
+                  [isMultiSelect]="field.isMultiSelect || true"
+                  [isValid]="dynamicForm.get(field.name)?.valid"
+                ></app-select>
+                }
+                <!-- Radio Buttons -->
+                <!-- <ng-container *ngSwitchCase="'radio'">
+                  <div class="d-flex">
+                    <div
+                      class="radio-container"
+                      *ngFor="let option of field.options"
+                    >
+                      <input
+                        [id]="field.name + '-' + option.value"
+                        type="radio"
+                        [formControlName]="field.name"
+                        [name]="field.name"
+                        [value]="option.value"
+                        class="form-radio"
+                      />
+                      <p>{{ option.display }}</p>
+                    </div>
+                  </div>
+                </ng-container> -->
+
+                @case ('text') {
+                <textarea
+                  *ngSwitchCase="'text-area'"
+                  [id]="field.name"
+                  [formControlName]="field.name"
+                  [disabled]="!!field.disabled"
+                  [placeholder]="field.label"
+                  class="textarea-field"
+                  [maxlength]="field.validations?.maxLength || 300"
+                  [class.invalid-input]="
+                    dynamicForm.get(field.name)?.touched &&
+                    dynamicForm.get(field.name)?.invalid
+                  "
+                ></textarea>
+                } @case ('fromTo') {
+                <!-- From-To Input -->
+                <div class="fromTo-wrapper">
+                  <div
+                    class="fromTo-container"
+                    formGroupName="{{ field.name }}"
+                  >
+                    @for (fromToField of field.fields; track fromToField) {
+                    <div class="fromTo-field">
+                      <app-input-time
+                        [id]="fromToField.name"
+                        [placeholder]="fromToField.placeholder || ''"
+                        [formControlName]="fromToField.name"
+                        [isValid]="isFieldValid(field.name)"
+                      ></app-input-time>
+                      <!-- <input
+                      
+                        [id]="fromToField.name"
+                        type="time"
+                        [formControlName]="fromToField.name"
+                        [name]="fromToField.name"
+                        [placeholder]="fromToField.placeholder"
+                      /> -->
+                    </div>
+                    }
+                  </div>
+                </div>
+                } @case ('texts') {
+                <div [class]="'field-' + field.type">
+                  @for (input of field.nestedInputs; track input) {
+                  <app-input-text
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder || ''"
+                    [isValid]="isFieldValid(field.name)"
+                  ></app-input-text>
+                  }
+                </div>
+                } @case ('checkboxOptions') {
+
+                <app-input-checkbox-option-group
+                  [options]="field.checkBoxOptions!"
+                  (selectionChange)="onSelectionChange($event, field.name)"
+                  [isValid]="isFieldValid(field.name)"
+                ></app-input-checkbox-option-group>
+
+                } }
+
+                <!-- Validation Errors -->
+                <div
+                  *ngIf="
+                    dynamicForm.get(field.name)?.invalid &&
+                    dynamicForm.get(field.name)?.touched
+                  "
+                  class="validation-errors"
+                ></div>
+              </ng-container>
+            </div>
+            }
+          </ng-container>
+          }
+        </div>
+        }
+      </div>
+    </form>
+    }
+  </div>
+</div>

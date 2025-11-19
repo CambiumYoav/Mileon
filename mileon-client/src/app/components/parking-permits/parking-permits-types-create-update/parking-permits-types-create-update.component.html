@@ -1,0 +1,50 @@
+@if(isEditMode()){
+<div class="mt-3 mb-3 checkbox-wrapper">
+  @if(isActive()){
+  <app-checkbox
+    [label]="'הפוך סוג תו ללא פעיל'"
+    (valueChanged)="openIsActiveModal()"
+  >
+  </app-checkbox>
+  }@else{
+  <app-checkbox
+    [label]="'הפוך סוג תו  לפעיל'"
+    (valueChanged)="openIsActiveModal()"
+  >
+  </app-checkbox>
+  }
+</div>
+}
+
+<div class="card">
+  <div class="table-card">
+    <app-parking-permits-dynamic-form
+      #form1
+      [rows]="form"
+      [triggerFormRecreation]="formRecreationTrigger()"
+      (formSubmitted)="checkIfFormIsValid($event)"
+      [authorityID]="authorityId() || ''"
+      [isParkingPermitCreate]="false"
+      [allAreas]="allAreas()"
+    >
+    </app-parking-permits-dynamic-form>
+
+    @if(isActive()){
+    <app-button
+      class="constant-btns mt-2"
+      (clickFunction)="submitForm()"
+      [buttonText]="' שמור '"
+    ></app-button>
+    }
+  </div>
+
+  <app-confirmation-modal
+    [isModalOpen]="isActiveModalOpen()"
+    (onConfirm)="updateIsActive()"
+    (isModalClosed)="closeIsActiveModal()"
+    [title]="updateTitle"
+    [message]="isActive() ? isInActiveText : isActiveText"
+    [confirmLabel]="'שמור'"
+    [cancelLabel]="'בטל'"
+  ></app-confirmation-modal>
+</div>

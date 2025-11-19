@@ -1,0 +1,45 @@
+<form
+  [formGroup]="fg"
+  (ngSubmit)="submit()"
+  [class.page-disabled]="!isActive()"
+>
+  <div formArrayName="docs" class="cols">
+    <!-- LEFT COLUMN (0..7) -->
+    <div class="col">
+      @for (i of leftIdxs(); track $index) {
+      <div class="row">
+        <div class="form-field-wrapper">
+          <app-input-checkbox-with-text
+            [formControlName]="i"
+            class="flex-1"
+            [class.has-error]="hasErrorAt(i)"
+            [label]="'הזן שם של קובץ לסריקה'"
+          ></app-input-checkbox-with-text>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- RIGHT COLUMN (8..15) -->
+    <div class="col">
+      @for (i of rightIdxs(); track $index) {
+      <div class="row">
+        <div class="form-field-wrapper">
+          <app-input-checkbox-with-text
+            [formControlName]="i"
+            class="flex-1"
+            [class.has-error]="hasErrorAt(i)"
+            [label]="'הזן שם של קובץ לסריקה'"
+          ></app-input-checkbox-with-text>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <app-button
+    class="constant-btns mt-2"
+    (clickFunction)="submit()"
+    [buttonText]="' שמור '"
+  ></app-button>
+</form>

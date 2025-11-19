@@ -1,3 +1,5 @@
+import { CheckboxOption } from '../../components/shared/base/inputs/input-checkbox-option-group/input-checkbox-option-group.component';
+import { RadioOption } from '../../components/shared/base/radio-button/radio-button.component';
 import { DataFunction } from '../advanced-search/form-tab.model';
 import { DynamicFieldSize } from '../enum/infrastructureTablesEnum';
 
@@ -73,6 +75,10 @@ export interface DynamicField {
   placeholder?: string;
   isRequired?: boolean;
   order?: number;
+  isSwitchable?: boolean;
+  place?: 'left' | 'center' | 'right';
+  checkBoxOptions?: CheckboxOption[];
+  radioOptions?: RadioOption[];
 }
 
 export interface SpecialTableTypes {

@@ -1,0 +1,44 @@
+.cols {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr;
+    gap: 12px 24px;
+  }
+  .col .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .w-28 {
+    width: 7rem;
+    min-width: 7rem;
+    text-align: right;
+  }
+  .flex-1 {
+    flex: 1;
+  }
+  @media (max-width: 768px) {
+    .cols {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .constant-btns {
+    display: flex;
+    justify-content: end;
+    ::ng-deep app-button {
+      button {
+        margin: 0;
+        margin-right: 10px;
+      }
+    }
+  }
+  :host .page-disabled {
+    pointer-events: none;           // blocks clicks on all children
+    opacity: 0.5;
+        // optional tiny dim
+  }
+  :host .page-disabled .ck-content {
+    user-select: none;              // no text selection
+  }
+  

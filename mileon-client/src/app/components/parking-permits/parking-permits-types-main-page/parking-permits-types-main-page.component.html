@@ -1,0 +1,90 @@
+<router-outlet></router-outlet>
+<div class="container-lg p-4">
+  <div class="row pb-4 align-items-center position-relative">
+    <div class="col d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center col-5">
+        <div class="arrow-container" (click)="back()">
+          <img [src]="Icons.ARROW_LEFT" />
+        </div>
+        <span class="heading">{{ title }}</span>
+      </div>
+    </div>
+  </div>
+  <!-- remove advanced search -->
+  <div class="row pb-4">
+    <app-parking-permits-search
+      (onSearch)="loadData($event)"
+      [resultData]="list"
+      [total]="total"
+      [showFilters]="false"
+      [searchByText]="SearchByTextEnum.ParkingPermitsTypesSearch"
+    ></app-parking-permits-search>
+
+    <div class="header col">
+      <div class="header col d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <app-checkbox
+            [label]="'הצג לא פעילים '"
+            (valueChanged)="onCheckboxChange($event)"
+          ></app-checkbox>
+        </div>
+        <div class="constant-btns d-flex align-items-center">
+          <!-- <app-button [buttonText]="'לוג שינויים '"></app-button> -->
+          <app-button
+            [buttonText]="Buttons.NewPemitType"
+            (clickFunction)="navigateToCreate()"
+          >
+          </app-button>
+          <app-button
+            [buttonText]="Buttons.ImportFromExcel"
+            (clickFunction)="openDialogImport()"
+          ></app-button>
+          <app-button
+            [buttonText]="Buttons.ExportToExcel"
+            [imgSrc]="Icons.EXCEL_UP"
+            (clickFunction)="openExportModal()"
+          ></app-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- add button for cahnge is active -->
+
+  <app-parking-permits-table
+    [data]="data"
+    [total]="total"
+    [count]="count"
+    (onFormChanges)="loadData($event)"
+    [selectedParkingPermitData]="selectedParkingPermitData$"
+    tableColumns="ParkingPermitTypesColumns"
+    [loader]="loader"
+    [showPaginator]="true"
+    (onRowClick)="onRowChange($event)"
+  ></app-parking-permits-table>
+</div>
+
+<app-modal
+  [title]="exportModalTitle"
+  [isModalOpen]="isExportModalOpen"
+  [modalSize]="'full'"
+  [buttons]="modalButtons"
+  (isModalClosed)="closeExportModal()"
+>
+  <div>
+    <div class="mb-2">
+      <img [src]="Icons.DANGER" />
+      <p class="text-bold-modal">
+        שימו לב, יצוא הקובץ בהתאם לחיפוש/פלטור שבוצע במסך זה.
+      </p>
+    </div>
+    <div>
+      <img [src]="Icons.ARROW_DIRECTION" />
+      <span class="text-bold-modal"> A </span>
+      <p class="text-modal">
+        קוד ,תיאור,מחיר התו,משך תוקף התו שניתן לתושב,תקף בימים,שעות התו,אזורים,
+        פעיל/ לא פעיל.
+        <br />
+      </p>
+    </div>
+  </div>
+</app-modal>

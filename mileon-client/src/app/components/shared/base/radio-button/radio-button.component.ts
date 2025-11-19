@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 export interface RadioOption {
-  value: string;
+  value: string | any;
   label: string;
   colorClass?: string;
   selected?: boolean;

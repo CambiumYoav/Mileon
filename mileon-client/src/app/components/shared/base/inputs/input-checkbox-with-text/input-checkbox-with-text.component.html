@@ -1,0 +1,76 @@
+<!-- <p>input-checkbox-with-text works!</p>
+<div class="inline-fields">
+  <app-checkbox
+    [checked]="value.isRequired"
+    (valueChanged)="onCheckedChange($event)"
+  >
+  </app-checkbox>
+  <app-input-text
+    [isValid]="hasError || hasLenError"
+    [class.is-invalid]="hasError || hasLenError"
+    [placeholder]="label || ''"
+    [disabled]="isDisabled"
+    (input)="onTextChange($event)"
+    (blur)="onTouched()"
+  >
+  </app-input-text>
+  <div class="input-wrapper">
+    <input
+      type="text"
+      class="form-control"
+      [class.is-invalid]="hasError || hasLenError"
+      [placeholder]="label || ''"
+      [value]="value.name"
+      [disabled]="isDisabled"
+      (input)="onTextChange($event)"
+      (blur)="onTouched()"
+    />
+
+    <div *ngIf="hasError || hasLenError" class="invalid-feedback">
+      <span *ngIf="hasError">שם הקובץ נדרש כאשר התיבה מסומנת</span>
+      <span *ngIf="hasLenError">שם הקובץ לא יכול להכיל יותר מ-30 תווים</span>
+    </div>
+  </div>
+</div> -->
+<div class="inline-fields">
+  <app-checkbox
+    [checked]="value().isRequired"
+    (valueChanged)="onCheckedChange($event)"
+  >
+  </app-checkbox>
+
+  <div class="input-wrapper">
+    <input
+      type="text"
+      class="form-control"
+      [class.is-invalid]="hasAnyError()"
+      [placeholder]="label || ''"
+      [value]="value().name"
+      [disabled]="isDisabled()"
+      (input)="onTextChange($event)"
+      (blur)="onTouched()"
+    />
+    <!-- <app-input-text
+    [isValid]="hasAnyError()"
+    [class.is-invalid]="hasAnyError()"
+    [placeholder]="label || ''"
+    [disabled]="isDisabled()"
+    (input)="onTextChange($event)"
+    (blur)="onTouched()"
+
+  >
+  </app-input-text> -->
+
+    @if(hasAnyError()){
+    <div class="invalid-feedback">
+      @if(hasError()) {
+      <span>שם הקובץ נדרש כאשר התיבה מסומנת</span>  } @if(hasLenError()){
+      <span>שם הקובץ לא יכול להכיל יותר מ-30 תווים</span>
+      }
+    </div>
+    }
+  </div>
+</div>
+
+
+<!--  fix the html + css for the input -->

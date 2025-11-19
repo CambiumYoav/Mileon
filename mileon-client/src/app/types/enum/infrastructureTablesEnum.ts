@@ -31,6 +31,7 @@ export enum DynamicFieldSize {
   Square = ' Square-size', //403px
   Medium = ' Medium-size', //250px
   Large = ' Large-size', //761px
+  FullWidth = ' Full-width', //100%
 }
 
 export enum InfrastructureTableAction {

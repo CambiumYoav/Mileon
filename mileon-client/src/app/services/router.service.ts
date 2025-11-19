@@ -37,11 +37,11 @@ export class RouterService implements OnDestroy {
     effect(() => {
       const url = this.navigationUrl();
       const navigating = this.isNavigating();
-      
+
       if (url && !navigating && url !== this.lastNavigatedUrl) {
         const now = Date.now();
         const timeSinceLastNavigation = now - this.lastNavigationTime;
-        
+
         // If enough time has passed since last navigation, navigate immediately
         if (timeSinceLastNavigation >= this.NAVIGATION_THROTTLE_MS) {
           this.performNavigation(url);
@@ -50,9 +50,10 @@ export class RouterService implements OnDestroy {
           if (this.debounceTimer) {
             clearTimeout(this.debounceTimer);
           }
-          
+
           // Set new debounced navigation
-          const remainingTime = this.NAVIGATION_THROTTLE_MS - timeSinceLastNavigation;
+          const remainingTime =
+            this.NAVIGATION_THROTTLE_MS - timeSinceLastNavigation;
           this.debounceTimer = setTimeout(() => {
             this.performNavigation(url);
           }, remainingTime);
@@ -69,7 +70,7 @@ export class RouterService implements OnDestroy {
     this.isNavigating.set(true);
     this.lastNavigationTime = Date.now();
     this.lastNavigatedUrl = url;
-    
+
     this.router.navigateByUrl(url).finally(() => {
       this.isNavigating.set(false);
     });
@@ -82,16 +83,16 @@ export class RouterService implements OnDestroy {
   ): Promise<boolean> | undefined | void {
     const currentUrl = this.snapshot.url;
     let fullUrl = currentUrl + '/' + url;
-    
+
     if (id) {
       fullUrl = fullUrl + '/' + id;
     }
-    
+
     if (queryParams) {
       const queryString = new URLSearchParams(queryParams as any).toString();
       fullUrl = fullUrl + '?' + queryString;
     }
-    
+
     this.navigationUrl.set(fullUrl);
     return Promise.resolve(true);
   }
@@ -112,17 +113,17 @@ export class RouterService implements OnDestroy {
   ): Promise<boolean> | undefined | void {
     const role = this.getRole();
     if (!role) return this.navigateTo('/login');
-    
+
     // Build the full URL with role prefix
     let fullUrl = `/main/${role}`;
     if (urlSections?.length) {
       fullUrl = this.removeTrailingSlash(fullUrl + '/' + urlSections.join('/'));
     }
-    
+
     if (queryParams) {
       fullUrl = fullUrl + this.buildQueryParams(queryParams);
     }
-    
+
     // Use throttled navigation to prevent rapid navigation requests
     this.navigationUrl.set(fullUrl);
     return Promise.resolve(true);
@@ -151,18 +152,26 @@ export class RouterService implements OnDestroy {
     }
     return;
   }
+
+  navigateToHome(): void {
+    const role = this.getRole();
+    if (role) {
+      const fullPath = `/home}`;
+      this.router.navigate([fullPath]);
+    }
+  }
   navigateToLogin(url: string, id?: string, queryParams?: {}) {
     let fullUrl = url;
-    
+
     if (id) {
       fullUrl = fullUrl + '/' + id;
     }
-    
+
     if (queryParams) {
       const queryString = new URLSearchParams(queryParams as any).toString();
       fullUrl = fullUrl + '?' + queryString;
     }
-    
+
     this.navigationUrl.set(fullUrl);
     return Promise.resolve(true);
   }
