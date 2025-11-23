@@ -36,17 +36,17 @@ export interface RadioOption {
 export class RadioButtonComponent implements ControlValueAccessor {
   options = input<RadioOption[]>([]);
   name = input<string>('');
-  value = input<string>('');
+  value = input<any>(null);
   disabled = input<boolean>(false);
   type = input<'default' | 'colored'>('default');
   direction = input<'horizontal' | 'vertical'>('horizontal');
-  allowDeselect = input<boolean>(false); // Allow deselecting current option
+  allowDeselect = input<boolean>(false);
   isValid = input<boolean | undefined>(true);
-  valueChange = output<string>();
+  valueChange = output<any>();
   selectionState = output<{ [key: string]: boolean }>();
 
-  private internalValue = signal<string>('');
-  private onChange = (value: string) => {};
+  private internalValue = signal<any>(null);
+  private onChange = (value: any) => {};
   private onTouched = () => {};
 
   currentValue = computed(() => this.internalValue());
@@ -59,31 +59,23 @@ export class RadioButtonComponent implements ControlValueAccessor {
     return state;
   });
 
-  containerClass = computed(
+  constructor() {
+    effect(() => {
+      const state = this.selectionStateMap();
+      if (Object.keys(state).length > 0) {
+        this.selectionState.emit(state);
+      }
+    });
+  }
+    containerClass = computed(
     () => `radio-options-container ${this.direction()}`
   );
 
-  constructor() {
-    // effect(() => {
-    //   this.selectionState.emit(this.selectionStateMap());
-    // });
-    effect(
-      () => {
-        const state = this.selectionStateMap();
-        // Only emit if there's actually a change
-        if (Object.keys(state).length > 0) {
-          this.selectionState.emit(state);
-        }
-      }
-      // { allowSignalWrites: true }
-    );
+  writeValue(value: any): void {
+    this.internalValue.set(value);
   }
 
-  writeValue(value: string): void {
-    this.internalValue.set(value || '');
-  }
-
-  registerOnChange(fn: (value: string) => void): void {
+  registerOnChange(fn: (value: any) => void): void {
     this.onChange = fn;
   }
 
@@ -91,22 +83,24 @@ export class RadioButtonComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {}
+  setDisabledState(isDisabled: boolean): void {
+    // אם אתה רוצה – תשפיע על disabled signal / CSS
+  }
 
-  onRadioChange(value: string): void {
+  onRadioChange(value: any): void {
     let newValue = value;
 
     if (this.allowDeselect() && this.currentValue() === value) {
-      newValue = '';
+      newValue = null;
     }
 
     this.internalValue.set(newValue);
-
     this.onChange(newValue);
     this.onTouched();
     this.valueChange.emit(newValue);
   }
-  isOptionSelected(optionValue: string): boolean {
+
+  isOptionSelected(optionValue: any): boolean {
     return this.currentValue() === optionValue;
   }
 
@@ -114,11 +108,102 @@ export class RadioButtonComponent implements ControlValueAccessor {
     return this.selectionStateMap();
   }
 
-  setSelectionByBoolean(optionValue: string, selected: boolean): void {
+  setSelectionByBoolean(optionValue: any, selected: boolean): void {
     if (selected) {
       this.onRadioChange(optionValue);
     } else if (this.allowDeselect() && this.currentValue() === optionValue) {
-      this.onRadioChange(optionValue); // This will deselect it
+      this.onRadioChange(optionValue);
     }
   }
 }
+
+// export class RadioButtonComponent implements ControlValueAccessor {
+//   options = input<RadioOption[]>([]);
+//   name = input<string>('');
+//   value = input<any>(null);
+//   // value = input<string>('');
+//   disabled = input<boolean>(false);
+//   type = input<'default' | 'colored'>('default');
+//   direction = input<'horizontal' | 'vertical'>('horizontal');
+//   allowDeselect = input<boolean>(false); // Allow deselecting current option
+//   isValid = input<boolean | undefined>(true);
+//   valueChange = output<string>();
+//   selectionState = output<{ [key: string]: boolean }>();
+
+//   private internalValue = signal<string>('');
+//   private onChange = (value: string) => {};
+//   private onTouched = () => {};
+
+//   currentValue = computed(() => this.internalValue());
+
+//   selectionStateMap = computed(() => {
+//     const state: { [key: string]: boolean } = {};
+//     this.options().forEach((option) => {
+//       state[option.value] = option.value === this.currentValue();
+//     });
+//     return state;
+//   });
+
+//   containerClass = computed(
+//     () => `radio-options-container ${this.direction()}`
+//   );
+
+//   constructor() {
+//     // effect(() => {
+//     //   this.selectionState.emit(this.selectionStateMap());
+//     // });
+//     effect(
+//       () => {
+//         const state = this.selectionStateMap();
+//         // Only emit if there's actually a change
+//         if (Object.keys(state).length > 0) {
+//           this.selectionState.emit(state);
+//         }
+//       }
+//       // { allowSignalWrites: true }
+//     );
+//   }
+
+//   writeValue(value: string): void {
+//     this.internalValue.set(value || '');
+//   }
+
+//   registerOnChange(fn: (value: string) => void): void {
+//     this.onChange = fn;
+//   }
+
+//   registerOnTouched(fn: () => void): void {
+//     this.onTouched = fn;
+//   }
+
+//   setDisabledState(isDisabled: boolean): void {}
+
+//   onRadioChange(value: string): void {
+//     let newValue = value;
+
+//     if (this.allowDeselect() && this.currentValue() === value) {
+//       newValue = '';
+//     }
+
+//     this.internalValue.set(newValue);
+
+//     this.onChange(newValue);
+//     this.onTouched();
+//     this.valueChange.emit(newValue);
+//   }
+//   isOptionSelected(optionValue: string): boolean {
+//     return this.currentValue() === optionValue;
+//   }
+
+//   getOptionBooleanState(): { [key: string]: boolean } {
+//     return this.selectionStateMap();
+//   }
+
+//   setSelectionByBoolean(optionValue: string, selected: boolean): void {
+//     if (selected) {
+//       this.onRadioChange(optionValue);
+//     } else if (this.allowDeselect() && this.currentValue() === optionValue) {
+//       this.onRadioChange(optionValue); // This will deselect it
+//     }
+//   }
+// }

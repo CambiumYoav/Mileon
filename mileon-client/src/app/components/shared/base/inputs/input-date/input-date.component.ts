@@ -33,6 +33,7 @@ export class InputDateComponent
 { 
   private readonly _isValid = signal<boolean | undefined>(true);
   private readonly _isRequired = signal<boolean | undefined>(false);
+  private readonly _errorMessage = signal<string>('');
 
   get isValid(): boolean | undefined {
     return this._isValid();
@@ -59,6 +60,11 @@ export class InputDateComponent
 
   @Input() set isRequired(value: boolean | undefined) {
     this._isRequired.set(value);
+  }
+
+  @Input()
+  set errorMessage(value: string) {
+    this._errorMessage.set(value);
   }
 
   @Input() isWeekendBlocked: boolean = false;
@@ -101,12 +107,16 @@ export class InputDateComponent
       this.control?.invalid && (this.control?.dirty || this.control?.touched)
     );
   }
-
+  get errorMessage(): string {
+    return this._errorMessage();
+  }
+  
   public onBlur(): void {
     if (this.isInvalid) {
       // this.toastr.error(ErrorSuccessMessages.INVALID_TIME_RANGE);
     }
   }
+  
 
   public onInput(event: Event): void {
     const input = event.target as HTMLInputElement;

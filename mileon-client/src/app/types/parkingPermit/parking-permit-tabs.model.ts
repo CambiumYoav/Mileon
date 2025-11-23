@@ -262,8 +262,67 @@ export class ParkingPermitTabs {
                 type: FieldTypeEnum.Text,
                 length: FieldLengthEnum.Medium,
               },
+              {
+                name: 'birthDate',
+                displayName: 'תאריך לידה',
+                type: FieldTypeEnum.Date,
+                length: FieldLengthEnum.Medium,
+              },
+              {
+                name: 'genderID',
+                displayName: 'מין',
+                type: FieldTypeEnum.Radio,
+                length: FieldLengthEnum.Medium,
+                radioOptions: [
+                  { value: 1, display: 'זכר' },
+                  { value: 2, display: 'נקבה' },
+                ],
+              },
+         
+              {
+                name: 'isReturningResident',
+                displayName: 'תושב חוזר',
+                type: FieldTypeEnum.Radio,
+                length: FieldLengthEnum.Medium,
+                radioOptions: [
+                  { value: true, display: 'כן' },
+                  { value: false, display: 'לא' },
+                ],
+              },
             ],
           },
+          // {
+          //   name: 'citizen1',
+          //   group: [
+          //     {
+          //       name: 'birthDate',
+          //       displayName: 'תאריך לידה',
+          //       type: FieldTypeEnum.Date,
+          //       length: FieldLengthEnum.Medium,
+          //     },
+          //     {
+          //       name: 'genderID',
+          //       displayName: 'מין',
+          //       type: FieldTypeEnum.Radio,
+          //       length: FieldLengthEnum.Medium,
+          //       radioOptions: [
+          //         { value: 1, display: 'זכר' },
+          //         { value: 2, display: 'נקבה' },
+          //       ],
+          //     },
+          //     // not sending to server
+          //     {
+          //       name: 'isReturningResident',
+          //       displayName: 'תושב חוזר',
+          //       type: FieldTypeEnum.Radio,
+          //       length: FieldLengthEnum.Medium,
+          //       radioOptions: [
+          //         { value: true, display: 'כן' },
+          //         { value: false, display: 'לא' },
+          //       ],
+          //     },
+          //   ],
+          // },
         ],
       },
     ],

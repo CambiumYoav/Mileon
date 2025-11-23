@@ -109,6 +109,30 @@ export const parkingPermitsRoutes: Routes = [
           },
         ],
       },
+
+      {
+        path: `:id`,
+        loadComponent: () =>
+          import('./parking-permit-item/parking-permit-item.component').then(
+            (m) => m.ParkingPermitItemComponent
+          ),
+        children: [
+          {
+            path: `${RP.ParkingPermits.Details}`,
+            loadComponent: () =>
+              import(
+                './parking-permit-item/parking-permit-details/parking-permit-details.component'
+              ).then((m) => m.ParkingPermitDetailsComponent),
+          },
+          {
+            path: `${RP.ParkingPermits.RequestDocuments}`,
+            loadComponent: () =>
+              import(
+                './parking-permit-item/parking-permit-request-documents/parking-permit-request-documents.component'
+              ).then((m) => m.ParkingPermitRequestDocumentsComponent),
+          },
+        ],
+      },
     ],
   },
 ];

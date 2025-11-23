@@ -478,8 +478,8 @@ export class ParkingPermitsTypesForm {
           validations: {},
 
           radioOptions: [
-            { value: '1', label: 'מדבקה' },
-            { value: '0', label: 'וירטואלי' },
+            { value: 0, label: 'מדבקה' },
+            { value: 1, label: 'וירטואלי' },
           ],
         },
       ],

@@ -13,5 +13,6 @@ export type ModalButtonNames = "אישור" | "ביטול" ;
 
 export enum ModalButtonsText{
 Cancel = 'ביטול',
-Export ='ייצוא'
+Export ='ייצוא',
+Confirm ='אישור'
 }

@@ -1,3 +1,4 @@
+import { RadioOption } from '../../components/shared/base/radio-button/radio-button.component';
 import { FieldOption } from '../infrastructure/InfrastructureTypes';
 
 // Modern TypeScript interfaces with better type safety
@@ -30,7 +31,7 @@ export interface Field {
   readonly bindLabelKeys?: readonly string[];
   readonly disabled?: boolean;
   readonly isRequired?: boolean;
-  readonly radioOptions?: FieldOption[];
+  readonly radioOptions?: FieldOption[] ;
 }
 
 export interface IdValue {

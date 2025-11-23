@@ -74,7 +74,7 @@ export class ParkingPermitsDynamicFormComponent implements OnInit {
   }>();
 
   // ---------------------------------------------------------------------------
-  // DI 
+  // DI
   // ---------------------------------------------------------------------------
   private readonly fb = inject(FormBuilder);
   private readonly toaster = inject(ToastrService);
@@ -577,11 +577,10 @@ export class ParkingPermitsDynamicFormComponent implements OnInit {
     );
   }
 
-  //FIXME - 
+
   getRadioValue(controlName: string): any {
-    const val = this.dynamicForm?.get(controlName)?.value;
-    console.log(val)
+    let val = this.dynamicForm?.get(controlName)?.value;
+
     return val !== undefined && val !== null ? val : '';
   }
-
 }

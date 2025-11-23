@@ -6,9 +6,13 @@ import { ControlOptionsDictionary } from '../../../types/formControlOptions';
   providedIn: 'root',
 })
 export class BaseFormService {
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {}
 
-  createFormGroup(dynamicClass: any, controlOptions?: ControlOptionsDictionary, disabled?: boolean): FormGroup {
+  createFormGroup(
+    dynamicClass: any,
+    controlOptions?: ControlOptionsDictionary,
+    disabled?: boolean
+  ): FormGroup {
     // create an object from dynamic class
     const dynamicObject = new dynamicClass({});
 
@@ -26,11 +30,13 @@ export class BaseFormService {
         let control;
         if (Array.isArray(value)) {
           control = this.fb.array([]);
-        }
-        else if (typeof value === 'object') {
+        } else if (typeof value === 'object') {
           control = new FormGroup({});
           for (let key in value) {
-            const childControl = new FormControl(value[key], controlOptions?.[key]?.validation);
+            const childControl = new FormControl(
+              value[key],
+              controlOptions?.[key]?.validation
+            );
             control.addControl(key, childControl);
           }
         } else {
@@ -53,7 +59,7 @@ export class BaseFormService {
         }
 
         // add the control to the controls object
-        controls[property] = control as FormControl; 
+        controls[property] = control as FormControl;
 
         return controls;
       },
@@ -67,7 +73,6 @@ export class BaseFormService {
     }
     return formGroup;
   }
-  
 
   getObjectProperties(obj: any): string[] {
     let properties: string[] = [];
@@ -93,28 +98,73 @@ export class BaseFormService {
     }
   }
 
+  // set the form control values to matched object values.
+  // setObjectValuesToForm(object: any, formGroup: FormGroup): void {
+  //   if(typeof object  !== 'object') return
+  //   Object.keys(object).forEach((key) => {
+  //     const control = formGroup.get(key);
+  //     const value = object ? object[key]: null;
 
-  // set the form control values to matched object values. 
+  //     if (control && value) {
+  //       if (typeof value === 'object') {
+  //         // If the value is an object, recursively set its values in a nested FormGroup
+  //         if (control instanceof FormGroup) {
+  //           this.setObjectValuesToForm(value, control);
+  //         }
+  //         if(control instanceof FormArray) {
+  //           for(let i = 0; i < control.controls.length; i++ ) {
+  //             this.setObjectValuesToForm(value[i], control.at(i) as FormGroup);
+  //           }
+  //         }
+  //       } else {
+  //         control.setValue(value);
+  //       }
+  //     }
+  //   });
+  // }
   setObjectValuesToForm(object: any, formGroup: FormGroup): void {
-    if(typeof object  !== 'object') return
+    if (!object || typeof object !== 'object') return;
+
     Object.keys(object).forEach((key) => {
       const control = formGroup.get(key);
-      const value = object ? object[key]: null;
+      const value = object[key];
 
-      if (control && value) {
-        if (typeof value === 'object') {
-          // If the value is an object, recursively set its values in a nested FormGroup
-          if (control instanceof FormGroup) {
-            this.setObjectValuesToForm(value, control);
-          }
-          if(control instanceof FormArray) {
-            for(let i = 0; i < control.controls.length; i++ ) {
-              this.setObjectValuesToForm(value[i], control.at(i) as FormGroup);
-            }
-          }
-        } else {
-          control.setValue(value);
+      if (!control || value === undefined || value === null) {
+        return;
+      }
+
+      // --- FormGroup: יורדים פנימה רק אם value הוא אובייקט ---
+      if (control instanceof FormGroup) {
+        if (typeof value === 'object' && !Array.isArray(value)) {
+          this.setObjectValuesToForm(value, control);
         }
+        // לא קוראים כאן ל־setValue על FormGroup
+        return;
+      }
+
+      // --- FormArray: ממפים אלמנטים למבנים קיימים (אם יש) ---
+      if (control instanceof FormArray) {
+        if (Array.isArray(value)) {
+          // אם כבר יצרת בתוך ה־FormArray קבוצות – נמלא אותן
+          if (control.length && typeof value[0] === 'object') {
+            value.forEach((item, index) => {
+              const childGroup = control.at(index);
+              if (childGroup instanceof FormGroup) {
+                this.setObjectValuesToForm(item, childGroup);
+              } else if (childGroup instanceof FormControl) {
+                childGroup.setValue(item);
+              }
+            });
+          }
+          // אם אין controls בתוך ה־FormArray – אתה יכול להשאיר ככה,
+          // או להרחיב כאן ליצירת קבוצות דינמית לפי value.length.
+        }
+        return;
+      }
+
+      // --- FormControl רגיל ---
+      if (control instanceof FormControl) {
+        control.setValue(value);
       }
     });
   }
@@ -145,14 +195,13 @@ export class BaseFormService {
     }
   }
 
-  
   // convert object to formData
-  objectToFormData(obj: any , formData : FormData,  parentKey?: string) {
+  objectToFormData(obj: any, formData: FormData, parentKey?: string) {
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
         const propName = parentKey ? `${parentKey}.${key}` : key;
         const value = obj[key];
-        if(value instanceof Date) {
+        if (value instanceof Date) {
           formData.append(propName, value.toISOString());
         }
         if (value instanceof File) {
@@ -163,20 +212,19 @@ export class BaseFormService {
           if (value.length == 0) {
             formData.append(propName, 'null'); // Initialize an empty array
           } else {
-          for (let i = 0; i < value.length; i++) {
-            const arrayKey = `${propName}[${i}]`;
-            this.objectToFormData(value[i], formData, arrayKey);
+            for (let i = 0; i < value.length; i++) {
+              const arrayKey = `${propName}[${i}]`;
+              this.objectToFormData(value[i], formData, arrayKey);
+            }
           }
-        }
         } else if (typeof value === 'object') {
-          this.objectToFormData(value,formData, propName);
+          this.objectToFormData(value, formData, propName);
         } else {
-          if(value) {
+          if (value) {
             formData.append(propName, value);
           }
         }
       }
     }
   }
-  
 }

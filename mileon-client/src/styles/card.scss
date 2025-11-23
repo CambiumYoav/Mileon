@@ -10,10 +10,10 @@
 
 .item {
   // width: 28%;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  // border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  height: 60px;
+  // height: 60px;
   justify-content: space-between;
 
   .info {
@@ -46,19 +46,24 @@
   }
 
   .title {
-    color: $colorTitle;
-    font-size: 15px;
-    font-weight: bold;
+    color: var(--black, #000);
+    text-align: right;
+    font-family: $fontOpenSans;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin: 0 0 6px 0 !important;
+    width: 100%;
   }
 }
 
-
 .hide-border-input {
+  border: none;
+  background-color: inherit;
+
+  &:focus {
+    outline: none !important;
     border: none;
-    background-color: inherit;
-  
-    &:focus {
-      outline: none !important;
-      border: none;
-    }
   }
+}

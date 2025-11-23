@@ -1,0 +1,500 @@
+@if(hasForm()){
+<div class="wrap-card">
+  <form [formGroup]="parkingPermitForm()!">
+    <div class="card parking-permit-card">
+      <div class="main-title">מספר תו <span>/סטטוס תו</span></div>
+
+      <span class="sub-title">פרטי בעל התו</span>
+      <div class="wrap-details">
+        <div class="row-details">
+          @for (row of ParkingPermitDetailsTabs.tabs[0].rows; track $index) {
+          @for (field of row.group; track $index) {
+
+          <div class="wrap-item" [formGroupName]="row.name!">
+            <div [ngClass]="{ item: true }">
+              @if(field.type == FieldTypeEnum.Radio) {
+              <div class="title">
+                {{ field.displayName }}
+              </div>
+              }
+              <div
+                [ngClass]="{
+                  info:
+                    field.type != FieldTypeEnum.Select &&
+                    pageType == PageTypeEnum.TO_VIEW
+                }"
+              >
+                @switch (field.type) { @case (FieldTypeEnum.Text) {
+                <app-input-text
+                  [formControlName]="field.name"
+                  [disabled]="field.disabled ?? false"
+                  [title]="field.displayName"
+                  [errorMessage]="ErrorMessage"
+                  [isValid]="
+                    parkingPermitForm()
+                      ?.get(row.name ?? '')
+                      ?.get(field.name)?.valid || field.disabled
+                  "
+                >
+                </app-input-text>
+                } @case (FieldTypeEnum.Select) {
+                <!-- <div class="wrap-field" > -->
+                <app-select
+                  [isMultiSelect]="false"
+                  [formControlName]="field.name"
+                  [placeholder]="field.displayName"
+                  [dataFunction]="field.dataFunction"
+                  [disabled]="field.disabled ?? false"
+                  [title]="field.displayName"
+                ></app-select>
+                <!-- </div> -->
+                } @case (FieldTypeEnum.Radio) {
+                <app-radio-button
+                  [options]="transformRadioOptions(field.radioOptions)"
+                  [name]="field.name"
+                  [formControlName]="field.name"
+                  direction="horizontal"
+                ></app-radio-button>
+                } @case (FieldTypeEnum.Date) {
+                <app-input-date
+                  [formControlName]="field.name"
+                  [title]="field.displayName"
+                  [isValid]="
+                    parkingPermitForm()
+                      ?.get(row.name ?? '')
+                      ?.get(field.name)?.valid || field.disabled
+                  "
+                  [errorMessage]="ErrorMessage"
+                >
+                </app-input-date>
+                }}
+              </div>
+            </div>
+            <!-- <div class="wrap-error">
+              <span
+                *ngIf="
+                  parkingPermitForm()
+                    ?.get(row.name ?? '')
+                    ?.get(field.name)
+                    ?.hasError('pattern') ||
+                  parkingPermitForm()
+                    ?.get(row.name ?? '')
+                    ?.get(field.name)
+                    ?.hasError('invalidIsraeliId')
+                "
+                class="error-input"
+                >*לא תקין</span
+              >
+            </div> -->
+          </div>
+          } }
+        </div>
+
+        <div class="row-details">
+          <!-- address -->
+          @for (field of EditableAddressFields; track $index) {
+
+          <div class="wrap-item" [formGroupName]="'citizen'">
+            <div [ngClass]="{ item: field.type != FieldTypeEnum.Select }">
+              <div class="info" [formGroupName]="'homeAddress'">
+                @switch (field.type) { @case (FieldTypeEnum.Text) {
+                <app-input-text
+                  [formControlName]="field.name"
+                  [disabled]="field.disabled ?? false"
+                  [title]="field.displayName"
+                >
+                </app-input-text>
+
+                <!-- [icon]=" editSvg" -->
+                } @case (FieldTypeEnum.Select) {
+                <app-select
+                  [formControlName]="field.name"
+                  [isMultiSelect]="false"
+                  [placeholder]="field.displayName"
+                  [dataFunction]="field.dataFunction"
+                  [disabled]="field.disabled ?? false"
+                  [title]="field.displayName"
+                ></app-select>
+                } }
+              </div>
+            </div>
+            <div class="wrap-error">
+              <span
+                *ngIf="
+                  parkingPermitForm()
+                    ?.get('citizen')
+                    ?.get('homeAddress')
+                    ?.get(field.name)
+                    ?.hasError('pattern')
+                "
+                class="error-input"
+                >*לא תקין</span
+              >
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="row-details">
+          <ng-container [formGroupName]="'citizen'">
+            <ng-container formArrayName="citizenPhones">
+              @for (phone of citizenPhonesArray.controls; let i = $index; track
+              i) {
+
+              <div class="wrap-item">
+                <div class="item" [formGroupName]="i">
+                  <div class="title">
+                    {{ phone.get("isMain")?.value ? "מספר ראשי" : "מספר נוסף" }}
+                  </div>
+
+                  <app-input-phone [formControlName]="'phone'">
+                  </app-input-phone>
+                  <!-- <div class="info edit">
+                    <input
+                      [formControlName]="'phone'"
+                      class="hide-border-input"
+                      type="text"
+                      placeholder="הוסף מספר"
+                    />
+                    <img [src]="editSvg" />
+                  </div> -->
+                </div>
+                <div class="wrap-error">
+                  <span
+                    *ngIf="phone.get('phone')?.hasError('pattern')"
+                    class="error-input"
+                    >* מספר לא תקין</span
+                  >
+                </div>
+              </div>
+              }
+            </ng-container>
+          </ng-container>
+
+          <div class="wrap-item big-width strech" [ngStyle]="{ width: '15%' }">
+            <div class="item" [formGroupName]="'citizen'">
+              <app-input-text
+                [formControlName]="'email'"
+                [disabled]="false"
+                [title]="'מייל'"
+                [isValid]="
+                  parkingPermitForm()?.get('citizen')?.get('email')?.valid ||
+                  false
+                "
+              >
+              </app-input-text>
+            </div>
+            <div class="wrap-error">
+              <span
+                *ngIf="
+                  parkingPermitForm()
+                    ?.get('citizen')
+                    ?.get('email')
+                    ?.hasError('pattern')
+                "
+                class="error-input"
+                >* מייל לא תקין</span
+              >
+            </div>
+          </div>
+
+          <div class="wrap-item item-checkbox">
+            <div class="item">
+              <!--    [formControlName]="'sendReminderWhenExpired'" -->
+              <app-checkbox
+                [label]="'תזכורת לחידוש'"
+                [checked]="parkingPermit()?.sendReminderWhenExpired ?? true"
+              ></app-checkbox>
+              <!-- <div class="checkboxes">
+                <div class="wrap-checkbox">
+                  <input
+                    type="checkbox"
+                    formControlName="sendReminderWhenExpired"
+                  />
+                  <span class="info">תזכורת לחידוש</span>
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- parking permit location and areas -->
+      <span class="sub-title">תו אזורי</span>
+      <div class="wrap-details gray-card">
+        @if(areasFormArray?.length){
+        <div formArrayName="permitByArray">
+          @if(parkingPermit()?.isPermitToAllCity) {
+
+          <div class="row-details" [formGroupName]="0">
+            <div class="wrap-item">
+              <div class="item">
+                <div class="title">איזור</div>
+                <app-select
+                  formControlName="permitBy"
+                  [placeholder]="'כל העיר'"
+                  [displaySearch]="false"
+                  [ngStyle]="{ width: '50%' }"
+                  [isMultiSelect]="false"
+                  class="white-select"
+                  [disabled]="true"
+                >
+                </app-select>
+              </div>
+            </div>
+          </div>
+
+          }@else { @for ( group of parkingPermit()?.parkingPermitAreas; let i =
+          $index;track i) {
+
+          <ng-container [formGroupName]="i">
+            @if(!parkingPermit()?.isPermitToAllCity){
+            <div class="row-details">
+              <div class="wrap-item">
+                <div class="item">
+                  <div class="title">איזור</div>
+                  <app-select
+                    [formControlName]="PermitAreas[0].name"
+                    [isMultiSelect]="false"
+                    [placeholder]="PermitAreas[0].displayName"
+                    [dataFunction]="PermitAreas[0].dataFunction"
+                    [ngStyle]="{ width: '50%' }"
+                    [placeholder]="group.areaName"
+                    [disabled]="PermitAreas[0].disabled ?? false"
+                  ></app-select>
+                </div>
+              </div>
+            </div>
+            }
+          </ng-container>
+          } }
+        </div>
+        }
+      </div>
+
+      <!-- parking permit status -->
+      <span class="sub-title">סטטוס</span>
+      <div class="wrap-details">
+        <div class="row-details">
+            @for (field of parkingPermitStatus; track $index) {
+
+                <div class="wrap-item">
+                  <div [ngClass]="{ item: field.type != FieldTypeEnum.Select }">
+                    <div class="title">
+                      {{ field.displayName }}
+                    </div>
+                    <div class="info">
+                      @if (field.name) {
+                        <app-input-text
+                          [formControlName]="field.name"
+                          [disabled]="true"
+                        ></app-input-text>
+                      } @else {
+                        <!-- no control, just show label -->
+                        {{ field.displayName }}
+                      }
+                    </div>
+                  </div>
+                </div>
+              
+              }
+              
+        </div>
+      </div>
+
+      <span class="sub-title">תוקף תו</span>
+      <div class="wrap-details gray-card">
+        <div class="row-details">
+          <div class="wrap-item" [ngStyle]="{ width: '100%' }">
+            <div class="item">
+              <div class="title">תוקף תו</div>
+              <div class="ml-1 px-2">
+                <app-input-date
+                  formControlName="startDate"
+                  [disabled]="true"
+                ></app-input-date>
+              </div>
+              <div>
+                <app-input-date
+                  formControlName="expirationDate"
+                  [disabled]="true"
+                ></app-input-date>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row-details">
+          <div class="wrap-item item-checkbox">
+            <div class="item">
+              <div class="title">תקף בימים</div>
+              <div class="ml-1 px-2 checkboxes">
+                @for (d of days; track $index) {
+                <app-checkbox
+                  [label]="d.label"
+                  [checked]="isDayOn(d.value)"
+                  [isDisabled]="true"
+                ></app-checkbox>
+                <!-- <label class="wrap-checkbox">
+                  <input
+                    type="checkbox"
+                    class="checkbox"
+                    [checked]="isDayOn(d.value)"
+                    [disabled]="true"
+                  />
+                  <span class="info">{{ d.label }}</span>
+                </label> -->
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row-details" formArrayName="timeLimits">
+          <div class="wrap-item">
+            <div class="item">
+              <div class="title">שעות</div>
+              <div class="mr-3 ml-1 px-2 wrap-hours">
+                <div class="info">
+                  <input
+                    type="time"
+                    class="hide-border-input"
+                    [disabled]="true"
+                    [value]="parkingPermit()?.fromTime"
+                  />
+                </div>
+                <div class="info">
+                  <input
+                    type="time"
+                    class="hide-border-input"
+                    [disabled]="true"
+                    [value]="parkingPermit()?.toTime"
+                  />
+                </div>
+                <div class="wrap-item item-checkbox">
+                  <div class="item">
+                    <div class="checkboxes">
+                      <app-checkbox
+                        [label]="'כל שעות היממה '"
+                        [checked]="isAllDayChecked"
+                        [isDisabled]="true"
+                      ></app-checkbox>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      @if( parkingPermit() && parkingPermit()?.parkingPermitRemarks &&
+      parkingPermit()?.parkingPermitRemarks?.length){
+
+      <span class="sub-title">צפייה בהערות קודמות</span>
+      <div class="wrap-details">
+        <div class="wrap-remarks">
+          @for (remark of parkingPermit()?.parkingPermitRemarks; track $index) {
+          <div class="wrap-remark">
+            <div class="signature">
+              <span
+                >{{ remark.createdByUser?.firstName ?? "" }}
+                {{ remark.createdByUser?.lastName ?? "" }} -
+                {{ remark.createdByUser?.userTypeID ?? -1 | userType }},
+                <span class="date">{{
+                  remark.creationDate | date : "dd.MM.yyyy, hh:mm"
+                }}</span>
+              </span>
+            </div>
+            <div>
+              @for (reservedRemark of remark.reservedRemarks; track $index) {
+
+              <span class="reserved chosen"> {{ reservedRemark.content }}</span>
+              }
+            </div>
+            <span class="remark">{{ remark.content }}</span>
+          </div>
+          }
+        </div>
+      </div>
+      } @if (pageType != PageTypeEnum.TO_VIEW) {
+
+      <span class="sub-title">הערה חדשה</span>
+      <app-textarea-comments
+        [actionModule]="ActionModuleEnum.PARKING_PERMIT"
+        [newComment]="newComment"
+      ></app-textarea-comments>
+      } @if(parkingPermit() && pageType != PageTypeEnum.TO_CREATE) {
+
+      <span class="sub-title">מערכת</span>
+      <div class="wrap-details">
+        <div class="row-details">
+          @for (detail of permitDetails; track $index) {
+          <div class="wrap-item">
+            <div class="item">
+              <div class="title">{{ detail.displayName }}</div>
+              <!-- <div class="info disabled">
+                @switch (detail.type) { @case(FieldTypeEnum.Date) {
+                {{ parkingPermit[detail.name] | date : "dd.MM.yy" }}
+                } @case(FieldTypeEnum.Time) {
+                {{ parkingPermit[detail.name] | date : "hh:mm" }}} @default {
+
+                {{ parkingPermit[detail.name] }}} }
+              </div> -->
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      }
+      <div class="row-details buttons">
+        <!-- make the button in disabled if the form us not valid -->
+        <app-button
+          (click)="saveParkingPermitDetails()"
+          [buttonText]="'שמירת נתונים'"
+          [loading]="isSaveLoading"
+          [isDisabled]="!parkingPermitForm()?.valid"
+        >
+        </app-button>
+
+        <div
+          class="permission-buttons"
+          *ngIf="pageType == PageTypeEnum.TO_EDIT"
+          [ngClass]="{ disabled: !updateStatusPermission }"
+        >
+          <app-button
+            (click)="declineParkingPermit()"
+            [buttonText]="'דחייה'"
+            [imgSrc]="crossBox"
+            [isDisabled]="!updateStatusPermission"
+          >
+          </app-button>
+
+          <app-button
+            (click)="moveToDocumentCompletion()"
+            [buttonText]="' השלמת מסמכים'"
+            [imgSrc]="documentCompletion"
+          >
+          </app-button>
+          <app-button
+            (click)="approveParkingPermit()"
+            [buttonText]="'אישור'"
+            [imgSrc]="tickBox"
+          >
+          </app-button>
+        </div>
+      </div>
+    </div>
+    <app-modal
+      [title]="modalTitle"
+      [isModalOpen]="isModalOpen"
+      [modalSize]="'md'"
+      [buttons]="modalButtons"
+      (isModalClosed)="closeModal()"
+    >
+    </app-modal>
+  </form>
+</div>
+
+}

@@ -63,3 +63,6 @@
     ></mat-datepicker>
   </div>
 </div>
+@if (!isValid) {
+<span class="error">{{ errorMessage }}</span>
+}

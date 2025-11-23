@@ -1,0 +1,375 @@
+@import "../../../../../styles/elements.scss";
+@import "../../../../../styles/form.scss";
+
+:host {
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .wrap-card {
+    width: 100%;
+
+    .card {
+      padding: 2rem;
+      width: 100%;
+      height: 68vh;
+      overflow: auto;
+
+      .main-title {
+        display: flex;
+        justify-content: center;
+        font-family: $fontOpenSans;
+        font-weight: 800;
+        font-size: 16px;
+        line-height: 22px;
+
+        span {
+          color: $colorDarkBlue;
+        }
+      }
+
+      .sub-title {
+        font-family: $fontOpenSans;
+        font-weight: 700;
+        font-size: 15px;
+        line-height: 20px;
+        margin: 0.5rem 0;
+        margin-top: 1.5rem;
+      }
+
+      .wrap-details {
+        border: 1px solid $colorBorder;
+        border-radius: 8px;
+        padding: 1rem;
+        padding-bottom: 0;
+        position: relative;
+      }
+
+      .row-details {
+        display: flex;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+
+        &.buttons {
+          margin-top: 2rem;
+          display: flex;
+          flex-direction: row-reverse;
+          justify-content: space-between;
+
+          .btn-save {
+            height: 100%;
+          }
+
+          .permission-buttons {
+            display: flex;
+            gap: 20px;
+          }
+        }
+
+        .wrap-item {
+          //   width: 10%;
+          margin-left: 1%;
+          margin-top: 10px;
+          .wrap-error {
+            height: 1vh;
+
+            .error-input {
+              color: red;
+            }
+          }
+          // &.item-radio {
+          //   .item {
+          //   height: 50px;
+
+          //   .title {
+          //     font-size: 13px !important;
+          //     font-weight: 700;
+          //   }
+
+          //   .info {
+          //     font-weight: 400;
+          //     font-size: 15px;
+          //     display: flex;
+          //     flex-direction: row;
+          //     border-bottom: none !important;
+          //     justify-content: flex-start;
+          //     align-items: center;
+          //     }
+          //   }
+          // }
+
+          .wrap-field {
+            max-width: 530px;
+          }
+
+          &.item-checkbox {
+            .item {
+              display: flex;
+              flex-direction: row;
+              border-bottom: none;
+              justify-content: flex-start;
+              align-items: center;
+            }
+
+            .checkboxes {
+              display: flex;
+              width: 83%;
+            }
+          }
+
+          .item {
+            // height: 50px;
+
+            .title {
+              color: var(--black, #000);
+              text-align: right;
+              font-family: $fontOpenSans;
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: normal;
+              margin: 0 0 6px 0 !important;
+              width: 100%;
+            }
+
+            .info {
+              font-weight: 400;
+              font-size: 15px;
+
+              &.birthDate {
+                display: flex;
+                justify-content: space-between;
+              }
+            }
+          }
+        }
+      }
+
+      .add {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+
+      .add-circle {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+
+      .gray-card {
+        background: $colorLightGray;
+        border: 1px solid $colorBorder;
+        border-radius: 8px;
+        padding: 0;
+
+        ::ng-deep .input-fill {
+          background-color: white;
+        }
+
+        .row-details {
+          overflow: auto;
+          margin-bottom: 0;
+          padding: 0.5rem 2rem;
+          border-bottom: 1px solid $colorBorder;
+
+          &:last-child {
+            border-bottom: 0;
+          }
+
+          .wrap-item {
+            max-width: 530px;
+
+            margin: 0;
+
+            .item {
+              display: flex;
+              justify-content: flex-start;
+              align-items: baseline;
+              flex-direction: row;
+              height: fit-content;
+              width: fit-content;
+              border-bottom: none !important;
+              width: 100%;
+
+              //   .title {
+              //     margin-left: 2rem;
+              //   }
+
+              .info {
+                border: 1px solid $colorBorder;
+                border-radius: 4px;
+                background: white;
+                width: 50%;
+                padding: 5px;
+
+                // &.date {
+                //   width: fit-content;
+                //   display: flex;
+                //   margin-left: 10px;
+                //   height: 39px;
+                //   padding: 0;
+                //   align-items: center;
+
+                //   ::ng-deep .input-fill {
+                //     border: none;
+                //   }
+                // }
+
+                .celander {
+                  margin-right: 1rem;
+                }
+
+                &.house-number {
+                  width: 15%;
+                  margin-left: 1rem;
+                }
+              }
+              //   .item-radio {
+              //     @extend .item; // inherit all .item styles
+              //     border-bottom: none !important; // remove divider line
+
+              //     .title {
+              //       font-size: 13px !important;
+              //       font-weight: 700 !important;
+              //     }
+
+              //     .info {
+              //       font-weight: 400;
+              //       font-size: 15px;
+              //       border-bottom: none !important;
+              //       display: flex;
+              //       flex-direction: row;
+              //       justify-content: flex-start;
+              //       align-items: center;
+              //     }
+
+              //     .item-radio-group {
+              //       display: flex;
+              //       flex-direction: row;
+              //       align-items: center;
+              //       gap: 10px;
+              //     }
+
+              //     .radio-container {
+              //       display: flex;
+              //       align-items: center;
+              //       margin-left: 10px;
+
+              //       input.form-radio {
+              //         width: 17px;
+              //         height: 17px;
+              //         margin-left: 5px;
+              //       }
+
+              //       p {
+              //         margin: 0;
+              //         font-weight: 400;
+              //       }
+              //     }
+              //   }
+              .wrap-hours {
+                display: flex;
+                align-items: baseline;
+
+                &:first-child {
+                  margin-right: 0;
+                }
+
+                .title {
+                  margin: 0 0.5rem;
+                  margin-right: 2rem;
+                }
+
+                .info {
+                  width: fit-content;
+                  margin-left: 0.5rem;
+                }
+              }
+
+              .wrap-checkbox {
+                .info {
+                  width: fit-content;
+                  border: none;
+                  background: none;
+                  margin-left: 1rem;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .remark-title {
+        margin-right: 2rem;
+        margin-top: 1rem;
+      }
+
+      .wrap-remarks {
+        height: 15vh;
+        overflow-y: scroll;
+        direction: rtl;
+
+        .wrap-remark {
+          margin-bottom: 1rem;
+          direction: rtl;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+
+          .signature {
+            font-family: $fontOpenSans;
+            font-weight: 600;
+            font-size: 14px;
+            color: $colorDarkBlue;
+          }
+
+          .remark,
+          .date {
+            font-family: $fontAssistant;
+            font-weight: 400;
+            font-size: 14px;
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 1300px) {
+      .return-citizen {
+        width: 15% !important;
+      }
+
+      .parking-permit-card {
+        height: 53vh;
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  ::-webkit-input-placeholder {
+    color: red;
+  }
+}
+
+.checkbox-container {
+  display: flex;
+  min-width: 30px;
+  margin-left: 5px;
+
+  input {
+    height: 17px !important;
+    width: 17px !important;
+  }
+
+  p {
+    margin: 0;
+    margin-right: 5px;
+  }
+}
+
+.wrap-field {
+  max-width: 530px;
+}

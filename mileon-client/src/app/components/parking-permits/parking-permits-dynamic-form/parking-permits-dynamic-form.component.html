@@ -82,9 +82,9 @@
                   [isDisabled]="field.name === 'isActive'"
                 ></app-input-checkbox-option-group>
                 } } @case ('radio') {
-     
+
                 <app-radio-button
-                [value]="getRadioValue(field.name)"
+                  [value]="getRadioValue(field.name)"
                   [options]="field.radioOptions!"
                   [name]="field.name"
                   [formControlName]="field.name"
