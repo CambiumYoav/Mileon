@@ -1,0 +1,62 @@
+
+@import '../../../../../styles/elements.scss';
+
+:host {
+  position: relative;
+  direction: rtl;
+  font-family: $fontOpenSans;
+
+  .card {
+    background-color: #FFFFFF !important;
+    box-shadow: 0px 0px 12px -1px $colorBoxShadow;
+    border-radius: 8px !important;
+    padding-right: 35px;
+    display: flex;
+    overflow: auto;
+    height: calc(100% - 180px);
+
+    .files-preview-container {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      padding-bottom: 30px;
+    }
+  }
+
+.title {
+  margin-top: 36px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+  .action-btn-upload-document {
+    height: 49px;
+    width: 186px;
+    background-color: $colorLightBlue;
+    border-radius: 8px;
+    padding: 12px 31px 12px 31px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    margin: 25px 5px;
+
+    img {
+      font-size: 22px;
+      margin-left: 5px;
+
+      &.microphone {
+        margin-left: 0;
+      }
+    }
+
+    &:hover {
+      background-color: $colorBlue;
+    }
+  }
+}
+
+

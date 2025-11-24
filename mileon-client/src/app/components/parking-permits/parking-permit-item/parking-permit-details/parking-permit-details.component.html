@@ -1,18 +1,9 @@
-<!-- <app-secondary-header
+<app-secondary-header
   secondaryHeaderTitle="תו דייר  {{ parkingPermit?.parkingPermitNumber }}"
   [routeNameToGoBack]="'parking-permits'"
   [extraParams]="{ source: 'parkingPermit' }"
-></app-secondary-header> -->
-<div class="col d-flex justify-content-between align-items-center">
-  <div class="d-flex align-items-center col-5">
-    <div class="arrow-container" (click)="back()">
-      <img [src]="Icons.ARROW_LEFT" />
-    </div>
-    <span class="heading"
-      >תו דייר {{ parkingPermit?.parkingPermitNumber }}</span
-    >
-  </div>
-</div>
+></app-secondary-header>
+
 <div class="row pb-4">
   <app-action-buttons
     #actionButtonsComponent
@@ -25,7 +16,6 @@
   ></app-action-buttons>
 </div>
 
-{{isFormReady()}}
 @if (isFormReady()) {
 <app-parking-permit-info
   [parkingPermitForm]="parkingPermitForm"

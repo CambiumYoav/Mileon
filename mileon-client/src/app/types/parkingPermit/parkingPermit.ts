@@ -30,7 +30,6 @@ export class ParkingPermit {
   statusId?: number;
   constructor(args?: any, flat: boolean = false) {
     if (args && typeof args === 'object') {
-
       args.citizen = new Citizen(args.citizen);
       args.address = new Address(args.address);
 
@@ -53,7 +52,6 @@ export class ParkingPermit {
 
       this.statusId = args.parkingPermitStatus.statusId;
     }
-    console.log(this.parkingPermitStatus);
   }
 }
 

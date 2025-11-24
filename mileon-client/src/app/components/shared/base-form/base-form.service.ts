@@ -133,19 +133,15 @@ export class BaseFormService {
         return;
       }
 
-      // --- FormGroup: יורדים פנימה רק אם value הוא אובייקט ---
       if (control instanceof FormGroup) {
         if (typeof value === 'object' && !Array.isArray(value)) {
           this.setObjectValuesToForm(value, control);
         }
-        // לא קוראים כאן ל־setValue על FormGroup
         return;
       }
 
-      // --- FormArray: ממפים אלמנטים למבנים קיימים (אם יש) ---
       if (control instanceof FormArray) {
         if (Array.isArray(value)) {
-          // אם כבר יצרת בתוך ה־FormArray קבוצות – נמלא אותן
           if (control.length && typeof value[0] === 'object') {
             value.forEach((item, index) => {
               const childGroup = control.at(index);
@@ -156,8 +152,6 @@ export class BaseFormService {
               }
             });
           }
-          // אם אין controls בתוך ה־FormArray – אתה יכול להשאיר ככה,
-          // או להרחיב כאן ליצירת קבוצות דינמית לפי value.length.
         }
         return;
       }

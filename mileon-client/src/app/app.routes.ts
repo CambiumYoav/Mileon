@@ -8,6 +8,8 @@ import { RoleGuard } from './guards/role.guard';
 import { RoleEnum } from './types/enum/moduleEnum';
 import { TicketsNewComponent } from './components/tickets-new/tickets-new.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
+import { PaymentErrorComponent } from './components/payment/payment-error/payment-error.component';
+import { PaymentSuccessComponent } from './components/payment/payment-success/payment-success.component';
 
 export const childRoutes: Routes = [
   {
@@ -67,11 +69,26 @@ export const childRoutes: Routes = [
         (m) => m.parkingPermitsRoutes
       ),
   },
+  {
+    path: `${ROUTE_PATH.Payment.Main}`,
+    loadComponent: () =>
+      import('./components/payment/payment.component').then(
+        (m) => m.PaymentComponent
+      ),
+  },
 ];
 export const routes: Routes = [
   { path: ``, redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomePageComponent, canActivate: [AuthGuard] },
+  {
+    path: `${ROUTE_PATH.Payment.Success}`,
+    component: PaymentSuccessComponent,
+  },
+  {
+    path: `${ROUTE_PATH.Payment.Error}`,
+    component: PaymentErrorComponent,
+  },
   {
     path: 'main',
     component: MainComponent,

@@ -38,7 +38,7 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
   @Input() isDownoladable: boolean = false; // Allow download by default
   @Input() uploadStatus: UploadStatus = UploadStatus.IDLE;
   @Input() errorType: 'size' | 'type' | null = null;
-
+  @Input() showSizeDetails: boolean = true;
   @Input()
   isFullPath!: boolean;
 
@@ -112,7 +112,8 @@ export class DocumentPreviewNewComponent implements OnInit, OnChanges {
     if (!this.isFullPath) {
       const basePath = this.baseService?.mediaUrl || '';
       this._baseImagePath.set(basePath);
-      const pathUrl = this.previewFile?.path?.replace('media/', '') || '';
+      // const pathUrl = this.previewFile?.path?.replace('media/', '') || '';
+      const pathUrl = this.previewFile?.path;
       const finalUrl = `${basePath}${pathUrl}`;
       this._finalFileUrl.set(finalUrl);
       this._safeUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(finalUrl));

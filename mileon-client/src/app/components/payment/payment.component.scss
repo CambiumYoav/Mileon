@@ -1,0 +1,248 @@
+@import "../../../styles/elements.scss";
+
+@mixin payment-method-container {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-between;
+}
+
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.back-icon {
+  height: 20px;
+  width: 20px;
+  top: 18px;
+  right: -35px;
+  cursor: pointer;
+  display: inline;
+}
+
+.record-data {
+  @include flex-row();
+  padding: 1rem;
+  gap: 4%;
+}
+
+.record-label {
+  @include flex-row();
+  gap: 20px;
+  .delete {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+}
+
+.price-label {
+  font-size: 17px;
+  font-family: $fontOpenSans;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  color: #21527d;
+}
+
+.total {
+  @include flex-row();
+  justify-content: space-between;
+  padding: 1rem;
+  span {
+    size: 16px;
+    font-family: $fontOpenSans;
+    font-weight: 700;
+  }
+  div {
+    color: black;
+    font-size: 21px;
+  }
+}
+
+.ticket-number-title {
+  font-family: $fontOpenSans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration-line: underline;
+  color: #387ec4;
+  cursor: pointer;
+
+  img {
+    margin-left: 5px;
+  }
+}
+
+.meddle-section {
+  @include flex-row();
+  gap: 5%;
+  flex: 1;
+  justify-content: center;
+}
+
+.details-label {
+  display: flex;
+  color: #606060;
+  font-family: $fontOpenSans;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding-left: 3px;
+  align-items: center;
+
+  .authority-label {
+    color: #19a58c;
+    font-weight: 700;
+  }
+
+  .authority-name-label {
+    color: #19a58c;
+    font-weight: 400;
+  }
+
+  .details-value {
+    padding-right: 2px;
+  }
+}
+
+.heading {
+  font-size: 24px;
+  font-weight: 800;
+  position: relative;
+  display: inline-block;
+}
+
+.fill-payer-details {
+  @include flex-row();
+  gap: 5px;
+  margin-bottom: 10px;
+  align-items: center;
+
+  span {
+    size: 15px;
+  }
+  .checkbox {
+    width: 16.85px;
+    height: 17px;
+  }
+}
+
+.payment-form-container {
+  @include payment-method-container;
+
+  .input-wrapper {
+    width: 15%;
+  }
+
+  .save-btn {
+    margin: 0 !important;
+  }
+}
+
+.check-payment-container {
+  .check-inputs-wrapper {
+    @include flex-row();
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+}
+
+.main-title {
+  font-size: medium;
+  font-weight: bold;
+  margin-bottom: 1.2rem;
+  color: #606060;
+}
+
+.long {
+  display: inline-block;
+  width: 18rem;
+}
+
+.medium {
+  display: inline-block;
+  width: 12rem;
+  margin-bottom: 20px;
+}
+
+.short {
+  display: inline-block;
+  width: 5rem;
+}
+
+.add-more-check {
+  @include flex-row();
+  justify-content: space-between;
+
+  .add-circle {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+}
+
+.other-payment-container {
+  @include payment-method-container;
+
+  .other-options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+}
+
+.check-detail {
+  @include flex-row();
+  gap: 20px;
+}
+
+.save-check-btn-container {
+  @include flex-row();
+  justify-content: end;
+}
+
+.card-icon {
+  height: 25px;
+  width: 25px;
+  position: absolute;
+  right: 5px;
+  top: 35px;
+}
+
+.bank-account-number-container {
+  position: relative;
+}
+
+.checkbox-copy-from-previous-check {
+  @include flex-row();
+  gap: 5px;
+
+  .copy-text {
+    font-weight: 300;
+    size: 15px;
+    height: 20px;
+    width: 159px;
+    color: 002741;
+  }
+}
+
+.payer-details {
+  @include flex-row();
+  gap:2.5%;
+  flex-wrap: wrap;
+}
+
+@media screen and (min-width: 1900px) {
+  .payer-details {
+    width: 80%;
+  }
+}
+
+.error {
+  color: #ff0000;
+}

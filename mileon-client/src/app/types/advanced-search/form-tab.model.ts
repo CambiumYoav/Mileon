@@ -31,7 +31,7 @@ export interface Field {
   readonly bindLabelKeys?: readonly string[];
   readonly disabled?: boolean;
   readonly isRequired?: boolean;
-  readonly radioOptions?: FieldOption[] ;
+  readonly radioOptions?: FieldOption[] 
 }
 
 export interface IdValue {

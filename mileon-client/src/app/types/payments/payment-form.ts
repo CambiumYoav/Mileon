@@ -1,8 +1,8 @@
-import {Validators} from "@angular/forms";
-import {ModuleEnum} from "../enum/moduleEnum";
-import {Address} from "../address";
-import {Patterns} from "../../validators/validationPatterns";
-import {paymentSourceEnum} from "../enum/paymentSourceEnum";
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { ModuleEnum } from '../enum/moduleEnum';
+import { Address } from '../address';
+import { Patterns } from '../../validators/validationPatterns';
+import { paymentSourceEnum } from '../enum/paymentSourceEnum';
 
 export class PaymentForm {
   module: ModuleEnum;
@@ -16,7 +16,7 @@ export class PaymentForm {
   manualPostalVoucher?: number;
   checkList?: checkForm[];
   creditCardInfo?: CreditCardInfo = new CreditCardInfo();
-  paymentSourceID: paymentSourceEnum;
+  paymentSourceID?: paymentSourceEnum;
   selectedPaymentAmount: number;
 
   constructor(paymentFormFields: PaymentForm) {
@@ -30,7 +30,8 @@ export class PaymentForm {
     this.payrollDeduction = paymentFormFields.payrollDeduction;
     this.manualPostalVoucher = paymentFormFields.manualPostalVoucher;
     this.checkList = [];
-    this.creditCardInfo = paymentFormFields.creditCardInfo ?? new CreditCardInfo();
+    this.creditCardInfo =
+      paymentFormFields.creditCardInfo ?? new CreditCardInfo();
     this.selectedPaymentAmount = paymentFormFields.selectedPaymentAmount;
   }
 
@@ -41,7 +42,6 @@ export class PaymentForm {
     payrollDeduction: [Validators.pattern(/^[0-9.]+$/)],
     manualPostalVoucher: [Validators.pattern(/^[0-9.]+$/)],
   };
-
 }
 
 export class CreditCardInfo {
@@ -77,12 +77,44 @@ export class checkForm {
     checkNumber: [Validators.pattern('^[0-9]*$'), Validators.required],
     confirmationNumber: [Validators.pattern('^[0-9]*$'), Validators.required],
     amount: [Validators.pattern('^[0-9]*$'), Validators.required],
-    bankAccountNumber: [Validators.pattern('^[0-9]{1,9}$'), Validators.required],
+    bankAccountNumber: [
+      Validators.pattern('^[0-9]{1,9}$'),
+      Validators.required,
+    ],
     bankCode: [Validators.required],
     bankBranchNumber: [Validators.required],
-    dueDate: [Validators.required]
+    dueDate: [Validators.required],
   };
 }
+
+export const nidRequiredIfNoPassport: ValidatorFn = (
+  group: AbstractControl
+): ValidationErrors | null => {
+  const nidCtrl = group.get('nid');
+  const passportCtrl = group.get('passportID');
+
+  if (!nidCtrl || !passportCtrl) return null;
+
+  const passportEmpty = !passportCtrl.value?.toString().trim();
+  const nidEmpty = !nidCtrl.value?.toString().trim();
+
+  // If passport is empty, nid must be required
+  if (passportEmpty && nidEmpty) {
+    // merge with other nid errors if exist
+    const errors = nidCtrl.errors ?? {};
+    if (!errors['required']) {
+      nidCtrl.setErrors({ ...errors, required: true });
+    }
+  } else {
+    // remove ONLY our 'required' if we added it
+    if (nidCtrl.errors?.['required']) {
+      const { required, ...rest } = nidCtrl.errors;
+      nidCtrl.setErrors(Object.keys(rest).length ? rest : null);
+    }
+  }
+
+  return null; // group-level error not needed
+};
 
 export class PayerForm {
   citizenID?: string;
@@ -114,7 +146,12 @@ export class PayerForm {
 export const addressValidation = {
   cityID: [Validators.required],
   streetID: [Validators.required],
-  houseNumber: [Validators.pattern(Patterns.HOUSE_NUMBER_PATTERN), Validators.required],
-  apartment: [Validators.pattern(Patterns.APARTMENT_PATTERN), Validators.required],
-}
-
+  houseNumber: [
+    Validators.pattern(Patterns.HOUSE_NUMBER_PATTERN),
+    Validators.required,
+  ],
+  apartment: [
+    Validators.pattern(Patterns.APARTMENT_PATTERN),
+    Validators.required,
+  ],
+};

@@ -1,0 +1,417 @@
+<div class="container-lg p-4">
+  <div class="row pb-4 align-items-center position-relative">
+    <div class="back-icon">
+      <img [src]="Icons.ARROW_LEFT" (click)="routerService.back()" />
+    </div>
+    <span class="heading col-5">תשלום</span>
+  </div>
+
+  <form [formGroup]="paymentForm">
+    <!-- payer details -->
+    <div class="fill-payer-details">
+      <app-checkbox
+        (valueChanged)="onCheckboxChange($event)"
+        [checked]="payerInfoFound()"
+        [isDisabled]="!payerInfoFound()"
+        [label]="'משיכת פרטים מהמערכת'"
+      >
+      </app-checkbox>
+      
+    </div>
+    <div class="card p-3 mb-2" formGroupName="payer">
+      <div class="payer-details">
+        <div *ngFor="let field of payerFields; let i = index">
+          <ng-container [ngSwitch]="field.type">
+            <div formGroupName="mainAddress">
+              <app-select
+                *ngSwitchCase="FieldTypeEnum.Select"
+                [dataFunction]="field.dataFunction"
+                bindLabelKey="value"
+                bindValueKey="id"
+                [title]="field.displayName"
+                [placeholder]="field.displayName"
+                [formControlName]="field.name"
+                [isMultiSelect]="false"
+                [ngClass]="field.length"
+                [ids]="
+                  paymentForm.get('payer')?.get('mainAddress')?.get(field.name)
+                    ?.value || []
+                "
+                [isValid]="
+                  paymentForm.get('payer')?.get('mainAddress')?.get(field.name)
+                    ?.valid || skipFormValidation()
+                "
+              >
+              </app-select>
+            </div>
+            <div *ngSwitchCase="FieldTypeEnum.Text">
+              <div
+                *ngIf="field.name.startsWith('mainAddress')"
+                formGroupName="mainAddress"
+              >
+                <app-input-text
+                  [title]="field.displayName"
+                  [placeholder]="field.displayName"
+                  [formControlName]="field.name.split('.')[1]"
+                  [isValid]="
+                    paymentForm.get('payer')?.get(field.name)?.valid ||
+                    skipFormValidation()
+                  "
+                ></app-input-text>
+              </div>
+              <div *ngIf="!field.name.startsWith('mainAddress')">
+                <app-input-text
+                  [title]="field.displayName"
+                  [placeholder]="field.displayName"
+                  [formControlName]="field.name"
+                  [isValid]="
+                    paymentForm.get('payer')?.get(field.name)?.valid ||
+                    skipFormValidation()
+                  "
+                ></app-input-text>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- records list -->
+    <ng-container
+      *ngIf="moduleEnum() === ModuleEnum.TicketsNewModule && isTicketNewArray()"
+    >
+      <div class="card p-3 mb-2">
+        <div *ngFor="let record of ticketRecords()">
+          <div class="record-data">
+            <div class="record-label">
+              <span
+                ><img
+                  [src]="Vector"
+                  class="delete"
+                  (click)="removeRecord(record.ticketID)"
+              /></span>
+              <div class="ticket-number-title">
+                <img [src]="ticketDetailsSvg" />
+                דוח מספר {{ record.ticketNumber }}
+              </div>
+            </div>
+            <div class="meddle-section">
+              <div class="details-label">
+                סטטוס:
+                <app-tag
+                  [tagName]="record.ticketStatusName"
+                  [tagId]="record.ticketStatusID.toString()"
+                >
+                </app-tag>
+              </div>
+              <div class="details-label">
+                תאריך:
+                <span class="details-value">
+                  {{ record.ticketGivingDate | date : "dd.MM.yy" }}</span
+                >
+              </div>
+              <div class="details-label">
+                שלב:
+                <app-icon
+                  [icon]="getTicketStageIconById(record.ticketStageID)"
+                ></app-icon>
+              </div>
+              <div class="details-label">
+                סוג דוח:
+                <span class="details-value"> {{ record.ticketTypeName }}</span>
+              </div>
+              <div class="details-label">
+                <div class="authority-label">
+                  רשות:
+                  <span class="authority-name-label">
+                    {{ record.authorityName }}</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="left-section">
+              <div class="price-label">₪ {{ record.paymentBalance }}</div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+        <div class="total">
+          <span>סה"כ לתשלום : </span>
+          <div class="price-label">₪ {{ totalPaymentBalance }}</div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container
+      *ngIf="
+        moduleEnum() === ModuleEnum.ParkingPermitsModule &&
+        isParkingPermitArrayType()
+      "
+    >
+      <app-parking-permit-details-row
+        *ngFor="let record of parkingPermitRecords()"
+        [permit]="record"
+      ></app-parking-permit-details-row>
+    </ng-container>
+
+    <!-- payment options -->
+    <div class="card card-margin p-3">
+      <div class="d-flex justify-content-between align-items-end">
+        <div class="d-flex">
+          <!-- Payment Option Select -->
+          <div
+            class="wrap-field"
+            [class]="'field-' + fields['paymentOption'].length"
+            [ngSwitch]="fields['paymentOption']"
+          >
+            <app-select
+              fxFill
+              appearance="outline"
+              [title]="fields['paymentOption'].displayName"
+              [formControlName]="fields['paymentOption'].name"
+              [dataFunction]="fields['paymentOption'].dataFunction"
+              searchPlaceholder="חיפוש"
+              bindLabelKey="value"
+              bindValueKey="id"
+              [isMultiSelect]="false"
+            ></app-select>
+          </div>
+          <!-- Payment Amount Input -->
+          <div
+            *ngIf="
+              paymentForm.get('paymentOptionId')?.value ===
+              paymentOptionsEnum.CreditCard
+            "
+          >
+            <app-input-text
+              [title]="'סכום לחיוב'"
+              [formControlName]="'selectedPaymentAmount'"
+              [isValid]="paymentForm.get('selectedPaymentAmount')?.valid"
+              [errorMessage]="'יש להזין סכום קטן או שווה לסכום לתשלום'"
+              placeholder="סכום לחיוב"
+            >
+            </app-input-text>
+          </div>
+        </div>
+        <div
+          *ngIf="
+            paymentForm.get('paymentOptionId')?.value ===
+            paymentOptionsEnum.CreditCard
+          "
+        >
+          <button
+            type="submit"
+            (click)="payPartialAmount()"
+            class="general-btn btn-save payment-btn"
+          >
+            המשך
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- cash form -->
+    <div
+      [ngSwitch]="paymentForm.controls['paymentOptionId'].value"
+      *ngIf="paymentForm.get('payer')?.valid"
+    >
+      <div class="card p-2" *ngSwitchCase="paymentOptionsEnum.Cash">
+        <div class="payment-form-container card-margin p-3">
+          <div class="input-wrapper">
+            <span>מזומן</span>
+            <app-input-text
+              placeholder="סכום"
+              [formControlName]="'cash'"
+              [isValid]="paymentForm.get('cash')?.valid"
+              [errorMessage]="'*יש להזין מספרים ונקודות בלבד'"
+            ></app-input-text>
+          </div>
+          <app-button
+            [loading]="loading()"
+            (clickFunction)="savePayment()"
+            [buttonText]="'לתשלום'"
+            [isDisabled]="!paymentForm.get('cash')?.valid"
+            [buttonType]="'submit'"
+          ></app-button>
+        </div>
+      </div>
+
+      <!-- check form -->
+      <div *ngSwitchCase="paymentOptionsEnum.Check">
+        <div formArrayName="checkList">
+          <ng-container
+            *ngFor="
+              let checkGroup of getCheckListFormArray()?.controls;
+              let i = index
+            "
+          >
+            <div [formGroupName]="i" class="card p-4 mb-2">
+              <div class="check-detail">
+                <div class="main-title">פרטי צ'ק</div>
+                <div class="checkbox-copy-from-previous-check">
+                  <app-checkbox
+                    *ngIf="i > 0"
+                    (valueChanged)="copyCheckDetails(i, $event)"
+                    [initialValue]="'false'"
+                  ></app-checkbox>
+                  <div *ngIf="i > 0" class="copy-text">
+                    העתקה מפרטי צ'ק קודמים
+                  </div>
+                </div>
+              </div>
+              <div class="check-payment-container">
+                <div class="check-inputs-wrapper">
+                  <app-input-text
+                    placeholder="מספר אישור"
+                    title="מספר אישור"
+                    [formControlName]="'confirmationNumber'"
+                    [isValid]="
+                      checkIfCheckFieldIsValid(i, 'confirmationNumber') ||
+                      !displayChecksValidationErrors
+                    "
+                  ></app-input-text>
+                  <app-input-text
+                    placeholder="סכום"
+                    title="סכום"
+                    [formControlName]="'amount'"
+                    [isValid]="
+                      checkIfCheckFieldIsValid(i, 'amount') ||
+                      !displayChecksValidationErrors
+                    "
+                  ></app-input-text>
+                  <app-select
+                    title="בנק"
+                    placeholder="בנק"
+                    [formControlName]="'bankCode'"
+                    class="long"
+                    [dataFunction]="getBanksNames"
+                    [isMultiSelect]="false"
+                    bindLabelKey="value"
+                    bindValueKey="id"
+                  ></app-select>
+                  <app-select
+                    placeholder="סניף"
+                    title="סניף"
+                    class="long"
+                    [formControlName]="'bankBranchNumber'"
+                    [dataFunction]="getBankBranches"
+                    [isMultiSelect]="false"
+                  ></app-select>
+                </div>
+                <div class="check-inputs-wrapper">
+                  <span class="bank-account-number-container long">
+                    <app-input-text
+                      placeholder="חשבון"
+                      title="חשבון"
+                      [formControlName]="'bankAccountNumber'"
+                      class="long"
+                      [isValid]="
+                        (!isLimitedAccounts()[i] &&
+                          checkIfCheckFieldIsValid(i, 'bankAccountNumber')) ||
+                        !displayChecksValidationErrors
+                      "
+                    ></app-input-text
+                    ><img [src]="Icons.CARD" class="card-icon" />
+                    <span *ngIf="isLimitedAccounts()[i]" class="error"
+                      >*חשבון זה מוגבל</span
+                    >
+                  </span>
+                  <app-input-text
+                    placeholder="מספר צ'ק"
+                    title="מספר צ'ק"
+                    [formControlName]="'checkNumber'"
+                    [isValid]="
+                      checkIfCheckFieldIsValid(i, 'checkNumber') ||
+                      !displayChecksValidationErrors
+                    "
+                  ></app-input-text>
+                  <app-input-date
+                    title="תאריך לפרעון"
+                    [formControlName]="'dueDate'"
+                  ></app-input-date>
+                </div>
+              </div>
+              <span
+                *ngIf="!validateCheckInputs(i) && displayChecksValidationErrors"
+                class="error"
+                >אחד הפרטים או יותר אינו תקין, אנא נסה שנית</span
+              >
+            </div>
+          </ng-container>
+          <div
+            class="card p-4 pb-1 mt-2 mb-2 add-more-check"
+            *ngSwitchCase="paymentOptionsEnum.Check"
+          >
+            <div class="main-title">הוספת צ'ק ובדיקת צ'ק קודם</div>
+            <img
+              [src]="Icons.ADD_CIRCLE"
+              class="add-circle"
+              (click)="addCheck()"
+            />
+          </div>
+        </div>
+        <div class="save-check-btn-container">
+          <app-button
+            [loading]="loading()"
+            (clickFunction)="payByChecks()"
+            [buttonText]="'לתשלום'"
+            [isDisabled]="!paymentForm.get('cash')?.valid"
+            [buttonType]="'submit'"
+          ></app-button>
+        </div>
+      </div>
+
+      <!-- credit card form -->
+      <div class="card p-2" *ngSwitchCase="paymentOptionsEnum.CreditCard">
+        <iframe
+          style="height: 390px"
+          allow="payment"
+          [src]="iframeUrl() | safe : 'url'"
+        ></iframe>
+      </div>
+
+      <!-- other form -->
+      <div
+        class="card p-4 other-payment-container"
+        *ngSwitchCase="paymentOptionsEnum.Other"
+      >
+        <div class="other-options">
+          <app-input-text
+            placeholder="סכום"
+            title="ניכוי שכר"
+            [formControlName]="'payrollDeduction'"
+            [isValid]="paymentForm.get('payrollDeduction')?.valid"
+            [errorMessage]="'יש להזין מספרים ונקודות בלבד'"
+          ></app-input-text>
+          <app-input-text
+            placeholder="סכום"
+            title="בבית משפט"
+            [formControlName]="'courtPayment'"
+            [isValid]="paymentForm.get('courtPayment')?.valid"
+            [errorMessage]="'יש להזין מספרים ונקודות בלבד'"
+          ></app-input-text>
+          <app-input-text
+            placeholder="סכום"
+            title="העברה בנקאית"
+            [formControlName]="'bankTransfer'"
+            [isValid]="paymentForm.get('bankTransfer')?.valid"
+            [errorMessage]="'יש להזין מספרים ונקודות בלבד'"
+          ></app-input-text>
+          <app-input-text
+            placeholder="סכום"
+            title="שובר דואר ידני"
+            [formControlName]="'manualPostalVoucher'"
+            [isValid]="paymentForm.get('manualPostalVoucher')?.valid"
+            [errorMessage]="'יש להזין מספרים ונקודות בלבד'"
+          ></app-input-text>
+        </div>
+        <app-button
+          [loading]="loading()"
+          (clickFunction)="savePayment()"
+          [buttonText]="'לתשלום'"
+          [isDisabled]="!paymentForm.get('cash')?.valid"
+        ></app-button>
+      </div>
+    </div>
+  </form>
+</div>

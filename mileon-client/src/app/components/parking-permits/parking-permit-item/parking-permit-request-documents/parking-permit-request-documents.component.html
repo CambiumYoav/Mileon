@@ -1,1 +1,47 @@
-<p>parking-permit-request-documents works!</p>
+
+<app-secondary-header
+  [routeNameToGoBack]="'parking-permits'"
+  [extraParams]="{ source: 'parkingPermit' }"
+></app-secondary-header>
+<div class="row pb-4">
+  <app-action-buttons
+    #actionButtonsComponent
+    [buttonsList]="actionButtonsList"
+    [recordId]="parkingPermitId()"
+    [moduleEnum]="moduleEnum.ParkingPermitsModule"
+  >
+  </app-action-buttons>
+</div>
+
+<div class="card">
+  <div class="title">קבצים מצורפים</div>
+  <app-button
+    class="constant-btns mt-4 mb-4"
+    [buttonText]="uploadDocumentTitle()"
+    [imgSrc]="Icons.UPLOAD_DOCUMENT"
+    (clickFunction)="openDialogImport()"
+  ></app-button>
+
+  <div class="files-preview-container">
+    @for (file of previewFiles(); track $index) {
+    <app-document-preview-new
+      [previewFile]="file"
+      [isFullPath]="false"
+      [isDownoladable]="true"
+      (deleteEvent)="openDeleteModal($event)"
+      [showSizeDetails]="false"
+    ></app-document-preview-new>
+    }
+  </div>
+</div>
+
+<app-confirmation-modal
+  [isModalOpen]="isDeleteModalOpen()"
+  (onConfirm)="onDelete()"
+  (onCancel)="closeDeleteModal()"
+  (isModalClosed)="closeDeleteModal()"
+  [confirmLabel]="'אשר'"
+  [cancelLabel]="'בטל'"
+  [message]="ModalMessages.ARE_YOU_SURE_DELETE_FILE_PARKING_PERMIT"
+  [title]="ModalMessages.DELETE_FILE_PARKING_PERMIT"
+></app-confirmation-modal>

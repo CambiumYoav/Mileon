@@ -279,6 +279,7 @@ export class ParkingPermitInfoComponent {
 
   async saveParkingPermitDetails() {
     const form = this.parkingPermitForm();
+    console.log(form);
     if (!form) return;
 
     this.isSaveLoading = true;
@@ -470,8 +471,16 @@ export class ParkingPermitInfoComponent {
   transformRadioOptions(options: FieldOption[] | undefined): any[] {
     if (!options || !Array.isArray(options)) return [];
     return options.map((option) => ({
-      value: String(option.value),
+      value: option.value,
       label: option.display,
     }));
+  }
+
+  getDetailValue(detail: Field): any {
+    const permit = this.parkingPermit(); // or this.parkingPermit if not signal
+    if (!permit) return null;
+    return (permit as any)[detail.name]
+      ? (permit as any)[detail.name]
+      : 'לא נמצא';
   }
 }

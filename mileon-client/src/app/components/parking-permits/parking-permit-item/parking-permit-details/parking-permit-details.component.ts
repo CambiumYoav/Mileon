@@ -32,11 +32,15 @@ import { TimeLimitClass } from '../../../../types/parkingPermit/timeLimit';
 import { getParkingPermitStatus } from '../../../../utils/checkParkingPermitStatus';
 import { Patterns } from '../../../../validators/validationPatterns';
 import { BaseFormService } from '../../../shared/base-form/base-form.service';
-import { ConstPath } from '../../../../constants/const_path';
+import { SecondaryHeaderComponent } from '../../../shared/secondary-header/secondary-header.component';
 
 @Component({
   selector: 'app-parking-permit-details',
-  imports: [ActionButtonsComponent, ParkingPermitInfoComponent],
+  imports: [
+    ActionButtonsComponent,
+    ParkingPermitInfoComponent,
+    SecondaryHeaderComponent,
+  ],
   templateUrl: './parking-permit-details.component.html',
   styleUrl: './parking-permit-details.component.scss',
 })
@@ -45,7 +49,6 @@ export class ParkingPermitDetailsComponent implements OnInit, AfterViewInit {
   // state
   // ---------------------------------------------------------------------------
   parkingPermit!: ParkingPermitDetails;
-  // you don't really use `formGroup` here, keeping for compatibility if needed
   formGroup!: FormGroup;
 
   permitByEnum = PermitByEnum;
@@ -69,7 +72,7 @@ export class ParkingPermitDetailsComponent implements OnInit, AfterViewInit {
     'SendEmail',
     'PrintToPDF',
   ];
-  Icons = ConstPath;
+
   currentAuthority: string | null = null;
 
   @ViewChild('actionButtonsComponent', { static: false })
@@ -157,7 +160,7 @@ export class ParkingPermitDetailsComponent implements OnInit, AfterViewInit {
   // Form building
   // ---------------------------------------------------------------------------
   buildForm(): void {
-    console.log('building form', this.parkingPermitForm);
+    console.log('building form');
 
     const citizenControlOptions: ControlOptionsDictionary = {
       email: {
@@ -211,10 +214,7 @@ export class ParkingPermitDetailsComponent implements OnInit, AfterViewInit {
           isMain: [true],
         }),
         this.formBuilder.group({
-          phone: [
-            '',
-            [Validators.required, Validators.pattern(Patterns.PHONE_NUMBER)],
-          ],
+          phone: ['', [Validators.pattern(Patterns.PHONE_NUMBER)]],
           isMain: [false],
         }),
       ])
@@ -250,6 +250,9 @@ export class ParkingPermitDetailsComponent implements OnInit, AfterViewInit {
       .get('vehicle.vehicleNumber')
       ?.updateValueAndValidity();
 
+    this.parkingPermitForm.get('statusName')?.disable();
+    this.parkingPermitForm.get('permitTypeName')?.disable();
+
     const timeLimitsFA = this.parkingPermitForm.get('timeLimits') as FormArray;
 
     const numOfDaysInWeek = 7;
@@ -271,7 +274,5 @@ export class ParkingPermitDetailsComponent implements OnInit, AfterViewInit {
     this.isFormReady.set(true);
     console.log(this.parkingPermitForm);
   }
-  back() {
-    this.router.navigate(['/parking-permits']);
-  }
+
 }

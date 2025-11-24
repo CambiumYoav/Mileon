@@ -1,0 +1,104 @@
+@import '../../../../styles/elements.scss';
+
+@mixin payment-method-container {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-between;
+}
+
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.back-icon {
+  height: 20px;
+  width: 20px;
+  top: 18px;
+  right: -35px;
+  cursor: pointer;
+  display: inline;
+}
+
+.record-data {
+  @include flex-row();
+  padding: 1rem;
+  gap: 4%;
+}
+
+.record-label {
+  @include flex-row();
+  gap: 20px;
+}
+
+.price-label {
+  font-size: 17px;
+  font-family: $fontOpenSans;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  color: #21527D;
+}
+
+.total {
+  @include flex-row();
+  justify-content: space-between;
+  padding: 1rem;
+  span {
+    size: 16px;
+    font-family: $fontOpenSans;
+    font-weight: 700;
+  }
+  div {
+    color: black;
+    font-size: 21px;
+  }
+}
+
+.ticket-number-title {
+  font-family: $fontOpenSans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration-line: underline;
+  color: #387EC4;
+  cursor: pointer;
+  img {
+    margin-left: 5px;
+  }
+}
+
+.meddle-section {
+  @include flex-row();
+  gap: 5%;
+  flex: 1;
+  justify-content:center;
+}
+
+.details-label {
+  display: flex;
+  color: #606060;
+  font-family: $fontOpenSans;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding-left: 3px;
+  align-items: center;
+
+  .authority-label {
+    color: #19A58C;
+    font-weight: 700;
+  }
+
+  .authority-name-label {
+    color: #19A58C;
+    font-weight: 400;
+  }
+
+  .details-value {
+    padding-right: 2px;
+  }
+}
